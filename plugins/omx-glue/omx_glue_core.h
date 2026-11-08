@@ -75,6 +75,6 @@ static inline void omx_glue_core_run_v(void *c, const float *key, const float *i
 
 static const struct omx_face_core OMX_GLUE_CORE = {sizeof(OmxGlueCore), omx_glue_core_init_v, omx_glue_core_resolve_v,
                                                    omx_glue_core_latency_v, omx_glue_core_run_v,
-                                                   NULL};
+                                                   omx_face_no_meter};
 
 #endif /* OMX_GLUE_CORE_H */

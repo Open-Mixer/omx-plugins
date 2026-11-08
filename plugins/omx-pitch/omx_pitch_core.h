@@ -70,6 +70,6 @@ static inline void omx_pitch_core_run_v(void *c, const float *key, const float *
 
 static const struct omx_face_core OMX_PITCH_CORE = {sizeof(OmxPitchCore), omx_pitch_core_init_v, omx_pitch_core_resolve_v,
                                                    omx_pitch_core_latency_v, omx_pitch_core_run_v,
-                                                   NULL};
+                                                   omx_face_no_meter};
 
 #endif /* OMX_PITCH_CORE_H */

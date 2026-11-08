@@ -19,6 +19,7 @@
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(PITCH), .core = &OMX_PITCH_CORE,
     OMX_FACE_LV2_PORTS(PITCH, UINT32_MAX),
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_lv2_face G_LV2 = OMX_LV2_FACE(&G_FACE, OMX_PITCH_LV2_URI);

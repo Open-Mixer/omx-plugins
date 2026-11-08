@@ -33,6 +33,7 @@ static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(MBCOMP), .core = &OMX_MBCOMP_CORE,
     .meters = G_METERS, .meter_count = 5u, .meter_values = 5u,
     OMX_FACE_LV2_PORTS(MBCOMP, UINT32_MAX),
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_lv2_face G_LV2 = OMX_LV2_FACE(&G_FACE, OMX_MBCOMP_LV2_URI);

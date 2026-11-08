@@ -17,5 +17,5 @@ static inline void omx_{{kernel}}_core_run_v(void *c, const float *key, const fl
 {{/tempo}}
 static const struct omx_face_core OMX_{{K}}_CORE = {sizeof(Omx{{Kernel}}Core), omx_{{kernel}}_core_init_v, omx_{{kernel}}_core_resolve_v,
                                                    omx_{{kernel}}_core_latency_v, omx_{{kernel}}_core_run_v,
-                                                   {{#meterRead}}omx_{{kernel}}_core_meter_v{{/meterRead}}{{^meterRead}}NULL{{/meterRead}}};
+                                                   {{#meterRead}}omx_{{kernel}}_core_meter_v{{/meterRead}}{{^meterRead}}omx_face_no_meter{{/meterRead}}};
 

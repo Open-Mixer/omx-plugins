@@ -71,6 +71,6 @@ static inline void omx_tone_core_run_v(void *c, const float *key, const float *i
 
 static const struct omx_face_core OMX_TONE_CORE = {sizeof(OmxToneCore), omx_tone_core_init_v, omx_tone_core_resolve_v,
                                                    omx_tone_core_latency_v, omx_tone_core_run_v,
-                                                   NULL};
+                                                   omx_face_no_meter};
 
 #endif /* OMX_TONE_CORE_H */

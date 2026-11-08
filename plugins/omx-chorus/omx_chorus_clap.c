@@ -16,6 +16,7 @@ static const char *G_FEATURES[] = {OMX_CHORUS_CLAP_FEATURES, NULL};
 
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(CHORUS), .features = G_FEATURES, .core = &OMX_CHORUS_CORE,
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_clap_face G_CLAP = OMX_CLAP_FACE(&G_FACE, G_FEATURES, OMX_CHORUS_CLAP_ID, OMX_CHORUS_NAME, OMX_CHORUS_VENDOR,

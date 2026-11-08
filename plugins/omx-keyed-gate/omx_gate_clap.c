@@ -27,6 +27,7 @@ static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(GATE), .features = G_FEATURES, .core = &OMX_GATE_CORE,
     .key_symbol = "key",
     .meters = G_METERS, .meter_count = 1u, .meter_values = 1u,
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_clap_face G_CLAP = OMX_CLAP_FACE(&G_FACE, G_FEATURES, OMX_GATE_CLAP_ID, OMX_GATE_NAME, OMX_GATE_VENDOR,

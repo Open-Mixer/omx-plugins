@@ -78,6 +78,13 @@
 #                   L - R null; each sabotaged by --self-test (tools/test/preset-figures.mjs; part of `make test` and `make test-faces`)
 #   make install    DESTDIR, PREFIX, LIBDIR, CLAPDIR, DATADIR: $(CLAPDIR)/<name>.clap, $(LIBDIR)/lv2/<name>.lv2/ and the
 #                   factory presets in $(DATADIR)/omx/presets/<plugin id>/<preset id>.json, then install-pins
+#   make rt-gate    omx-rt-gate (omx-dsp-devel, spec 7.13) over every LV2 face the tree builds, the shared face and the plugin's unit,
+#                   the roots derived from the descriptor's tables; red is exit 1, nothing judged exit 2 (tools/rt-gate.sh).
+#                   RT_GATE_FACES=clap or all adds the CLAP faces, which are red until omx-dsp's CLAP table names
+#                   request_callback and request_restart and the gate stops joining a vtable field to every field of that name
+#   make rt-gate-test  tools/rt-gate.sh held by planted violations (malloc, usleep, a worker's allocation and kept body pointer)
+#                   and by the guards broken one at a time (tools/test/rt-gate-test.sh); not in `make test` until omx-dsp's
+#                   release that ships the gate is the floor
 #   make install-pins  PINS_DIR, PINS_FILE: plugin-qualify --pins over the just-installed .clap files, written to
 #                   $(DESTDIR)$(PINS_DIR)/$(PINS_FILE) with the buildroot rewritten to the final $(CLAPDIR)
 #                   (tools/gen-pins.sh, with its --self-test; needs plugin-qualify >= 0.9.0); tools/pins-check.sh
@@ -167,7 +174,7 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi
+.PHONY: summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi rt-gate rt-gate-test
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
@@ -296,6 +303,11 @@ presets-figures:
 	node tools/test/preset-figures.mjs --self-test
 # A plugin is complete when it has every artifact the recipe lists and keeps every law; a new plugin
 # starts with `node tools/omx-new-plugin.mjs --from-contract <kernel>` (docs/new-plugin-from-contract.md).
+RT_GATE_FACES ?= lv2
+rt-gate:
+	tools/rt-gate.sh --faces $(RT_GATE_FACES)
+rt-gate-test:
+	tools/test/rt-gate-test.sh
 recipe-test: selftest completeness
 completeness:
 	node tools/plugin-recipe.mjs

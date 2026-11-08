@@ -26,6 +26,7 @@ static const struct omx_face_meter G_METERS[] = {
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(LIMITER), .features = G_FEATURES, .core = &OMX_LIMITER_CORE,
     .meters = G_METERS, .meter_count = 1u, .meter_values = 1u,
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_clap_face G_CLAP = OMX_CLAP_FACE(&G_FACE, G_FEATURES, OMX_LIMITER_CLAP_ID, OMX_LIMITER_NAME, OMX_LIMITER_VENDOR,

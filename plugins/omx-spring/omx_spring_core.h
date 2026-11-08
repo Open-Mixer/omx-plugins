@@ -72,6 +72,6 @@ static inline void omx_spring_core_run_v(void *c, const float *key, const float 
 
 static const struct omx_face_core OMX_SPRING_CORE = {sizeof(OmxSpringCore), omx_spring_core_init_v, omx_spring_core_resolve_v,
                                                    omx_spring_core_latency_v, omx_spring_core_run_v,
-                                                   NULL};
+                                                   omx_face_no_meter};
 
 #endif /* OMX_SPRING_CORE_H */

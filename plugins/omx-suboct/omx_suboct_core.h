@@ -72,6 +72,6 @@ static inline void omx_suboct_core_run_v(void *c, const float *key, const float 
 
 static const struct omx_face_core OMX_SUBOCT_CORE = {sizeof(OmxSuboctCore), omx_suboct_core_init_v, omx_suboct_core_resolve_v,
                                                    omx_suboct_core_latency_v, omx_suboct_core_run_v,
-                                                   NULL};
+                                                   omx_face_no_meter};
 
 #endif /* OMX_SUBOCT_CORE_H */

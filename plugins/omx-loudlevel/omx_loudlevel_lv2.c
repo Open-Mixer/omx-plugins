@@ -19,6 +19,7 @@
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(LOUDLEVEL), .core = &OMX_LOUDLEVEL_CORE,
     OMX_FACE_LV2_PORTS(LOUDLEVEL, UINT32_MAX),
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_lv2_face G_LV2 = OMX_LV2_FACE(&G_FACE, OMX_LOUDLEVEL_LV2_URI);

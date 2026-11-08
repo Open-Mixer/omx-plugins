@@ -16,6 +16,7 @@ static const char *G_FEATURES[] = {OMX_TREMOLO_CLAP_FEATURES, NULL};
 
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(TREMOLO), .features = G_FEATURES, .core = &OMX_TREMOLO_CORE,
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_clap_face G_CLAP = OMX_CLAP_FACE(&G_FACE, G_FEATURES, OMX_TREMOLO_CLAP_ID, OMX_TREMOLO_NAME, OMX_TREMOLO_VENDOR,

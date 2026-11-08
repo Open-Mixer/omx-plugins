@@ -97,6 +97,6 @@ static inline void omx_delay_core_tempo_v(void *c, double bpm) { omx_delay_core_
 
 static const struct omx_face_core OMX_DELAY_CORE = {sizeof(OmxDelayCore), omx_delay_core_init_v, omx_delay_core_resolve_v,
                                                    omx_delay_core_latency_v, omx_delay_core_run_v,
-                                                   NULL};
+                                                   omx_face_no_meter};
 
 #endif /* OMX_DELAY_CORE_H */

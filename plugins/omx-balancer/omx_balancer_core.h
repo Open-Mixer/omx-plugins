@@ -71,6 +71,6 @@ static inline void omx_balancer_core_run_v(void *c, const float *key, const floa
 
 static const struct omx_face_core OMX_BALANCER_CORE = {sizeof(OmxBalancerCore), omx_balancer_core_init_v, omx_balancer_core_resolve_v,
                                                    omx_balancer_core_latency_v, omx_balancer_core_run_v,
-                                                   NULL};
+                                                   omx_face_no_meter};
 
 #endif /* OMX_BALANCER_CORE_H */

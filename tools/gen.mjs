@@ -664,8 +664,10 @@ ${(d.chain ?? []).filter((el) => bandCountOf(d, el)).map((el) => {
  * non-finite word its default. Its bands from this one on are passed switched off: out of the face's bank. */
 static inline uint32_t ${bandCountFn(d, el)}(const float *values) {
   const float w = values[${N}];
-  const float n = w - w == 0.0f ? rintf(w) : ${N}_DEFAULT;
-  return (uint32_t)(n < ${N}_MIN ? ${N}_MIN : n > ${N}_MAX ? ${N}_MAX : n);
+  /* clamped, then rounded to the nearest (ties to even): the same count as rounding first, and lrintf is a call
+   * omx-rt-gate classifies where rintf is not */
+  const int n = w - w == 0.0f ? (int)lrintf(fminf(fmaxf(w, (float)${N}_MIN), (float)${N}_MAX)) : (int)${N}_DEFAULT;
+  return (uint32_t)(n < (int)${N}_MIN ? (int)${N}_MIN : n > (int)${N}_MAX ? (int)${N}_MAX : n);
 }
 `;
   }).join('')}

@@ -29,11 +29,14 @@ void omx_lv2_face_run(LV2_Handle h, uint32_t frames);
 void omx_lv2_face_cleanup(LV2_Handle h);
 const void *omx_lv2_face_extension_data(const char *uri);
 
+/* The descriptor's fields are named: omx-rt-gate derives the real-time roots from the functions an initializer stores
+ * into the fields of LV2_Descriptor, and reads a positional initializer nested in this struct as no store. */
 #define OMX_LV2_FACE(face_, uri_)                                                                               \
   {                                                                                                             \
-    {uri_, omx_lv2_face_instantiate, omx_lv2_face_connect_port, omx_lv2_face_activate, omx_lv2_face_run, NULL, \
-     omx_lv2_face_cleanup, omx_lv2_face_extension_data},                                                        \
-        face_                                                                                                   \
+    .lv2 = {.URI = uri_, .instantiate = omx_lv2_face_instantiate, .connect_port = omx_lv2_face_connect_port,    \
+            .activate = omx_lv2_face_activate, .run = omx_lv2_face_run, .deactivate = NULL,                     \
+            .cleanup = omx_lv2_face_cleanup, .extension_data = omx_lv2_face_extension_data},                    \
+    .face = face_                                                                                               \
   }
 
 /* The port indices generated/omx_<kernel>_params.h names for every plugin (a keyed plugin's key its own). */

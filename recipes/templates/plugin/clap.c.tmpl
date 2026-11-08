@@ -27,6 +27,7 @@ static const struct omx_face G_FACE = {
 {{#keyed}}    .key_symbol = "{{keySymbol}}",
 {{/keyed}}{{#metered}}    .meters = G_METERS, .meter_count = {{meterCount}}u, .meter_values = {{meterValues}}u,
 {{/metered}}{{#tempo}}    .tempo = omx_{{kernel}}_core_tempo_v,
+{{/tempo}}{{^tempo}}    .tempo = omx_face_no_tempo,
 {{/tempo}}};
 
 static const struct omx_clap_face G_CLAP = OMX_CLAP_FACE(&G_FACE, G_FEATURES, OMX_{{K}}_CLAP_ID, OMX_{{K}}_NAME, OMX_{{K}}_VENDOR,
