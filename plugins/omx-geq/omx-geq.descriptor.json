@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:geq",
     "name": "omx geq",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The console's 31-band graphic EQ: one fader per ISO third-octave band from 20 Hz to 20 kHz, each cutting or boosting by up to 15 dB.",
     "features": [
       "audio-effect"

@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:ducker",
     "name": "omx ducker",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "Pulls the programme down while a key is heard, music under a voice, by a set depth with attack, hold and release, the console ducker.",
     "features": [
       "audio-effect"

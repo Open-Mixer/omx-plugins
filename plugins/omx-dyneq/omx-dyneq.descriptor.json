@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:dyneq",
     "name": "omx dyneq",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "A six-band dynamic EQ: each band is an EQ bell or shelf whose gain also moves with the level of its own band, cutting above a threshold (down) or lifting below it (up), held to a range, so a harsh or boomy band is tamed only while it is too loud.",
     "features": [
       "audio-effect"

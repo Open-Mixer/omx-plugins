@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:tremolo",
     "name": "omx tremolo",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The console's tremolo and auto-pan: one oscillator turned into a level change on both legs, or into a left-right pan.",
     "features": [
       "audio-effect"

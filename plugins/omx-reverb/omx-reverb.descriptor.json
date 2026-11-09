@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:reverb",
     "name": "omx reverb",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal.",
     "features": [
       "audio-effect"

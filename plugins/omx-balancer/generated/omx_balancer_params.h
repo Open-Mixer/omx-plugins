@@ -59,7 +59,7 @@ static const char *const OMX_BALANCER_PARAM_MODULES[OMX_BALANCER_PARAM_COUNT] = 
 #define OMX_BALANCER_NAME "omx balancer"
 #define OMX_BALANCER_VENDOR "openmixer"
 #define OMX_BALANCER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_BALANCER_VERSION "0.19.1"
+#define OMX_BALANCER_VERSION "0.19.2"
 #define OMX_BALANCER_DESCRIPTION "Walks four bands slowly toward a target tone, so a mix settles toward a pink-noise balance without chasing notes."
 #define OMX_BALANCER_CLAP_ID "org.openmixer.balancer"
 #define OMX_BALANCER_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
@@ -102,7 +102,7 @@ static const struct omx_panel_control_row OMX_BALANCER_PANEL_CONTROLS[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_BALANCER_PANEL_PAGES[] = {
-  { "Balancer", "Balancer", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_BALANCER_PANEL_PAGE_COUNT 1u
 static const struct omx_panel_rows OMX_BALANCER_PANEL = {

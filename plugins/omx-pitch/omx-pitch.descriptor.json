@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:pitch",
     "name": "omx pitch",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The console's pitch shifter: shifts both channels up or down by semitones and cents, without changing their length, mixed with the dry signal.",
     "features": [
       "audio-effect"

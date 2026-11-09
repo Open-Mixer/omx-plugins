@@ -15,7 +15,7 @@
 | C compiler, make, pkg-config | `gcc make pkgconf-pkg-config` | `build-essential pkgconf` | |
 | lilv | `lilv lilv-devel` | `lilv-utils liblilv-dev` | tests: the oracles' LV2 host, `lv2ls`, `lv2info` |
 | Node.js ≥ 18 | `nodejs` | `nodejs` | tests and `make gen`: the generators |
-| omx-panel ≥ 0.11.0 (the `omx-panel` command, `/usr/share/omx-panel`; `$OMX_PANEL_DIR` names another tree, `$OMX_PANEL` another command) | `omx-panel` (channel) | `omx-panel` (channel) | the panels: the layout every face serves and the MOD GUI of each plugin, from its descriptor and its declared panel |
+| omx-panel ≥ 0.11.1 (the `omx-panel` command, `/usr/share/omx-panel`; `$OMX_PANEL_DIR` names another tree, `$OMX_PANEL` another command) | `omx-panel` (channel) | `omx-panel` (channel) | the panels: the layout every face serves and the MOD GUI of each plugin, from its descriptor and its declared panel |
 | sord | `sord` | `sordi` | tests: `sord_validate` on the LV2 bundle |
 | omx-clap-host | `omx-clap-host` (channel) | `omx-clap-host` (channel) | tests: `omx-clap-scan` (the check says SKIP when it is absent; CI and the package builds install it) |
 

@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:deesser",
     "name": "omx deesser",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The console's de-esser: a detector on a band around the sibilance drives the compressor's gain computer, and the reduction lands on that band alone or on the whole signal.",
     "features": [
       "audio-effect"

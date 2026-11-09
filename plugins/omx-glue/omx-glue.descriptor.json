@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:glue",
     "name": "omx glue",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "A bus compressor with the detents of a classic console: stepped ratio, attack and release, a key filter and a dry mix.",
     "features": [
       "audio-effect"

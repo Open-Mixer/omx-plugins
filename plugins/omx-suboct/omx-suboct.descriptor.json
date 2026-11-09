@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:suboct",
     "name": "omx suboct",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "Adds a note one or two octaves below a single played line, by dividing its pitch, with a tracking range and a gate for quiet input.",
     "features": [
       "audio-effect"

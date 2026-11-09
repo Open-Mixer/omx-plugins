@@ -221,7 +221,7 @@ static const char *const OMX_GEQ_PARAM_MODULES[OMX_GEQ_PARAM_COUNT] = {
 #define OMX_GEQ_NAME "omx geq"
 #define OMX_GEQ_VENDOR "openmixer"
 #define OMX_GEQ_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_GEQ_VERSION "0.19.1"
+#define OMX_GEQ_VERSION "0.19.2"
 #define OMX_GEQ_DESCRIPTION "The console's 31-band graphic EQ: one fader per ISO third-octave band from 20 Hz to 20 kHz, each cutting or boosting by up to 15 dB."
 #define OMX_GEQ_CLAP_ID "org.openmixer.geq"
 #define OMX_GEQ_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
@@ -351,12 +351,13 @@ static const struct omx_panel_role_row OMX_GEQ_PANEL_ROLES[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_GEQ_PANEL_PAGES[] = {
-  { "Geq", "Geq 1", { 0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u } },
-  { "Geq", "Geq 2", { 8u, 9u, 10u, 11u, 12u, 13u, 14u, 15u } },
-  { "Geq", "Geq 3", { 16u, 17u, 18u, 19u, 20u, 21u, 22u, 23u } },
-  { "Geq", "Geq 4", { 24u, 25u, 26u, 27u, 28u, 29u, 30u, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 6u, 12u, 18u, 24u, 30u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Geq", "Geq: 25 Hz - 160 Hz", { 1u, 2u, 3u, 4u, 5u, 7u, 8u, 9u } },
+  { "Geq", "Geq: 200 Hz - 1.6 kHz", { 10u, 11u, 13u, 14u, 15u, 16u, 17u, 19u } },
+  { "Geq", "Geq: 2 kHz - 12.5 kHz", { 20u, 21u, 22u, 23u, 25u, 26u, 27u, 28u } },
+  { "Geq", "Geq: 16 kHz", { 29u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_GEQ_PANEL_PAGE_COUNT 4u
+#define OMX_GEQ_PANEL_PAGE_COUNT 5u
 static const struct omx_panel_rows OMX_GEQ_PANEL = {
   OMX_GEQ_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_EQ,
   OMX_GEQ_PANEL_SECTIONS, 1u,

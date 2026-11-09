@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:rotary",
     "name": "omx rotary",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The console's rotary speaker: a drum rotor on the low band and a horn rotor on the high band, with stop, slow and fast speeds, mixed with the dry signal.",
     "features": [
       "audio-effect"

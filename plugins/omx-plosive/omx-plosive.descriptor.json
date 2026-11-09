@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:plosive",
     "name": "omx plosive",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "Softens the p pops and hard t and k consonants of a voice, cutting each only while it bursts.",
     "features": [
       "audio-effect"

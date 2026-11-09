@@ -65,7 +65,7 @@ static const char *const OMX_SUBOCT_PARAM_MODULES[OMX_SUBOCT_PARAM_COUNT] = {
 #define OMX_SUBOCT_NAME "omx suboct"
 #define OMX_SUBOCT_VENDOR "openmixer"
 #define OMX_SUBOCT_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_SUBOCT_VERSION "0.19.1"
+#define OMX_SUBOCT_VERSION "0.19.2"
 #define OMX_SUBOCT_DESCRIPTION "Adds a note one or two octaves below a single played line, by dividing its pitch, with a tracking range and a gate for quiet input."
 #define OMX_SUBOCT_CLAP_ID "org.openmixer.suboct"
 #define OMX_SUBOCT_CLAP_FEATURES "audio-effect", "pitch-shifter", "stereo"
@@ -110,9 +110,10 @@ static const struct omx_panel_control_row OMX_SUBOCT_PANEL_CONTROLS[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_SUBOCT_PANEL_PAGES[] = {
-  { "Suboct", "Suboct", { 0u, 1u, 2u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Suboct", "Suboct", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_SUBOCT_PANEL_PAGE_COUNT 1u
+#define OMX_SUBOCT_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_SUBOCT_PANEL = {
   OMX_SUBOCT_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
   OMX_SUBOCT_PANEL_SECTIONS, 1u,

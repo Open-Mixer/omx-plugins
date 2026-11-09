@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:balancer",
     "name": "omx balancer",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "Walks four bands slowly toward a target tone, so a mix settles toward a pink-noise balance without chasing notes.",
     "features": [
       "audio-effect"

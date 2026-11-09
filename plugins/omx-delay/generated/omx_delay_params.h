@@ -173,7 +173,7 @@ static const char *const OMX_DELAY_PARAM_MODULES[OMX_DELAY_PARAM_COUNT] = {
 #define OMX_DELAY_NAME "omx delay"
 #define OMX_DELAY_VENDOR "openmixer"
 #define OMX_DELAY_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DELAY_VERSION "0.19.1"
+#define OMX_DELAY_VERSION "0.19.2"
 #define OMX_DELAY_DESCRIPTION "The OpenMixer console's stereo delay: one time, free or synced to the host's tempo, feedback through a tone filter, ping-pong, read taps, a tape or analog colour, a wet/dry mix and a duck under the input."
 #define OMX_DELAY_CLAP_ID "org.openmixer.delay"
 #define OMX_DELAY_CLAP_FEATURES "audio-effect", "delay", "stereo"
@@ -267,13 +267,14 @@ static const struct omx_panel_default_row OMX_DELAY_PANEL_DEFAULTS[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_DELAY_PANEL_PAGES[] = {
-  { "Delay", "Delay", { 4u, 0u, 1u, 3u, 2u, 19u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Delay", "Delay", { 4u, 19u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Tempo", "Tempo", { 17u, 18u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Taps", "Taps 1", { 5u, 6u, 7u, 8u, 9u, 10u, 11u, 12u } },
-  { "Taps", "Taps 2", { 13u, 14u, 15u, 16u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Taps", "Taps: Taps - Tap 3 Gain", { 5u, 6u, 7u, 8u, 9u, 10u, 11u, 12u } },
+  { "Taps", "Taps: Tap 3 Pan - Tap 4 Pan", { 13u, 14u, 15u, 16u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Duck", "Duck", { 20u, 21u, 22u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_DELAY_PANEL_PAGE_COUNT 5u
+#define OMX_DELAY_PANEL_PAGE_COUNT 6u
 static const struct omx_panel_rows OMX_DELAY_PANEL = {
   OMX_DELAY_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DELAY,
   OMX_DELAY_PANEL_SECTIONS, 4u,

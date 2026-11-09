@@ -287,7 +287,7 @@ static const char *const OMX_MBCOMP_PARAM_MODULES[OMX_MBCOMP_PARAM_COUNT] = {
 #define OMX_MBCOMP_NAME "omx multiband"
 #define OMX_MBCOMP_VENDOR "openmixer"
 #define OMX_MBCOMP_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_MBCOMP_VERSION "0.19.1"
+#define OMX_MBCOMP_VERSION "0.19.2"
 #define OMX_MBCOMP_DESCRIPTION "A multiband compressor: two to five bands split by Linkwitz-Riley crossovers, each band its own compressor with threshold, ratio, attack, release, make-up, solo and bypass, then a mix and an output gain, for in-ear mixes, vocals and playback buses."
 #define OMX_MBCOMP_CLAP_ID "org.openmixer.multiband"
 #define OMX_MBCOMP_CLAP_FEATURES "audio-effect", "compressor", "stereo"
@@ -422,15 +422,16 @@ static const struct omx_panel_role_row OMX_MBCOMP_PANEL_ROLES[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_MBCOMP_PANEL_PAGES[] = {
+  { "Easy", "Easy", { 5u, 25u, 40u, 15u, 20u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Split", "Split", { 0u, 1u, 2u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Band 1", "Band 1", { 5u, 10u, 15u, 20u, 25u, 30u, 35u, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Band 1", "Band 1", { 10u, 30u, 35u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Band 2", "Band 2", { 6u, 11u, 16u, 21u, 26u, 31u, 36u, OMX_CLAP_PANEL_INVALID_ID } },
   { "Band 3", "Band 3", { 7u, 12u, 17u, 22u, 27u, 32u, 37u, OMX_CLAP_PANEL_INVALID_ID } },
   { "Band 4", "Band 4", { 8u, 13u, 18u, 23u, 28u, 33u, 38u, OMX_CLAP_PANEL_INVALID_ID } },
   { "Band 5", "Band 5", { 9u, 14u, 19u, 24u, 29u, 34u, 39u, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Output", "Output", { 40u, 41u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Output", "Output", { 41u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_MBCOMP_PANEL_PAGE_COUNT 7u
+#define OMX_MBCOMP_PANEL_PAGE_COUNT 8u
 static const struct omx_panel_rows OMX_MBCOMP_PANEL = {
   OMX_MBCOMP_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DYNAMICS,
   OMX_MBCOMP_PANEL_SECTIONS, 7u,

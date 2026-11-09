@@ -71,7 +71,7 @@ static const char *const OMX_PHASER_PARAM_MODULES[OMX_PHASER_PARAM_COUNT] = {
 #define OMX_PHASER_NAME "omx phaser"
 #define OMX_PHASER_VENDOR "openmixer"
 #define OMX_PHASER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_PHASER_VERSION "0.19.1"
+#define OMX_PHASER_VERSION "0.19.2"
 #define OMX_PHASER_DESCRIPTION "The console's phaser: identical all-pass sections swept in octaves by one oscillator, with feedback around the chain and a wet/dry mix."
 #define OMX_PHASER_CLAP_ID "org.openmixer.phaser"
 #define OMX_PHASER_CLAP_FEATURES "audio-effect", "phaser", "stereo"
@@ -124,9 +124,10 @@ static const struct omx_panel_role_row OMX_PHASER_PANEL_ROLES[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_PHASER_PANEL_PAGES[] = {
-  { "Phaser", "Phaser", { 0u, 1u, 2u, 3u, 4u, 5u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 2u, 4u, 5u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Phaser", "Phaser", { 1u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_PHASER_PANEL_PAGE_COUNT 1u
+#define OMX_PHASER_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_PHASER_PANEL = {
   OMX_PHASER_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_MODULATION,
   OMX_PHASER_PANEL_SECTIONS, 1u,

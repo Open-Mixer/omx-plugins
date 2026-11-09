@@ -101,7 +101,7 @@ static const char *const OMX_DRIVE_PARAM_MODULES[OMX_DRIVE_PARAM_COUNT] = {
 #define OMX_DRIVE_NAME "omx drive"
 #define OMX_DRIVE_VENDOR "openmixer"
 #define OMX_DRIVE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DRIVE_VERSION "0.19.1"
+#define OMX_DRIVE_VERSION "0.19.2"
 #define OMX_DRIVE_DESCRIPTION "The console's drive: one waveshaper (soft, tape, tube or exciter) run inside the console's oversampler, on the full band, the lows, the highs or a tilt, with a wet/dry mix and a trim."
 #define OMX_DRIVE_CLAP_ID "org.openmixer.drive"
 #define OMX_DRIVE_CLAP_FEATURES "audio-effect", "distortion", "stereo"
@@ -168,8 +168,8 @@ static const struct omx_panel_display_row OMX_DRIVE_PANEL_DISPLAYS[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_DRIVE_PANEL_PAGES[] = {
-  { "Drive", "Drive 1", { 5u, 6u, 9u, 10u, 0u, 1u, 2u, 3u } },
-  { "Drive", "Drive 2", { 4u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 5u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Drive", "Drive", { 6u, 9u, 10u, 2u, 4u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_DRIVE_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_DRIVE_PANEL = {

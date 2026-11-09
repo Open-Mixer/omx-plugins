@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:upward",
     "name": "omx upward",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "Lifts what is quiet toward a threshold, by a ratio and up to a limit, and leaves the loud alone.",
     "features": [
       "audio-effect"
