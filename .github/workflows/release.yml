@@ -5,7 +5,7 @@ name: release
 # A version tag builds omx-plugins-clap and omx-plugins-lv2 as RPMs (Fedora 44, x86_64 and aarch64) and
 # DEBs (bookworm and trixie, amd64 and arm64), signs them, publishes them into the rpm/ and deb/ trees of
 # the FreeMixer Pages repository and attaches them to the GitHub release, with the trixie arm64 DEBs
-# repacked as a Zynthian tarball beside them. Anything else builds unsigned trees and publishes nothing. Everything is in FreeMixer/.github; the secrets are the organisation's.
+# repacked as a Zynthian tarball beside them. Anything else builds unsigned trees and publishes nothing. Everything is in Open-Mixer/.github; the secrets are the organisation's.
 # The build dependencies the distributions do not carry (omx-dsp-devel, omx-clap-core-devel,
 # omx-clap-host) come from the FreeMixer channel, inside the build containers only.
 # Nothing is built for release before every plugin has a suitable real-time-safety verdict (the qualify job).
@@ -56,12 +56,12 @@ jobs:
         run: dnf install -y --setopt=install_weak_deps=False git dnf5-plugins nodejs
 
       - name: Add the OpenMixer repository
-        uses: FreeMixer/.github/.github/actions/add-openmixer@v1
+        uses: Open-Mixer/.github/.github/actions/add-openmixer@main
 
       - uses: actions/checkout@v4
 
-      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until FreeMixer/.github moves v1 past it
-      - uses: FreeMixer/.github/.github/actions/wave-deps@main
+      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
+      - uses: Open-Mixer/.github/.github/actions/wave-deps@main
 
       - name: Install the build dependencies and the prober
         run: |
@@ -84,7 +84,7 @@ jobs:
 
   rpm:
     needs: qualify
-    uses: FreeMixer/.github/.github/workflows/build-rpm.yml@v1
+    uses: Open-Mixer/.github/.github/workflows/build-rpm.yml@main
     with:
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
@@ -99,7 +99,7 @@ jobs:
   deb:
     needs: rpm
     if: ${{ !cancelled() && needs.rpm.result == 'success' }}
-    uses: FreeMixer/.github/.github/workflows/build-deb.yml@v1
+    uses: Open-Mixer/.github/.github/workflows/build-deb.yml@main
     with:
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
