@@ -47,7 +47,9 @@ check() {
     fi
   done
   for s in $ships; do
-    if [ -z "$(find "$stage" -name "$s.clap" | head -1)" ]; then echo "FAIL test-role: shipped plugin $s is not installed"; bad=$((bad + 1)); fi
+    # a face with no CLAP source (omx-fbs, omx-hrp: LV2 only until omx-clap-core has a worker hook) is installed as its bundle
+    if compgen -G "$HERE/plugins/$s/omx_*_clap.c" >/dev/null; then want="$s.clap"; kind=clap; else want="$s.lv2"; kind=lv2; fi
+    if [ -z "$(find "$stage" -name "$want" | head -1)" ]; then echo "FAIL test-role: shipped plugin $s is not installed (its $kind face)"; bad=$((bad + 1)); fi
   done
   return "$bad"
 }
@@ -63,7 +65,13 @@ if [ "${1:-}" = --self-test ]; then
   cc -c -o "$scratch/faces.o" "$scratch/faces.c" && ar rcs "$scratch/full.a" "$scratch/faces.o"
   grep -v "omx_clap_entry_$k1 " "$scratch/faces.c" > "$scratch/short.c" || true
   cc -c -o "$scratch/short.o" "$scratch/short.c" && ar rcs "$scratch/short.a" "$scratch/short.o"
-  good() { rm -rf "$scratch/stage" && mkdir -p "$scratch/stage/usr/lib/clap" && for s in $ships; do : > "$scratch/stage/usr/lib/clap/$s.clap"; done; }
+  # a right stage: each shipped plugin's .clap, and for a face with no CLAP source (LV2 only) its bundle
+  good() {
+    rm -rf "$scratch/stage" && mkdir -p "$scratch/stage/usr/lib/clap" "$scratch/stage/usr/lib64/lv2" || return 1
+    for s in $ships; do
+      if compgen -G "$HERE/plugins/$s/omx_*_clap.c" >/dev/null; then : > "$scratch/stage/usr/lib/clap/$s.clap"; else mkdir -p "$scratch/stage/usr/lib64/lv2/$s.lv2"; fi
+    done
+  }
   fail=0
   arm() { # <name> <want 0|1> <archive>
     local rc=0 out
@@ -80,6 +88,8 @@ if [ "${1:-}" = --self-test ]; then
   good; : > "$scratch/stage/usr/lib/clap/$t1.clap"; arm "a test plugin's .clap installed" 1 "$scratch/full.a"
   good; mkdir -p "$scratch/stage/usr/lib64/lv2/$t1.lv2"; arm "a test plugin's .lv2 installed" 1 "$scratch/full.a"
   good; rm -f "$scratch/stage/usr/lib/clap/$s1.clap"; arm "a shipped plugin not installed" 1 "$scratch/full.a"
+  for s in $ships; do compgen -G "$HERE/plugins/$s/omx_*_clap.c" >/dev/null || { l1=$s; break; }; done
+  if [ -n "${l1:-}" ]; then good; rmdir "$scratch/stage/usr/lib64/lv2/$l1.lv2"; arm "an LV2-only plugin's bundle not installed" 1 "$scratch/full.a"; fi
   good; arm "a test face missing from the archive" 1 "$scratch/short.a"
   exit "$fail"
 fi
