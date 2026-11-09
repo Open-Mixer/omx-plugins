@@ -32,6 +32,7 @@ jobs:
     timeout-minutes: 5
     outputs:
       packages: ${{ steps.diff.outputs.packages }}
+      machinery: ${{ steps.diff.outputs.machinery }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -46,9 +47,12 @@ jobs:
           set -euo pipefail
           if [ "$EVENT" != pull_request ] || ! changed=$(git diff --name-only HEAD^1 HEAD) || [ -z "$changed" ]; then
             echo "packages=true" >> "$GITHUB_OUTPUT"
+            echo "machinery=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           printf '%s\n' "$changed"
+          # the recipe selftest (about 80 minutes) runs when the change can move it: tools/ci-scope.sh
+          tools/ci-scope.sh <<<"$changed" >> "$GITHUB_OUTPUT"
           if grep -qvE '^(fuzz/|bench/|[^/]*\.md$|LICENSE$)' <<<"$changed"; then
             echo "packages=true" >> "$GITHUB_OUTPUT"
           else
@@ -147,6 +151,8 @@ jobs:
     # Its own job, beside make test: the two together outgrew one job's 30 minutes once the chain and the
     # compressor landed. Same container and dependencies; nothing is dropped.
     name: make selftest (fedora:44, amd64)
+    needs: changes
+    if: needs.changes.outputs.machinery == 'true'
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
     container:
