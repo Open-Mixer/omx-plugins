@@ -67,7 +67,7 @@ jobs:
           dnf install -y --setopt=install_weak_deps=False git dnf5-plugins
 
       - name: Add the OpenMixer repository
-        uses: FreeMixer/.github/.github/actions/add-openmixer@v1
+        uses: Open-Mixer/.github/.github/actions/add-openmixer@main
 
       - uses: actions/checkout@v4
         with:
@@ -76,8 +76,8 @@ jobs:
       - name: The checkout is a git directory this job may read
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until FreeMixer/.github moves v1 past it
-      - uses: FreeMixer/.github/.github/actions/wave-deps@main
+      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
+      - uses: Open-Mixer/.github/.github/actions/wave-deps@main
 
       - name: Install what the spec builds and tests with
         run: |
@@ -101,11 +101,11 @@ jobs:
 
       - name: Every file a comment can be written in opens with its licence
         id: handback-spdx
-        uses: FreeMixer/.github/.github/actions/spdx-check@c67b6d0e09fd9f7cf9a8dd24ff41ea30d99f893c
+        uses: Open-Mixer/.github/.github/actions/spdx-check@c67b6d0e09fd9f7cf9a8dd24ff41ea30d99f893c
 
       - name: No tracked file points into a private repository
         id: handback-private-refs
-        uses: FreeMixer/.github/.github/actions/private-refs-check@v1
+        uses: Open-Mixer/.github/.github/actions/private-refs-check@main
 
 
       - name: No source carries a copy of a function omx-dsp exports, and a planted copy goes red
@@ -157,7 +157,7 @@ jobs:
           dnf install -y --setopt=install_weak_deps=False git dnf5-plugins
 
       - name: Add the OpenMixer repository
-        uses: FreeMixer/.github/.github/actions/add-openmixer@v1
+        uses: Open-Mixer/.github/.github/actions/add-openmixer@main
 
       - uses: actions/checkout@v4
         with:
@@ -166,8 +166,8 @@ jobs:
       - name: The checkout is a git directory this job may read
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
-      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until FreeMixer/.github moves v1 past it
-      - uses: FreeMixer/.github/.github/actions/wave-deps@main
+      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
+      - uses: Open-Mixer/.github/.github/actions/wave-deps@main
 
       - name: Install what the spec builds and tests with
         run: |
@@ -196,16 +196,16 @@ jobs:
           dnf install -y --setopt=install_weak_deps=False git rpm-build dnf5-plugins gcc make tar gzip diffutils
 
       - name: Add the OpenMixer repository
-        uses: FreeMixer/.github/.github/actions/add-openmixer@v1
+        uses: Open-Mixer/.github/.github/actions/add-openmixer@main
 
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until FreeMixer/.github moves v1 past it
-      - uses: FreeMixer/.github/.github/actions/wave-deps@main
+      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
+      - uses: Open-Mixer/.github/.github/actions/wave-deps@main
 
-      - uses: FreeMixer/.github/.github/actions/build-rpm@v1
+      - uses: Open-Mixer/.github/.github/actions/build-rpm@main
 
       - name: Check the file lists
         run: |
@@ -368,17 +368,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: FreeMixer/.github/.github/actions/deb-deps@v1
+      - uses: Open-Mixer/.github/.github/actions/deb-deps@main
         with:
           names: clap-headers
 
       - name: Take build dependencies from the OpenMixer channel
-        uses: FreeMixer/.github/.github/actions/add-openmixer@v1
+        uses: Open-Mixer/.github/.github/actions/add-openmixer@main
 
-      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until FreeMixer/.github moves v1 past it
-      - uses: FreeMixer/.github/.github/actions/wave-deps@main
+      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
+      - uses: Open-Mixer/.github/.github/actions/wave-deps@main
 
-      - uses: FreeMixer/.github/.github/actions/build-deb@v1
+      - uses: Open-Mixer/.github/.github/actions/build-deb@main
 
       - name: The packages install and their plugins load
         run: |
@@ -464,12 +464,12 @@ jobs:
           dnf install -y --setopt=install_weak_deps=False git dnf5-plugins
 
       - name: Add the OpenMixer repository
-        uses: FreeMixer/.github/.github/actions/add-openmixer@v1
+        uses: Open-Mixer/.github/.github/actions/add-openmixer@main
 
       - uses: actions/checkout@v4
 
-      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until FreeMixer/.github moves v1 past it
-      - uses: FreeMixer/.github/.github/actions/wave-deps@main
+      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
+      - uses: Open-Mixer/.github/.github/actions/wave-deps@main
 
       - name: Install what the spec builds with, and clap-validator from the Audinux COPR
         run: |
@@ -528,4 +528,4 @@ jobs:
   # The shared checks on what this repository publishes: a pull request's own commits carry no attribution line, no
   # tracked file points into a private repository, and no local copy of these checks is kept.
   public-sources:
-    uses: FreeMixer/.github/.github/workflows/public-sources-check.yml@v1
+    uses: Open-Mixer/.github/.github/workflows/public-sources-check.yml@main
