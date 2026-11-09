@@ -1,0 +1,2239 @@
+{
+  "$schema": "https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json",
+  "requires": {
+    "omx-contract-schema": ">= 3.7.0"
+  },
+  "origin": "authored",
+  "plugin": {
+    "id": "urn:openmixer:fbs",
+    "format": "lv2",
+    "uri": "urn:openmixer:fbs",
+    "name": "omx fbs",
+    "vendor": "openmixer",
+    "version": "0.19.1",
+    "doc": "The feedback corrector: finds the frequencies that ring in a mono signal and plants a notch on each, reporting each as a band.",
+    "features": [
+      "audio-effect"
+    ]
+  },
+  "controls": [
+    {
+      "id": 0,
+      "symbol": "mode",
+      "name": "Mode",
+      "kind": "choice",
+      "ids": [
+        "cut",
+        "report"
+      ],
+      "labels": [
+        "Cut",
+        "Report"
+      ],
+      "default": "cut",
+      "group": [
+        "Controls"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/fbs.json#FBS_MODES",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 1,
+      "symbol": "pool",
+      "name": "Pool",
+      "kind": "choice",
+      "ids": [
+        "fixed",
+        "live"
+      ],
+      "labels": [
+        "Fixed",
+        "Live"
+      ],
+      "default": "live",
+      "group": [
+        "Controls"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/fbs.json#FBS_POOLS",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "symbol": "hold",
+      "name": "Hold",
+      "kind": "travel",
+      "travel": {
+        "min": 1,
+        "max": 300,
+        "step": 1,
+        "unit": "s",
+        "default": 5,
+        "scale": "linear"
+      },
+      "group": [
+        "Controls"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/fbs.json#FBS_HOLD_RANGE",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "symbol": "bands",
+      "name": "Bands",
+      "kind": "travel",
+      "travel": {
+        "min": 1,
+        "max": 24,
+        "step": 1,
+        "unit": "",
+        "default": 6,
+        "scale": "linear"
+      },
+      "group": [
+        "Controls"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/fbs.json#FBS_BANDS_RANGE",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "symbol": "merge",
+      "name": "Merge",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 600,
+        "step": 1,
+        "unit": "cents",
+        "default": 100,
+        "scale": "linear"
+      },
+      "group": [
+        "Controls"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/fbs.json#FBS_MERGE_RANGE",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "symbol": "cooldown",
+      "name": "Cooldown",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 7200,
+        "step": 1,
+        "unit": "s",
+        "default": 600,
+        "scale": "linear"
+      },
+      "group": [
+        "Controls"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/fbs.json#FBS_COOLDOWN_RANGE",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "symbol": "analysing",
+      "name": "Analysing",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "Set once a worker has answered a pass: a host with no worker gets audio passed untouched, nothing corrected, and this stays 0.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 7,
+      "symbol": "band1_freq",
+      "name": "Band 1 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 8,
+      "symbol": "band1_depth",
+      "name": "Band 1 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 9,
+      "symbol": "band1_q",
+      "name": "Band 1 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 10,
+      "symbol": "band1_on",
+      "name": "Band 1 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 11,
+      "symbol": "band2_freq",
+      "name": "Band 2 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 12,
+      "symbol": "band2_depth",
+      "name": "Band 2 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 13,
+      "symbol": "band2_q",
+      "name": "Band 2 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 14,
+      "symbol": "band2_on",
+      "name": "Band 2 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 15,
+      "symbol": "band3_freq",
+      "name": "Band 3 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 16,
+      "symbol": "band3_depth",
+      "name": "Band 3 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 17,
+      "symbol": "band3_q",
+      "name": "Band 3 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 18,
+      "symbol": "band3_on",
+      "name": "Band 3 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 19,
+      "symbol": "band4_freq",
+      "name": "Band 4 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 20,
+      "symbol": "band4_depth",
+      "name": "Band 4 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 21,
+      "symbol": "band4_q",
+      "name": "Band 4 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 22,
+      "symbol": "band4_on",
+      "name": "Band 4 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 23,
+      "symbol": "band5_freq",
+      "name": "Band 5 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 24,
+      "symbol": "band5_depth",
+      "name": "Band 5 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 25,
+      "symbol": "band5_q",
+      "name": "Band 5 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 26,
+      "symbol": "band5_on",
+      "name": "Band 5 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 27,
+      "symbol": "band6_freq",
+      "name": "Band 6 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 28,
+      "symbol": "band6_depth",
+      "name": "Band 6 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 29,
+      "symbol": "band6_q",
+      "name": "Band 6 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 30,
+      "symbol": "band6_on",
+      "name": "Band 6 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 31,
+      "symbol": "band7_freq",
+      "name": "Band 7 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 32,
+      "symbol": "band7_depth",
+      "name": "Band 7 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 33,
+      "symbol": "band7_q",
+      "name": "Band 7 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 34,
+      "symbol": "band7_on",
+      "name": "Band 7 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 35,
+      "symbol": "band8_freq",
+      "name": "Band 8 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 36,
+      "symbol": "band8_depth",
+      "name": "Band 8 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 37,
+      "symbol": "band8_q",
+      "name": "Band 8 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 38,
+      "symbol": "band8_on",
+      "name": "Band 8 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 39,
+      "symbol": "band9_freq",
+      "name": "Band 9 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 40,
+      "symbol": "band9_depth",
+      "name": "Band 9 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 41,
+      "symbol": "band9_q",
+      "name": "Band 9 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 42,
+      "symbol": "band9_on",
+      "name": "Band 9 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 43,
+      "symbol": "band10_freq",
+      "name": "Band 10 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 44,
+      "symbol": "band10_depth",
+      "name": "Band 10 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 45,
+      "symbol": "band10_q",
+      "name": "Band 10 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 46,
+      "symbol": "band10_on",
+      "name": "Band 10 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 47,
+      "symbol": "band11_freq",
+      "name": "Band 11 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 48,
+      "symbol": "band11_depth",
+      "name": "Band 11 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 49,
+      "symbol": "band11_q",
+      "name": "Band 11 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 50,
+      "symbol": "band11_on",
+      "name": "Band 11 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 51,
+      "symbol": "band12_freq",
+      "name": "Band 12 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 52,
+      "symbol": "band12_depth",
+      "name": "Band 12 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 53,
+      "symbol": "band12_q",
+      "name": "Band 12 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 54,
+      "symbol": "band12_on",
+      "name": "Band 12 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 55,
+      "symbol": "band13_freq",
+      "name": "Band 13 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 56,
+      "symbol": "band13_depth",
+      "name": "Band 13 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 57,
+      "symbol": "band13_q",
+      "name": "Band 13 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 58,
+      "symbol": "band13_on",
+      "name": "Band 13 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 59,
+      "symbol": "band14_freq",
+      "name": "Band 14 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 60,
+      "symbol": "band14_depth",
+      "name": "Band 14 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 61,
+      "symbol": "band14_q",
+      "name": "Band 14 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 62,
+      "symbol": "band14_on",
+      "name": "Band 14 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 63,
+      "symbol": "band15_freq",
+      "name": "Band 15 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 64,
+      "symbol": "band15_depth",
+      "name": "Band 15 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 65,
+      "symbol": "band15_q",
+      "name": "Band 15 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 66,
+      "symbol": "band15_on",
+      "name": "Band 15 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 67,
+      "symbol": "band16_freq",
+      "name": "Band 16 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 68,
+      "symbol": "band16_depth",
+      "name": "Band 16 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 69,
+      "symbol": "band16_q",
+      "name": "Band 16 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 70,
+      "symbol": "band16_on",
+      "name": "Band 16 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 71,
+      "symbol": "band17_freq",
+      "name": "Band 17 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 72,
+      "symbol": "band17_depth",
+      "name": "Band 17 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 73,
+      "symbol": "band17_q",
+      "name": "Band 17 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 74,
+      "symbol": "band17_on",
+      "name": "Band 17 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 75,
+      "symbol": "band18_freq",
+      "name": "Band 18 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 76,
+      "symbol": "band18_depth",
+      "name": "Band 18 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 77,
+      "symbol": "band18_q",
+      "name": "Band 18 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 78,
+      "symbol": "band18_on",
+      "name": "Band 18 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 79,
+      "symbol": "band19_freq",
+      "name": "Band 19 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 80,
+      "symbol": "band19_depth",
+      "name": "Band 19 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 81,
+      "symbol": "band19_q",
+      "name": "Band 19 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 82,
+      "symbol": "band19_on",
+      "name": "Band 19 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 83,
+      "symbol": "band20_freq",
+      "name": "Band 20 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 84,
+      "symbol": "band20_depth",
+      "name": "Band 20 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 85,
+      "symbol": "band20_q",
+      "name": "Band 20 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 86,
+      "symbol": "band20_on",
+      "name": "Band 20 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 87,
+      "symbol": "band21_freq",
+      "name": "Band 21 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 88,
+      "symbol": "band21_depth",
+      "name": "Band 21 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 89,
+      "symbol": "band21_q",
+      "name": "Band 21 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 90,
+      "symbol": "band21_on",
+      "name": "Band 21 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 91,
+      "symbol": "band22_freq",
+      "name": "Band 22 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 92,
+      "symbol": "band22_depth",
+      "name": "Band 22 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 93,
+      "symbol": "band22_q",
+      "name": "Band 22 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 94,
+      "symbol": "band22_on",
+      "name": "Band 22 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 95,
+      "symbol": "band23_freq",
+      "name": "Band 23 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 96,
+      "symbol": "band23_depth",
+      "name": "Band 23 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 97,
+      "symbol": "band23_q",
+      "name": "Band 23 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 98,
+      "symbol": "band23_on",
+      "name": "Band 23 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 99,
+      "symbol": "band24_freq",
+      "name": "Band 24 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 100,
+      "symbol": "band24_depth",
+      "name": "Band 24 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 101,
+      "symbol": "band24_q",
+      "name": "Band 24 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    },
+    {
+      "id": 102,
+      "symbol": "band24_on",
+      "name": "Band 24 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-fbs/omx_fbs_lv2.c#fbs_connect_port"
+      }
+    }
+  ],
+  "ports": [
+    {
+      "id": 0,
+      "name": "in",
+      "kind": "audio",
+      "direction": "in",
+      "role": "main",
+      "channels": 1,
+      "layout": "mono"
+    },
+    {
+      "id": 0,
+      "name": "out",
+      "kind": "audio",
+      "direction": "out",
+      "role": "main",
+      "channels": 1,
+      "layout": "mono"
+    }
+  ],
+  "needs": {
+    "extensions": {
+      "optional": [
+        "lv2:hardRTCapable",
+        "<http://lv2plug.in/ns/ext/worker#schedule>"
+      ]
+    }
+  },
+  "latency": {
+    "reports": false
+  },
+  "extensions": {
+    "lv2": {
+      "rdf:type": [
+        "lv2:Plugin"
+      ]
+    }
+  },
+  "source": {
+    "impl": "plugins/omx-fbs/omx_fbs_lv2.c#lv2_descriptor"
+  }
+}
