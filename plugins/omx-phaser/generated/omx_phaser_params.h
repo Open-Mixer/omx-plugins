@@ -122,7 +122,8 @@ static const struct omx_panel_role_row OMX_PHASER_PANEL_ROLES[] = {
   { "feedback", 0u, 4u },
   { "mix", 0u, 5u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_PHASER_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 2u, 4u, 5u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Phaser", "Phaser", { 1u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },

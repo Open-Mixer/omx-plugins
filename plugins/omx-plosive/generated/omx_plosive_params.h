@@ -140,7 +140,8 @@ static const struct omx_panel_control_row OMX_PLOSIVE_PANEL_CONTROLS[] = {
   { 7u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.plosive.pop_recovery_ms", "Pop Recovery", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 8u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.plosive.pop_hz", "Pop Corner", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_PLOSIVE_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Plosive", "Plosive", { 4u, 5u, 6u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },

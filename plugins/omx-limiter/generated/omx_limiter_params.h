@@ -97,7 +97,8 @@ static const struct omx_panel_role_row OMX_LIMITER_PANEL_ROLES[] = {
   { "release", 0u, 2u },
   { "lookahead", 0u, 1u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_LIMITER_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 2u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };

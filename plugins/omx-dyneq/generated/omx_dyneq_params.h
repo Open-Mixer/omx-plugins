@@ -698,7 +698,8 @@ static const struct omx_panel_display_row OMX_DYNEQ_PANEL_DISPLAYS[] = {
   { OMX_CLAP_DISPLAY_EQ_RESPONSE, 4u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.dyneq.display.eq_response", "Band 5" },
   { OMX_CLAP_DISPLAY_EQ_RESPONSE, 5u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.dyneq.display.eq_response", "Band 6" },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DYNEQ_PANEL_PAGES[] = {
   { "Easy", "Easy", { 18u, 19u, 20u, 21u, 22u, 23u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Band 1", "Band 1: Band 1 On - Band 1 Range", { 0u, 6u, 12u, 24u, 30u, 36u, 42u, 48u } },

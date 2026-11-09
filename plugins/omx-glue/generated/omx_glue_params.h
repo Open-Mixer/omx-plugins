@@ -132,7 +132,8 @@ static const struct omx_panel_control_row OMX_GLUE_PANEL_CONTROLS[] = {
   { 6u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.glue.mix_pct", "Mix", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 7u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.glue.detector_topology", "Detector Topology", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_GLUE_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Glue", "Glue", { 4u, 5u, 6u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },

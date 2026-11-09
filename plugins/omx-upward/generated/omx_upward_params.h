@@ -108,7 +108,8 @@ static const struct omx_panel_control_row OMX_UPWARD_PANEL_CONTROLS[] = {
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.upward.attack_ms", "Attack", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 4u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.upward.release_ms", "Release", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_UPWARD_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Upward", "Upward", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },

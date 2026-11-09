@@ -349,7 +349,8 @@ static const struct omx_panel_role_row OMX_GEQ_PANEL_ROLES[] = {
   { "band_gain", 29u, 29u },
   { "band_gain", 30u, 30u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_GEQ_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 6u, 12u, 18u, 24u, 30u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Geq", "Geq: 25 Hz - 160 Hz", { 1u, 2u, 3u, 4u, 5u, 7u, 8u, 9u } },

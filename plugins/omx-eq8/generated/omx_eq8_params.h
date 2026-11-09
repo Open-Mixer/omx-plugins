@@ -493,7 +493,8 @@ static const struct omx_panel_role_row OMX_EQ8_PANEL_ROLES[] = {
 static const struct omx_panel_display_row OMX_EQ8_PANEL_DISPLAYS[] = {
   { OMX_CLAP_DISPLAY_EQ_RESPONSE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.eq.display.eq_response", "Bands" },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_EQ8_PANEL_PAGES[] = {
   { "Easy", "Easy", { 8u, 13u, 23u, 28u, 38u, 43u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Bands", "Bands: Band 1 On - Band 2 Q", { 10u, 6u, 7u, 9u, 15u, 11u, 12u, 14u } },

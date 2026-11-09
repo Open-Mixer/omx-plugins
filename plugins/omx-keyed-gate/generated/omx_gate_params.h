@@ -180,7 +180,8 @@ static const struct omx_panel_role_row OMX_GATE_PANEL_ROLES[] = {
 static const struct omx_panel_display_row OMX_GATE_PANEL_DISPLAYS[] = {
   { OMX_CLAP_DISPLAY_TRANSFER_CURVE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.gate.display.transfer_curve", "Gate" },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_GATE_PANEL_PAGES[] = {
   { "Easy", "Easy", { 1u, 3u, 4u, 5u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Gate", "Gate", { 2u, 8u, 9u, 6u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },

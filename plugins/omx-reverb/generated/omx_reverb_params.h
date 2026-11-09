@@ -188,7 +188,8 @@ static const struct omx_panel_role_row OMX_REVERB_PANEL_ROLES[] = {
 static const struct omx_panel_default_row OMX_REVERB_PANEL_DEFAULTS[] = {
   { OMX_CLAP_PLACEMENT_RETURN, 1u, 1 },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_REVERB_PANEL_PAGES[] = {
   { "Easy", "Easy", { 2u, 3u, 1u, 12u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Reverb", "Reverb", { 5u, 4u, 6u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },

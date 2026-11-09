@@ -166,7 +166,8 @@ static const struct omx_panel_role_row OMX_DRIVE_PANEL_ROLES[] = {
 static const struct omx_panel_display_row OMX_DRIVE_PANEL_DISPLAYS[] = {
   { OMX_CLAP_DISPLAY_TRANSFER_CURVE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.drive.display.transfer_curve", "Drive" },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DRIVE_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 1u, 5u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Drive", "Drive", { 6u, 9u, 10u, 2u, 4u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID } },
