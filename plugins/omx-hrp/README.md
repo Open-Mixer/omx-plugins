@@ -13,18 +13,8 @@ read-only: frequency, depth, Q and on, four per slot, `OMX_HRP_LV2_MAX_BANDS` sl
 
 ## Building
 
-The live-shell API (`omx_band_report.h`, `omx_live_shell.h`, the `report`/`mode`/`analysing`
-members of `omx_hrp_lv2.h`) is not yet in a released omx-dsp -- 0.19.1 here is served against
-omx-dsp 0.31.0, which predates it. It lives on `FreeMixer/omx-dsp@feat/curve-marks` (merged PRs
-#305 "rt-gate" and #306 "fbs, hrp: live-shell cores", sha `77b3c6b05193b5851217fb63e27c82e0e68e9936`
-at the time this was built). Point the build at a clone of that branch; never vendor its headers
-into this repo:
-
-```
-git clone -b feat/curve-marks git@github.com:FreeMixer/omx-dsp.git /path/to/omx-dsp
-make -C /path/to/omx-dsp lib
-make test OMXDSP_INC=/path/to/omx-dsp/include OMXDSP_LIB=/path/to/omx-dsp/build/libomxdsp.a
-```
+The live-shell API (`omx_band_report.h`, `omx_live_shell.h`, `omx_hrp_lv2.h`) is in omx-dsp 0.32, the floor
+`packaging/omx-plugins.spec` declares. `make test` builds against the installed omx-dsp (`pkg-config omxdsp`).
 
 ## Not yet done
 

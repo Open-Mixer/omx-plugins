@@ -6,21 +6,20 @@
 # is hand-written C over omx-dsp's live-shell header rather than the generated faces the other
 # plugins share (lib/omx_lv2_face.c has no worker support yet).
 #
-# Build deps: omx-dsp's live-shell API (omx_hrp_lv2.h, omx_band_report.h, omx_live_shell.h),
-# which is NOT YET in a released omx-dsp (0.31.0 is served; this needs
-# FreeMixer/omx-dsp@feat/curve-marks, merged PRs #305 and #306, sha 77b3c6b). Point OMXDSP_INC at
-# a clone of that branch's include/ and OMXDSP_LIB at its built build/libomxdsp.a (`make lib` in
-# that tree); never vendor the headers into this repo.
-#
-#   make test   build and run the report/live-set oracle
+# Build deps: omx-dsp (pkg-config omxdsp, >= OMXDSP_MIN, the floor packaging/omx-plugins.spec declares: the
+# live-shell header omx_hrp_lv2.h is in its 0.32), lv2.
 
-OMXDSP_INC ?= $(error set OMXDSP_INC to <clone of omx-dsp@feat/curve-marks sha 77b3c6b>/include)
-OMXDSP_LIB ?= $(error set OMXDSP_LIB to <that clone>/build/libomxdsp.a)
+OMXDSP_MIN ?= 0.32.0
+PKG_CONFIG ?= pkg-config
+ifeq ($(shell $(PKG_CONFIG) --atleast-version=$(OMXDSP_MIN) omxdsp && echo y),)
+$(error omx-dsp >= $(OMXDSP_MIN) is required (packaging/omx-plugins.spec); `$(PKG_CONFIG) omxdsp` finds $(or $(shell $(PKG_CONFIG) --modversion omxdsp 2>/dev/null),none): install omx-dsp-devel or libomxdsp-dev from the channel (BUILDING.md))
+endif
 
 CC     ?= cc
 CFLAGS ?= -O0 -g
 WARN   := -std=gnu11 -Wall -Wextra -Werror
-INC    := -I$(OMXDSP_INC) $(shell pkg-config --cflags lv2 2>/dev/null)
+INC    := $(shell $(PKG_CONFIG) --cflags omxdsp) $(shell $(PKG_CONFIG) --cflags lv2 2>/dev/null)
+DSP_LIBS := $(shell $(PKG_CONFIG) --libs omxdsp)
 
 B := build
 
@@ -34,7 +33,7 @@ $(B)/omx_hrp_lv2.o: omx_hrp_lv2.c
 $(B)/hrp_report_matches_live_set.test: test/hrp_report_matches_live_set.test.c omx_hrp_lv2.c
 	@mkdir -p $(B)
 	$(CC) $(CFLAGS) $(WARN) $(INC) omx_hrp_lv2.c test/hrp_report_matches_live_set.test.c \
-		$(OMXDSP_LIB) -lm -o $@
+		$(DSP_LIBS) -lm -o $@
 
 test: $(B)/hrp_report_matches_live_set.test
 	./$(B)/hrp_report_matches_live_set.test
