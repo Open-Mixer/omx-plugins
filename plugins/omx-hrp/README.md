@@ -16,16 +16,16 @@ read-only: frequency, depth, Q and on, four per slot, `OMX_HRP_LV2_MAX_BANDS` sl
 The live-shell API (`omx_band_report.h`, `omx_live_shell.h`, `omx_hrp_lv2.h`) is in omx-dsp 0.32, the floor
 `packaging/omx-plugins.spec` declares. `make test` builds against the installed omx-dsp (`pkg-config omxdsp`).
 
+Everything a host reads is written by `tools/live-faces.mjs` and held by `tools/test/live-faces-test.mjs`: the
+descriptor, the declared panel (the eq family, the report words as band roles, `hrp` as the origin, one exact
+`eq_response`) and the TTLs. The LV2 URI is `urn:openmixer:hrp`.
+
 ## Not yet done
 
-- No CLAP face: spec 7.13 says omx-hrp's CLAP face starts no thread until omx-clap-core's worker
-  hook exists, so it ships LV2-only for now.
-- No descriptor.json / decl.json wired into tools/gen.mjs (the generator has no notion yet of a
-  read-only report control bound to an eq band role, origin or `eq_response` display -- spec
-  7.7's panel/description side).
-- Not gated by `omx-rt-gate` yet (built from the same branch, not run against this face yet).
-- No TSAN arm for the run()/work()/work_response() handoff yet.
-- No oracle for the drawn curve within 0.5 dB of the measured response at 48/96 kHz yet.
-- The LV2 URI (`urn:openmixer:hrp`) follows this repo's `urn:openmixer:<name>` convention; spec
-  7.7 says omx-hrp "keeps its URI" from wherever it ran before the move, which this has not been
-  checked against.
+- No CLAP face: spec 7.13 says omx-hrp's CLAP face starts no thread until omx-clap-core's worker hook exists, so it ships
+  LV2-only for now.
+- Not gated by `omx-rt-gate` (omx-plugins#334), not qualified per class, rate and quantum, and no TSAN arm for the
+  run()/work()/work_response() handoff.
+- No oracle for the drawn curve within 0.5 dB of the measured response at 48 and 96 kHz.
+- The marks of a plugin's own notches reach a surface through the host's `curve_points` reply, which carries no marks
+  today: a plugin-hostd-protocol minor and a plugin-hostd change.
