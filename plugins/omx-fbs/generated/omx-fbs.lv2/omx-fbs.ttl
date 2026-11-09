@@ -23,7 +23,7 @@
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
     lv2:minorVersion 19 ;
-    lv2:microVersion 1 ;
+    lv2:microVersion 2 ;
     rdfs:comment "The feedback corrector: finds the frequencies that ring in a mono signal and plants a notch on each, reporting each as a band." ;
     lv2:optionalFeature lv2:hardRTCapable , work:schedule ;
     lv2:extensionData work:interface ;
