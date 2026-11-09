@@ -4,7 +4,8 @@ omx-plugins (0.19.2) unstable; urgency=medium
     a ceiling: omx-dsp >= 0.32.0 and << 0.33, omx-contract >= 3.12.0 and
     << 4, omx-clap-core and omx-clap-host >= 0.31.0 and << 0.32,
     plugin-hostd >= 0.20.0 and << 0.21, omx-panel >= 0.12.0 and << 0.13,
-    plugin-qualify >= 0.20.0 and << 0.21.
+    plugin-qualify >= 0.20.0 and << 0.21, and the CLAP headers >= 1.2.10
+    and << 2.
   * The control-surface pages and faces come from omx-panel's one cut and
     are generated again on omx-panel 0.12.
 

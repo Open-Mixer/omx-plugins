@@ -28,7 +28,7 @@ BuildRequires: (omx-panel >= 0.12.0 with omx-panel < 0.13)
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}
-BuildRequires: clap-devel
+BuildRequires: (clap-devel >= 1.2.7 with clap-devel < 2)
 BuildRequires: lv2-devel
 # %%check: the generators and checks are Node scripts; the hosts that load the built plugins
 BuildRequires: nodejs
@@ -122,7 +122,7 @@ Requires: (omx-dsp-devel >= 0.32.0 with omx-dsp-devel < 0.33)
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
 Requires: (omx-contract-devel >= 3.12.0 with omx-contract-devel < 4)
 Requires: %{name}-contract = %{version}-%{release}
-Requires: clap-devel
+Requires: (clap-devel >= 1.2.7 with clap-devel < 2)
 
 %description devel
 The headers other projects include to use the OpenMixer plugins' parameters and
@@ -286,7 +286,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
   ceiling: omx-dsp >= 0.32.0 and < 0.33, omx-contract >= 3.12.0 and < 4,
   omx-clap-core and omx-clap-host >= 0.31.0 and < 0.32, plugin-hostd >= 0.20.0
   and < 0.21, omx-panel >= 0.12.0 and < 0.13, plugin-qualify >= 0.20.0 and
-  < 0.21
+  < 0.21, and the CLAP headers >= 1.2.7 (1.2.10 on Debian) and < 2
 - the control-surface pages and faces come from omx-panel's one cut and are
   generated again on omx-panel 0.12
 
