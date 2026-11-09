@@ -22,7 +22,7 @@
 NAME       := omx-spring
 URI        := urn:openmixer:spring
 CLAP_ID    := org.openmixer.spring
-OMXDSP_MIN ?= 0.31.0
+OMXDSP_MIN ?= 0.32.0
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

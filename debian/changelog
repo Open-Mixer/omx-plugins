@@ -1,3 +1,15 @@
+omx-plugins (0.19.2) unstable; urgency=medium
+
+  * Built and tested on the one-panel wave's releases, each with a floor and
+    a ceiling: omx-dsp >= 0.32.0 and << 0.33, omx-contract >= 3.12.0 and
+    << 4, omx-clap-core and omx-clap-host >= 0.31.0 and << 0.32,
+    plugin-hostd >= 0.20.0 and << 0.21, omx-panel >= 0.12.0 and << 0.13,
+    plugin-qualify >= 0.20.0 and << 0.21.
+  * The control-surface pages and faces come from omx-panel's one cut and
+    are generated again on omx-panel 0.12.
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Mon, 09 Nov 2026 13:50:00 +0100
+
 omx-plugins (0.19.1) unstable; urgency=medium
 
   * omx-dsp is taken at 0.31: libomxdsp-dev >= 0.31.0 and << 0.32 (the
