@@ -1,0 +1,109 @@
+{
+  "family": "eq",
+  "roles": {
+    "band_freq": [
+      "band1_freq",
+      "band2_freq",
+      "band3_freq",
+      "band4_freq",
+      "band5_freq",
+      "band6_freq",
+      "band7_freq",
+      "band8_freq"
+    ],
+    "band_gain": [
+      "band1_depth",
+      "band2_depth",
+      "band3_depth",
+      "band4_depth",
+      "band5_depth",
+      "band6_depth",
+      "band7_depth",
+      "band8_depth"
+    ],
+    "band_q": [
+      "band1_q",
+      "band2_q",
+      "band3_q",
+      "band4_q",
+      "band5_q",
+      "band6_q",
+      "band7_q",
+      "band8_q"
+    ],
+    "band_on": [
+      "band1_on",
+      "band2_on",
+      "band3_on",
+      "band4_on",
+      "band5_on",
+      "band6_on",
+      "band7_on",
+      "band8_on"
+    ]
+  },
+  "origins": {
+    "band1_freq": "hrp",
+    "band2_freq": "hrp",
+    "band3_freq": "hrp",
+    "band4_freq": "hrp",
+    "band5_freq": "hrp",
+    "band6_freq": "hrp",
+    "band7_freq": "hrp",
+    "band8_freq": "hrp"
+  },
+  "sections": [
+    {
+      "key": "report",
+      "label": "Report",
+      "controls": [
+        "band1_freq",
+        "band1_depth",
+        "band1_q",
+        "band1_on",
+        "band2_freq",
+        "band2_depth",
+        "band2_q",
+        "band2_on",
+        "band3_freq",
+        "band3_depth",
+        "band3_q",
+        "band3_on",
+        "band4_freq",
+        "band4_depth",
+        "band4_q",
+        "band4_on",
+        "band5_freq",
+        "band5_depth",
+        "band5_q",
+        "band5_on",
+        "band6_freq",
+        "band6_depth",
+        "band6_q",
+        "band6_on",
+        "band7_freq",
+        "band7_depth",
+        "band7_q",
+        "band7_on",
+        "band8_freq",
+        "band8_depth",
+        "band8_q",
+        "band8_on",
+        "analysing"
+      ],
+      "graph": "eq-curve",
+      "basis": "exact"
+    },
+    {
+      "key": "controls",
+      "label": "Controls",
+      "controls": [
+        "bypass",
+        "family",
+        "amount",
+        "bands",
+        "mode"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,861 @@
+{
+  "$schema": "https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json",
+  "requires": {
+    "omx-contract-schema": ">= 3.7.0"
+  },
+  "origin": "authored",
+  "plugin": {
+    "id": "urn:openmixer:hrp",
+    "format": "lv2",
+    "uri": "urn:openmixer:hrp",
+    "name": "omx hrp",
+    "vendor": "openmixer",
+    "version": "0.19.1",
+    "doc": "The harmonic resonance processor: finds the resonances of a mono source from its harmonics and cuts them, reporting each cut as a band.",
+    "features": [
+      "audio-effect"
+    ]
+  },
+  "controls": [
+    {
+      "id": 0,
+      "symbol": "bypass",
+      "name": "Bypass",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Controls"
+      ],
+      "doc": "Pass the audio untouched and analyse nothing.",
+      "automatable": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 1,
+      "symbol": "family",
+      "name": "Family",
+      "kind": "travel",
+      "travel": {
+        "min": -1,
+        "max": 9,
+        "step": 1,
+        "unit": "",
+        "default": -1,
+        "scale": "linear"
+      },
+      "group": [
+        "Controls"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/hrp.json#HRP_FAMILY_RANGE",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "symbol": "amount",
+      "name": "Amount",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 1,
+        "step": 0,
+        "unit": "",
+        "default": 0.5,
+        "scale": "linear"
+      },
+      "group": [
+        "Controls"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/hrp.json#HRP_AMOUNT_RANGE",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "symbol": "bands",
+      "name": "Bands",
+      "kind": "travel",
+      "travel": {
+        "min": 1,
+        "max": 8,
+        "step": 1,
+        "unit": "",
+        "default": 8,
+        "scale": "linear"
+      },
+      "group": [
+        "Controls"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/hrp.json#HRP_BANDS_RANGE",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "symbol": "mode",
+      "name": "Mode",
+      "kind": "choice",
+      "ids": [
+        "cut",
+        "report"
+      ],
+      "labels": [
+        "Cut",
+        "Report"
+      ],
+      "default": "cut",
+      "group": [
+        "Controls"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/hrp.json#HRP_MODES",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "symbol": "analysing",
+      "name": "Analysing",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "Set once a worker has answered a pass: a host with no worker gets audio passed untouched, nothing corrected, and this stays 0.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 6,
+      "symbol": "band1_freq",
+      "name": "Band 1 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 7,
+      "symbol": "band1_depth",
+      "name": "Band 1 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 8,
+      "symbol": "band1_q",
+      "name": "Band 1 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 9,
+      "symbol": "band1_on",
+      "name": "Band 1 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 10,
+      "symbol": "band2_freq",
+      "name": "Band 2 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 11,
+      "symbol": "band2_depth",
+      "name": "Band 2 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 12,
+      "symbol": "band2_q",
+      "name": "Band 2 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 13,
+      "symbol": "band2_on",
+      "name": "Band 2 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 14,
+      "symbol": "band3_freq",
+      "name": "Band 3 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 15,
+      "symbol": "band3_depth",
+      "name": "Band 3 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 16,
+      "symbol": "band3_q",
+      "name": "Band 3 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 17,
+      "symbol": "band3_on",
+      "name": "Band 3 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 18,
+      "symbol": "band4_freq",
+      "name": "Band 4 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 19,
+      "symbol": "band4_depth",
+      "name": "Band 4 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 20,
+      "symbol": "band4_q",
+      "name": "Band 4 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 21,
+      "symbol": "band4_on",
+      "name": "Band 4 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 22,
+      "symbol": "band5_freq",
+      "name": "Band 5 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 23,
+      "symbol": "band5_depth",
+      "name": "Band 5 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 24,
+      "symbol": "band5_q",
+      "name": "Band 5 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 25,
+      "symbol": "band5_on",
+      "name": "Band 5 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 26,
+      "symbol": "band6_freq",
+      "name": "Band 6 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 27,
+      "symbol": "band6_depth",
+      "name": "Band 6 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 28,
+      "symbol": "band6_q",
+      "name": "Band 6 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 29,
+      "symbol": "band6_on",
+      "name": "Band 6 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 30,
+      "symbol": "band7_freq",
+      "name": "Band 7 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 31,
+      "symbol": "band7_depth",
+      "name": "Band 7 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 32,
+      "symbol": "band7_q",
+      "name": "Band 7 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 33,
+      "symbol": "band7_on",
+      "name": "Band 7 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 34,
+      "symbol": "band8_freq",
+      "name": "Band 8 Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 20000,
+        "step": 0,
+        "unit": "Hz",
+        "default": 0,
+        "scale": "log"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "frequency",
+      "doc": "The centre of the band, Hz; 0 while the slot is free.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 35,
+      "symbol": "band8_depth",
+      "name": "Band 8 Depth",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "gain",
+      "doc": "The band's gain, dB; a cut is negative.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 36,
+      "symbol": "band8_q",
+      "name": "Band 8 Q",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 400,
+        "step": 0,
+        "unit": "",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Report"
+      ],
+      "meaning": "q",
+      "doc": "The band's Q.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    },
+    {
+      "id": 37,
+      "symbol": "band8_on",
+      "name": "Band 8 On",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Report"
+      ],
+      "doc": "1 while the slot holds a band.",
+      "readonly": true,
+      "source": {
+        "impl": "plugins/omx-hrp/omx_hrp_lv2.c#hrp_connect_port"
+      }
+    }
+  ],
+  "ports": [
+    {
+      "id": 0,
+      "name": "in",
+      "kind": "audio",
+      "direction": "in",
+      "role": "main",
+      "channels": 1,
+      "layout": "mono"
+    },
+    {
+      "id": 0,
+      "name": "out",
+      "kind": "audio",
+      "direction": "out",
+      "role": "main",
+      "channels": 1,
+      "layout": "mono"
+    }
+  ],
+  "needs": {
+    "extensions": {
+      "optional": [
+        "lv2:hardRTCapable",
+        "<http://lv2plug.in/ns/ext/worker#schedule>"
+      ]
+    }
+  },
+  "latency": {
+    "reports": false
+  },
+  "extensions": {
+    "lv2": {
+      "rdf:type": [
+        "lv2:Plugin"
+      ]
+    }
+  },
+  "source": {
+    "impl": "plugins/omx-hrp/omx_hrp_lv2.c#lv2_descriptor"
+  }
+}
