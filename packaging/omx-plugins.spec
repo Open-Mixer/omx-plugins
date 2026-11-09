@@ -259,9 +259,11 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 %{_libdir}/lv2/omx-eq8.lv2/
 %{_libdir}/lv2/omx-eq16.lv2/
 %{_libdir}/lv2/omx-eq32.lv2/
+%{_libdir}/lv2/omx-fbs.lv2/
 %{_libdir}/lv2/omx-flanger.lv2/
 %{_libdir}/lv2/omx-geq.lv2/
 %{_libdir}/lv2/omx-glue.lv2/
+%{_libdir}/lv2/omx-hrp.lv2/
 %{_libdir}/lv2/omx-keyed-gate.lv2/
 %{_libdir}/lv2/omx-limiter.lv2/
 %{_libdir}/lv2/omx-loudlevel.lv2/

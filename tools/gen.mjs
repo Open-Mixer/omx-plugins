@@ -51,6 +51,7 @@ import { omxdspInclude, render } from './template.mjs';
 import { generateTest, isTestDir, loadTestDecl, testPluginDirs } from './test-plugins.mjs';
 import { emitHintsC, hintPrefixes, hintTriples, statedHints } from './resource-hints.mjs';
 import { presetsManifest, presetsOf } from './preset-lib.mjs';
+import { FACES as LIVE_FACES } from './live-faces.mjs';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -1452,7 +1453,8 @@ export const SHARED = {
   },
   'packaging/omx-plugins.spec': {
     'clap-files': (ds) => ds.map((d) => `/usr/lib/clap/${d.stem}.clap`),
-    'lv2-files': (ds) => ds.map((d) => `%{_libdir}/lv2/${d.stem}.lv2/`),
+    // the declared plugins' bundles, and the two worker faces' (tools/live-faces.mjs: LV2 only, no declaration)
+    'lv2-files': (ds) => [...ds.map((d) => d.stem), ...Object.keys(LIVE_FACES)].sort((a, b) => a.localeCompare(b, 'en', { numeric: true })).map((stem) => `%{_libdir}/lv2/${stem}.lv2/`),
     // the test plugins (`"role": "test"`): omx-plugins-test, outside every CLAP search path (`make install-test`)
     'clap-test-files': (ds, ts = []) => ts.map((d) => `%{_libexecdir}/omx-plugins/test/${d.stem}.clap`),
   },
