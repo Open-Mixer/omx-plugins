@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:hrp",
     "name": "omx hrp",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The harmonic resonance processor: finds the resonances of a mono source from its harmonics and cuts them, reporting each cut as a band.",
     "features": [
       "audio-effect"

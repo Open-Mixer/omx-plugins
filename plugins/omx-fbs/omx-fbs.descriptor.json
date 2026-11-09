@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:fbs",
     "name": "omx fbs",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The feedback corrector: finds the frequencies that ring in a mono signal and plants a notch on each, reporting each as a band.",
     "features": [
       "audio-effect"
