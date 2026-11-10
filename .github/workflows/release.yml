@@ -56,12 +56,12 @@ jobs:
         run: dnf install -y --setopt=install_weak_deps=False git dnf5-plugins nodejs
 
       - name: Add the OpenMixer repository
-        uses: Open-Mixer/.github/.github/actions/add-openmixer@main
+        uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
 
       - uses: actions/checkout@v4
 
       # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
-      - uses: Open-Mixer/.github/.github/actions/wave-deps@main
+      - uses: Open-Mixer/.github/.github/actions/wave-deps@openmixer-v1
 
       - name: Install the build dependencies and the prober
         run: |
@@ -84,7 +84,7 @@ jobs:
 
   rpm:
     needs: qualify
-    uses: Open-Mixer/.github/.github/workflows/build-rpm.yml@main
+    uses: Open-Mixer/.github/.github/workflows/build-rpm.yml@openmixer-v1
     with:
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
@@ -99,7 +99,7 @@ jobs:
   deb:
     needs: rpm
     if: ${{ !cancelled() && needs.rpm.result == 'success' }}
-    uses: Open-Mixer/.github/.github/workflows/build-deb.yml@main
+    uses: Open-Mixer/.github/.github/workflows/build-deb.yml@openmixer-v1
     with:
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
