@@ -109,6 +109,19 @@
 #                   install, with its --self-test (part of `make test`)
 VERSION := 0.19.1
 PLUGINS := $(sort $(dir $(wildcard plugins/*/Makefile)))
+# CHANGED_PLUGINS (CI's `test` job, from tools/plugin-scope.sh over the pull request's diff): the short names
+# (omx-eq8, never a path) of the plugins a change touches, space-separated, or ALL. Empty (every local `make
+# test`, a push to main or a tag) and ALL both mean every plugin, exactly as before; a narrower list scopes the
+# per-plugin test loop and the round-trip rescan below to it, so a one-plugin pull request no longer rebuilds,
+# rescans and sabotages the other thirty (#2).
+CHANGED_PLUGINS ?=
+ifeq ($(strip $(CHANGED_PLUGINS))$(filter ALL,$(CHANGED_PLUGINS)),)
+SCOPE_PLUGINS := $(PLUGINS)
+else ifeq ($(filter ALL,$(CHANGED_PLUGINS)),ALL)
+SCOPE_PLUGINS := $(PLUGINS)
+else
+SCOPE_PLUGINS := $(filter $(addsuffix /,$(addprefix plugins/,$(CHANGED_PLUGINS))),$(PLUGINS))
+endif
 # A test plugin is built, tested and linked into libomxplugins.a like the others; `make install` never installs
 # it, and `make install-test` puts it outside the CLAP path: its declaration says `"role": "test"`
 # (tools/test-plugins.mjs).
@@ -167,13 +180,16 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran lv2bench-exit clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi
+.PHONY: summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran lv2bench-exit plugin-scope clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran lv2bench-exit probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids strip-visible-when face-dirty-order
+test: lib units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran lv2bench-exit plugin-scope probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids strip-visible-when face-dirty-order
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
-	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
+	@if [ "$(words $(SCOPE_PLUGINS))" != "$(words $(PLUGINS))" ]; then \
+	  echo "scope: CHANGED_PLUGINS=$(CHANGED_PLUGINS): testing only $(SCOPE_PLUGINS), not $(filter-out $(SCOPE_PLUGINS),$(PLUGINS))"; \
+	fi
+	@for p in $(SCOPE_PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s round-trip
 	@$(MAKE) -s presets-figures
 	@$(MAKE) -s lib-test
@@ -407,6 +423,10 @@ lv2bench-ran:
 # let it gate the per-URI check above, in either output shape
 lv2bench-exit:
 	tools/test/lv2bench-exit-check.sh
+# CHANGED_PLUGINS (CI's `test` job) scopes the per-plugin test loop and the round-trip rescan to a pull
+# request's own plugins; tools/plugin-scope.sh (what computes it from a diff) and its ALL fallback, checked
+plugin-scope:
+	tools/test/plugin-scope-check.sh
 contract-dir:
 	tools/test/contract-dir-check.sh
 	tools/test/contract-dir-check.sh --self-test

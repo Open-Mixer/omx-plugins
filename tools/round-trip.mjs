@@ -249,9 +249,15 @@ export function compareFace(format, authored, scanned) {
   return out;
 }
 
-/** The lines of a whole run: `{ lines, losses, fails }`. */
-export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
-  const { inside, outside } = described(root);
+/** The lines of a whole run: `{ lines, losses, fails }`. `only`, when given (CHANGED_PLUGINS, a pull request
+ * scoped to the plugins it touches, #2), restricts both `inside` and `outside` to it: a plugin round-trip.sh
+ * did not rescan is left out of the run rather than counted as a missing scan. */
+export function roundTrip(scansDir, { root = ROOT, authoredFiles = {}, only } = {}) {
+  let { inside, outside } = described(root);
+  if (only) {
+    inside = inside.filter((s) => only.has(s));
+    outside = outside.filter((s) => only.has(s));
+  }
   const lines = [], losses = {}, upstream = {};
   let fails = 0;
   for (const stem of inside) {
@@ -282,24 +288,29 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
     }
   }
   for (const stem of outside) lines.push(`outside ${stem}: no descriptor, outside the round trip`);
-  for (const k of [...new Set([...Object.keys(LOSSES), ...Object.keys(losses)])].sort()) {
-    const ok = LOSSES[k] === losses[k];
-    lines.push(`${ok ? 'named' : 'unnamed'} loss ${k}: ${losses[k] ?? 0} word(s)${ok ? '' : `, LOSSES names ${LOSSES[k] ?? 0}`}`);
-    if (!ok) fails++;
-  }
-  for (const [k, { count: named, at, through }] of Object.entries(UPSTREAM)) {
-    const count = at?.length ?? named;
-    if (through !== undefined) {
-      const v = hostdVersion();
-      if (v === undefined || compareVersions(v, through) > 0) {
-        lines.push(`unnamed upstream ${k}: plugin-hostd ${v ?? '(no version: pkg-config --modversion plugin-hostd)'} is past ${through}, the release the entry holds through: run without it, retire it if no named port differs, else move it on`);
-        fails++;
-        continue;
-      }
+  // LOSSES and UPSTREAM count words across the WHOLE fleet; scoped to `only`, a plugin round-trip.sh did not
+  // rescan never adds its words, so the totals never match and are not checked here (a real `differs` above
+  // still fails; #2).
+  if (!only) {
+    for (const k of [...new Set([...Object.keys(LOSSES), ...Object.keys(losses)])].sort()) {
+      const ok = LOSSES[k] === losses[k];
+      lines.push(`${ok ? 'named' : 'unnamed'} loss ${k}: ${losses[k] ?? 0} word(s)${ok ? '' : `, LOSSES names ${LOSSES[k] ?? 0}`}`);
+      if (!ok) fails++;
     }
-    const ok = through === undefined ? upstream[k] === count : upstream[k] > 0 && (count === undefined || upstream[k] <= count);
-    lines.push(`${ok ? 'upstream' : 'unnamed upstream'} ${k}: ${upstream[k] ?? 0} word(s)${ok ? '' : `, UPSTREAM names ${count} (fixed upstream? remove the entry)`}`);
-    if (!ok) fails++;
+    for (const [k, { count: named, at, through }] of Object.entries(UPSTREAM)) {
+      const count = at?.length ?? named;
+      if (through !== undefined) {
+        const v = hostdVersion();
+        if (v === undefined || compareVersions(v, through) > 0) {
+          lines.push(`unnamed upstream ${k}: plugin-hostd ${v ?? '(no version: pkg-config --modversion plugin-hostd)'} is past ${through}, the release the entry holds through: run without it, retire it if no named port differs, else move it on`);
+          fails++;
+          continue;
+        }
+      }
+      const ok = through === undefined ? upstream[k] === count : upstream[k] > 0 && (count === undefined || upstream[k] <= count);
+      lines.push(`${ok ? 'upstream' : 'unnamed upstream'} ${k}: ${upstream[k] ?? 0} word(s)${ok ? '' : `, UPSTREAM names ${count} (fixed upstream? remove the entry)`}`);
+      if (!ok) fails++;
+    }
   }
   return { lines, losses, fails, inside, outside };
 }
@@ -307,8 +318,12 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
 if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
   const args = process.argv.slice(2);
   const authoredFiles = {};
-  for (let i = 1; i < args.length; i += 2) if (args[i] === '--authored') { const [s, f] = args[i + 1].split('='); authoredFiles[s] = f; }
-  const { lines, fails, inside, outside } = roundTrip(args[0], { authoredFiles });
+  let only;
+  for (let i = 1; i < args.length; i += 2) {
+    if (args[i] === '--authored') { const [s, f] = args[i + 1].split('='); authoredFiles[s] = f; }
+    else if (args[i] === '--only') only = new Set(args[i + 1].split(/\s+/).filter(Boolean));
+  }
+  const { lines, fails, inside, outside } = roundTrip(args[0], { authoredFiles, only });
   for (const l of lines) console.log(l);
   const count = (v) => lines.filter((l) => l.startsWith(`${v} `)).length;
   const up = lines.filter((l) => l.startsWith('differs ') && l.includes(' (upstream: ')).length;

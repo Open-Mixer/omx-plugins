@@ -7,8 +7,11 @@
 # descriptor: `node tools/gen.mjs`, build both faces, `plugin-hostd-probe describe` each built face, and
 # tools/round-trip.mjs compares the scanned descriptors with the authored ones word by word (equal, lost <format>
 # <word>, differs). --self-test breaks the first described plugin twice and wants each red: one range changed in a
-# copy of its authored descriptor, and one lv2:maximum changed in a copy of its built .ttl. Scratch lives under
-# build/tmp. Exit 1 when it does not pass, or an arm stays green.
+# copy of its authored descriptor, and one lv2:maximum changed in a copy of its built .ttl. CHANGED_PLUGINS (CI's
+# `test` job; empty or ALL otherwise, meaning every plugin, as before) scopes the plain rescan to the plugins a
+# pull request touches, so it stops rebuilding and rescanning the rest on every push (#2); --self-test always
+# reads the full set, since it is a fixed check of the comparison tool and not of what the pull request changed.
+# Scratch lives under build/tmp. Exit 1 when it does not pass, or an arm stays green.
 set -u
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 PROBE=${PLUGIN_HOSTD_PROBE:-plugin-hostd-probe}
@@ -17,8 +20,24 @@ mkdir -p "$ROOT/build/tmp"
 TMP=$(mktemp -d "$ROOT/build/tmp/round-trip.XXXXXX") || exit 1
 trap 'rm -rf "$TMP"' EXIT INT TERM
 field() { node -e 'console.log(JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).plugin[process.argv[2]])' "$1" "$2"; }
-stems=$(cd "$ROOT" && node --input-type=module -e 'import { described } from "./tools/round-trip.mjs"; console.log(described().inside.join(" "))') || exit 1
-[ -n "$stems" ] || { echo "FAIL round-trip: no plugin is described"; exit 1; }
+all_stems=$(cd "$ROOT" && node --input-type=module -e 'import { described } from "./tools/round-trip.mjs"; console.log(described().inside.join(" "))') || exit 1
+[ -n "$all_stems" ] || { echo "FAIL round-trip: no plugin is described"; exit 1; }
+
+scoped=0
+if [ "${1:-}" = "--self-test" ] || [ -z "${CHANGED_PLUGINS:-}" ] || [ "${CHANGED_PLUGINS:-}" = "ALL" ]; then
+  stems=$all_stems
+else
+  stems=
+  for s in $all_stems; do
+    case " $CHANGED_PLUGINS " in *" $s "*) stems="$stems $s" ;; esac
+  done
+  stems=${stems# }
+  if [ -z "$stems" ]; then
+    echo "round-trip: none of CHANGED_PLUGINS ($CHANGED_PLUGINS) is described; nothing to rescan"
+    exit 0
+  fi
+  scoped=1
+fi
 
 (cd "$ROOT" && node tools/gen.mjs >/dev/null) || { echo "FAIL round-trip: node tools/gen.mjs"; exit 1; }
 mkdir -p "$TMP/scans"
@@ -31,7 +50,11 @@ for stem in $stems; do
 done
 
 if [ "${1:-}" != "--self-test" ]; then
-  node "$ROOT/tools/round-trip.mjs" "$TMP/scans"
+  if [ "$scoped" = 1 ]; then
+    node "$ROOT/tools/round-trip.mjs" "$TMP/scans" --only "$stems"
+  else
+    node "$ROOT/tools/round-trip.mjs" "$TMP/scans"
+  fi
   exit $?
 fi
 
