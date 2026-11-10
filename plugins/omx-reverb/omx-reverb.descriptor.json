@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:reverb",
     "name": "omx reverb",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal.",
     "features": [
       "audio-effect"
@@ -37,7 +37,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_PLATE_MOD_DEPTH_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -62,7 +62,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_MIX_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -87,7 +87,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_SIZE_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -112,7 +112,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_DAMPING_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -137,7 +137,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_WIDTH_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -162,7 +162,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_PREDELAY_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -187,7 +187,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_LOWCUT_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -212,7 +212,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_HIGHCUT_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -236,7 +236,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_REVERSE_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -260,7 +260,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_HOLD_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -284,7 +284,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_RELEASE_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -308,7 +308,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_GATE_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -347,7 +347,7 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_ALGORITHMS",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     }

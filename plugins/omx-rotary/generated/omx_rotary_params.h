@@ -83,7 +83,7 @@ static const char *const OMX_ROTARY_PARAM_MODULES[OMX_ROTARY_PARAM_COUNT] = {
 #define OMX_ROTARY_NAME "omx rotary"
 #define OMX_ROTARY_VENDOR "openmixer"
 #define OMX_ROTARY_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_ROTARY_VERSION "0.19.1"
+#define OMX_ROTARY_VERSION "0.19.2"
 #define OMX_ROTARY_DESCRIPTION "The console's rotary speaker: a drum rotor on the low band and a horn rotor on the high band, with stop, slow and fast speeds, mixed with the dry signal."
 #define OMX_ROTARY_CLAP_ID "org.openmixer.rotary"
 #define OMX_ROTARY_CLAP_FEATURES "audio-effect", "stereo"
@@ -135,11 +135,13 @@ static const struct omx_panel_control_row OMX_ROTARY_PANEL_CONTROLS[] = {
 static const struct omx_panel_role_row OMX_ROTARY_PANEL_ROLES[] = {
   { "mix", 0u, 6u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_ROTARY_PANEL_PAGES[] = {
-  { "Rotary", "Rotary", { 0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u } },
+  { "Easy", "Easy", { 6u, 0u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Rotary", "Rotary", { 3u, 4u, 5u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_ROTARY_PANEL_PAGE_COUNT 1u
+#define OMX_ROTARY_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_ROTARY_PANEL = {
   OMX_ROTARY_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_MODULATION,
   OMX_ROTARY_PANEL_SECTIONS, 1u,

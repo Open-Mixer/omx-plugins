@@ -77,7 +77,7 @@ static const char *const OMX_DOUBLER_PARAM_MODULES[OMX_DOUBLER_PARAM_COUNT] = {
 #define OMX_DOUBLER_NAME "omx doubler"
 #define OMX_DOUBLER_VENDOR "openmixer"
 #define OMX_DOUBLER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DOUBLER_VERSION "0.19.1"
+#define OMX_DOUBLER_VERSION "0.19.2"
 #define OMX_DOUBLER_DESCRIPTION "Doubles a voice or an instrument with up to four slightly delayed, detuned and drifting copies spread across the stereo field, the double-tracked sound without a second take."
 #define OMX_DOUBLER_CLAP_ID "org.openmixer.doubler"
 #define OMX_DOUBLER_CLAP_FEATURES "audio-effect", "doubler", "stereo"
@@ -134,13 +134,15 @@ static const struct omx_panel_role_row OMX_DOUBLER_PANEL_ROLES[] = {
   { "spread", 0u, 5u },
   { "mix", 0u, 6u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DOUBLER_PANEL_PAGES[] = {
-  { "Voices", "Voices", { 0u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Drift", "Drift", { 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Output", "Output", { 5u, 6u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 3u, 6u, 0u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Voices", "Voices", { 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Drift", "Drift", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Output", "Output", { 5u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_DOUBLER_PANEL_PAGE_COUNT 3u
+#define OMX_DOUBLER_PANEL_PAGE_COUNT 4u
 static const struct omx_panel_rows OMX_DOUBLER_PANEL = {
   OMX_DOUBLER_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_MODULATION,
   OMX_DOUBLER_PANEL_SECTIONS, 3u,

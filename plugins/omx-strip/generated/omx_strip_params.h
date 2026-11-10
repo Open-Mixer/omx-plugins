@@ -1200,7 +1200,7 @@ static inline uint32_t omx_strip_eq_band_count(const float *values) {
 #define OMX_STRIP_NAME "omx strip"
 #define OMX_STRIP_VENDOR "openmixer"
 #define OMX_STRIP_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_STRIP_VERSION "0.19.1"
+#define OMX_STRIP_VERSION "0.19.2"
 #define OMX_STRIP_DESCRIPTION "The OpenMixer console's channel strip in one plugin: input trim, high- and low-pass filters, gate, a parametric EQ of as many bands as its Bands control says, and compressor, in the console's order or any other. No DSP of its own: each stage is omx-dsp's instance face of the console's kernel, called in order."
 #define OMX_STRIP_CLAP_ID "org.openmixer.strip"
 #define OMX_STRIP_CLAP_FEATURES "audio-effect", "mixing", "stereo"
@@ -1622,20 +1622,39 @@ static const struct omx_panel_control_row OMX_STRIP_PANEL_CONTROLS[] = {
   { 49u, 4u, OMX_CLAP_WIDGET_AUTO, "fx.strip.comp_detector_oversampling", "Comp Detector Oversampling", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 50u, 5u, OMX_CLAP_WIDGET_KNOB, "fx.strip.order", "Order", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_STRIP_PANEL_PAGES[] = {
-  { "Input", "Input", { 0u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Filters", "Filters", { 2u, 3u, 4u, 5u, 6u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Gate", "Gate 1", { 9u, 10u, 11u, 12u, 13u, 14u, 15u, 16u } },
-  { "Gate", "Gate 2", { 17u, 18u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "EQ", "EQ 1", { 19u, 51u, 20u, 21u, 22u, 23u, 24u, 25u } },
-  { "EQ", "EQ 2", { 26u, 27u, 28u, 29u, 30u, 31u, 32u, 33u } },
-  { "EQ", "EQ 3", { 34u, 35u, 36u, 37u, 38u, 39u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Comp", "Comp 1", { 40u, 41u, 42u, 43u, 44u, 45u, 46u, 47u } },
-  { "Comp", "Comp 2", { 48u, 49u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Filters", "Filters", { 4u, 5u, 6u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Gate", "Gate: Gate - Gate Knee End", { 9u, 10u, 11u, 12u, 13u, 14u, 15u, 16u } },
+  { "Gate", "Gate: Gate Hold - Gate Hysteresis", { 17u, 18u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "EQ", "EQ: EQ - EQ 2 Type", { 19u, 51u, 20u, 21u, 22u, 23u, 24u, 25u } },
+  { "EQ", "EQ: EQ 2 Freq - EQ 3 Q", { 26u, 27u, 28u, 29u, 30u, 31u, 32u, 33u } },
+  { "EQ", "EQ: EQ 3 - EQ 5 Freq", { 34u, 35u, 36u, 37u, 38u, 39u, 52u, 53u } },
+  { "EQ", "EQ: EQ 5 Gain - EQ 6", { 54u, 55u, 56u, 57u, 58u, 59u, 60u, 61u } },
+  { "EQ", "EQ: EQ 7 Type - EQ 8 Gain", { 62u, 63u, 64u, 65u, 66u, 67u, 68u, 69u } },
+  { "EQ", "EQ: EQ 8 Q - EQ 10 Type", { 70u, 71u, 72u, 73u, 74u, 75u, 76u, 77u } },
+  { "EQ", "EQ: EQ 10 Freq - EQ 11 Q", { 78u, 79u, 80u, 81u, 82u, 83u, 84u, 85u } },
+  { "EQ", "EQ: EQ 11 - EQ 13 Freq", { 86u, 87u, 88u, 89u, 90u, 91u, 92u, 93u } },
+  { "EQ", "EQ: EQ 13 Gain - EQ 14", { 94u, 95u, 96u, 97u, 98u, 99u, 100u, 101u } },
+  { "EQ", "EQ: EQ 15 Type - EQ 16 Gain", { 102u, 103u, 104u, 105u, 106u, 107u, 108u, 109u } },
+  { "EQ", "EQ: EQ 16 Q - EQ 18 Type", { 110u, 111u, 112u, 113u, 114u, 115u, 116u, 117u } },
+  { "EQ", "EQ: EQ 18 Freq - EQ 19 Q", { 118u, 119u, 120u, 121u, 122u, 123u, 124u, 125u } },
+  { "EQ", "EQ: EQ 19 - EQ 21 Freq", { 126u, 127u, 128u, 129u, 130u, 131u, 132u, 133u } },
+  { "EQ", "EQ: EQ 21 Gain - EQ 22", { 134u, 135u, 136u, 137u, 138u, 139u, 140u, 141u } },
+  { "EQ", "EQ: EQ 23 Type - EQ 24 Gain", { 142u, 143u, 144u, 145u, 146u, 147u, 148u, 149u } },
+  { "EQ", "EQ: EQ 24 Q - EQ 26 Type", { 150u, 151u, 152u, 153u, 154u, 155u, 156u, 157u } },
+  { "EQ", "EQ: EQ 26 Freq - EQ 27 Q", { 158u, 159u, 160u, 161u, 162u, 163u, 164u, 165u } },
+  { "EQ", "EQ: EQ 27 - EQ 29 Freq", { 166u, 167u, 168u, 169u, 170u, 171u, 172u, 173u } },
+  { "EQ", "EQ: EQ 29 Gain - EQ 30", { 174u, 175u, 176u, 177u, 178u, 179u, 180u, 181u } },
+  { "EQ", "EQ: EQ 31 Type - EQ 32 Gain", { 182u, 183u, 184u, 185u, 186u, 187u, 188u, 189u } },
+  { "EQ", "EQ: EQ 32 Q - EQ 32", { 190u, 191u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Comp", "Comp: Comp - Comp Kind", { 40u, 41u, 42u, 43u, 44u, 45u, 46u, 47u } },
+  { "Comp", "Comp: Comp Mix - Comp Detector Oversampling", { 48u, 49u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Order", "Order", { 50u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_STRIP_PANEL_PAGE_COUNT 10u
+#define OMX_STRIP_PANEL_PAGE_COUNT 28u
 static const struct omx_panel_rows OMX_STRIP_PANEL = {
   OMX_STRIP_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
   OMX_STRIP_PANEL_SECTIONS, 6u,

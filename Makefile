@@ -107,7 +107,7 @@
 #   make package-lists  every plugin the build makes is installed and listed by exactly the package it belongs
 #                   to, in the RPM spec and the Debian .install files: tools/package-lists-check.sh over a staged
 #                   install, with its --self-test (part of `make test`)
-VERSION := 0.19.1
+VERSION := 0.19.2
 PLUGINS := $(sort $(dir $(wildcard plugins/*/Makefile)))
 # CHANGED_PLUGINS (CI's `test` job, from tools/plugin-scope.sh over the pull request's diff): the short names
 # (omx-eq8, never a path) of the plugins a change touches, space-separated, or ALL. Empty (every local `make

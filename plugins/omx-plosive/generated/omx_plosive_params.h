@@ -89,7 +89,7 @@ static const char *const OMX_PLOSIVE_PARAM_MODULES[OMX_PLOSIVE_PARAM_COUNT] = {
 #define OMX_PLOSIVE_NAME "omx plosive"
 #define OMX_PLOSIVE_VENDOR "openmixer"
 #define OMX_PLOSIVE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_PLOSIVE_VERSION "0.19.1"
+#define OMX_PLOSIVE_VERSION "0.19.2"
 #define OMX_PLOSIVE_DESCRIPTION "Softens the p pops and hard t and k consonants of a voice, cutting each only while it bursts."
 #define OMX_PLOSIVE_CLAP_ID "org.openmixer.plosive"
 #define OMX_PLOSIVE_CLAP_FEATURES "audio-effect", "de-esser", "stereo"
@@ -140,10 +140,11 @@ static const struct omx_panel_control_row OMX_PLOSIVE_PANEL_CONTROLS[] = {
   { 7u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.plosive.pop_recovery_ms", "Pop Recovery", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 8u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.plosive.pop_hz", "Pop Corner", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_PLOSIVE_PANEL_PAGES[] = {
-  { "Plosive", "Plosive 1", { 0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u } },
-  { "Plosive", "Plosive 2", { 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Plosive", "Plosive", { 4u, 5u, 6u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_PLOSIVE_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_PLOSIVE_PANEL = {

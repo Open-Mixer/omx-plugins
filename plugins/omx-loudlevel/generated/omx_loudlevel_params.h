@@ -65,7 +65,7 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
 #define OMX_LOUDLEVEL_NAME "omx loudlevel"
 #define OMX_LOUDLEVEL_VENDOR "openmixer"
 #define OMX_LOUDLEVEL_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_LOUDLEVEL_VERSION "0.19.1"
+#define OMX_LOUDLEVEL_VERSION "0.19.2"
 #define OMX_LOUDLEVEL_DESCRIPTION "Holds a signal at a loudness target by moving its gain slowly, with a gate so pauses are left alone."
 #define OMX_LOUDLEVEL_CLAP_ID "org.openmixer.loudlevel"
 #define OMX_LOUDLEVEL_CLAP_FEATURES "audio-effect", "utility", "stereo"
@@ -108,11 +108,13 @@ static const struct omx_panel_control_row OMX_LOUDLEVEL_PANEL_CONTROLS[] = {
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.loudlevel.gate_lufs", "Gate", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 4u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.loudlevel.window", "Window", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_LOUDLEVEL_PANEL_PAGES[] = {
-  { "Loudlevel", "Loudlevel", { 0u, 1u, 2u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Loudlevel", "Loudlevel", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_LOUDLEVEL_PANEL_PAGE_COUNT 1u
+#define OMX_LOUDLEVEL_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_LOUDLEVEL_PANEL = {
   OMX_LOUDLEVEL_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
   OMX_LOUDLEVEL_PANEL_SECTIONS, 1u,

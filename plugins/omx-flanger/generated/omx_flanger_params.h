@@ -59,7 +59,7 @@ static const char *const OMX_FLANGER_PARAM_MODULES[OMX_FLANGER_PARAM_COUNT] = {
 #define OMX_FLANGER_NAME "omx flanger"
 #define OMX_FLANGER_VENDOR "openmixer"
 #define OMX_FLANGER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_FLANGER_VERSION "0.19.1"
+#define OMX_FLANGER_VERSION "0.19.2"
 #define OMX_FLANGER_DESCRIPTION "The console's flanger: one modulated short delay with signed feedback, swept by one oscillator and mixed with the dry signal."
 #define OMX_FLANGER_CLAP_ID "org.openmixer.flanger"
 #define OMX_FLANGER_CLAP_FEATURES "audio-effect", "flanger", "stereo"
@@ -107,9 +107,10 @@ static const struct omx_panel_role_row OMX_FLANGER_PANEL_ROLES[] = {
   { "feedback", 0u, 2u },
   { "mix", 0u, 3u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_FLANGER_PANEL_PAGES[] = {
-  { "Flanger", "Flanger", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 2u, 3u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_FLANGER_PANEL_PAGE_COUNT 1u
 static const struct omx_panel_rows OMX_FLANGER_PANEL = {

@@ -473,7 +473,7 @@ static const char *const OMX_DYNEQ_PARAM_MODULES[OMX_DYNEQ_PARAM_COUNT] = {
 #define OMX_DYNEQ_NAME "omx dyneq"
 #define OMX_DYNEQ_VENDOR "openmixer"
 #define OMX_DYNEQ_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DYNEQ_VERSION "0.19.1"
+#define OMX_DYNEQ_VERSION "0.19.2"
 #define OMX_DYNEQ_DESCRIPTION "A six-band dynamic EQ: each band is an EQ bell or shelf whose gain also moves with the level of its own band, cutting above a threshold (down) or lifting below it (up), held to a range, so a harsh or boomy band is tamed only while it is too loud."
 #define OMX_DYNEQ_CLAP_ID "org.openmixer.dyneq"
 #define OMX_DYNEQ_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
@@ -698,23 +698,25 @@ static const struct omx_panel_display_row OMX_DYNEQ_PANEL_DISPLAYS[] = {
   { OMX_CLAP_DISPLAY_EQ_RESPONSE, 4u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.dyneq.display.eq_response", "Band 5" },
   { OMX_CLAP_DISPLAY_EQ_RESPONSE, 5u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.dyneq.display.eq_response", "Band 6" },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DYNEQ_PANEL_PAGES[] = {
-  { "Band 1", "Band 1 1", { 0u, 6u, 12u, 18u, 24u, 30u, 36u, 42u } },
-  { "Band 1", "Band 1 2", { 48u, 54u, 60u, 66u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Band 2", "Band 2 1", { 1u, 7u, 13u, 19u, 25u, 31u, 37u, 43u } },
-  { "Band 2", "Band 2 2", { 49u, 55u, 61u, 67u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Band 3", "Band 3 1", { 2u, 8u, 14u, 20u, 26u, 32u, 38u, 44u } },
-  { "Band 3", "Band 3 2", { 50u, 56u, 62u, 68u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Band 4", "Band 4 1", { 3u, 9u, 15u, 21u, 27u, 33u, 39u, 45u } },
-  { "Band 4", "Band 4 2", { 51u, 57u, 63u, 69u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Band 5", "Band 5 1", { 4u, 10u, 16u, 22u, 28u, 34u, 40u, 46u } },
-  { "Band 5", "Band 5 2", { 52u, 58u, 64u, 70u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Band 6", "Band 6 1", { 5u, 11u, 17u, 23u, 29u, 35u, 41u, 47u } },
-  { "Band 6", "Band 6 2", { 53u, 59u, 65u, 71u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 18u, 19u, 20u, 21u, 22u, 23u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Band 1", "Band 1: Band 1 On - Band 1 Range", { 0u, 6u, 12u, 24u, 30u, 36u, 42u, 48u } },
+  { "Band 1", "Band 1: Band 1 Attack - Band 1 Listen", { 54u, 60u, 66u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Band 2", "Band 2: Band 2 On - Band 2 Range", { 1u, 7u, 13u, 25u, 31u, 37u, 43u, 49u } },
+  { "Band 2", "Band 2: Band 2 Attack - Band 2 Listen", { 55u, 61u, 67u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Band 3", "Band 3: Band 3 On - Band 3 Range", { 2u, 8u, 14u, 26u, 32u, 38u, 44u, 50u } },
+  { "Band 3", "Band 3: Band 3 Attack - Band 3 Listen", { 56u, 62u, 68u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Band 4", "Band 4: Band 4 On - Band 4 Range", { 3u, 9u, 15u, 27u, 33u, 39u, 45u, 51u } },
+  { "Band 4", "Band 4: Band 4 Attack - Band 4 Listen", { 57u, 63u, 69u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Band 5", "Band 5: Band 5 On - Band 5 Range", { 4u, 10u, 16u, 28u, 34u, 40u, 46u, 52u } },
+  { "Band 5", "Band 5: Band 5 Attack - Band 5 Listen", { 58u, 64u, 70u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Band 6", "Band 6: Band 6 On - Band 6 Range", { 5u, 11u, 17u, 29u, 35u, 41u, 47u, 53u } },
+  { "Band 6", "Band 6: Band 6 Attack - Band 6 Listen", { 59u, 65u, 71u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Output", "Output", { 72u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_DYNEQ_PANEL_PAGE_COUNT 13u
+#define OMX_DYNEQ_PANEL_PAGE_COUNT 14u
 static const struct omx_panel_rows OMX_DYNEQ_PANEL = {
   OMX_DYNEQ_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_EQ,
   OMX_DYNEQ_PANEL_SECTIONS, 7u,

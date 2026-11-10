@@ -65,7 +65,7 @@ static const char *const OMX_SPRING_PARAM_MODULES[OMX_SPRING_PARAM_COUNT] = {
 #define OMX_SPRING_NAME "omx spring"
 #define OMX_SPRING_VENDOR "openmixer"
 #define OMX_SPRING_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_SPRING_VERSION "0.19.1"
+#define OMX_SPRING_VERSION "0.19.2"
 #define OMX_SPRING_DESCRIPTION "A spring reverb: a delay, a chain of all-passes and a darkening loop, with decay, length, tension and damping."
 #define OMX_SPRING_CLAP_ID "org.openmixer.spring"
 #define OMX_SPRING_CLAP_FEATURES "audio-effect", "reverb", "stereo"
@@ -108,11 +108,13 @@ static const struct omx_panel_control_row OMX_SPRING_PANEL_CONTROLS[] = {
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.spring.damp_hz", "Damping", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 4u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.spring.mix_pct", "Mix", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_SPRING_PANEL_PAGES[] = {
-  { "Spring", "Spring", { 0u, 1u, 2u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Spring", "Spring", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_SPRING_PANEL_PAGE_COUNT 1u
+#define OMX_SPRING_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_SPRING_PANEL = {
   OMX_SPRING_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
   OMX_SPRING_PANEL_SECTIONS, 1u,

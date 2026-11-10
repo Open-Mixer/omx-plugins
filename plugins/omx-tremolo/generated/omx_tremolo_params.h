@@ -59,7 +59,7 @@ static const char *const OMX_TREMOLO_PARAM_MODULES[OMX_TREMOLO_PARAM_COUNT] = {
 #define OMX_TREMOLO_NAME "omx tremolo"
 #define OMX_TREMOLO_VENDOR "openmixer"
 #define OMX_TREMOLO_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TREMOLO_VERSION "0.19.1"
+#define OMX_TREMOLO_VERSION "0.19.2"
 #define OMX_TREMOLO_DESCRIPTION "The console's tremolo and auto-pan: one oscillator turned into a level change on both legs, or into a left-right pan."
 #define OMX_TREMOLO_CLAP_ID "org.openmixer.tremolo"
 #define OMX_TREMOLO_CLAP_FEATURES "audio-effect", "tremolo", "stereo"
@@ -105,9 +105,10 @@ static const struct omx_panel_role_row OMX_TREMOLO_PANEL_ROLES[] = {
   { "depth", 0u, 1u },
   { "mix", 0u, 2u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_TREMOLO_PANEL_PAGES[] = {
-  { "Tremolo", "Tremolo", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_TREMOLO_PANEL_PAGE_COUNT 1u
 static const struct omx_panel_rows OMX_TREMOLO_PANEL = {

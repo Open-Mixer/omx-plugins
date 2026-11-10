@@ -65,7 +65,7 @@ static const char *const OMX_TRANSIENT_PARAM_MODULES[OMX_TRANSIENT_PARAM_COUNT] 
 #define OMX_TRANSIENT_NAME "omx transient"
 #define OMX_TRANSIENT_VENDOR "openmixer"
 #define OMX_TRANSIENT_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TRANSIENT_VERSION "0.19.1"
+#define OMX_TRANSIENT_VERSION "0.19.2"
 #define OMX_TRANSIENT_DESCRIPTION "The console's transient designer: more or less attack and sustain, from two envelope contrasts, with no threshold to set."
 #define OMX_TRANSIENT_CLAP_ID "org.openmixer.transient"
 #define OMX_TRANSIENT_CLAP_FEATURES "audio-effect", "transient-shaper", "stereo"
@@ -108,11 +108,13 @@ static const struct omx_panel_control_row OMX_TRANSIENT_PANEL_CONTROLS[] = {
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.transient.sustain_time_ms", "Sustain Time", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 4u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.transient.output_db", "Output", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_TRANSIENT_PANEL_PAGES[] = {
-  { "Transient", "Transient", { 0u, 1u, 2u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Transient", "Transient", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_TRANSIENT_PANEL_PAGE_COUNT 1u
+#define OMX_TRANSIENT_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_TRANSIENT_PANEL = {
   OMX_TRANSIENT_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
   OMX_TRANSIENT_PANEL_SECTIONS, 1u,

@@ -582,6 +582,8 @@ function emitPanelRows(d) {
   const K = d.kernel.toUpperCase();
   const x = panelDescription(d);
   const NONE = 'OMX_CLAP_PANEL_INVALID_ID';
+  // the page table holds every control in its slot: the boundaries do not move with the values, and the face blanks a hidden one
+  const everyShown = { ...x, controls: x.controls.map((c) => ({ ...c, visible: null })) };
   const id = (n) => (n === null || n === undefined ? NONE : `${n}u`);
   const enumOf = (prefix, list, v) => `OMX_CLAP_${prefix}_${list[list.indexOf(v)].toUpperCase()}`;
   const tables = [
@@ -599,11 +601,12 @@ function emitPanelRows(d) {
  * Declared roles not published:
 ${unpublished}` : ''} */
 #define OMX_${K}_PANEL_FINGERPRINT "${panelFingerprint(x)}"
-${tables.map(array).join('')}/* clap.remote-controls/2: the pages of the page rule over the sections. */
+${tables.map(array).join('')}/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_${K}_PANEL_PAGES[] = {
-${pagesOf(x, d).map((g) => `  { ${cstr(g.sectionName)}, ${cstr(g.pageName)}, { ${g.ids.map(id).join(', ')} } },`).join('\n')}
+${pagesOf(everyShown, d).map((g) => `  { ${cstr(g.sectionName)}, ${cstr(g.pageName)}, { ${g.ids.map(id).join(', ')} } },`).join('\n')}
 };
-#define OMX_${K}_PANEL_PAGE_COUNT ${pagesOf(x, d).length}u
+#define OMX_${K}_PANEL_PAGE_COUNT ${pagesOf(everyShown, d).length}u
 static const struct omx_panel_rows OMX_${K}_PANEL = {
   OMX_${K}_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_${FAMILIES[FAMILIES.indexOf(x.family)].toUpperCase()},
 ${tables.map((t) => `  ${ref(t)},`).join('\n')}

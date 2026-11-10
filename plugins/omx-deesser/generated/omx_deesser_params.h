@@ -83,7 +83,7 @@ static const char *const OMX_DEESSER_PARAM_MODULES[OMX_DEESSER_PARAM_COUNT] = {
 #define OMX_DEESSER_NAME "omx deesser"
 #define OMX_DEESSER_VENDOR "openmixer"
 #define OMX_DEESSER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DEESSER_VERSION "0.19.1"
+#define OMX_DEESSER_VERSION "0.19.2"
 #define OMX_DEESSER_DESCRIPTION "The console's de-esser: a detector on a band around the sibilance drives the compressor's gain computer, and the reduction lands on that band alone or on the whole signal."
 #define OMX_DEESSER_CLAP_ID "org.openmixer.deesser"
 #define OMX_DEESSER_CLAP_FEATURES "audio-effect", "de-esser", "stereo"
@@ -143,11 +143,13 @@ static const struct omx_panel_role_row OMX_DEESSER_PANEL_ROLES[] = {
   { "release", 0u, 6u },
   { "mode", 0u, 7u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DEESSER_PANEL_PAGES[] = {
-  { "De-esser", "De-esser", { 7u, 0u, 1u, 2u, 3u, 4u, 5u, 6u } },
+  { "Easy", "Easy", { 0u, 2u, 4u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "De-esser", "De-esser", { 1u, 3u, 5u, 6u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_DEESSER_PANEL_PAGE_COUNT 1u
+#define OMX_DEESSER_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_DEESSER_PANEL = {
   OMX_DEESSER_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DEESSER,
   OMX_DEESSER_PANEL_SECTIONS, 1u,

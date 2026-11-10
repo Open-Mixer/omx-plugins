@@ -95,10 +95,9 @@ jobs:
       channel-deps: true
     secrets: inherit
 
-  # after the RPMs, and only when they built: both publish into one tree, and a push that loses a race is refused
+  # beside the RPMs: the two publish jobs share one concurrency group, so their pushes never race
   deb:
-    needs: rpm
-    if: ${{ !cancelled() && needs.rpm.result == 'success' }}
+    needs: qualify
     uses: Open-Mixer/.github/.github/workflows/build-deb.yml@openmixer-v1
     with:
       package-name: omx-plugins
