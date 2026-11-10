@@ -55,9 +55,16 @@ $(B)/hrp_report_matches_live_set.test: test/hrp_report_matches_live_set.test.c o
 	$(CC) $(CFLAGS) $(WARN) $(DSP_CFLAGS) $(LV2_CFLAGS) omx_hrp_lv2.c test/hrp_report_matches_live_set.test.c \
 		$(DSP_LIBS) -lm -o $@
 
+$(B)/hrp_drawn_curve_oracle.test: test/hrp_drawn_curve_oracle.test.c omx_hrp_lv2.c | $(B)
+	$(CC) $(CFLAGS) $(WARN) $(DSP_CFLAGS) $(LV2_CFLAGS) omx_hrp_lv2.c test/hrp_drawn_curve_oracle.test.c \
+		$(DSP_LIBS) -lm -o $@
+
 # The oracle: the report ports equal the live set, adopted through the real work_response() callback.
-test: all $(B)/hrp_report_matches_live_set.test
+# The drawn curve: within 0.5 dB of the measured response at 48 and 96 kHz, with a sabotage arm.
+test: all $(B)/hrp_report_matches_live_set.test $(B)/hrp_drawn_curve_oracle.test
 	./$(B)/hrp_report_matches_live_set.test
+	./$(B)/hrp_drawn_curve_oracle.test
+	./$(B)/hrp_drawn_curve_oracle.test --self-test
 
 install: all
 	mkdir -p $(DESTDIR)$(LIBDIR)/lv2
