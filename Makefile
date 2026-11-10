@@ -60,6 +60,9 @@
 #                    plugins are built for (tools/test/meters-abi-test.c, compile and run; part of `make test`)
 #   make param-contract-abi  include/omx_param_contract.h's extension table and entry are the layout omx-clap-core's
 #                    omx_clap_ext.h reads (tools/test/param-contract-abi-test.c, compile and run; part of `make test`)
+#   make host-contract  every built face opened by libomx-clap-core, whose own fingerprint of what get_info and the
+#                    contract serve must match the face's: omx_clap_host_param_contract() trusts it
+#                    (tools/test/host-contract-accept.c; part of `make test` and `make test-faces`)
 #   make strip-crosscheck   omx-strip, a chain, against the hand-ported strip it replaced, bit for bit at
 #                    the old plugin's settings (tools/test/strip-crosscheck.sh; needs the git history, and builds the
 #                    omx-contract and omx-dsp releases the old commit pinned, from sibling checkouts' tags or GitHub).
@@ -169,7 +172,7 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi
+.PHONY: face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi host-contract
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
@@ -185,6 +188,7 @@ test: lib units panel-words face-header role-meanings meter-binding panel-layout
 	@$(MAKE) -s presets-figures
 	@$(MAKE) -s meters-abi
 	@$(MAKE) -s param-contract-abi
+	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
 	@$(MAKE) -s strip-bands
 	@$(MAKE) -s test-role
@@ -195,6 +199,7 @@ test-faces: all lib contract-union eq-probe-race
 	@$(MAKE) -s lib-test
 	@$(MAKE) -s meters-abi
 	@$(MAKE) -s param-contract-abi
+	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
 	@$(MAKE) -s test-role
 	@$(MAKE) -s package-lists
@@ -332,6 +337,10 @@ param-contract-abi:
 	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-contract omx-clap-core clap) -o build/param-contract-abi-test tools/test/param-contract-abi-test.c
 	build/param-contract-abi-test
 	@echo "ok   org.openmixer.param-contract/1 as omx-clap-core reads it: id, sizeof and offsetof"
+host-contract: all
+	@mkdir -p build
+	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/host-contract-accept tools/test/host-contract-accept.c $(shell $(PKG_CONFIG) --libs omx-clap-core)
+	build/host-contract-accept $(foreach p,$(PLUGINS),$(p)build/$(notdir $(patsubst %/,%,$(p))).clap)
 # every level meter of the metered faces reads what tools/test/<face>.meter-level.txt holds within the bound
 # omx-dsp's fast-maths bound gives (meter-level-digest --tolerance), and a level moved past that bound is red; every
 # other meter (a gain reduction, float through libm) reads within a tolerance what tools/test/<face>.meter-others.txt holds
