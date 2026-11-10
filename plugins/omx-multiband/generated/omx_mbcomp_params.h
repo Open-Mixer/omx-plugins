@@ -419,6 +419,9 @@ static const struct omx_panel_role_row OMX_MBCOMP_PANEL_ROLES[] = {
   { "mix", 0u, 40u },
   { "output", 0u, 41u },
 };
+static const struct omx_panel_display_row OMX_MBCOMP_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR, 1u, OMX_CLAP_DISPLAY_FROM_METERS, { 0u, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.mbcomp.display.gain_reduction_bar", "Gain reduction" },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_MBCOMP_PANEL_PAGES[] = {
@@ -437,7 +440,7 @@ static const struct omx_panel_rows OMX_MBCOMP_PANEL = {
   OMX_MBCOMP_PANEL_SECTIONS, 7u,
   OMX_MBCOMP_PANEL_CONTROLS, 42u,
   OMX_MBCOMP_PANEL_ROLES, 7u,
-  NULL, 0u,
+  OMX_MBCOMP_PANEL_DISPLAYS, 1u,
   NULL, 0u,
 };
 

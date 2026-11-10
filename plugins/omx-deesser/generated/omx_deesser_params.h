@@ -142,6 +142,9 @@ static const struct omx_panel_role_row OMX_DEESSER_PANEL_ROLES[] = {
   { "release", 0u, 6u },
   { "mode", 0u, 7u },
 };
+static const struct omx_panel_display_row OMX_DEESSER_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR, 0u, OMX_CLAP_DISPLAY_FROM_METERS, { 0u, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.deesser.display.gain_reduction_bar", "Gain reduction" },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DEESSER_PANEL_PAGES[] = {
@@ -154,7 +157,7 @@ static const struct omx_panel_rows OMX_DEESSER_PANEL = {
   OMX_DEESSER_PANEL_SECTIONS, 1u,
   OMX_DEESSER_PANEL_CONTROLS, 8u,
   OMX_DEESSER_PANEL_ROLES, 8u,
-  NULL, 0u,
+  OMX_DEESSER_PANEL_DISPLAYS, 1u,
   NULL, 0u,
 };
 

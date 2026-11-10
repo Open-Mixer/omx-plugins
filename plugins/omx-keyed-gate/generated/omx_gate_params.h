@@ -178,6 +178,7 @@ static const struct omx_panel_role_row OMX_GATE_PANEL_ROLES[] = {
 };
 static const struct omx_panel_display_row OMX_GATE_PANEL_DISPLAYS[] = {
   { OMX_CLAP_DISPLAY_TRANSFER_CURVE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.gate.display.transfer_curve", "Gate" },
+  { OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR, 0u, OMX_CLAP_DISPLAY_FROM_METERS, { 0u, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.gate.display.gain_reduction_bar", "Gain reduction" },
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
@@ -192,7 +193,7 @@ static const struct omx_panel_rows OMX_GATE_PANEL = {
   OMX_GATE_PANEL_SECTIONS, 2u,
   OMX_GATE_PANEL_CONTROLS, 12u,
   OMX_GATE_PANEL_ROLES, 9u,
-  OMX_GATE_PANEL_DISPLAYS, 1u,
+  OMX_GATE_PANEL_DISPLAYS, 2u,
   NULL, 0u,
 };
 

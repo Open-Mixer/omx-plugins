@@ -195,7 +195,7 @@ static const omx_resource_hints_t OMX_COMP_RESOURCE_HINTS = {
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics. */
-#define OMX_COMP_PANEL_FINGERPRINT "ba5654783533eee7566956507562576632693877f4cbcfe3cdb9f91196e1e0cc"
+#define OMX_COMP_PANEL_FINGERPRINT "62e5fda63d8af6fd4d4ca6bff17890bc931195598bfb42815b8cb3018d86768f"
 static const struct omx_panel_section_row OMX_COMP_PANEL_SECTIONS[] = {
   { "comp", "fx.comp.section.comp", "Comp" },
   { "key", "fx.comp.section.key", "Key" },
@@ -231,6 +231,10 @@ static const struct omx_panel_role_row OMX_COMP_PANEL_ROLES[] = {
   { "makeup", 0u, 5u },
   { "mix", 0u, 6u },
 };
+static const struct omx_panel_display_row OMX_COMP_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_TRANSFER_CURVE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.comp.display.transfer_curve", "Comp" },
+  { OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR, 0u, OMX_CLAP_DISPLAY_FROM_METERS, { 0u, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.comp.display.gain_reduction_bar", "Gain reduction" },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_COMP_PANEL_PAGES[] = {
@@ -245,7 +249,7 @@ static const struct omx_panel_rows OMX_COMP_PANEL = {
   OMX_COMP_PANEL_SECTIONS, 3u,
   OMX_COMP_PANEL_CONTROLS, 19u,
   OMX_COMP_PANEL_ROLES, 7u,
-  NULL, 0u,
+  OMX_COMP_PANEL_DISPLAYS, 2u,
   NULL, 0u,
 };
 

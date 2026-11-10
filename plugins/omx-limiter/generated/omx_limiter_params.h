@@ -97,6 +97,9 @@ static const struct omx_panel_role_row OMX_LIMITER_PANEL_ROLES[] = {
   { "release", 0u, 2u },
   { "lookahead", 0u, 1u },
 };
+static const struct omx_panel_display_row OMX_LIMITER_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR, 0u, OMX_CLAP_DISPLAY_FROM_METERS, { 0u, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.limiter.display.gain_reduction_bar", "Gain reduction" },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_LIMITER_PANEL_PAGES[] = {
@@ -108,7 +111,7 @@ static const struct omx_panel_rows OMX_LIMITER_PANEL = {
   OMX_LIMITER_PANEL_SECTIONS, 1u,
   OMX_LIMITER_PANEL_CONTROLS, 3u,
   OMX_LIMITER_PANEL_ROLES, 3u,
-  NULL, 0u,
+  OMX_LIMITER_PANEL_DISPLAYS, 1u,
   NULL, 0u,
 };
 
