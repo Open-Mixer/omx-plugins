@@ -124,8 +124,8 @@ static const char *const OMX_REVERB_PARAM_MODULES[OMX_REVERB_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_REVERB_PARAM_CONTRACT_VERSION 1u
-#define OMX_REVERB_PARAM_CONTRACT_FINGERPRINT "3c6d0c052481f1fbafefc5f64bb8f16b76d00dfea1598888d5c90129a2e4a99d"
+#define OMX_REVERB_PARAM_CONTRACT_VERSION 2u
+#define OMX_REVERB_PARAM_CONTRACT_FINGERPRINT "4bfc8b448bcedb15595b78e1694ba771f4cf8f7cd7fb2ce077d9414b9af31afc"
 static const struct omx_param_contract_row OMX_REVERB_PARAM_CONTRACT[OMX_REVERB_PARAM_COUNT] = {
   { 14u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* plateModDepth pc */
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* mix none */

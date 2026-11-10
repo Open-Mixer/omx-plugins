@@ -76,8 +76,8 @@ static const char *const OMX_SPRING_PARAM_MODULES[OMX_SPRING_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_SPRING_PARAM_CONTRACT_VERSION 1u
-#define OMX_SPRING_PARAM_CONTRACT_FINGERPRINT "d92f4dc985e249e557b7cd62fd8c612c268932f592740230f11a9ace230a8095"
+#define OMX_SPRING_PARAM_CONTRACT_VERSION 2u
+#define OMX_SPRING_PARAM_CONTRACT_FINGERPRINT "a6dbeb2327e1d07d0b7906a057185616c4723d90582d8122e25660ff6b5a4eda"
 static const struct omx_param_contract_row OMX_SPRING_PARAM_CONTRACT[OMX_SPRING_PARAM_COUNT] = {
   { 1u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* decayS s */
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lengthMs ms */

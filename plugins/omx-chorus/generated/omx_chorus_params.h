@@ -76,8 +76,8 @@ static const char *const OMX_CHORUS_PARAM_MODULES[OMX_CHORUS_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_CHORUS_PARAM_CONTRACT_VERSION 1u
-#define OMX_CHORUS_PARAM_CONTRACT_FINGERPRINT "0ed178cc68e5aec571483b30d59a2e0bbce5baebe61b7b209cb069601584a0ad"
+#define OMX_CHORUS_PARAM_CONTRACT_VERSION 2u
+#define OMX_CHORUS_PARAM_CONTRACT_FINGERPRINT "cc4815354f59f8a24dd33071d8fa5a30d25b037923b8cf13ebb61cf1d4263577"
 static const struct omx_param_contract_row OMX_CHORUS_PARAM_CONTRACT[OMX_CHORUS_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* spread none */
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* rate hz */

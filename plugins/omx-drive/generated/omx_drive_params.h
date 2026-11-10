@@ -112,8 +112,8 @@ static const char *const OMX_DRIVE_PARAM_MODULES[OMX_DRIVE_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DRIVE_PARAM_CONTRACT_VERSION 1u
-#define OMX_DRIVE_PARAM_CONTRACT_FINGERPRINT "d7bc8c775efd557f555f597a287da8d8310e73782215f5bbfd025dba56d5df1d"
+#define OMX_DRIVE_PARAM_CONTRACT_VERSION 2u
+#define OMX_DRIVE_PARAM_CONTRACT_FINGERPRINT "1a35b3fb687b7421dd51cdeb9fa4947172c628c8164a4f76a3f88bfaf9b17a8e"
 static const struct omx_param_contract_row OMX_DRIVE_PARAM_CONTRACT[OMX_DRIVE_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* amount db */
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* character none */

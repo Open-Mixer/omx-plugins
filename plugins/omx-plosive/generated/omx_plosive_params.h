@@ -100,8 +100,8 @@ static const char *const OMX_PLOSIVE_PARAM_MODULES[OMX_PLOSIVE_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_PLOSIVE_PARAM_CONTRACT_VERSION 1u
-#define OMX_PLOSIVE_PARAM_CONTRACT_FINGERPRINT "693fcfd3bea6c88ed44fec2e124173aba261e022c3498a57d3eda0b46fd57675"
+#define OMX_PLOSIVE_PARAM_CONTRACT_VERSION 2u
+#define OMX_PLOSIVE_PARAM_CONTRACT_FINGERPRINT "2a41eecfe15389d0caf8ba2240c4b18cef9ddbb34a843f86783be0ea67fe9ea3"
 static const struct omx_param_contract_row OMX_PLOSIVE_PARAM_CONTRACT[OMX_PLOSIVE_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* consonantDb db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* sensitivityDb db */

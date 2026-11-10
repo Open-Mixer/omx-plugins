@@ -144,8 +144,8 @@ const movedAndSealed = (dir) => (rows) => {
   const moved = set('param', 0, 7, plus(1))(rows);
   const want = contractOf(loadDecl(dir), scaleOf);
   const unitOf = Object.fromEntries(want.map((r) => [r.unitEnum, r.unit]));
-  const served = moved.filter((r) => r[0] === 'param').map(([, , symbol, unitEnum, scale, step, min, max, def, flags]) => ({
-    symbol, unitEnum: Number(unitEnum), unit: unitOf[Number(unitEnum)], scale: SCALES[Number(scale)], step: Number(step), min: Number(min), max: Number(max), def: Number(def), flags: parseInt(flags, 16) & 0x1001b,
+  const served = moved.filter((r) => r[0] === 'param').map(([, id, symbol, unitEnum, scale, step, min, max, def, flags]) => ({
+    id: Number(id), symbol, unitEnum: Number(unitEnum), unit: unitOf[Number(unitEnum)], scale: SCALES[Number(scale)], step: Number(step), min: Number(min), max: Number(max), def: Number(def), flags: parseInt(flags, 16) & 0x1001b,
   }));
   return set('contract', 0, 2, contractFingerprint(served))(moved);
 };

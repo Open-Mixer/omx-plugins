@@ -106,8 +106,8 @@ static const char *const OMX_DUCKER_PARAM_MODULES[OMX_DUCKER_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DUCKER_PARAM_CONTRACT_VERSION 2u
-#define OMX_DUCKER_PARAM_CONTRACT_FINGERPRINT "f12cbb46a1f457128bbce6762a7a4be4d7f0603573cacec41999ac81f6aca8a8"
+#define OMX_DUCKER_PARAM_CONTRACT_VERSION 3u
+#define OMX_DUCKER_PARAM_CONTRACT_FINGERPRINT "26cb02750c18a914890aa7b6b007905fa2cc563d1ca4a8ad1e6006f05f873864"
 static const struct omx_param_contract_row OMX_DUCKER_PARAM_CONTRACT[OMX_DUCKER_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* thresholdDb db */
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* rangeDb db */

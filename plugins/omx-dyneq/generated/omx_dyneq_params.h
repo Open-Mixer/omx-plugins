@@ -484,8 +484,8 @@ static const char *const OMX_DYNEQ_PARAM_MODULES[OMX_DYNEQ_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DYNEQ_PARAM_CONTRACT_VERSION 2u
-#define OMX_DYNEQ_PARAM_CONTRACT_FINGERPRINT "fa72b31fef51f2de8c2690bda7d8f5b09f76032186bda513f187a0b70b56aa64"
+#define OMX_DYNEQ_PARAM_CONTRACT_VERSION 3u
+#define OMX_DYNEQ_PARAM_CONTRACT_FINGERPRINT "ae87b93cf0445f027d461a70139753d7fd71282bda7375d7a0c9863e443fb424"
 static const struct omx_param_contract_row OMX_DYNEQ_PARAM_CONTRACT[OMX_DYNEQ_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bandOn1 none */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bandOn2 none */

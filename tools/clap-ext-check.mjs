@@ -44,12 +44,12 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
 // the parameter contract
 const want = contractOf(d, scaleOf);
-const served = of('param').map(([, symbol, unitEnum, scale, step, min, max, def, flags]) => ({
-  symbol, unitEnum: Number(unitEnum), scale: SCALES[Number(scale)] ?? '?', step: Number(step), min: Number(min), max: Number(max), def: Number(def), flags: parseInt(flags, 16) & 0x1001b,
+const served = of('param').map(([id, symbol, unitEnum, scale, step, min, max, def, flags]) => ({
+  id: Number(id), symbol, unitEnum: Number(unitEnum), scale: SCALES[Number(scale)] ?? '?', step: Number(step), min: Number(min), max: Number(max), def: Number(def), flags: parseInt(flags, 16) & 0x1001b,
 }));
 const unitOf = Object.fromEntries(want.map((r) => [r.unitEnum, r.unit]));
-const row = (r) => [r.symbol, r.unitEnum, r.scale, r.step];
-check(same(served.map(row), want.map(row)), `param-contract: symbol, unit, scale and step of the ${want.length} parameters are the declaration's`, JSON.stringify(served.map(row)));
+const row = (r) => [r.id, r.symbol, r.unitEnum, r.scale, r.step];
+check(same(served.map(row), want.map(row)), `param-contract: id, symbol, unit, scale and step of the ${want.length} parameters are the declaration's`, JSON.stringify(served.map(row)));
 const [version, fingerprint] = of('contract')[0] ?? [];
 const wantVersion = contractVersionOf(d.stem, contractFingerprint(want));
 check(Number(version) === wantVersion, `param-contract: version ${wantVersion}`, `version ${version}`);

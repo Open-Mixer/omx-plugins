@@ -76,8 +76,8 @@ static const char *const OMX_TRANSIENT_PARAM_MODULES[OMX_TRANSIENT_PARAM_COUNT] 
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_TRANSIENT_PARAM_CONTRACT_VERSION 1u
-#define OMX_TRANSIENT_PARAM_CONTRACT_FINGERPRINT "bbc6e30c71502797c8ff2202acbfef52074f75a9b2ab3e5110adabacdabed242"
+#define OMX_TRANSIENT_PARAM_CONTRACT_VERSION 2u
+#define OMX_TRANSIENT_PARAM_CONTRACT_FINGERPRINT "110cf0365d7f60b97a18b53213f8bfd9042bbe9110b4f60c490cca6ad8cb16b0"
 static const struct omx_param_contract_row OMX_TRANSIENT_PARAM_CONTRACT[OMX_TRANSIENT_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* attackDb db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* sustainDb db */

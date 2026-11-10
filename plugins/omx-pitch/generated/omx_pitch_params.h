@@ -64,8 +64,8 @@ static const char *const OMX_PITCH_PARAM_MODULES[OMX_PITCH_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_PITCH_PARAM_CONTRACT_VERSION 1u
-#define OMX_PITCH_PARAM_CONTRACT_FINGERPRINT "5e31598957873137f074ab60e22da1d9b4b7ff26f2bb238e6eb450aca61311b3"
+#define OMX_PITCH_PARAM_CONTRACT_VERSION 2u
+#define OMX_PITCH_PARAM_CONTRACT_FINGERPRINT "38bfaa5502a46fd716a79b1d4ab2946be65ec549fcbc54d2b4e575e4d6a3ffaf"
 static const struct omx_param_contract_row OMX_PITCH_PARAM_CONTRACT[OMX_PITCH_PARAM_COUNT] = {
   { 22u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* semitones semitone12TET */
   { 21u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* cents cent */

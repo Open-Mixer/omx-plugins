@@ -104,8 +104,9 @@ export function scalesOf(dir) {
 }
 const STEPPED = 0x1, BYPASS = 0x10;
 
-/** Each parameter's contract, in id order, the host's bypass last: `{ symbol, unit, unitEnum, scale,
- * min, max, def, step, flags }` with min, max and def as the face's float travel reports them. */
+/** Each parameter's contract, in id order, the host's bypass last: `{ id, symbol, unit, unitEnum, scale,
+ * min, max, def, step, flags }`, `id` the CLAP id the face serves it under (a declared parameter its index, the bypass
+ * OMX_PLUGIN_FACE_IDS.bypassClapId), min, max and def as the face's float travel reports them. */
 export function contractOf(d, scaleOf) {
   const where = `plugins/${d.stem}`;
   const rows = d.params.map((p, i) => {
@@ -115,10 +116,10 @@ export function contractOf(d, scaleOf) {
     const choice = p.values !== undefined || p.points !== undefined;
     const scale = !choice && scaleOf(p) === 'log' ? 'log' : p.kind ? 'stepped' : 'linear';
     if (scale === 'log' && !(p.min > 0 && p.max > 0)) throw new Error(`${where}: '${p.symbol}' is logarithmic over ${p.min}..${p.max}; a log scale needs a positive travel`);
-    return { symbol: p.symbol, unit, unitEnum, scale, min: Math.fround(p.min), max: Math.fround(p.max), def: Math.fround(p.def), step: p.kind ? 1 : 0, flags: p.kind ? STEPPED : 0 };
+    return { id: i, symbol: p.symbol, unit, unitEnum, scale, min: Math.fround(p.min), max: Math.fround(p.max), def: Math.fround(p.def), step: p.kind ? 1 : 0, flags: p.kind ? STEPPED : 0 };
   });
   if (rows.some((r) => r.symbol === 'bypass')) throw new Error(`${where}: 'bypass' is the host's bypass parameter's symbol; a declared parameter cannot take it`);
-  rows.push({ symbol: 'bypass', unit: 'none', unitEnum: 0, scale: 'stepped', min: 0, max: 1, def: 0, step: 1, flags: STEPPED | BYPASS });
+  rows.push({ id: faceIds().bypassClapId, symbol: 'bypass', unit: 'none', unitEnum: 0, scale: 'stepped', min: 0, max: 1, def: 0, step: 1, flags: STEPPED | BYPASS });
   return rows;
 }
 
@@ -126,8 +127,13 @@ export function contractOf(d, scaleOf) {
 const shortest = (n) => (Object.is(n, -0) ? '0' : String(n));
 
 /** The canonical serialisation: the id line, then `id symbol unit scale min max default step flags`
- * per parameter, TAB-separated, LF after every line. */
-export const contractCanonical = (rows) =>
-  `${[CONTRACT_ID, ...rows.map((r, id) => [id, r.symbol, r.unit, r.scale, shortest(r.min), shortest(r.max), shortest(r.def), shortest(r.step), r.flags.toString(16)].join('\t'))].join('\n')}\n`;
+ * per parameter in CLAP id order, TAB-separated, LF after every line. `id` is the row's CLAP id, the one get_info
+ * answers and a host hashes, never its position. */
+export const contractCanonical = (rows) => {
+  const bad = rows.find((r) => !Number.isInteger(r.id) || r.id < 0 || r.id > 0xffffffff);
+  if (bad) throw new Error(`param-contract: the row '${bad.symbol}' has no CLAP id`);
+  const sorted = [...rows].sort((a, b) => a.id - b.id);
+  return `${[CONTRACT_ID, ...sorted.map((r) => [r.id, r.symbol, r.unit, r.scale, shortest(r.min), shortest(r.max), shortest(r.def), shortest(r.step), r.flags.toString(16)].join('\t'))].join('\n')}\n`;
+};
 
 export const contractFingerprint = (rows) => createHash('sha256').update(contractCanonical(rows)).digest('hex');

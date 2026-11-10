@@ -88,8 +88,8 @@ static const char *const OMX_DOUBLER_PARAM_MODULES[OMX_DOUBLER_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DOUBLER_PARAM_CONTRACT_VERSION 1u
-#define OMX_DOUBLER_PARAM_CONTRACT_FINGERPRINT "2bc2860d318e0c31b59d7c0d7e822fbc0c28a471d0d57e34d357dd8dddd66cfe"
+#define OMX_DOUBLER_PARAM_CONTRACT_VERSION 2u
+#define OMX_DOUBLER_PARAM_CONTRACT_FINGERPRINT "2fe9ebb30602c04c0efc688379faa74d6743ac48dc3aa95f7f184840477c1631"
 static const struct omx_param_contract_row OMX_DOUBLER_PARAM_CONTRACT[OMX_DOUBLER_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* voices none */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* delayMs ms */

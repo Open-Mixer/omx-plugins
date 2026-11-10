@@ -184,8 +184,8 @@ static const char *const OMX_DELAY_PARAM_MODULES[OMX_DELAY_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DELAY_PARAM_CONTRACT_VERSION 1u
-#define OMX_DELAY_PARAM_CONTRACT_FINGERPRINT "0fb8078f57eefce8cebfd48112c29e53c7e1648dcd485bad6ee881e645744c74"
+#define OMX_DELAY_PARAM_CONTRACT_VERSION 2u
+#define OMX_DELAY_PARAM_CONTRACT_FINGERPRINT "5d68c368c9182981147b3872a22fa1e47097e14a683897a35f7e806e1be2d4e8"
 static const struct omx_param_contract_row OMX_DELAY_PARAM_CONTRACT[OMX_DELAY_PARAM_COUNT] = {
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* fxDelayTime ms */
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* fxDelayFeedback none */

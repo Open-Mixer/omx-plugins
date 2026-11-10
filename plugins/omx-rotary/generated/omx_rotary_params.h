@@ -94,8 +94,8 @@ static const char *const OMX_ROTARY_PARAM_MODULES[OMX_ROTARY_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_ROTARY_PARAM_CONTRACT_VERSION 1u
-#define OMX_ROTARY_PARAM_CONTRACT_FINGERPRINT "7b064efba0e9985f2c12b82e577a32aeecd9502f6fcfce98f373d8a88d720c79"
+#define OMX_ROTARY_PARAM_CONTRACT_VERSION 2u
+#define OMX_ROTARY_PARAM_CONTRACT_FINGERPRINT "c8df04231f5071d1830fa6e67ac6e067f46b7bb659db9eafb2a76f8d779846e8"
 static const struct omx_param_contract_row OMX_ROTARY_PARAM_CONTRACT[OMX_ROTARY_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* hornSlowHz hz */
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* hornFastHz hz */
