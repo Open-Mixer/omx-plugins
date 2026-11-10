@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:flanger",
     "name": "omx flanger",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The console's flanger: one modulated short delay with signed feedback, swept by one oscillator and mixed with the dry signal.",
     "features": [
       "audio-effect"
@@ -38,7 +38,7 @@
       "source": {
         "from": {
           "link": "data/kernels/flanger.json#FLANGER_RATE_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -63,7 +63,7 @@
       "source": {
         "from": {
           "link": "data/kernels/flanger.json#FLANGER_DEPTH_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -88,7 +88,7 @@
       "source": {
         "from": {
           "link": "data/kernels/flanger.json#FLANGER_FEEDBACK_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -113,7 +113,7 @@
       "source": {
         "from": {
           "link": "data/kernels/flanger.json#FLANGER_MIX_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     }

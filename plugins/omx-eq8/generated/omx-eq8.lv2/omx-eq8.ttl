@@ -24,7 +24,7 @@
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
     lv2:minorVersion 19 ;
-    lv2:microVersion 1 ;
+    lv2:microVersion 2 ;
     rdfs:comment "The OpenMixer console's channel EQ, 8-band form: 8 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire." ;
     lv2:optionalFeature lv2:hardRTCapable ;
     omxres:threadsSpawned "0"^^xsd:integer ;

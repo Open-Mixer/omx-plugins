@@ -59,7 +59,7 @@ static const char *const OMX_TONE_PARAM_MODULES[OMX_TONE_PARAM_COUNT] = {
 #define OMX_TONE_NAME "omx tone"
 #define OMX_TONE_VENDOR "openmixer"
 #define OMX_TONE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TONE_VERSION "0.19.1"
+#define OMX_TONE_VERSION "0.19.2"
 #define OMX_TONE_DESCRIPTION "Tilts the whole tone darker or brighter about a pivot, and sweeps a resonant DJ filter from a low-pass through open to a high-pass with one knob."
 #define OMX_TONE_CLAP_ID "org.openmixer.tone"
 #define OMX_TONE_CLAP_FEATURES "audio-effect", "filter", "stereo"
@@ -108,10 +108,9 @@ static const struct omx_panel_role_row OMX_TONE_PANEL_ROLES[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_TONE_PANEL_PAGES[] = {
-  { "Tilt", "Tilt", { 0u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "DJ Filter", "DJ Filter", { 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 3u, 0u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_TONE_PANEL_PAGE_COUNT 2u
+#define OMX_TONE_PANEL_PAGE_COUNT 1u
 static const struct omx_panel_rows OMX_TONE_PANEL = {
   OMX_TONE_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_FILTER,
   OMX_TONE_PANEL_SECTIONS, 2u,

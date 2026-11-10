@@ -554,7 +554,7 @@ static const char *const OMX_EQ16_PARAM_MODULES[OMX_EQ16_PARAM_COUNT] = {
 #define OMX_EQ16_NAME "omx eq16"
 #define OMX_EQ16_VENDOR "openmixer"
 #define OMX_EQ16_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_EQ16_VERSION "0.19.1"
+#define OMX_EQ16_VERSION "0.19.2"
 #define OMX_EQ16_DESCRIPTION "The OpenMixer console's channel EQ, 16-band form: 16 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire."
 #define OMX_EQ16_CLAP_ID "org.openmixer.eq16"
 #define OMX_EQ16_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
@@ -855,20 +855,27 @@ static const struct omx_panel_display_row OMX_EQ16_PANEL_DISPLAYS[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_EQ16_PANEL_PAGES[] = {
-  { "Bands", "Bands 1", { 10u, 6u, 7u, 8u, 9u, 15u, 11u, 12u } },
-  { "Bands", "Bands 2", { 13u, 14u, 20u, 16u, 17u, 18u, 19u, 25u } },
-  { "Bands", "Bands 3", { 21u, 22u, 23u, 24u, 30u, 26u, 27u, 28u } },
-  { "Bands", "Bands 4", { 29u, 35u, 31u, 32u, 33u, 34u, 40u, 36u } },
-  { "Bands", "Bands 5", { 37u, 38u, 39u, 45u, 41u, 42u, 43u, 44u } },
-  { "Bands", "Bands 6", { 50u, 46u, 47u, 48u, 49u, 55u, 51u, 52u } },
-  { "Bands", "Bands 7", { 53u, 54u, 60u, 56u, 57u, 58u, 59u, 65u } },
-  { "Bands", "Bands 8", { 61u, 62u, 63u, 64u, 70u, 66u, 67u, 68u } },
-  { "Bands", "Bands 9", { 69u, 75u, 71u, 72u, 73u, 74u, 80u, 76u } },
-  { "Bands", "Bands 10", { 77u, 78u, 79u, 85u, 81u, 82u, 83u, 84u } },
+  { "Easy", "Easy", { 8u, 23u, 38u, 53u, 68u, 83u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 1 On - Band 1 Q", { 10u, 6u, 7u, 9u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 2 On - Band 2 Q", { 15u, 11u, 12u, 13u, 14u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 3 On - Band 3 Q", { 20u, 16u, 17u, 18u, 19u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 4 On - Band 4 Q", { 25u, 21u, 22u, 24u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 5 On - Band 5 Q", { 30u, 26u, 27u, 28u, 29u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 6 On - Band 6 Q", { 35u, 31u, 32u, 33u, 34u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 7 On - Band 7 Q", { 40u, 36u, 37u, 39u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 8 On - Band 8 Q", { 45u, 41u, 42u, 43u, 44u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 9 On - Band 9 Q", { 50u, 46u, 47u, 48u, 49u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 10 On - Band 10 Q", { 55u, 51u, 52u, 54u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 11 On - Band 11 Q", { 60u, 56u, 57u, 58u, 59u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 12 On - Band 12 Q", { 65u, 61u, 62u, 63u, 64u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 13 On - Band 13 Q", { 70u, 66u, 67u, 69u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 14 On - Band 14 Q", { 75u, 71u, 72u, 73u, 74u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 15 On - Band 15 Q", { 80u, 76u, 77u, 78u, 79u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 16 On - Band 16 Q", { 85u, 81u, 82u, 84u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "HPF", "HPF", { 0u, 2u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "LPF", "LPF", { 3u, 5u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_EQ16_PANEL_PAGE_COUNT 12u
+#define OMX_EQ16_PANEL_PAGE_COUNT 19u
 static const struct omx_panel_rows OMX_EQ16_PANEL = {
   OMX_EQ16_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_EQ,
   OMX_EQ16_PANEL_SECTIONS, 3u,

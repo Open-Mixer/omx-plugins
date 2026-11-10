@@ -34,6 +34,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { descriptorFile } from './descriptor.mjs';
+import { FACES as LIVE_FACES } from './live-faces.mjs';
 import { lookupValues, tableRows, tableWords } from './format-tables.mjs';
 import { compareVersions } from './omx-contract.mjs';
 
@@ -119,10 +120,13 @@ export const UPSTREAM = {
 /** An UPSTREAM entry excuses a differ when it names no ports (`at`), or names this plugin's port. */
 const excused = (entry, stem, where) => entry !== undefined && (entry.at === undefined || entry.at.includes(`${stem} ${where}`));
 
-/** The described plugins (a descriptor beside the declaration), and the ones outside the round trip. */
+/** The described plugins (a descriptor beside the declaration), and the ones outside the round trip. The two worker faces
+ * (omx-fbs, omx-hrp: LV2 only, written by tools/live-faces.mjs) are outside it: it scans both formats
+ * of a plugin, and tools/test/live-faces-test.mjs holds their descriptor equal to their TTL and their C enum. */
 export function described(root = ROOT) {
   const stems = readdirSync(join(root, 'plugins'), { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name).sort();
-  return { inside: stems.filter((s) => existsSync(join(root, 'plugins', s, descriptorFile(s)))), outside: stems.filter((s) => !existsSync(join(root, 'plugins', s, descriptorFile(s)))) };
+  const inside = (s) => existsSync(join(root, 'plugins', s, descriptorFile(s))) && !(s in LIVE_FACES);
+  return { inside: stems.filter(inside), outside: stems.filter((s) => !inside(s)) };
 }
 
 const f32 = (x) => (typeof x === 'number' ? Math.fround(x) : x);

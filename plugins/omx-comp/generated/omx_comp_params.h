@@ -149,7 +149,7 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 #define OMX_COMP_NAME "omx comp"
 #define OMX_COMP_VENDOR "openmixer"
 #define OMX_COMP_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_COMP_VERSION "0.19.1"
+#define OMX_COMP_VERSION "0.19.2"
 #define OMX_COMP_DESCRIPTION "The console's compressor: threshold, ratio and knee set how hard it holds the level down, attack and release how fast, with makeup gain and a dry/wet mix. Kind picks the RMS detector (Compressor) or the peak detector (Limiter), and detector oversampling can run the control path at 4x; detector topology has it hear the input (feedforward) or its own output (feedback). Its detector can listen to a key routed to its sidechain input instead, through a high-pass, a low-pass and a tilt, on the louder leg, the mid or the side, with a hold; key listen puts what the detector hears on the output, and duck holds the reduction to a set depth. The DSP is omx-dsp's <omxdsp/fx/omx_comp_instance.h>, the console's own compressor."
 #define OMX_COMP_CLAP_ID "org.openmixer.comp"
 #define OMX_COMP_CLAP_FEATURES "audio-effect", "compressor", "stereo"
@@ -234,8 +234,8 @@ static const struct omx_panel_role_row OMX_COMP_PANEL_ROLES[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_COMP_PANEL_PAGES[] = {
-  { "Comp", "Comp 1", { 0u, 1u, 2u, 3u, 4u, 15u, 5u, 6u } },
-  { "Comp", "Comp 2", { 7u, 8u, 9u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 5u, 6u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Comp", "Comp", { 1u, 2u, 15u, 7u, 8u, 9u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Key", "Key", { 10u, 11u, 12u, 13u, 16u, 14u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Duck", "Duck", { 17u, 18u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };

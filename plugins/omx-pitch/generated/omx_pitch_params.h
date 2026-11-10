@@ -53,7 +53,7 @@ static const char *const OMX_PITCH_PARAM_MODULES[OMX_PITCH_PARAM_COUNT] = {
 #define OMX_PITCH_NAME "omx pitch"
 #define OMX_PITCH_VENDOR "openmixer"
 #define OMX_PITCH_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_PITCH_VERSION "0.19.1"
+#define OMX_PITCH_VERSION "0.19.2"
 #define OMX_PITCH_DESCRIPTION "The console's pitch shifter: shifts both channels up or down by semitones and cents, without changing their length, mixed with the dry signal."
 #define OMX_PITCH_CLAP_ID "org.openmixer.pitch"
 #define OMX_PITCH_CLAP_FEATURES "audio-effect", "pitch-shifter", "stereo"
@@ -99,7 +99,7 @@ static const struct omx_panel_role_row OMX_PITCH_PANEL_ROLES[] = {
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections. */
 static const struct omx_panel_page_row OMX_PITCH_PANEL_PAGES[] = {
-  { "Pitch", "Pitch", { 0u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_PITCH_PANEL_PAGE_COUNT 1u
 static const struct omx_panel_rows OMX_PITCH_PANEL = {

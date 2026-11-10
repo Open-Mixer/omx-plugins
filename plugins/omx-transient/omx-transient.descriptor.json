@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:transient",
     "name": "omx transient",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The console's transient designer: more or less attack and sustain, from two envelope contrasts, with no threshold to set.",
     "features": [
       "audio-effect"
@@ -37,7 +37,7 @@
       "source": {
         "from": {
           "link": "data/kernels/transient.json#TRANSIENT_LIMITS.attackDb",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -61,7 +61,7 @@
       "source": {
         "from": {
           "link": "data/kernels/transient.json#TRANSIENT_LIMITS.sustainDb",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/transient.json#TRANSIENT_LIMITS.attackTimeMs",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -109,7 +109,7 @@
       "source": {
         "from": {
           "link": "data/kernels/transient.json#TRANSIENT_LIMITS.sustainTimeMs",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -133,7 +133,7 @@
       "source": {
         "from": {
           "link": "data/kernels/transient.json#TRANSIENT_LIMITS.outputDb",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     }
