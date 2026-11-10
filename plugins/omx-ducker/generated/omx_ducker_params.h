@@ -95,7 +95,7 @@ static const char *const OMX_DUCKER_PARAM_MODULES[OMX_DUCKER_PARAM_COUNT] = {
 #define OMX_DUCKER_NAME "omx ducker"
 #define OMX_DUCKER_VENDOR "openmixer"
 #define OMX_DUCKER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DUCKER_VERSION "0.19.1"
+#define OMX_DUCKER_VERSION "0.19.2"
 #define OMX_DUCKER_DESCRIPTION "Pulls the programme down while a key is heard, music under a voice, by a set depth with attack, hold and release, the console ducker."
 #define OMX_DUCKER_CLAP_ID "org.openmixer.ducker"
 #define OMX_DUCKER_CLAP_FEATURES "audio-effect", "compressor", "stereo"
@@ -158,13 +158,15 @@ static const struct omx_panel_role_row OMX_DUCKER_PANEL_ROLES[] = {
   { "release", 0u, 4u },
   { "knee", 0u, 6u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DUCKER_PANEL_PAGES[] = {
-  { "Duck", "Duck", { 0u, 1u, 5u, 6u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Timing", "Timing", { 2u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 2u, 4u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Duck", "Duck", { 5u, 6u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Timing", "Timing", { 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Key", "Key", { 7u, 8u, 9u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_DUCKER_PANEL_PAGE_COUNT 3u
+#define OMX_DUCKER_PANEL_PAGE_COUNT 4u
 static const struct omx_panel_rows OMX_DUCKER_PANEL = {
   OMX_DUCKER_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DYNAMICS,
   OMX_DUCKER_PANEL_SECTIONS, 3u,

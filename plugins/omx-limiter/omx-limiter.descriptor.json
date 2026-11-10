@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:limiter",
     "name": "omx limiter",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "The precision limiter: a look-ahead, true-peak, stereo-linked brickwall.",
     "features": [
       "audio-effect"
@@ -38,7 +38,7 @@
       "source": {
         "from": {
           "link": "data/kernels/limiter.json#LIMITER_LIMITS.ceilingDb",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -63,7 +63,7 @@
       "source": {
         "from": {
           "link": "data/kernels/limiter.json#LIMITER_LIMITS.lookaheadMs",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -88,7 +88,7 @@
       "source": {
         "from": {
           "link": "data/kernels/limiter.json#LIMITER_LIMITS.releaseMs",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     }
@@ -138,7 +138,7 @@
       "source": {
         "from": {
           "link": "data/kernels/limiter.json#readouts[gainReductionDb]",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     }

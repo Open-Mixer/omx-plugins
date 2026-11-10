@@ -101,7 +101,7 @@ jobs:
 
       - name: Every file a comment can be written in opens with its licence
         id: handback-spdx
-        uses: Open-Mixer/.github/.github/actions/spdx-check@c67b6d0e09fd9f7cf9a8dd24ff41ea30d99f893c
+        uses: Open-Mixer/.github/.github/actions/spdx-check@main
 
       - name: No tracked file points into a private repository
         id: handback-private-refs

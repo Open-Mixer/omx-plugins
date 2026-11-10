@@ -107,7 +107,7 @@
 #   make package-lists  every plugin the build makes is installed and listed by exactly the package it belongs
 #                   to, in the RPM spec and the Debian .install files: tools/package-lists-check.sh over a staged
 #                   install, with its --self-test (part of `make test`)
-VERSION := 0.19.1
+VERSION := 0.19.2
 PLUGINS := $(sort $(dir $(wildcard plugins/*/Makefile)))
 # A test plugin is built, tested and linked into libomxplugins.a like the others; `make install` never installs
 # it, and `make install-test` puts it outside the CLAP path: its declaration says `"role": "test"`

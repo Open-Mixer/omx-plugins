@@ -83,7 +83,7 @@ static const char *const OMX_GLUE_PARAM_MODULES[OMX_GLUE_PARAM_COUNT] = {
 #define OMX_GLUE_NAME "omx glue"
 #define OMX_GLUE_VENDOR "openmixer"
 #define OMX_GLUE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_GLUE_VERSION "0.19.1"
+#define OMX_GLUE_VERSION "0.19.2"
 #define OMX_GLUE_DESCRIPTION "A bus compressor with the detents of a classic console: stepped ratio, attack and release, a key filter and a dry mix."
 #define OMX_GLUE_CLAP_ID "org.openmixer.glue"
 #define OMX_GLUE_CLAP_FEATURES "audio-effect", "compressor", "stereo"
@@ -132,11 +132,13 @@ static const struct omx_panel_control_row OMX_GLUE_PANEL_CONTROLS[] = {
   { 6u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.glue.mix_pct", "Mix", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 7u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.glue.detector_topology", "Detector Topology", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_GLUE_PANEL_PAGES[] = {
-  { "Glue", "Glue", { 0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Glue", "Glue", { 4u, 5u, 6u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_GLUE_PANEL_PAGE_COUNT 1u
+#define OMX_GLUE_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_GLUE_PANEL = {
   OMX_GLUE_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
   OMX_GLUE_PANEL_SECTIONS, 1u,

@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:suboct",
     "name": "omx suboct",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.2",
     "doc": "Adds a note one or two octaves below a single played line, by dividing its pitch, with a tracking range and a gate for quiet input.",
     "features": [
       "audio-effect"
@@ -45,7 +45,7 @@
       "source": {
         "from": {
           "link": "data/kernels/suboct.json#SUBOCT_RANGES",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -69,7 +69,7 @@
       "source": {
         "from": {
           "link": "data/kernels/suboct.json#SUBOCT_OCT1_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -93,7 +93,7 @@
       "source": {
         "from": {
           "link": "data/kernels/suboct.json#SUBOCT_OCT2_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -117,7 +117,7 @@
       "source": {
         "from": {
           "link": "data/kernels/suboct.json#SUBOCT_DRY_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -141,7 +141,7 @@
       "source": {
         "from": {
           "link": "data/kernels/suboct.json#SUBOCT_TRACK_GATE_DB_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     }

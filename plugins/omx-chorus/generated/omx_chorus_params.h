@@ -65,7 +65,7 @@ static const char *const OMX_CHORUS_PARAM_MODULES[OMX_CHORUS_PARAM_COUNT] = {
 #define OMX_CHORUS_NAME "omx chorus"
 #define OMX_CHORUS_VENDOR "openmixer"
 #define OMX_CHORUS_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_CHORUS_VERSION "0.19.1"
+#define OMX_CHORUS_VERSION "0.19.2"
 #define OMX_CHORUS_DESCRIPTION "The console's chorus: up to four voices read one modulated delay line, the right leg's sweep offset by the spread, mixed with the dry signal."
 #define OMX_CHORUS_CLAP_ID "org.openmixer.chorus"
 #define OMX_CHORUS_CLAP_FEATURES "audio-effect", "chorus", "stereo"
@@ -116,11 +116,13 @@ static const struct omx_panel_role_row OMX_CHORUS_PANEL_ROLES[] = {
   { "spread", 0u, 0u },
   { "mix", 0u, 4u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_CHORUS_PANEL_PAGES[] = {
-  { "Chorus", "Chorus", { 1u, 2u, 3u, 4u, 0u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 1u, 4u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Chorus", "Chorus", { 0u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_CHORUS_PANEL_PAGE_COUNT 1u
+#define OMX_CHORUS_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_CHORUS_PANEL = {
   OMX_CHORUS_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_MODULATION,
   OMX_CHORUS_PANEL_SECTIONS, 1u,

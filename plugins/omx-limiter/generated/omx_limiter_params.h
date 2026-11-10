@@ -53,7 +53,7 @@ static const char *const OMX_LIMITER_PARAM_MODULES[OMX_LIMITER_PARAM_COUNT] = {
 #define OMX_LIMITER_NAME "omx limiter"
 #define OMX_LIMITER_VENDOR "openmixer"
 #define OMX_LIMITER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_LIMITER_VERSION "0.19.1"
+#define OMX_LIMITER_VERSION "0.19.2"
 #define OMX_LIMITER_DESCRIPTION "The precision limiter: a look-ahead, true-peak, stereo-linked brickwall."
 #define OMX_LIMITER_CLAP_ID "org.openmixer.limiter"
 #define OMX_LIMITER_CLAP_FEATURES "audio-effect", "limiter", "stereo"
@@ -97,9 +97,10 @@ static const struct omx_panel_role_row OMX_LIMITER_PANEL_ROLES[] = {
   { "release", 0u, 2u },
   { "lookahead", 0u, 1u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_LIMITER_PANEL_PAGES[] = {
-  { "Limiter", "Limiter", { 0u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 2u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_LIMITER_PANEL_PAGE_COUNT 1u
 static const struct omx_panel_rows OMX_LIMITER_PANEL = {
