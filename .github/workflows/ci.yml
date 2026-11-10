@@ -32,13 +32,18 @@ jobs:
     timeout-minutes: 5
     outputs:
       packages: ${{ steps.diff.outputs.packages }}
+      # the plugins a pull request's own diff touches (tools/plugin-scope.sh), or ALL: `make test`'s
+      # CHANGED_PLUGINS, so an unrelated plugin's sabotage arms and the round-trip rescan are not run again (#2)
+      plugins: ${{ steps.diff.outputs.plugins }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
       # The checkout of a pull request is its merge commit and the first parent is the base, so this diff is what the
-      # pull request adds. Any other event, or a diff that cannot be read, says true: main and tags always run it.
+      # pull request adds. Any other event, or a diff that cannot be read, says true: main and tags always run it,
+      # and every plugin (tools/plugin-scope.sh's own ALL fallback would say the same for an empty diff, but the
+      # packages check needs this same early exit).
       - id: diff
         env:
           EVENT: ${{ github.event_name }}
@@ -46,6 +51,7 @@ jobs:
           set -euo pipefail
           if [ "$EVENT" != pull_request ] || ! changed=$(git diff --name-only HEAD^1 HEAD) || [ -z "$changed" ]; then
             echo "packages=true" >> "$GITHUB_OUTPUT"
+            echo "plugins=ALL" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           printf '%s\n' "$changed"
@@ -54,13 +60,17 @@ jobs:
           else
             echo "packages=false" >> "$GITHUB_OUTPUT"
           fi
+          echo "plugins=$(tools/plugin-scope.sh <<<"$changed")" >> "$GITHUB_OUTPUT"
 
   test:
     name: make test (fedora:44, amd64)
+    needs: changes
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
     container:
       image: fedora:44
+    env:
+      CHANGED_PLUGINS: ${{ needs.changes.outputs.plugins }}
     steps:
       - name: Install the build dependencies
         run: |
