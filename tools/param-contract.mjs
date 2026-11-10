@@ -7,17 +7,26 @@
  * writes the rows a CLAP face serves it from (include/omx_param_contract.h); the unit codes are omx-contract's
  * (OMX_PARAM_CONTRACT_UNITS). tools/clap-ext-check.mjs reads what a built face serves back.
  *
- * The contract's version is 1: its first publication. A later change of a
- * symbol, unit, scale, travel or stepping changes the fingerprint and needs the next version.
+ * A plugin's contract version is the 1-based position of its fingerprint in tools/param-contract-versions.json: 1 its
+ * first publication, and a later change of a symbol, unit, scale, travel or stepping changes the fingerprint and appends
+ * it there, the next version. A fingerprint the file does not list is refused, so no change ships under an old version.
  */
 import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
 import { items, locateContract } from './omx-contract.mjs';
+import { travelUnit } from './descriptor.mjs';
 
 export const CONTRACT_ID = 'org.openmixer.param-contract/1';
-export const CONTRACT_VERSION = 1;
+/** The contract version of plugin `stem` whose contract fingerprint is `fingerprint` (tools/param-contract-versions.json). */
+export function contractVersionOf(stem, fingerprint) {
+  const known = JSON.parse(readFileSync(join(ROOT, 'tools', 'param-contract-versions.json'), 'utf8')).plugins[stem] ?? [];
+  const i = known.indexOf(fingerprint);
+  if (i < 0) throw new Error(`plugins/${stem}: param-contract fingerprint ${fingerprint} is not in tools/param-contract-versions.json: append it, the next version (${known.length + 1})`);
+  return i + 1;
+}
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -101,8 +110,9 @@ const STEPPED = 0x1, BYPASS = 0x10;
  * min, max, def, step, flags }` with min, max and def as the face's float travel reports them. */
 export function contractOf(d, scaleOf) {
   const where = `plugins/${d.stem}`;
-  const rows = d.params.map((p) => {
-    const [unit, unitEnum] = contractUnit(p.unit);
+  const rows = d.params.map((p, i) => {
+    // the unit the LV2 face writes for it (gen.mjs faceUnit): a ratio's travel with no unit of its own is a ratio
+    const [unit, unitEnum] = contractUnit(travelUnit(p.unit, d.descriptor?.controls[i]?.travel?.unit));
     // an integer travel is stepped, or log when its law is (an integer frequency, plugin-hostd#142); its step is 1 either way
     const choice = p.values !== undefined || p.points !== undefined;
     const scale = !choice && scaleOf(p) === 'log' ? 'log' : p.kind ? 'stepped' : 'linear';

@@ -76,11 +76,11 @@ static const char *const OMX_UPWARD_PARAM_MODULES[OMX_UPWARD_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_UPWARD_PARAM_CONTRACT_VERSION 1u
-#define OMX_UPWARD_PARAM_CONTRACT_FINGERPRINT "c75452b5fd9339a5adb42e9bec62697ff1f201af0596211bfcc108cfb72baa5b"
+#define OMX_UPWARD_PARAM_CONTRACT_VERSION 2u
+#define OMX_UPWARD_PARAM_CONTRACT_FINGERPRINT "2fc982aabf55f20d07941be4636a22c33034de41d19a62ea47d472ae04b9c214"
 static const struct omx_param_contract_row OMX_UPWARD_PARAM_CONTRACT[OMX_UPWARD_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* thresholdDb db */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio none */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio ratio */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* rangeDb db */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* attackMs ms */
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* releaseMs ms */

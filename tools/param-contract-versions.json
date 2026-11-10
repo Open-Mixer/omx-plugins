@@ -1,0 +1,108 @@
+{
+  "$comment": "Each plugin's org.openmixer.param-contract/1 fingerprints in publication order: its contract version is the 1-based position of its current fingerprint (tools/param-contract.mjs contractVersionOf). A change of symbol, unit, scale, travel or stepping appends the new fingerprint, never rewrites one.",
+  "plugins": {
+    "omx-balancer": [
+      "8c1de971be63f6c0df20d1500f885d569497eec815587fe7d31d3a27f45823ee"
+    ],
+    "omx-chorus": [
+      "0ed178cc68e5aec571483b30d59a2e0bbce5baebe61b7b209cb069601584a0ad"
+    ],
+    "omx-clipper": [
+      "36a5f5efb0b03951929924dbacf8d3d02cf7a3a929917845bcc44709c3ad1b3f"
+    ],
+    "omx-comp": [
+      "9e6eb2dc019e7d5c8c4d9bfd3c4125056dc2eb2db90a34b5719e46bf0a8477cb",
+      "80e0daeb20ee68aed82fdcf501c0f6661e277ba71fb91d2d2efc2e4bb8e10375"
+    ],
+    "omx-deesser": [
+      "762fa5fbcc17e69ff69407b8f46f1192c7d87b40d5c03db82749a35e390bd592",
+      "674f0f034984bd72f7cecbe5df7547b3fab8923ac5aa5fdf1f3b18119109af8a"
+    ],
+    "omx-delay": [
+      "0fb8078f57eefce8cebfd48112c29e53c7e1648dcd485bad6ee881e645744c74"
+    ],
+    "omx-doubler": [
+      "2bc2860d318e0c31b59d7c0d7e822fbc0c28a471d0d57e34d357dd8dddd66cfe"
+    ],
+    "omx-drive": [
+      "d7bc8c775efd557f555f597a287da8d8310e73782215f5bbfd025dba56d5df1d"
+    ],
+    "omx-ducker": [
+      "54e675dbd3317a4a76b2aeccc359f7c81c6d438f8f457e2eb9a9e2230a094767",
+      "f12cbb46a1f457128bbce6762a7a4be4d7f0603573cacec41999ac81f6aca8a8"
+    ],
+    "omx-dyneq": [
+      "b1c783fb3f786f4b7f74254ece5fb34cff436b49ae4a6f6a07a51448a664395b",
+      "fa72b31fef51f2de8c2690bda7d8f5b09f76032186bda513f187a0b70b56aa64"
+    ],
+    "omx-eq16": [
+      "f5e8fc02ca0b569ec0dde54fb0ab1fe10ec05c33ef19e1f2571524951f14e0c6"
+    ],
+    "omx-eq32": [
+      "a480854f026d6a18caa231dfab1e98de1dc23213e28af4a1a08b4d4c13cfefa3"
+    ],
+    "omx-eq8": [
+      "717733632742a913b553f1acc9c3dec8d6ec13428b0aa34d9e36511fd205abb1"
+    ],
+    "omx-flanger": [
+      "5fe17545e5852d6db37874ddaaadb5ba6a87a1b375a97ac936251fd39b6db747"
+    ],
+    "omx-geq": [
+      "fab8d4a312ea7b485a3ec91d008ddb735c80c3739231b7002744998eb423d5f0"
+    ],
+    "omx-glue": [
+      "7f2c2b19ab3474118548bdfffbb3316299e5cc3bbe8d22d40791f39656d0b848"
+    ],
+    "omx-keyed-gate": [
+      "fb378b79e0e68a9b25293e3aeb0b134134cded48e07e07665f6f182c05092b3e",
+      "a5ac3b3c1b0204bacc05c4ce21c84265c7ca35a10b359eda6aac985b27cd3542"
+    ],
+    "omx-limiter": [
+      "5eac6b3d4921ead5ed21ef89862a7f21ca7a6aca16cd6c5d49a320f0e52fb65e"
+    ],
+    "omx-loudlevel": [
+      "33b959ab49e65da93fa433b0263dae01c9d5d54c62a1705229854dc45467f2dc"
+    ],
+    "omx-multiband": [
+      "56d488bf9d3b6bf373e2c762ad4fb08cf54cbfc4fda0d60e07241e3929d32148",
+      "2093e6e94b941f469715ca034b123be763ab9b2e3f1e156d69307b0297e000cd"
+    ],
+    "omx-phaser": [
+      "ce52de8667a3734d436618dd2a7c57f9a6428f2ae0d80e3ae77159efef05c13e"
+    ],
+    "omx-pitch": [
+      "5e31598957873137f074ab60e22da1d9b4b7ff26f2bb238e6eb450aca61311b3"
+    ],
+    "omx-plosive": [
+      "693fcfd3bea6c88ed44fec2e124173aba261e022c3498a57d3eda0b46fd57675"
+    ],
+    "omx-reverb": [
+      "3c6d0c052481f1fbafefc5f64bb8f16b76d00dfea1598888d5c90129a2e4a99d"
+    ],
+    "omx-rotary": [
+      "7b064efba0e9985f2c12b82e577a32aeecd9502f6fcfce98f373d8a88d720c79"
+    ],
+    "omx-spring": [
+      "d92f4dc985e249e557b7cd62fd8c612c268932f592740230f11a9ace230a8095"
+    ],
+    "omx-strip": [
+      "1890ee14c19981c5811e3ae3dac4fea1ebc3cb9fca5c50b1d4e6c032e8edc533"
+    ],
+    "omx-suboct": [
+      "938441cf0a3c715127ab3c40b318de9af07ffeafd559a8d6edb704337b8391c4"
+    ],
+    "omx-tone": [
+      "33df5e703efc53d22079c985ffd9a121f845f316e6e5ca997e5d2fceb5a16816"
+    ],
+    "omx-transient": [
+      "bbc6e30c71502797c8ff2202acbfef52074f75a9b2ab3e5110adabacdabed242"
+    ],
+    "omx-tremolo": [
+      "7eda7f36d4553d98706b108002422d309b187291a28efb210a2d3c6369dee62f"
+    ],
+    "omx-upward": [
+      "c75452b5fd9339a5adb42e9bec62697ff1f201af0596211bfcc108cfb72baa5b",
+      "2fc982aabf55f20d07941be4636a22c33034de41d19a62ea47d472ae04b9c214"
+    ]
+  }
+}

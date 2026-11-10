@@ -44,7 +44,7 @@ import { faceBinding } from './instance-face.mjs';
 import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
 import { lv2Designation, lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
-import { CONTRACT_VERSION, contractFingerprint, contractOf, faceIds } from './param-contract.mjs';
+import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
 import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam } from './omx-contract.mjs';
 import { bandsMacro, baseOf, expandVariant, variantStems } from './variants.mjs';
 import { omxdspInclude, render } from './template.mjs';
@@ -687,7 +687,7 @@ static inline uint32_t ${bandCountFn(d, el)}(const float *values) {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_${K}_PARAM_CONTRACT_VERSION ${CONTRACT_VERSION}u
+#define OMX_${K}_PARAM_CONTRACT_VERSION ${contractVersionOf(d.stem, contractFingerprint(contractOf(d, scaleOf)))}u
 #define OMX_${K}_PARAM_CONTRACT_FINGERPRINT "${contractFingerprint(contractOf(d, scaleOf))}"
 static const struct omx_param_contract_row OMX_${K}_PARAM_CONTRACT[${P}_COUNT] = {
 ${contractOf(d, scaleOf).slice(0, -1).map((r) => `  { ${r.unitEnum}u, OMX_CLAP_SCALE_${r.scale.toUpperCase()}, ${r.step}.0 }, /* ${r.symbol} ${r.unit} */`).join('\n')}

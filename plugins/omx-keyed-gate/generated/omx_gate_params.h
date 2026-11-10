@@ -118,12 +118,12 @@ static const char *const OMX_GATE_PARAM_MODULES[OMX_GATE_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_GATE_PARAM_CONTRACT_VERSION 1u
-#define OMX_GATE_PARAM_CONTRACT_FINGERPRINT "fb378b79e0e68a9b25293e3aeb0b134134cded48e07e07665f6f182c05092b3e"
+#define OMX_GATE_PARAM_CONTRACT_VERSION 2u
+#define OMX_GATE_PARAM_CONTRACT_FINGERPRINT "a5ac3b3c1b0204bacc05c4ce21c84265c7ca35a10b359eda6aac985b27cd3542"
 static const struct omx_param_contract_row OMX_GATE_PARAM_CONTRACT[OMX_GATE_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* key_external none */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* threshold db */
-  { 0u, OMX_CLAP_SCALE_LOG, 0.0 }, /* ratio none */
+  { 258u, OMX_CLAP_SCALE_LOG, 0.0 }, /* ratio ratio */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* range db */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* attack ms */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* release ms */
@@ -145,10 +145,8 @@ static const omx_resource_hints_t OMX_GATE_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family gate.
- * Declared roles not published:
- *   ratio (ratio): the ratio role takes ratio, coef, not no unit */
-#define OMX_GATE_PANEL_FINGERPRINT "2338bb0c4807cadf33fb1d7ca6c09000ec92aa5836e8257233ea801b166505df"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family gate. */
+#define OMX_GATE_PANEL_FINGERPRINT "242ab64ba6d431ad101586d5ddcec59fecdee16d1cc142dc6f0145b4a44c30f3"
 static const struct omx_panel_section_row OMX_GATE_PANEL_SECTIONS[] = {
   { "gate", "fx.gate.section.gate", "Gate" },
   { "key", "fx.gate.section.key", "Key" },
@@ -176,6 +174,7 @@ static const struct omx_panel_role_row OMX_GATE_PANEL_ROLES[] = {
   { "knee_start", 0u, 6u },
   { "knee_end", 0u, 7u },
   { "hysteresis", 0u, 9u },
+  { "ratio", 0u, 2u },
 };
 static const struct omx_panel_display_row OMX_GATE_PANEL_DISPLAYS[] = {
   { OMX_CLAP_DISPLAY_TRANSFER_CURVE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.gate.display.transfer_curve", "Gate" },
@@ -192,7 +191,7 @@ static const struct omx_panel_rows OMX_GATE_PANEL = {
   OMX_GATE_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_GATE,
   OMX_GATE_PANEL_SECTIONS, 2u,
   OMX_GATE_PANEL_CONTROLS, 12u,
-  OMX_GATE_PANEL_ROLES, 8u,
+  OMX_GATE_PANEL_ROLES, 9u,
   OMX_GATE_PANEL_DISPLAYS, 1u,
   NULL, 0u,
 };

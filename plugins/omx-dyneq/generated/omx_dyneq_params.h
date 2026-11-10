@@ -484,8 +484,8 @@ static const char *const OMX_DYNEQ_PARAM_MODULES[OMX_DYNEQ_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_DYNEQ_PARAM_CONTRACT_VERSION 1u
-#define OMX_DYNEQ_PARAM_CONTRACT_FINGERPRINT "b1c783fb3f786f4b7f74254ece5fb34cff436b49ae4a6f6a07a51448a664395b"
+#define OMX_DYNEQ_PARAM_CONTRACT_VERSION 2u
+#define OMX_DYNEQ_PARAM_CONTRACT_FINGERPRINT "fa72b31fef51f2de8c2690bda7d8f5b09f76032186bda513f187a0b70b56aa64"
 static const struct omx_param_contract_row OMX_DYNEQ_PARAM_CONTRACT[OMX_DYNEQ_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bandOn1 none */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bandOn2 none */
@@ -529,12 +529,12 @@ static const struct omx_param_contract_row OMX_DYNEQ_PARAM_CONTRACT[OMX_DYNEQ_PA
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* threshold4 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* threshold5 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* threshold6 db */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio1 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio2 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio3 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio4 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio5 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio6 none */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio1 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio2 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio3 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio4 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio5 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio6 ratio */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* range1 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* range2 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* range3 db */

@@ -22,7 +22,7 @@ import { readFileSync } from 'node:fs';
 import { panelDescription } from './descriptor.mjs';
 import { loadDecl, scaleOf } from './gen.mjs';
 import { locateContract } from './omx-contract.mjs';
-import { CONTRACT_VERSION, contractCanonical, contractFingerprint, contractOf, scalesOf } from './param-contract.mjs';
+import { contractCanonical, contractFingerprint, contractOf, contractVersionOf, scalesOf } from './param-contract.mjs';
 import { PLACEMENTS, pagesOf } from './omx-panel.mjs';
 import { maskOf } from './resource-hints.mjs';
 
@@ -51,7 +51,8 @@ const unitOf = Object.fromEntries(want.map((r) => [r.unitEnum, r.unit]));
 const row = (r) => [r.symbol, r.unitEnum, r.scale, r.step];
 check(same(served.map(row), want.map(row)), `param-contract: symbol, unit, scale and step of the ${want.length} parameters are the declaration's`, JSON.stringify(served.map(row)));
 const [version, fingerprint] = of('contract')[0] ?? [];
-check(Number(version) === CONTRACT_VERSION, `param-contract: version ${CONTRACT_VERSION}`, `version ${version}`);
+const wantVersion = contractVersionOf(d.stem, contractFingerprint(want));
+check(Number(version) === wantVersion, `param-contract: version ${wantVersion}`, `version ${version}`);
 const servedRows = served.map((r) => ({ ...r, unit: unitOf[r.unitEnum] ?? `?${r.unitEnum}` }));
 check(fingerprint === contractFingerprint(servedRows), 'param-contract: the fingerprint is that of what get_info and the contract serve', `${fingerprint}, computed over:\n${contractCanonical(servedRows)}`);
 check(fingerprint === contractFingerprint(want), "param-contract: the fingerprint is the declaration's", `${fingerprint}, the declaration's ${contractFingerprint(want)}`);

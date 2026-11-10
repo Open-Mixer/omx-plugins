@@ -160,11 +160,11 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_COMP_PARAM_CONTRACT_VERSION 1u
-#define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "9e6eb2dc019e7d5c8c4d9bfd3c4125056dc2eb2db90a34b5719e46bf0a8477cb"
+#define OMX_COMP_PARAM_CONTRACT_VERSION 2u
+#define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "80e0daeb20ee68aed82fdcf501c0f6661e277ba71fb91d2d2efc2e4bb8e10375"
 static const struct omx_param_contract_row OMX_COMP_PARAM_CONTRACT[OMX_COMP_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* thresholdDb db */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio none */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio ratio */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* kneeDb db */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* attackMs ms */
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* releaseMs ms */
@@ -194,10 +194,8 @@ static const omx_resource_hints_t OMX_COMP_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics.
- * Declared roles not published:
- *   ratio (ratio): the ratio role takes ratio, coef, not no unit */
-#define OMX_COMP_PANEL_FINGERPRINT "6efeb5c69eeb29e615a8fed653f4f1237aedcfe2374593812b674b29a05c76a1"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics. */
+#define OMX_COMP_PANEL_FINGERPRINT "ba5654783533eee7566956507562576632693877f4cbcfe3cdb9f91196e1e0cc"
 static const struct omx_panel_section_row OMX_COMP_PANEL_SECTIONS[] = {
   { "comp", "fx.comp.section.comp", "Comp" },
   { "key", "fx.comp.section.key", "Key" },
@@ -226,6 +224,7 @@ static const struct omx_panel_control_row OMX_COMP_PANEL_CONTROLS[] = {
 };
 static const struct omx_panel_role_row OMX_COMP_PANEL_ROLES[] = {
   { "threshold", 0u, 0u },
+  { "ratio", 0u, 1u },
   { "attack", 0u, 3u },
   { "release", 0u, 4u },
   { "knee", 0u, 2u },
@@ -235,8 +234,8 @@ static const struct omx_panel_role_row OMX_COMP_PANEL_ROLES[] = {
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_COMP_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 0u, 5u, 6u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Comp", "Comp", { 1u, 2u, 15u, 7u, 8u, 9u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 5u, 6u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Comp", "Comp", { 2u, 15u, 7u, 8u, 9u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Key", "Key", { 10u, 11u, 12u, 13u, 16u, 14u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Duck", "Duck", { 17u, 18u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
@@ -245,7 +244,7 @@ static const struct omx_panel_rows OMX_COMP_PANEL = {
   OMX_COMP_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DYNAMICS,
   OMX_COMP_PANEL_SECTIONS, 3u,
   OMX_COMP_PANEL_CONTROLS, 19u,
-  OMX_COMP_PANEL_ROLES, 6u,
+  OMX_COMP_PANEL_ROLES, 7u,
   NULL, 0u,
   NULL, 0u,
 };
