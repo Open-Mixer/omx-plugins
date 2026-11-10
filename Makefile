@@ -167,11 +167,11 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi
+.PHONY: role-meanings summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids strip-visible-when face-dirty-order
+test: lib units panel-words role-meanings panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids strip-visible-when face-dirty-order
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s round-trip
@@ -200,6 +200,10 @@ units:
 	node tools/test/param-units-check.mjs --self-test
 panel-words:
 	node tools/test/panel-words-check.mjs --self-test
+# contract/role-meanings.json holds every role of every family once, and none other (tools/test/role-meanings-check.mjs)
+role-meanings:
+	node tools/test/role-meanings-check.mjs
+	node tools/test/role-meanings-check.mjs --self-test
 panel-layout:
 	node tools/test/panel-layout-test.mjs
 descriptor-view:
@@ -383,7 +387,7 @@ package-lists:
 	tools/package-lists-check.sh --self-test
 # Each shipped plugin's descriptor, plugins/<stem>/<stem>.descriptor.json, installed byte for byte into omx-contract's
 # contract directory as $(CONTRACTDIR)/<schema major>/omx-plugins/plugins/<stem>.json, and each definition file of
-# contract/ (a definition file this tree owns; none today) as
+# contract/ (a definition file this tree owns: role-meanings.json, the meaning each panel role plays) as
 # $(CONTRACTDIR)/<schema major>/omx-plugins/<file>.json, with a MANIFEST.json naming this
 # version (omx-contract docs/contract-dir.md); the packages ship it in omx-plugins-contract. The directory is
 # omx-contract-data's, under the same data directory

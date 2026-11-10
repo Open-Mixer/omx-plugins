@@ -101,7 +101,7 @@ Description: Headers and static library of the OpenMixer plugins
 Package: omx-plugins-contract
 Architecture: all
 Multi-Arch: foreign
-Depends: ${misc:Depends}
+Depends: omx-contract-data (>= 3.13.0~), omx-contract-data (<< 4~), ${misc:Depends}
 Breaks: omx-plugins-dev (<< ${source:Version})
 Replaces: omx-plugins-dev (<< ${source:Version})
 Description: OpenMixer plugins' descriptors in omx-contract's contract directory

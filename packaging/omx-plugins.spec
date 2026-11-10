@@ -137,7 +137,8 @@ Its documentation is on openmixer.org.
 Summary: The OpenMixer plugins' descriptors in omx-contract's contract directory
 BuildArch: noarch
 # the contract directory, its schema and its reader's own package
-Requires: (omx-contract-data >= 3.12.0 with omx-contract-data < 4)
+# 3.13.0: the reader that knows the roleMeanings kind contract/role-meanings.json is
+Requires: (omx-contract-data >= 3.13.0 with omx-contract-data < 4)
 # the files lived in omx-plugins-devel before this package
 Conflicts: %{name}-devel < %{version}-%{release}
 
