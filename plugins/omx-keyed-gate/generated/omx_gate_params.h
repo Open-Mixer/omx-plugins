@@ -117,7 +117,7 @@ static const char *const OMX_GATE_PARAM_MODULES[OMX_GATE_PARAM_COUNT] = {
 #define OMX_GATE_DECL_DIGEST "89c6643026ff9a19b63266e7c5661b32863e3689620767db36a0707c46367fe8"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_GATE_PARAM_CONTRACT_VERSION 2u
 #define OMX_GATE_PARAM_CONTRACT_FINGERPRINT "a5ac3b3c1b0204bacc05c4ce21c84265c7ca35a10b359eda6aac985b27cd3542"
 static const struct omx_param_contract_row OMX_GATE_PARAM_CONTRACT[OMX_GATE_PARAM_COUNT] = {

@@ -63,7 +63,7 @@ static const char *const OMX_LIMITER_PARAM_MODULES[OMX_LIMITER_PARAM_COUNT] = {
 #define OMX_LIMITER_DECL_DIGEST "aaae50a0d0219bc9406793d74ddc52d57717d8a4433e4d39f174cd5ef6e4c52c"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_LIMITER_PARAM_CONTRACT_VERSION 1u
 #define OMX_LIMITER_PARAM_CONTRACT_FINGERPRINT "5eac6b3d4921ead5ed21ef89862a7f21ca7a6aca16cd6c5d49a320f0e52fb65e"
 static const struct omx_param_contract_row OMX_LIMITER_PARAM_CONTRACT[OMX_LIMITER_PARAM_COUNT] = {

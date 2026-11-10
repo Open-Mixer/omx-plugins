@@ -564,7 +564,7 @@ static const char *const OMX_EQ16_PARAM_MODULES[OMX_EQ16_PARAM_COUNT] = {
 #define OMX_EQ16_DECL_DIGEST "7b5f7b1f46ebc116414f68203cf8240c72c0154227d0169c0da832ee9aad2c56"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_EQ16_PARAM_CONTRACT_VERSION 1u
 #define OMX_EQ16_PARAM_CONTRACT_FINGERPRINT "f5e8fc02ca0b569ec0dde54fb0ab1fe10ec05c33ef19e1f2571524951f14e0c6"
 static const struct omx_param_contract_row OMX_EQ16_PARAM_CONTRACT[OMX_EQ16_PARAM_COUNT] = {

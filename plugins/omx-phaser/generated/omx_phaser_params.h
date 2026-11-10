@@ -81,7 +81,7 @@ static const char *const OMX_PHASER_PARAM_MODULES[OMX_PHASER_PARAM_COUNT] = {
 #define OMX_PHASER_DECL_DIGEST "d39a2a6935c7d0e32234d86d28aa84bcb731db7c680d1cd28dd517edff5fe512"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_PHASER_PARAM_CONTRACT_VERSION 1u
 #define OMX_PHASER_PARAM_CONTRACT_FINGERPRINT "ce52de8667a3734d436618dd2a7c57f9a6428f2ae0d80e3ae77159efef05c13e"
 static const struct omx_param_contract_row OMX_PHASER_PARAM_CONTRACT[OMX_PHASER_PARAM_COUNT] = {

@@ -69,7 +69,7 @@ static const char *const OMX_TONE_PARAM_MODULES[OMX_TONE_PARAM_COUNT] = {
 #define OMX_TONE_DECL_DIGEST "98bc8d37e1cb6e843ad5cae6db1e41273e996044dc425c5aa435f945ed96656e"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_TONE_PARAM_CONTRACT_VERSION 1u
 #define OMX_TONE_PARAM_CONTRACT_FINGERPRINT "33df5e703efc53d22079c985ffd9a121f845f316e6e5ca997e5d2fceb5a16816"
 static const struct omx_param_contract_row OMX_TONE_PARAM_CONTRACT[OMX_TONE_PARAM_COUNT] = {

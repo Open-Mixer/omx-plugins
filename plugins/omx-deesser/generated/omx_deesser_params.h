@@ -93,7 +93,7 @@ static const char *const OMX_DEESSER_PARAM_MODULES[OMX_DEESSER_PARAM_COUNT] = {
 #define OMX_DEESSER_DECL_DIGEST "5229f9c0817d98fea312f088c1f8519628c36ef5f1d2b453b22f3ba0571f097f"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_DEESSER_PARAM_CONTRACT_VERSION 2u
 #define OMX_DEESSER_PARAM_CONTRACT_FINGERPRINT "674f0f034984bd72f7cecbe5df7547b3fab8923ac5aa5fdf1f3b18119109af8a"
 static const struct omx_param_contract_row OMX_DEESSER_PARAM_CONTRACT[OMX_DEESSER_PARAM_COUNT] = {

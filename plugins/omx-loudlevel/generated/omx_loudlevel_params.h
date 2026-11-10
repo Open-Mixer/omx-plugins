@@ -75,7 +75,7 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
 #define OMX_LOUDLEVEL_DECL_DIGEST "5ca40a12d69abada26cd79a670a6090d0dabf4de21b92531fafaccc34968ba61"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 1u
 #define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "33b959ab49e65da93fa433b0263dae01c9d5d54c62a1705229854dc45467f2dc"
 static const struct omx_param_contract_row OMX_LOUDLEVEL_PARAM_CONTRACT[OMX_LOUDLEVEL_PARAM_COUNT] = {

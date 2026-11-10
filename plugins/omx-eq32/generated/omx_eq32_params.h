@@ -1044,7 +1044,7 @@ static const char *const OMX_EQ32_PARAM_MODULES[OMX_EQ32_PARAM_COUNT] = {
 #define OMX_EQ32_DECL_DIGEST "abb7cd492c295eaa6fb5588beab68219fbe050173bc287f2a02f26670db1181c"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_EQ32_PARAM_CONTRACT_VERSION 1u
 #define OMX_EQ32_PARAM_CONTRACT_FINGERPRINT "a480854f026d6a18caa231dfab1e98de1dc23213e28af4a1a08b4d4c13cfefa3"
 static const struct omx_param_contract_row OMX_EQ32_PARAM_CONTRACT[OMX_EQ32_PARAM_COUNT] = {

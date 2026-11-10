@@ -69,7 +69,7 @@ static const char *const OMX_TREMOLO_PARAM_MODULES[OMX_TREMOLO_PARAM_COUNT] = {
 #define OMX_TREMOLO_DECL_DIGEST "b57991962924d939b9966fa18b44ce86bb73f3c940611aaf165dd227ec9b6d1a"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_TREMOLO_PARAM_CONTRACT_VERSION 1u
 #define OMX_TREMOLO_PARAM_CONTRACT_FINGERPRINT "7eda7f36d4553d98706b108002422d309b187291a28efb210a2d3c6369dee62f"
 static const struct omx_param_contract_row OMX_TREMOLO_PARAM_CONTRACT[OMX_TREMOLO_PARAM_COUNT] = {

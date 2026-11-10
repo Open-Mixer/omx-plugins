@@ -105,7 +105,7 @@ static const char *const OMX_DUCKER_PARAM_MODULES[OMX_DUCKER_PARAM_COUNT] = {
 #define OMX_DUCKER_DECL_DIGEST "cd2a96de102d23b5c4293c47764f817f2b2e659e7a8a88a01c538731a6e439ed"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_DUCKER_PARAM_CONTRACT_VERSION 2u
 #define OMX_DUCKER_PARAM_CONTRACT_FINGERPRINT "f12cbb46a1f457128bbce6762a7a4be4d7f0603573cacec41999ac81f6aca8a8"
 static const struct omx_param_contract_row OMX_DUCKER_PARAM_CONTRACT[OMX_DUCKER_PARAM_COUNT] = {

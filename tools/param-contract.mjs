@@ -49,24 +49,22 @@ export function declaredUnits(dir) {
   return Object.fromEntries(Object.entries(item.value).sort((a, b) => a[1] - b[1]));
 }
 
-/** The ids a face gives its own controls are omx-contract's: the sheet OMX_PLUGIN_FACE_IDS (data/plugin-face.json,
- * omx-contract >= 3.9.0), rendered to omxcontract/omx_plugin_face_ids.h. The CLAP bypass id and the LV2 enabled and latency
+/** The ids a face gives its own controls are this tree's: the sheet OMX_PLUGIN_FACE_IDS of contract/plugin-face.json
+ * (omx-contract's from 3.9.0 to 3.12.x, ours since 0.19.3), rendered to include/omx_plugin_face_ids.h and installed into
+ * the contract directory. The CLAP bypass id and the LV2 enabled and latency
  * indices are the same in every plugin and never move when a control is appended. */
 export const FACE_IDS_ITEM = 'OMX_PLUGIN_FACE_IDS';
+export const FACE_IDS_FILE = 'plugin-face.json';
 
-/** `{ bypassClapId, enabledLv2Index, latencyLv2Index }` of the resolved contract at `dir` (default: this tree's). */
+/** `{ bypassClapId, enabledLv2Index, latencyLv2Index }` of this tree's contract/plugin-face.json, or of the resolved
+ * contract at `dir` (a union holding the installed copy). */
 let faceIdsCache;
 export function faceIds(dir) {
   if (dir === undefined && faceIdsCache) return faceIdsCache;
-  let at = dir;
-  if (at === undefined) {
-    const found = locateContract(ROOT);
-    if (!found.dir) throw new Error(`${FACE_IDS_ITEM}: ${found.why}`);
-    at = found.dir;
-  }
-  const v = items(at)[FACE_IDS_ITEM]?.value;
+  const at = dir ?? join(ROOT, 'contract', FACE_IDS_FILE);
+  const v = dir === undefined ? JSON.parse(readFileSync(at, 'utf8'))[FACE_IDS_ITEM]?.value : items(at)[FACE_IDS_ITEM]?.value;
   for (const k of ['bypassClapId', 'enabledLv2Index', 'latencyLv2Index'])
-    if (!Number.isInteger(v?.[k])) throw new Error(`${at}: the resolved contract holds no ${FACE_IDS_ITEM}.${k} (omx-contract >= 3.9.0)`);
+    if (!Number.isInteger(v?.[k])) throw new Error(`${at}: holds no ${FACE_IDS_ITEM}.${k}`);
   const ids = { bypassClapId: v.bypassClapId, enabledLv2Index: v.enabledLv2Index, latencyLv2Index: v.latencyLv2Index };
   if (dir === undefined) faceIdsCache = ids;
   return ids;

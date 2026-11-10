@@ -75,7 +75,7 @@ static const char *const OMX_SUBOCT_PARAM_MODULES[OMX_SUBOCT_PARAM_COUNT] = {
 #define OMX_SUBOCT_DECL_DIGEST "6e650f4f11758449a64b5a67752d62f89f3c852e48f19bff02327520610abbb3"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_SUBOCT_PARAM_CONTRACT_VERSION 1u
 #define OMX_SUBOCT_PARAM_CONTRACT_FINGERPRINT "938441cf0a3c715127ab3c40b318de9af07ffeafd559a8d6edb704337b8391c4"
 static const struct omx_param_contract_row OMX_SUBOCT_PARAM_CONTRACT[OMX_SUBOCT_PARAM_COUNT] = {

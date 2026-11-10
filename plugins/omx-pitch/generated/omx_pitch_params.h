@@ -63,7 +63,7 @@ static const char *const OMX_PITCH_PARAM_MODULES[OMX_PITCH_PARAM_COUNT] = {
 #define OMX_PITCH_DECL_DIGEST "1147fee9b0992b434223331f065cdfacf96577f00fb64751d0c42aca706448b6"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_PITCH_PARAM_CONTRACT_VERSION 1u
 #define OMX_PITCH_PARAM_CONTRACT_FINGERPRINT "5e31598957873137f074ab60e22da1d9b4b7ff26f2bb238e6eb450aca61311b3"
 static const struct omx_param_contract_row OMX_PITCH_PARAM_CONTRACT[OMX_PITCH_PARAM_COUNT] = {

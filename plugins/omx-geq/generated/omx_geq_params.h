@@ -231,7 +231,7 @@ static const char *const OMX_GEQ_PARAM_MODULES[OMX_GEQ_PARAM_COUNT] = {
 #define OMX_GEQ_DECL_DIGEST "d0a6a22360a6ce7914f59d4b3eb245c16250f1a772ad308a64bbe05698fe2f48"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_GEQ_PARAM_CONTRACT_VERSION 1u
 #define OMX_GEQ_PARAM_CONTRACT_FINGERPRINT "fab8d4a312ea7b485a3ec91d008ddb735c80c3739231b7002744998eb423d5f0"
 static const struct omx_param_contract_row OMX_GEQ_PARAM_CONTRACT[OMX_GEQ_PARAM_COUNT] = {

@@ -69,7 +69,7 @@ static const char *const OMX_BALANCER_PARAM_MODULES[OMX_BALANCER_PARAM_COUNT] = 
 #define OMX_BALANCER_DECL_DIGEST "427d243fbeeca3d3a7f7a86bb6f9c0a2a75ff42890268e7e92547d573480a461"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_BALANCER_PARAM_CONTRACT_VERSION 1u
 #define OMX_BALANCER_PARAM_CONTRACT_FINGERPRINT "8c1de971be63f6c0df20d1500f885d569497eec815587fe7d31d3a27f45823ee"
 static const struct omx_param_contract_row OMX_BALANCER_PARAM_CONTRACT[OMX_BALANCER_PARAM_COUNT] = {

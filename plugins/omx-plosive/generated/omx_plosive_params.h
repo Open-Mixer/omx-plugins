@@ -99,7 +99,7 @@ static const char *const OMX_PLOSIVE_PARAM_MODULES[OMX_PLOSIVE_PARAM_COUNT] = {
 #define OMX_PLOSIVE_DECL_DIGEST "1f7aefaa6ad81d242266a7500ef6518bd97654dee392eaa333bd5b82f1144d59"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_PLOSIVE_PARAM_CONTRACT_VERSION 1u
 #define OMX_PLOSIVE_PARAM_CONTRACT_FINGERPRINT "693fcfd3bea6c88ed44fec2e124173aba261e022c3498a57d3eda0b46fd57675"
 static const struct omx_param_contract_row OMX_PLOSIVE_PARAM_CONTRACT[OMX_PLOSIVE_PARAM_COUNT] = {

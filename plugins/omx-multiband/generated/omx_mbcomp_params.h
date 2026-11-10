@@ -297,7 +297,7 @@ static const char *const OMX_MBCOMP_PARAM_MODULES[OMX_MBCOMP_PARAM_COUNT] = {
 #define OMX_MBCOMP_DECL_DIGEST "e94249a95a2284f21f484388a13d5ab5e249fd138fc123a063260c19573edd10"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_MBCOMP_PARAM_CONTRACT_VERSION 2u
 #define OMX_MBCOMP_PARAM_CONTRACT_FINGERPRINT "2093e6e94b941f469715ca034b123be763ab9b2e3f1e156d69307b0297e000cd"
 static const struct omx_param_contract_row OMX_MBCOMP_PARAM_CONTRACT[OMX_MBCOMP_PARAM_COUNT] = {

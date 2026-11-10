@@ -1,0 +1,39 @@
+{
+  "$schema": "https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json",
+  "requires": {
+    "omx-contract-schema": ">= 3.13.0"
+  },
+  "render": {
+    "c": [
+      {
+        "header": "omx_plugin_face_ids.h",
+        "guard": "OMX_PLUGIN_FACE_IDS_H",
+        "project": "omx-plugins",
+        "banner": [
+          "Rendered from OMX_PLUGIN_FACE_IDS of contract/plugin-face.json: the ids a plugin face gives its own controls.",
+          "omx-plugins' CLAP and LV2 faces include this header; the item is installed into omx-contract's contract directory."
+        ],
+        "brief": "The face's own controls' permanent ids, one OMX_PLUGIN_FACE_ define per field.",
+        "numbers": {
+          "comment": "the CLAP id of the host's bypass and the LV2 indices of enabled and latency, the same in every plugin and every release",
+          "prefix": "OMX_PLUGIN_FACE_"
+        }
+      }
+    ]
+  },
+  "OMX_PLUGIN_FACE_IDS": {
+    "kind": "sheet",
+    "since": "0.19.3",
+    "doc": "The ids a plugin face gives the controls that are the face's and not the declaration's, the same in every plugin and never moved: the CLAP id of the host's bypass parameter, outside every declaration's ids (0 up, in declaration order), and the LV2 port indices of enabled and latency, the first two ports, before the audio ports and the declared controls, so appending a control or a port moves neither. A host keeps bypass automation by this id; LV2 presets and sessions name ports by symbol and are unaffected by the indices. Declared by omx-contract from 3.9.0 to 3.12.x; omx-plugins' own since 0.19.3, values unchanged.",
+    "value": {
+      "bypassClapId": 2147418112,
+      "enabledLv2Index": 0,
+      "latencyLv2Index": 1
+    },
+    "docs": {
+      "bypassClapId": "0x7FFF0000: the host's bypass, clap_param_info.id; below INT32_MAX so a host storing ids signed reads it whole",
+      "enabledLv2Index": "the input port lv2:enabled, 1 processing and 0 bypassed",
+      "latencyLv2Index": "the output port reporting the latency in frames"
+    }
+  }
+}

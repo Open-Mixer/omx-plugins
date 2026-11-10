@@ -93,7 +93,7 @@ static const char *const OMX_GLUE_PARAM_MODULES[OMX_GLUE_PARAM_COUNT] = {
 #define OMX_GLUE_DECL_DIGEST "7bcb023ca90e579d8a3ed67bd6066c428c3c8eb20cb121d2d092ce0876f6de0f"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_GLUE_PARAM_CONTRACT_VERSION 1u
 #define OMX_GLUE_PARAM_CONTRACT_FINGERPRINT "7f2c2b19ab3474118548bdfffbb3316299e5cc3bbe8d22d40791f39656d0b848"
 static const struct omx_param_contract_row OMX_GLUE_PARAM_CONTRACT[OMX_GLUE_PARAM_COUNT] = {

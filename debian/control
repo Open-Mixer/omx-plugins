@@ -7,8 +7,8 @@ Maintainer: Pau Aliagas <linuxnow@gmail.com>
 Build-Depends: debhelper-compat (= 13),
                clap-headers (>= 1.2.10~), clap-headers (<< 2~),
                libomxdsp-dev (>= 0.32.0~), libomxdsp-dev (<< 0.33~),
-               libomx-contract-dev (>= 3.12.0~), libomx-contract-dev (<< 4~),
-               omx-contract (>= 3.12.0~), omx-contract (<< 4~),
+               libomx-contract-dev (>= 3.13.0~), libomx-contract-dev (<< 4~),
+               omx-contract (>= 3.13.0~), omx-contract (<< 4~),
                libomx-clap-core-dev (>= 0.31.0~), libomx-clap-core-dev (<< 0.32~),
                plugin-hostd-dev (>= 0.20.0~), plugin-hostd-dev (<< 0.21~),
                omx-panel (>= 0.13.0~), omx-panel (<< 0.14~),
@@ -87,7 +87,7 @@ Description: OpenMixer test instruments, for host tests and plugin measurement
 Package: omx-plugins-dev
 Section: libdevel
 Architecture: any
-Depends: libomxdsp-dev (>= 0.32.0~), libomxdsp-dev (<< 0.33~), libomx-contract-dev (>= 3.12.0~), libomx-contract-dev (<< 4~), omx-plugins-contract (= ${source:Version}), clap-headers (>= 1.2.10~), clap-headers (<< 2~), ${misc:Depends}
+Depends: libomxdsp-dev (>= 0.32.0~), libomxdsp-dev (<< 0.33~), libomx-contract-dev (>= 3.13.0~), libomx-contract-dev (<< 4~), omx-plugins-contract (= ${source:Version}), clap-headers (>= 1.2.10~), clap-headers (<< 2~), ${misc:Depends}
 Description: Headers and static library of the OpenMixer plugins
  The headers other projects include to use the OpenMixer plugins' parameters
  and instance code, such as omx_delay_core.h and each plugin's generated

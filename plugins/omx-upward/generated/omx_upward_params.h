@@ -75,7 +75,7 @@ static const char *const OMX_UPWARD_PARAM_MODULES[OMX_UPWARD_PARAM_COUNT] = {
 #define OMX_UPWARD_DECL_DIGEST "c3af33da420f6e4fa8933bbd1d4cde26bff717ba1eeb11161ca378aafaffe5df"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_UPWARD_PARAM_CONTRACT_VERSION 2u
 #define OMX_UPWARD_PARAM_CONTRACT_FINGERPRINT "2fc982aabf55f20d07941be4636a22c33034de41d19a62ea47d472ae04b9c214"
 static const struct omx_param_contract_row OMX_UPWARD_PARAM_CONTRACT[OMX_UPWARD_PARAM_COUNT] = {

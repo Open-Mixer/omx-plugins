@@ -1210,7 +1210,7 @@ static inline uint32_t omx_strip_eq_band_count(const float *values) {
 #define OMX_STRIP_DECL_DIGEST "0a095ba0f9230b0cfff693d43aa9f3063e7246b70534e57fe369132708922244"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
 #define OMX_STRIP_PARAM_CONTRACT_VERSION 1u
 #define OMX_STRIP_PARAM_CONTRACT_FINGERPRINT "1890ee14c19981c5811e3ae3dac4fea1ebc3cb9fca5c50b1d4e6c032e8edc533"
 static const struct omx_param_contract_row OMX_STRIP_PARAM_CONTRACT[OMX_STRIP_PARAM_COUNT] = {
