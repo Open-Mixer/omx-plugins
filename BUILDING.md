@@ -46,6 +46,9 @@ and what `pkg-config` finds installed, when an installed release is outside it.
 ```sh
 make                      # every plugin: plugins/<name>/build/
 make test                 # every plugin's tests, then the static table's (make lib-test)
+make test CHANGED_PLUGINS="omx-eq8 omx-delay"   # only those plugins' tests and the round-trip rescan;
+                                                         # CI sets this from a pull request's own diff (tools/plugin-scope.sh);
+                                                         # empty or ALL (the default) means every plugin, as above
 make install DESTDIR=/tmp/stage LIBDIR=/usr/lib64   # <CLAPDIR>/*.clap (default /usr/lib/clap, any LIBDIR), <LIBDIR>/lv2/*.lv2/
 make install-devel DESTDIR=/tmp/stage LIBDIR=/usr/lib64   # headers, <LIBDIR>/libomxplugins.a, <LIBDIR>/pkgconfig/omxplugins.pc, and each plugin's descriptor
                                                          # in <DATADIR>/omx-contract/contract.d/3/omx-plugins/ (make install-contract, CONTRACTDIR=)
