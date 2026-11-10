@@ -22,7 +22,7 @@
 NAME       := omx-doubler
 URI        := urn:openmixer:doubler
 CLAP_ID    := org.openmixer.doubler
-OMXDSP_MIN ?= 0.31.0
+OMXDSP_MIN ?= 0.32.0
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build
