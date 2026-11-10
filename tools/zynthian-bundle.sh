@@ -99,8 +99,11 @@ for b in "$stage"/lv2/*.lv2; do
   lv2s=$((lv2s + 1))
 done
 # and every plugin instantiated and run on this architecture: lv2bench loads each binary and processes
-# audio through it (either shape of its output: tools/lv2bench-ran.sh), so a plugin that cannot load on the target is refused here, not on the Zynthian
-bench=$(LV2_PATH="$stage/lv2" lv2bench)
+# audio through it (either shape of its output: tools/lv2bench-ran.sh), so a plugin that cannot load on the target is
+# refused here, not on the Zynthian. lv2bench's own exit status is not a per-plugin signal: Fedora's lilv 0.26.4
+# exits nonzero the moment ANY plugin on LV2_PATH fails to instantiate, even one of ours that ran fine, so it must
+# not gate this script (`|| true`); the per-URI check below, on the captured text, is what decides.
+bench=$(LV2_PATH="$stage/lv2" lv2bench) || true
 for b in "$stage"/lv2/*.lv2; do
   uri=$(sed -n 's/^<\(urn:openmixer:[^>]*\)>.*/\1/p' "$b/manifest.ttl" | head -1)
   "$root/tools/lv2bench-ran.sh" "$uri" <<<"$bench" || die "lv2bench did not run $uri"
