@@ -925,10 +925,21 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     expect(moved.status !== 0 && moved.stderr.includes('compThresholdDb -> compRatio') && moved.stderr.includes('compRatio -> compThresholdDb'),
       `sabotage chain: two parameters swapped against the release are refused, each index named (${moved.stderr.split('\n').find((l) => l.includes('->'))?.trim()})`);
     const idxs = [...moved.stderr.matchAll(/^ {2}(\d+ \S+ -> \S+)$/gm)].map((m) => m[1]);
-    expect(idxs.length === 2 && shippedAs((d) => {
+    const named = (d) => {
       swap(d);
       d.shippedDiff = idxs;
-    }).status === 0, `chain: the same swap named in shippedDiff is accepted (${idxs.join('; ')})`);
+    };
+    // a parameter that moved is served under another id: the swap is a new parameter contract, refused until a person appends it
+    const unlisted = shippedAs(named);
+    const next = unlisted.stderr.match(new RegExp(`plugins/${stem}: param-contract fingerprint ([0-9a-f]{64}) is not in tools/param-contract-versions\\.json: append it, the next version \\(2\\)`))?.[1];
+    expect(idxs.length === 2 && unlisted.status !== 0 && next !== undefined,
+      `sabotage chain: the swap named in shippedDiff, its contract fingerprint not appended, is refused naming version 2 (${unlisted.stderr.split('\n').find((l) => l.includes('param-contract fingerprint'))?.trim().slice(0, 60)})`);
+    const versionsFile = join(ct, 'tools', 'param-contract-versions.json'), versionsWas = readFileSync(versionsFile, 'utf8');
+    const versions = JSON.parse(versionsWas);
+    versions.plugins[stem].push(next);
+    writeFileSync(versionsFile, `${JSON.stringify(versions, null, 2)}\n`);
+    expect(next !== undefined && shippedAs(named).status === 0, `chain: the same swap named in shippedDiff, its fingerprint appended as version 2, is accepted (${idxs.join('; ')})`);
+    writeFileSync(versionsFile, versionsWas);
     writeFileSync(join(ct, CP, `${stem}.decl.json`), `${JSON.stringify(plan.decl, null, 2)}\n`);
     spawnSync('node', ['tools/gen.mjs', CP], { cwd: ct, encoding: 'utf8' }); // the plugin as it was released
     delete process.env.OMX_CONTRACT_DIR;
