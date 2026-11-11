@@ -111,6 +111,9 @@ const arm = (dir, code) => spawnSync(process.execPath, ['--input-type=module', '
 const FT = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
 let r = arm(broken('no-gain', (rows) => { delete rows['param:gain']; }), `import { lv2Designation } from ${FT}; console.log(String(lv2Designation('gain')));`);
 check('arm: the param:gain row removed, gain falls back to its urn', r.stdout.trim(), '<urn:openmixer:meaning#gain>');
+// arm: knee has no LV2 param: term at all (the table maps none); with the fallback removed, omx-comp's kneeDb
+// (meaning knee) would lose its designation outright, same as before FreeMixer/omx-plugins#12
+check("arm: the fallback, knee (omx-comp's kneeDb) is designated by its urn", lv2Designation('knee'), '<urn:openmixer:meaning#knee>');
 r = arm(broken('no-db', (rows) => { delete rows['units:db']; }), `import { lv2UnitRef } from ${FT}; console.log(String(lv2UnitRef('dB')));`);
 check('arm: the units:db row removed, dB has no LV2 unit', r.stdout.trim(), 'undefined');
 r = arm(broken('twice', (rows) => { rows['units:unit'].word.values['urn:openmixer:unit#dB'] = 'dB'; }), `import { lv2UnitRef } from ${FT}; lv2UnitRef('dB');`);
