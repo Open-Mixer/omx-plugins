@@ -139,6 +139,7 @@
         lv2:minimum -90 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation <urn:openmixer:meaning#range> ;
         pg:group <urn:openmixer:keyed-gate#gate>
     ] ,
     [
@@ -211,6 +212,7 @@
         lv2:minimum 0 ;
         lv2:maximum 24 ;
         units:unit units:db ;
+        lv2:designation <urn:openmixer:meaning#hysteresis> ;
         pg:group <urn:openmixer:keyed-gate#gate>
     ] ,
     [

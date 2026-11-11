@@ -110,7 +110,7 @@ const broken = (name, edit) => {
 const arm = (dir, code) => spawnSync(process.execPath, ['--input-type=module', '-e', code], { cwd: ROOT, env: { ...process.env, PLUGIN_HOSTD_TABLES: dir }, encoding: 'utf8' });
 const FT = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
 let r = arm(broken('no-gain', (rows) => { delete rows['param:gain']; }), `import { lv2Designation } from ${FT}; console.log(String(lv2Designation('gain')));`);
-check('arm: the param:gain row removed, gain is designated by nothing', r.stdout.trim(), 'undefined');
+check('arm: the param:gain row removed, gain falls back to its urn', r.stdout.trim(), '<urn:openmixer:meaning#gain>');
 r = arm(broken('no-db', (rows) => { delete rows['units:db']; }), `import { lv2UnitRef } from ${FT}; console.log(String(lv2UnitRef('dB')));`);
 check('arm: the units:db row removed, dB has no LV2 unit', r.stdout.trim(), 'undefined');
 r = arm(broken('twice', (rows) => { rows['units:unit'].word.values['urn:openmixer:unit#dB'] = 'dB'; }), `import { lv2UnitRef } from ${FT}; lv2UnitRef('dB');`);
