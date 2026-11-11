@@ -22,7 +22,7 @@
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
     lv2:minorVersion 19 ;
-    lv2:microVersion 2 ;
+    lv2:microVersion 3 ;
     rdfs:comment "The precision limiter: a look-ahead, true-peak, stereo-linked brickwall." ;
     lv2:optionalFeature lv2:hardRTCapable ;
     omxres:threadsSpawned "0"^^xsd:integer ;

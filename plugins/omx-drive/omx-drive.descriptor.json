@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:drive",
     "name": "omx drive",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "The console's drive: one waveshaper (soft, tape, tube or exciter) run inside the console's oversampler, on the full band, the lows, the highs or a tilt, with a wet/dry mix and a trim.",
     "features": [
       "audio-effect"

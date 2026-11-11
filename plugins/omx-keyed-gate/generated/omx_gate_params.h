@@ -107,7 +107,7 @@ static const char *const OMX_GATE_PARAM_MODULES[OMX_GATE_PARAM_COUNT] = {
 #define OMX_GATE_NAME "omx keyed-gate"
 #define OMX_GATE_VENDOR "openmixer"
 #define OMX_GATE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_GATE_VERSION "0.19.2"
+#define OMX_GATE_VERSION "0.19.3"
 #define OMX_GATE_DESCRIPTION "The OpenMixer console's channel gate with an external key: the stereo signal is gated while the detector listens to the sidechain input the host routes to it, or to the signal itself with the key unconnected or set to Self. One gain drives both legs. An attack under 0.5 ms engages 4x detector oversampling, which adds 72 frames of latency, reported to the host. The DSP is omx-dsp's <omxdsp/fx/omx_gate_instance.h>, the console's own gate."
 #define OMX_GATE_CLAP_ID "org.openmixer.keyed-gate"
 #define OMX_GATE_CLAP_FEATURES "audio-effect", "gate", "stereo"
@@ -117,13 +117,13 @@ static const char *const OMX_GATE_PARAM_MODULES[OMX_GATE_PARAM_COUNT] = {
 #define OMX_GATE_DECL_DIGEST "89c6643026ff9a19b63266e7c5661b32863e3689620767db36a0707c46367fe8"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_GATE_PARAM_CONTRACT_VERSION 1u
-#define OMX_GATE_PARAM_CONTRACT_FINGERPRINT "fb378b79e0e68a9b25293e3aeb0b134134cded48e07e07665f6f182c05092b3e"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_GATE_PARAM_CONTRACT_VERSION 3u
+#define OMX_GATE_PARAM_CONTRACT_FINGERPRINT "5b1c1de696eb5a9be6973c2ca62cc1de55f797d360193e760b5f6923b4f64db4"
 static const struct omx_param_contract_row OMX_GATE_PARAM_CONTRACT[OMX_GATE_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* key_external none */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* threshold db */
-  { 0u, OMX_CLAP_SCALE_LOG, 0.0 }, /* ratio none */
+  { 258u, OMX_CLAP_SCALE_LOG, 0.0 }, /* ratio ratio */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* range db */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* attack ms */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* release ms */
@@ -145,10 +145,8 @@ static const omx_resource_hints_t OMX_GATE_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family gate.
- * Declared roles not published:
- *   ratio (ratio): the ratio role takes ratio, coef, not no unit */
-#define OMX_GATE_PANEL_FINGERPRINT "2338bb0c4807cadf33fb1d7ca6c09000ec92aa5836e8257233ea801b166505df"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family gate. */
+#define OMX_GATE_PANEL_FINGERPRINT "242ab64ba6d431ad101586d5ddcec59fecdee16d1cc142dc6f0145b4a44c30f3"
 static const struct omx_panel_section_row OMX_GATE_PANEL_SECTIONS[] = {
   { "gate", "fx.gate.section.gate", "Gate" },
   { "key", "fx.gate.section.key", "Key" },
@@ -176,9 +174,11 @@ static const struct omx_panel_role_row OMX_GATE_PANEL_ROLES[] = {
   { "knee_start", 0u, 6u },
   { "knee_end", 0u, 7u },
   { "hysteresis", 0u, 9u },
+  { "ratio", 0u, 2u },
 };
 static const struct omx_panel_display_row OMX_GATE_PANEL_DISPLAYS[] = {
   { OMX_CLAP_DISPLAY_TRANSFER_CURVE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.gate.display.transfer_curve", "Gate" },
+  { OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR, 0u, OMX_CLAP_DISPLAY_FROM_METERS, { 0u, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.gate.display.gain_reduction_bar", "Gain reduction" },
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
@@ -192,8 +192,8 @@ static const struct omx_panel_rows OMX_GATE_PANEL = {
   OMX_GATE_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_GATE,
   OMX_GATE_PANEL_SECTIONS, 2u,
   OMX_GATE_PANEL_CONTROLS, 12u,
-  OMX_GATE_PANEL_ROLES, 8u,
-  OMX_GATE_PANEL_DISPLAYS, 1u,
+  OMX_GATE_PANEL_ROLES, 9u,
+  OMX_GATE_PANEL_DISPLAYS, 2u,
   NULL, 0u,
 };
 

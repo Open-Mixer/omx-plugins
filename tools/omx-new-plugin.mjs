@@ -38,7 +38,8 @@ import { fileURLToPath } from 'node:url';
 import { bindFace, instanceHeader, parseFace } from './instance-face.mjs';
 import { controlOf, items, kernelControls, kernelExists, locateContract, resolveParam } from './omx-contract.mjs';
 import { ROOT, checkPlugin, consoleErrors, gapLines, layerOfPath, loadRecipe, loadSchema, panelErrors, pluginFacts, pluginStems, validate } from './plugin-recipe.mjs';
-import { chainBindings, defaultPanel, instanceExtras, loadDecl, prepareDecl } from './gen.mjs';
+import { chainBindings, defaultPanel, instanceExtras, loadDecl, prepareDecl, scaleOf } from './gen.mjs';
+import { contractFingerprint, contractOf, registerFirstContract } from './param-contract.mjs';
 import { describedOf, descriptorFile } from './descriptor.mjs';
 import { modgui } from './panel-file.mjs';
 import { pinOfTtl } from './port-hints.mjs';
@@ -431,6 +432,16 @@ function run(cmd, args, opts) {
   return { code: r.status, out: `${r.stdout ?? ''}${r.stderr ?? ''}` };
 }
 
+const CONTRACT_VERSIONS = 'tools/param-contract-versions.json';
+
+/** A plugin the tree has never published takes contract version 1: its fingerprint, from the declaration just written,
+ * goes into tools/param-contract-versions.json before tools/gen.mjs reads its version there. Returns the file when it
+ * was written; a plugin already listed is not touched, and a change to its contract is appended by hand. */
+function registerContract(root, stem) {
+  const fingerprint = contractFingerprint(contractOf(loadDecl(join(root, 'plugins', stem)), scaleOf));
+  return registerFirstContract(root, stem, fingerprint) ? [CONTRACT_VERSIONS] : [];
+}
+
 /** Write the declaration and run the generators; returns every file written, relative to the tree. */
 export function writePlugin(plan, { root = ROOT } = {}) {
   const d = plan.decl;
@@ -442,6 +453,7 @@ export function writePlugin(plan, { root = ROOT } = {}) {
     mkdirSync(dirname(join(root, rel)), { recursive: true });
     writeFileSync(join(root, rel), text);
   }
+  written.push(...registerContract(root, d.stem));
   // a generated plugin always has its MOD GUI: its declared panel, or gen.mjs's one section of every parameter
   const tools = [[join(root, 'tools', 'gen.mjs')], ...(d.panel || d.binding === 'instance' || d.binding === 'chain' ? [[join(root, 'tools', 'panel-file.mjs'), '--modgui', join(root, 'plugins', d.stem)]] : [])];
   const generate = () => {
@@ -601,6 +613,7 @@ async function variantsMain(raw, src, { root, recipe, declPath, argv, opt }) {
     plans.push(plan);
   }
   const written = [relative(root, declPath)];
+  for (const p of plans) written.push(...registerContract(root, p.decl.stem));
   const tools = [[join(root, 'tools', 'gen.mjs')], ...plans.map((p) => [join(root, 'tools', 'panel-file.mjs'), '--modgui', join(root, 'plugins', p.decl.stem)])];
   for (const args of tools) {
     const r = run('node', args, { cwd: root });

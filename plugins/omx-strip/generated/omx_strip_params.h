@@ -1200,7 +1200,7 @@ static inline uint32_t omx_strip_eq_band_count(const float *values) {
 #define OMX_STRIP_NAME "omx strip"
 #define OMX_STRIP_VENDOR "openmixer"
 #define OMX_STRIP_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_STRIP_VERSION "0.19.2"
+#define OMX_STRIP_VERSION "0.19.3"
 #define OMX_STRIP_DESCRIPTION "The OpenMixer console's channel strip in one plugin: input trim, high- and low-pass filters, gate, a parametric EQ of as many bands as its Bands control says, and compressor, in the console's order or any other. No DSP of its own: each stage is omx-dsp's instance face of the console's kernel, called in order."
 #define OMX_STRIP_CLAP_ID "org.openmixer.strip"
 #define OMX_STRIP_CLAP_FEATURES "audio-effect", "mixing", "stereo"
@@ -1210,9 +1210,9 @@ static inline uint32_t omx_strip_eq_band_count(const float *values) {
 #define OMX_STRIP_DECL_DIGEST "0a095ba0f9230b0cfff693d43aa9f3063e7246b70534e57fe369132708922244"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_STRIP_PARAM_CONTRACT_VERSION 1u
-#define OMX_STRIP_PARAM_CONTRACT_FINGERPRINT "1890ee14c19981c5811e3ae3dac4fea1ebc3cb9fca5c50b1d4e6c032e8edc533"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_STRIP_PARAM_CONTRACT_VERSION 2u
+#define OMX_STRIP_PARAM_CONTRACT_FINGERPRINT "b8832cb75b74bcad0b515527e218b6b7fc6d4d8d61447877be9073a52b5e7b76"
 static const struct omx_param_contract_row OMX_STRIP_PARAM_CONTRACT[OMX_STRIP_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* trimOn none */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* trimDb db */

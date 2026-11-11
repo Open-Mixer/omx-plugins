@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 Name: omx-plugins
-Version: 0.19.2
+Version: 0.19.3
 Release: 1%{?dist}
 License: GPL-3.0-or-later
 Summary: The OpenMixer console's delay, drive, EQ, channel strip, keyed gate and effects, as plugins for your DAW
@@ -16,15 +16,15 @@ BuildRequires: pkgconf-pkg-config
 # proven on; from 1.0 the next major), once here and in debian/control
 # the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
 BuildRequires: (omx-dsp-devel >= 0.32.0 with omx-dsp-devel < 0.33)
-BuildRequires: (omx-contract-devel >= 3.12.0 with omx-contract-devel < 4)
+BuildRequires: (omx-contract-devel >= 3.13.0 with omx-contract-devel < 4)
 BuildRequires: (omx-clap-core-devel >= 0.31.0 with omx-clap-core-devel < 0.32)
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
 BuildRequires: (plugin-hostd-devel >= 0.20.0 with plugin-hostd-devel < 0.21)
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
 # (3.3.0: the directory and its schema are omx-contract-data's, the definitions each owner's -contract package's)
-BuildRequires: (omx-contract >= 3.12.0 with omx-contract < 4)
+BuildRequires: (omx-contract >= 3.13.0 with omx-contract < 4)
 # the panel layout and the MOD GUI are omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
-BuildRequires: (omx-panel >= 0.12.0 with omx-panel < 0.13)
+BuildRequires: (omx-panel >= 0.13.2 with omx-panel < 0.14)
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}
@@ -120,7 +120,7 @@ Its documentation is on openmixer.org.
 Summary: Headers and static library of the OpenMixer plugins, for projects that build on them
 Requires: (omx-dsp-devel >= 0.32.0 with omx-dsp-devel < 0.33)
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
-Requires: (omx-contract-devel >= 3.12.0 with omx-contract-devel < 4)
+Requires: (omx-contract-devel >= 3.13.0 with omx-contract-devel < 4)
 Requires: %{name}-contract = %{version}-%{release}
 Requires: (clap-devel >= 1.2.7 with clap-devel < 2)
 
@@ -137,7 +137,8 @@ Its documentation is on openmixer.org.
 Summary: The OpenMixer plugins' descriptors in omx-contract's contract directory
 BuildArch: noarch
 # the contract directory, its schema and its reader's own package
-Requires: (omx-contract-data >= 3.12.0 with omx-contract-data < 4)
+# 3.13.0: the reader that knows the roleMeanings kind contract/role-meanings.json is
+Requires: (omx-contract-data >= 3.13.0 with omx-contract-data < 4)
 # the files lived in omx-plugins-devel before this package
 Conflicts: %{name}-devel < %{version}-%{release}
 
@@ -281,6 +282,16 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 # END GENERATED lv2-files
 
 %changelog
+* Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
+- omx-plugins-contract installs role-meanings.json (the meaning each panel
+  role plays) and plugin-face.json (the face ids, declared here since
+  omx-contract 3.13.0 no longer does); omx-contract-data >= 3.13.0 and < 4
+- a ratio travel's unit is ratio in the parameter contract, as in the LV2 face
+- omx-comp draws its transfer curve and gain-reduction bar; the panels are
+  laid out by omx-panel >= 0.13.2 and < 0.14
+- the contract fingerprint names each parameter by its CLAP id, so a host
+  that computes it from the plugin trusts the contract
+
 * Mon Nov 09 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.2-1
 - built and tested on the one-panel wave's releases, each with a floor and a
   ceiling: omx-dsp >= 0.32.0 and < 0.33, omx-contract >= 3.12.0 and < 4,

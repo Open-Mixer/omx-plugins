@@ -49,7 +49,7 @@
 #include "clap/stream.h"
 
 #include "omx_clap_face.h"
-#include <omxcontract/omx_plugin_face_ids.h> /* the host bypass's permanent CLAP id */
+#include "omx_plugin_face_ids.h"    /* the host bypass's permanent CLAP id, rendered from contract/plugin-face.json */
 #include <omx-clap-host/omx_clap_ext.h>
 #include <omx-clap-host/clap_meters.h>
 #include "omx_meter_ring.h"

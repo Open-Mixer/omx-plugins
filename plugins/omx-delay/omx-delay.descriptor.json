@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:delay",
     "name": "omx delay",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "The OpenMixer console's stereo delay: one time, free or synced to the host's tempo, feedback through a tone filter, ping-pong, read taps, a tape or analog colour, a wet/dry mix and a duck under the input.",
     "features": [
       "audio-effect"

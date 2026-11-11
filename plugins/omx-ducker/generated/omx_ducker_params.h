@@ -95,7 +95,7 @@ static const char *const OMX_DUCKER_PARAM_MODULES[OMX_DUCKER_PARAM_COUNT] = {
 #define OMX_DUCKER_NAME "omx ducker"
 #define OMX_DUCKER_VENDOR "openmixer"
 #define OMX_DUCKER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DUCKER_VERSION "0.19.2"
+#define OMX_DUCKER_VERSION "0.19.3"
 #define OMX_DUCKER_DESCRIPTION "Pulls the programme down while a key is heard, music under a voice, by a set depth with attack, hold and release, the console ducker."
 #define OMX_DUCKER_CLAP_ID "org.openmixer.ducker"
 #define OMX_DUCKER_CLAP_FEATURES "audio-effect", "compressor", "stereo"
@@ -105,16 +105,16 @@ static const char *const OMX_DUCKER_PARAM_MODULES[OMX_DUCKER_PARAM_COUNT] = {
 #define OMX_DUCKER_DECL_DIGEST "cd2a96de102d23b5c4293c47764f817f2b2e659e7a8a88a01c538731a6e439ed"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_DUCKER_PARAM_CONTRACT_VERSION 1u
-#define OMX_DUCKER_PARAM_CONTRACT_FINGERPRINT "54e675dbd3317a4a76b2aeccc359f7c81c6d438f8f457e2eb9a9e2230a094767"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_DUCKER_PARAM_CONTRACT_VERSION 3u
+#define OMX_DUCKER_PARAM_CONTRACT_FINGERPRINT "26cb02750c18a914890aa7b6b007905fa2cc563d1ca4a8ad1e6006f05f873864"
 static const struct omx_param_contract_row OMX_DUCKER_PARAM_CONTRACT[OMX_DUCKER_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* thresholdDb db */
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* rangeDb db */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* attackMs ms */
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* holdMs ms */
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* releaseMs ms */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio none */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio ratio */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* kneeDb db */
   { 16u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* keyHpHz hz */
   { 16u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* keyLpHz hz */
@@ -131,10 +131,8 @@ static const omx_resource_hints_t OMX_DUCKER_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics.
- * Declared roles not published:
- *   ratio (ratio): the ratio role takes ratio, coef, not no unit */
-#define OMX_DUCKER_PANEL_FINGERPRINT "6b7bd667e0d0be5d2f600dbdadfb36064825007b46ce82ce4da48a0e10a797a2"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics. */
+#define OMX_DUCKER_PANEL_FINGERPRINT "ff49ae5eef7e5e9dc9c18a231ad4e911ccede5f6088efbda41a7afe2905a3a12"
 static const struct omx_panel_section_row OMX_DUCKER_PANEL_SECTIONS[] = {
   { "duck", "fx.comp.section.duck", "Duck" },
   { "timing", "fx.comp.section.timing", "Timing" },
@@ -156,13 +154,14 @@ static const struct omx_panel_role_row OMX_DUCKER_PANEL_ROLES[] = {
   { "threshold", 0u, 0u },
   { "attack", 0u, 2u },
   { "release", 0u, 4u },
+  { "ratio", 0u, 5u },
   { "knee", 0u, 6u },
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DUCKER_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 0u, 2u, 4u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Duck", "Duck", { 5u, 6u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 5u, 2u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Duck", "Duck", { 1u, 6u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Timing", "Timing", { 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Key", "Key", { 7u, 8u, 9u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
@@ -171,7 +170,7 @@ static const struct omx_panel_rows OMX_DUCKER_PANEL = {
   OMX_DUCKER_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DYNAMICS,
   OMX_DUCKER_PANEL_SECTIONS, 3u,
   OMX_DUCKER_PANEL_CONTROLS, 10u,
-  OMX_DUCKER_PANEL_ROLES, 4u,
+  OMX_DUCKER_PANEL_ROLES, 5u,
   NULL, 0u,
   NULL, 0u,
 };

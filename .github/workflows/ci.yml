@@ -243,7 +243,7 @@ jobs:
           # version, read at run time with no -devel installed
           cdir=/usr/share/omx-contract/contract.d/3/omx-plugins
           rpm -qlp rpms/omx-plugins-contract-[0-9]*.noarch.rpm | sort > files-contract.txt
-          { printf '%s\n' "$cdir" "$cdir/MANIFEST.json" "$cdir/plugins" \
+          { printf '%s\n' "$cdir" "$cdir/MANIFEST.json" "$cdir/plugin-face.json" "$cdir/role-meanings.json" "$cdir/plugins" \
               /usr/share/doc/omx-plugins-contract /usr/share/doc/omx-plugins-contract/README.md \
               /usr/share/licenses/omx-plugins-contract /usr/share/licenses/omx-plugins-contract/LICENSE
             for d in plugins/*/*.descriptor.json; do echo "$cdir/plugins/$(basename "$d" .descriptor.json).json"; done; } | sort > expected-contract.txt

@@ -116,13 +116,17 @@ const displayArms = (face) => [
   ['a display lost', drop('display', 0), new RegExp(`FAIL panel ${face} displays`)],
   ['a display moved to another section', set('display', 0, 2, '1'), new RegExp(`FAIL panel ${face} displays`)],
   ['a display source changed', set('display', 0, 3, (v) => (v === '0' ? '1' : '0')), new RegExp(`FAIL panel ${face} displays`)],
+  ['a floor in dB given to the transfer curve', set('display', 0, 8, '-60'), new RegExp(`FAIL panel ${face} displays`)],
+  ['a floor in dB given to the gain-reduction bar', set('display', 1, 8, '-60'), new RegExp(`FAIL panel ${face} displays`)],
+  ['a floor parameter given to the gain-reduction bar', set('display', 1, 7, '0'), new RegExp(`FAIL panel ${face} displays`)],
 ];
 
 const extArms = [
-  ['a unit changed', set('param', 0, 3, plus(1)), /FAIL clap-ext param-contract: symbol, unit, scale and step/],
-  ['a scale changed', set('param', 0, 4, (v) => (v === '0' ? '1' : '0')), /FAIL clap-ext param-contract: symbol, unit, scale and step/],
-  ['a step changed', set('param', 0, 5, (v) => (v === '0' ? '1' : '0')), /FAIL clap-ext param-contract: symbol, unit, scale and step/],
-  ['a parameter lost', drop('param', 1), /FAIL clap-ext param-contract: symbol, unit, scale and step/],
+  ['a parameter served under another id', set('param', 0, 1, plus(1000)), /FAIL clap-ext param-contract: id, symbol, unit, scale and step/],
+  ['a unit changed', set('param', 0, 3, plus(1)), /FAIL clap-ext param-contract: id, symbol, unit, scale and step/],
+  ['a scale changed', set('param', 0, 4, (v) => (v === '0' ? '1' : '0')), /FAIL clap-ext param-contract: id, symbol, unit, scale and step/],
+  ['a step changed', set('param', 0, 5, (v) => (v === '0' ? '1' : '0')), /FAIL clap-ext param-contract: id, symbol, unit, scale and step/],
+  ['a parameter lost', drop('param', 1), /FAIL clap-ext param-contract: id, symbol, unit, scale and step/],
   ['the contract version changed', set('contract', 0, 1, plus(1)), /FAIL clap-ext param-contract: version/],
   ['the fingerprint changed', set('contract', 0, 2, flip), /FAIL clap-ext param-contract: the fingerprint/],
   ['a remote-control page lost', drop('page', 0), /FAIL clap-ext remote-controls/],
@@ -144,8 +148,8 @@ const movedAndSealed = (dir) => (rows) => {
   const moved = set('param', 0, 7, plus(1))(rows);
   const want = contractOf(loadDecl(dir), scaleOf);
   const unitOf = Object.fromEntries(want.map((r) => [r.unitEnum, r.unit]));
-  const served = moved.filter((r) => r[0] === 'param').map(([, , symbol, unitEnum, scale, step, min, max, def, flags]) => ({
-    symbol, unitEnum: Number(unitEnum), unit: unitOf[Number(unitEnum)], scale: SCALES[Number(scale)], step: Number(step), min: Number(min), max: Number(max), def: Number(def), flags: parseInt(flags, 16) & 0x1001b,
+  const served = moved.filter((r) => r[0] === 'param').map(([, id, symbol, unitEnum, scale, step, min, max, def, flags]) => ({
+    id: Number(id), symbol, unitEnum: Number(unitEnum), unit: unitOf[Number(unitEnum)], scale: SCALES[Number(scale)], step: Number(step), min: Number(min), max: Number(max), def: Number(def), flags: parseInt(flags, 16) & 0x1001b,
   }));
   return set('contract', 0, 2, contractFingerprint(served))(moved);
 };

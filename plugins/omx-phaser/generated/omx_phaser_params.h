@@ -71,7 +71,7 @@ static const char *const OMX_PHASER_PARAM_MODULES[OMX_PHASER_PARAM_COUNT] = {
 #define OMX_PHASER_NAME "omx phaser"
 #define OMX_PHASER_VENDOR "openmixer"
 #define OMX_PHASER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_PHASER_VERSION "0.19.2"
+#define OMX_PHASER_VERSION "0.19.3"
 #define OMX_PHASER_DESCRIPTION "The console's phaser: identical all-pass sections swept in octaves by one oscillator, with feedback around the chain and a wet/dry mix."
 #define OMX_PHASER_CLAP_ID "org.openmixer.phaser"
 #define OMX_PHASER_CLAP_FEATURES "audio-effect", "phaser", "stereo"
@@ -81,9 +81,9 @@ static const char *const OMX_PHASER_PARAM_MODULES[OMX_PHASER_PARAM_COUNT] = {
 #define OMX_PHASER_DECL_DIGEST "d39a2a6935c7d0e32234d86d28aa84bcb731db7c680d1cd28dd517edff5fe512"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_PHASER_PARAM_CONTRACT_VERSION 1u
-#define OMX_PHASER_PARAM_CONTRACT_FINGERPRINT "ce52de8667a3734d436618dd2a7c57f9a6428f2ae0d80e3ae77159efef05c13e"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_PHASER_PARAM_CONTRACT_VERSION 2u
+#define OMX_PHASER_PARAM_CONTRACT_FINGERPRINT "1513b4b4271dbe16d78fec1f7b0b3c47902ad8743df5b64bb96c65021889d513"
 static const struct omx_param_contract_row OMX_PHASER_PARAM_CONTRACT[OMX_PHASER_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* rateHz hz */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* baseHz hz */
