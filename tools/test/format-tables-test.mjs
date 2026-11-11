@@ -66,6 +66,10 @@ function designations(designationOf) {
 // 2. the designations
 const { got, want } = designations(lv2Designation);
 check('every described control whose meaning the LV2 table maps is designated by it, and no other', got, want);
+// held by value: a meaning the LV2 table maps no param: term for (knee, makeup) still carries one, urn:openmixer:meaning#<meaning>
+const compPorts = portsOf(ttlOf(join(ROOT, 'plugins', 'omx-comp'), 'omx-comp'));
+check("omx-comp.kneeDb's designation (knee, no LV2 param: term)", compPorts.kneeDb?.designation, '<urn:openmixer:meaning#knee>');
+check("omx-comp.makeupDb's designation (makeup, no LV2 param: term)", compPorts.makeupDb?.designation, '<urn:openmixer:meaning#makeup>');
 const byTerm = {};
 for (const g of got) byTerm[g.split(' ')[1]] = (byTerm[g.split(' ')[1]] ?? 0) + 1;
 check('the designations of this release, by term', Object.fromEntries(Object.entries(byTerm).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))), { 'param:gain': 93, 'param:frequency': 63, 'param:wetDryRatio': 12, 'param:release': 6, 'param:attack': 5, 'param:ratio': 5, 'param:threshold': 5, 'param:cutoffFrequency': 1, 'param:delay': 1, 'param:hold': 1, 'param:resonance': 1 });
@@ -106,7 +110,10 @@ const broken = (name, edit) => {
 const arm = (dir, code) => spawnSync(process.execPath, ['--input-type=module', '-e', code], { cwd: ROOT, env: { ...process.env, PLUGIN_HOSTD_TABLES: dir }, encoding: 'utf8' });
 const FT = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
 let r = arm(broken('no-gain', (rows) => { delete rows['param:gain']; }), `import { lv2Designation } from ${FT}; console.log(String(lv2Designation('gain')));`);
-check('arm: the param:gain row removed, gain is designated by nothing', r.stdout.trim(), 'undefined');
+check('arm: the param:gain row removed, gain falls back to its urn', r.stdout.trim(), '<urn:openmixer:meaning#gain>');
+// arm: knee has no LV2 param: term at all (the table maps none); with the fallback removed, omx-comp's kneeDb
+// (meaning knee) would lose its designation outright, same as before FreeMixer/omx-plugins#12
+check("arm: the fallback, knee (omx-comp's kneeDb) is designated by its urn", lv2Designation('knee'), '<urn:openmixer:meaning#knee>');
 r = arm(broken('no-db', (rows) => { delete rows['units:db']; }), `import { lv2UnitRef } from ${FT}; console.log(String(lv2UnitRef('dB')));`);
 check('arm: the units:db row removed, dB has no LV2 unit', r.stdout.trim(), 'undefined');
 r = arm(broken('twice', (rows) => { rows['units:unit'].word.values['urn:openmixer:unit#dB'] = 'dB'; }), `import { lv2UnitRef } from ${FT}; lv2UnitRef('dB');`);
