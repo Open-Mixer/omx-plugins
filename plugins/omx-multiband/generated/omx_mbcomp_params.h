@@ -287,7 +287,7 @@ static const char *const OMX_MBCOMP_PARAM_MODULES[OMX_MBCOMP_PARAM_COUNT] = {
 #define OMX_MBCOMP_NAME "omx multiband"
 #define OMX_MBCOMP_VENDOR "openmixer"
 #define OMX_MBCOMP_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_MBCOMP_VERSION "0.19.2"
+#define OMX_MBCOMP_VERSION "0.19.3"
 #define OMX_MBCOMP_DESCRIPTION "A multiband compressor: two to five bands split by Linkwitz-Riley crossovers, each band its own compressor with threshold, ratio, attack, release, make-up, solo and bypass, then a mix and an output gain, for in-ear mixes, vocals and playback buses."
 #define OMX_MBCOMP_CLAP_ID "org.openmixer.multiband"
 #define OMX_MBCOMP_CLAP_FEATURES "audio-effect", "compressor", "stereo"

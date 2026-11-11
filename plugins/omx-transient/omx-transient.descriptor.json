@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:transient",
     "name": "omx transient",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "The console's transient designer: more or less attack and sustain, from two envelope contrasts, with no threshold to set.",
     "features": [
       "audio-effect"

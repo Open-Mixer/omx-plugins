@@ -101,7 +101,7 @@ static const char *const OMX_DRIVE_PARAM_MODULES[OMX_DRIVE_PARAM_COUNT] = {
 #define OMX_DRIVE_NAME "omx drive"
 #define OMX_DRIVE_VENDOR "openmixer"
 #define OMX_DRIVE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DRIVE_VERSION "0.19.2"
+#define OMX_DRIVE_VERSION "0.19.3"
 #define OMX_DRIVE_DESCRIPTION "The console's drive: one waveshaper (soft, tape, tube or exciter) run inside the console's oversampler, on the full band, the lows, the highs or a tilt, with a wet/dry mix and a trim."
 #define OMX_DRIVE_CLAP_ID "org.openmixer.drive"
 #define OMX_DRIVE_CLAP_FEATURES "audio-effect", "distortion", "stereo"

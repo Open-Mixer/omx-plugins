@@ -65,7 +65,7 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
 #define OMX_LOUDLEVEL_NAME "omx loudlevel"
 #define OMX_LOUDLEVEL_VENDOR "openmixer"
 #define OMX_LOUDLEVEL_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_LOUDLEVEL_VERSION "0.19.2"
+#define OMX_LOUDLEVEL_VERSION "0.19.3"
 #define OMX_LOUDLEVEL_DESCRIPTION "Holds a signal at a loudness target by moving its gain slowly, with a gate so pauses are left alone."
 #define OMX_LOUDLEVEL_CLAP_ID "org.openmixer.loudlevel"
 #define OMX_LOUDLEVEL_CLAP_FEATURES "audio-effect", "utility", "stereo"

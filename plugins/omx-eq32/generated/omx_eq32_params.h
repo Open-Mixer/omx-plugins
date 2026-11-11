@@ -1034,7 +1034,7 @@ static const char *const OMX_EQ32_PARAM_MODULES[OMX_EQ32_PARAM_COUNT] = {
 #define OMX_EQ32_NAME "omx eq32"
 #define OMX_EQ32_VENDOR "openmixer"
 #define OMX_EQ32_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_EQ32_VERSION "0.19.2"
+#define OMX_EQ32_VERSION "0.19.3"
 #define OMX_EQ32_DESCRIPTION "The OpenMixer console's channel EQ, 32-band form: 32 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire."
 #define OMX_EQ32_CLAP_ID "org.openmixer.eq32"
 #define OMX_EQ32_CLAP_FEATURES "audio-effect", "equalizer", "stereo"

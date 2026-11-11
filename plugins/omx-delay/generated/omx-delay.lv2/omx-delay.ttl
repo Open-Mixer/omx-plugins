@@ -26,7 +26,7 @@
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
     lv2:minorVersion 19 ;
-    lv2:microVersion 2 ;
+    lv2:microVersion 3 ;
     rdfs:comment "The OpenMixer console's stereo delay: one time, free or synced to the host's tempo, feedback through a tone filter, ping-pong, read taps, a tape or analog colour, a wet/dry mix and a duck under the input." ;
     lv2:optionalFeature lv2:hardRTCapable ;
     lv2:optionalFeature urid:map ;

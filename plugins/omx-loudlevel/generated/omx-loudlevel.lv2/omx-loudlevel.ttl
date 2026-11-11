@@ -22,7 +22,7 @@
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
     lv2:minorVersion 19 ;
-    lv2:microVersion 2 ;
+    lv2:microVersion 3 ;
     rdfs:comment "Holds a signal at a loudness target by moving its gain slowly, with a gate so pauses are left alone." ;
     lv2:optionalFeature lv2:hardRTCapable ;
     omxres:threadsSpawned "0"^^xsd:integer ;

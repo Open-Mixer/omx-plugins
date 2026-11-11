@@ -12,7 +12,7 @@
 #define OMX_TEST_SINE_VOICE_NAME "omx test-sine-voice"
 #define OMX_TEST_SINE_VOICE_VENDOR "openmixer"
 #define OMX_TEST_SINE_VOICE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TEST_SINE_VOICE_VERSION "0.19.2"
+#define OMX_TEST_SINE_VOICE_VERSION "0.19.3"
 #define OMX_TEST_SINE_VOICE_DESCRIPTION "A test instrument: one sine per held note at its equal-tempered frequency, at a level the velocity predicts, with a linear attack and release."
 #define OMX_TEST_SINE_VOICE_CLAP_ID "org.openmixer.test-sine-voice"
 #define OMX_TEST_SINE_VOICE_CLAP_FEATURES "instrument", "synthesizer", "stereo"

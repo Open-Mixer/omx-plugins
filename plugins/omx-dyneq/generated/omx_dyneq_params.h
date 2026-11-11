@@ -473,7 +473,7 @@ static const char *const OMX_DYNEQ_PARAM_MODULES[OMX_DYNEQ_PARAM_COUNT] = {
 #define OMX_DYNEQ_NAME "omx dyneq"
 #define OMX_DYNEQ_VENDOR "openmixer"
 #define OMX_DYNEQ_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DYNEQ_VERSION "0.19.2"
+#define OMX_DYNEQ_VERSION "0.19.3"
 #define OMX_DYNEQ_DESCRIPTION "A six-band dynamic EQ: each band is an EQ bell or shelf whose gain also moves with the level of its own band, cutting above a threshold (down) or lifting below it (up), held to a range, so a harsh or boomy band is tamed only while it is too loud."
 #define OMX_DYNEQ_CLAP_ID "org.openmixer.dyneq"
 #define OMX_DYNEQ_CLAP_FEATURES "audio-effect", "equalizer", "stereo"

@@ -22,7 +22,7 @@
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
     lv2:minorVersion 19 ;
-    lv2:microVersion 2 ;
+    lv2:microVersion 3 ;
     rdfs:comment "The console's 31-band graphic EQ: one fader per ISO third-octave band from 20 Hz to 20 kHz, each cutting or boosting by up to 15 dB." ;
     lv2:optionalFeature lv2:hardRTCapable ;
     omxres:threadsSpawned "0"^^xsd:integer ;

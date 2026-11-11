@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:limiter",
     "name": "omx limiter",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "The precision limiter: a look-ahead, true-peak, stereo-linked brickwall.",
     "features": [
       "audio-effect"

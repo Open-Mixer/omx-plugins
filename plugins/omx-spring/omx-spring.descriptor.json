@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:spring",
     "name": "omx spring",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "A spring reverb: a delay, a chain of all-passes and a darkening loop, with decay, length, tension and damping.",
     "features": [
       "audio-effect"

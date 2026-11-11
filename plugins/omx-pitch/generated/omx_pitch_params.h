@@ -53,7 +53,7 @@ static const char *const OMX_PITCH_PARAM_MODULES[OMX_PITCH_PARAM_COUNT] = {
 #define OMX_PITCH_NAME "omx pitch"
 #define OMX_PITCH_VENDOR "openmixer"
 #define OMX_PITCH_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_PITCH_VERSION "0.19.2"
+#define OMX_PITCH_VERSION "0.19.3"
 #define OMX_PITCH_DESCRIPTION "The console's pitch shifter: shifts both channels up or down by semitones and cents, without changing their length, mixed with the dry signal."
 #define OMX_PITCH_CLAP_ID "org.openmixer.pitch"
 #define OMX_PITCH_CLAP_FEATURES "audio-effect", "pitch-shifter", "stereo"

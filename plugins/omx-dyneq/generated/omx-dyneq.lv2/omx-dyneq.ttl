@@ -24,7 +24,7 @@
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
     lv2:minorVersion 19 ;
-    lv2:microVersion 2 ;
+    lv2:microVersion 3 ;
     rdfs:comment "A six-band dynamic EQ: each band is an EQ bell or shelf whose gain also moves with the level of its own band, cutting above a threshold (down) or lifting below it (up), held to a range, so a harsh or boomy band is tamed only while it is too loud." ;
     lv2:optionalFeature lv2:hardRTCapable ;
     omxres:threadsSpawned "0"^^xsd:integer ;

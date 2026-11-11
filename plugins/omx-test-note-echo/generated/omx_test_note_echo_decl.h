@@ -12,7 +12,7 @@
 #define OMX_TEST_NOTE_ECHO_NAME "omx test-note-echo"
 #define OMX_TEST_NOTE_ECHO_VENDOR "openmixer"
 #define OMX_TEST_NOTE_ECHO_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TEST_NOTE_ECHO_VERSION "0.19.2"
+#define OMX_TEST_NOTE_ECHO_VERSION "0.19.3"
 #define OMX_TEST_NOTE_ECHO_DESCRIPTION "A test instrument: every note event it is handed comes out of its note output unchanged at the same frame, and its audio is silence."
 #define OMX_TEST_NOTE_ECHO_CLAP_ID "org.openmixer.test-note-echo"
 #define OMX_TEST_NOTE_ECHO_CLAP_FEATURES "note-effect", "utility"

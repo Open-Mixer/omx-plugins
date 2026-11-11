@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 Name: omx-plugins
-Version: 0.19.2
+Version: 0.19.3
 Release: 1%{?dist}
 License: GPL-3.0-or-later
 Summary: The OpenMixer console's delay, drive, EQ, channel strip, keyed gate and effects, as plugins for your DAW
@@ -282,6 +282,16 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 # END GENERATED lv2-files
 
 %changelog
+* Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
+- omx-plugins-contract installs role-meanings.json (the meaning each panel
+  role plays) and plugin-face.json (the face ids, declared here since
+  omx-contract 3.13.0 no longer does); omx-contract-data >= 3.13.0 and < 4
+- a ratio travel's unit is ratio in the parameter contract, as in the LV2 face
+- omx-comp draws its transfer curve and gain-reduction bar; the panels are
+  laid out by omx-panel >= 0.13.2 and < 0.14
+- the contract fingerprint names each parameter by its CLAP id, so a host
+  that computes it from the plugin trusts the contract
+
 * Mon Nov 09 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.2-1
 - built and tested on the one-panel wave's releases, each with a floor and a
   ceiling: omx-dsp >= 0.32.0 and < 0.33, omx-contract >= 3.12.0 and < 4,

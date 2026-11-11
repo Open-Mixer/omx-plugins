@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:clipper",
     "name": "omx clipper",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "Clips the peaks at a ceiling, with drive in front and an adjustable softness of the bend.",
     "features": [
       "audio-effect"

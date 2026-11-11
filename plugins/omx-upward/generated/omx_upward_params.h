@@ -65,7 +65,7 @@ static const char *const OMX_UPWARD_PARAM_MODULES[OMX_UPWARD_PARAM_COUNT] = {
 #define OMX_UPWARD_NAME "omx upward"
 #define OMX_UPWARD_VENDOR "openmixer"
 #define OMX_UPWARD_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_UPWARD_VERSION "0.19.2"
+#define OMX_UPWARD_VERSION "0.19.3"
 #define OMX_UPWARD_DESCRIPTION "Lifts what is quiet toward a threshold, by a ratio and up to a limit, and leaves the loud alone."
 #define OMX_UPWARD_CLAP_ID "org.openmixer.upward"
 #define OMX_UPWARD_CLAP_FEATURES "audio-effect", "compressor", "stereo"
