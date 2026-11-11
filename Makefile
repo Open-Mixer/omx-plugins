@@ -60,7 +60,7 @@
 #                    plugins are built for (tools/test/meters-abi-test.c, compile and run; part of `make test`)
 #   make param-contract-abi  include/omx_param_contract.h's extension table and entry are the layout omx-clap-core's
 #                    omx_clap_ext.h reads (tools/test/param-contract-abi-test.c, compile and run; part of `make test`)
-#   make host-contract  every built face opened by libomx-clap-core, whose own fingerprint of what get_info and the
+#   make host-contract  every shipped face opened by libomx-clap-core, whose own fingerprint of what get_info and the
 #                    contract serve must match the face's: omx_clap_host_param_contract() trusts it
 #                    (tools/test/host-contract-accept.c; part of `make test` and `make test-faces`)
 #   make strip-crosscheck   omx-strip, a chain, against the hand-ported strip it replaced, bit for bit at
@@ -340,7 +340,7 @@ param-contract-abi:
 host-contract: all
 	@mkdir -p build
 	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/host-contract-accept tools/test/host-contract-accept.c $(shell $(PKG_CONFIG) --libs omx-clap-core)
-	build/host-contract-accept $(foreach p,$(PLUGINS),$(p)build/$(notdir $(patsubst %/,%,$(p))).clap)
+	build/host-contract-accept $(foreach p,$(SHIP_PLUGINS),$(p)build/$(notdir $(patsubst %/,%,$(p))).clap)
 # every level meter of the metered faces reads what tools/test/<face>.meter-level.txt holds within the bound
 # omx-dsp's fast-maths bound gives (meter-level-digest --tolerance), and a level moved past that bound is red; every
 # other meter (a gain reduction, float through libm) reads within a tolerance what tools/test/<face>.meter-others.txt holds
