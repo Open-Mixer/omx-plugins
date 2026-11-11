@@ -449,6 +449,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 8 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:dyneq#band1>
     ] ,
     [
@@ -459,6 +460,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 8 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:dyneq#band2>
     ] ,
     [
@@ -469,6 +471,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 8 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:dyneq#band3>
     ] ,
     [
@@ -479,6 +482,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 8 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:dyneq#band4>
     ] ,
     [
@@ -489,6 +493,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 8 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:dyneq#band5>
     ] ,
     [
@@ -499,6 +504,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 8 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:dyneq#band6>
     ] ,
     [

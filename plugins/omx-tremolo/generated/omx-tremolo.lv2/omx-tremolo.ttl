@@ -85,6 +85,7 @@
         lv2:maximum 20 ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation <urn:openmixer:meaning#rate> ;
         pg:group <urn:openmixer:tremolo#tremolo>
     ] ,
     [
@@ -96,6 +97,7 @@
         lv2:minimum 0 ;
         lv2:maximum 100 ;
         units:unit units:pc ;
+        lv2:designation <urn:openmixer:meaning#depth> ;
         pg:group <urn:openmixer:tremolo#tremolo>
     ] ,
     [

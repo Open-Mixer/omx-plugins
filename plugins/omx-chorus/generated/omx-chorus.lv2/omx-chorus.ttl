@@ -82,6 +82,7 @@
         lv2:default 0 ;
         lv2:minimum 0 ;
         lv2:maximum 0.5 ;
+        lv2:designation <urn:openmixer:meaning#spread> ;
         pg:group <urn:openmixer:chorus#chorus>
     ] ,
     [
@@ -94,6 +95,7 @@
         lv2:maximum 8 ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation <urn:openmixer:meaning#rate> ;
         pg:group <urn:openmixer:chorus#chorus>
     ] ,
     [
@@ -105,6 +107,7 @@
         lv2:minimum 0 ;
         lv2:maximum 12 ;
         units:unit units:ms ;
+        lv2:designation <urn:openmixer:meaning#depth> ;
         pg:group <urn:openmixer:chorus#chorus>
     ] ,
     [
