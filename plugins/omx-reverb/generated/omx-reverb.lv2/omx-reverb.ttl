@@ -277,3 +277,38 @@ lv2:displayPriority
     rdfs:label "decibels (full scale)" ;
     units:render "%f dBFS" ;
     units:symbol "dBFS" .
+
+<urn:openmixer:meaning#size>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "size" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#damping>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "damping" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#width>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "width" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#predelay>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "predelay" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#lowCut>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "lowCut" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#highCut>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "highCut" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#algorithm>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "algorithm" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .

@@ -235,3 +235,23 @@ lv2:displayPriority
     lv2:name "Drive" ;
     lv2:displayPriority 1 ;
     rdfs:label "Drive" .
+
+<urn:openmixer:meaning#drive>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "drive" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#tone>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "tone" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#output>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "output" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#model>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "model" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .

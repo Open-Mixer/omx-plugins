@@ -148,3 +148,18 @@ lv2:displayPriority
     lv2:name "Chorus" ;
     lv2:displayPriority 1 ;
     rdfs:label "Chorus" .
+
+<urn:openmixer:meaning#spread>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "spread" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#rate>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "rate" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#depth>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "depth" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
