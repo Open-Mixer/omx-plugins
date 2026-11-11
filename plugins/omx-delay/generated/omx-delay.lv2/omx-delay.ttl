@@ -109,6 +109,7 @@
         lv2:default 0.3 ;
         lv2:minimum 0 ;
         lv2:maximum 0.99 ;
+        lv2:designation <urn:openmixer:meaning#feedback> ;
         pg:group <urn:openmixer:delay#delay>
     ] ,
     [
@@ -119,6 +120,7 @@
         lv2:default 0.3 ;
         lv2:minimum 0 ;
         lv2:maximum 1 ;
+        lv2:designation <urn:openmixer:meaning#tone> ;
         pg:group <urn:openmixer:delay#delay>
     ] ,
     [
@@ -141,6 +143,7 @@
         lv2:minimum 0 ;
         lv2:maximum 1 ;
         lv2:portProperty lv2:toggled ;
+        lv2:designation <urn:openmixer:meaning#pingpong> ;
         pg:group <urn:openmixer:delay#delay>
     ] ,
     [

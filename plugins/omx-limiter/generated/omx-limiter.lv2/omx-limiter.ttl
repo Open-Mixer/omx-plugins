@@ -91,6 +91,7 @@
         lv2:minimum -12 ;
         lv2:maximum 0 ;
         units:unit <urn:openmixer:unit#dBFS> ;
+        lv2:designation <urn:openmixer:meaning#ceiling> ;
         pg:group <urn:openmixer:limiter#limiter>
     ] ,
     [
@@ -102,6 +103,7 @@
         lv2:minimum 0.5 ;
         lv2:maximum 5 ;
         units:unit units:ms ;
+        lv2:designation <urn:openmixer:meaning#lookahead> ;
         pg:group <urn:openmixer:limiter#limiter>
     ] ,
     [
