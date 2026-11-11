@@ -46,9 +46,9 @@ export function rule(makefile, target) {
 function topSteps(r) {
   const steps = [];
   for (const l of r.recipe) {
-    const loop = l.match(/\$\(MAKE\) -C \$\$p (\S+)/);
+    const loop = l.match(/\$\(MAKE\) -C \$\$p ([A-Za-z0-9_-]+)/);
     if (loop) steps.push(`per-plugin ${loop[1]}`);
-    for (const m of l.matchAll(/\$\(MAKE\) -s (\S+)/g)) steps.push(m[1]);
+    for (const m of l.matchAll(/\$\(MAKE\) -s ([A-Za-z0-9_-]+)/g)) steps.push(m[1]);
   }
   return steps;
 }
@@ -151,12 +151,12 @@ if (!failed) {
 if (process.argv.includes('--self-test')) {
   const swap = (s, a, b) => { if (!s.includes(a)) throw new Error(`self-test: "${a}" is not in the text it sabotages`); return s.replace(a, b); };
   const arms = {
-    'round-trip dropped from make test-heavy': { ...t, makefile: swap(t.makefile, '\t@$(MAKE) -s round-trip\n', '') },
+    'round-trip dropped from make test-heavy': { ...t, makefile: swap(t.makefile, '$(MAKE) -s round-trip;', 'true;') },
     'hints dropped from make test': { ...t, makefile: swap(t.makefile, '\t@$(MAKE) -s hints\n', '') },
-    'a fast prerequisite dropped from make test': { ...t, makefile: swap(t.makefile, ' face-dirty-order', '') },
+    'a fast prerequisite dropped from make test': { ...t, makefile: swap(t.makefile, ' face-dirty-order test-split\n', ' test-split\n') },
     'host-check.sh dropped from a plugin\'s test-heavy': { ...t, template: t.template.split('\n').filter((l) => !l.includes('host-check.sh')).join('\n') },
     'a plugin Makefile with no test-heavy': { ...t, plugins: { ...t.plugins, 'omx-x': 'all:\n\ttrue\ntest: all\n\ttrue\n' } },
-    'a shard left out of the CI matrix': { ...t, ci: t.ci.replace(/\n(\s+)- (\d+)\/(\d+)\s*(?=\n)/, (m, sp, i, n) => (i === n ? '' : m)) },
+    'a shard left out of the CI matrix': { ...t, ci: swap(t.ci, '          - 4/4\n', '') },
     'the CI test-heavy job gone': { ...t, ci: t.ci.replace(/\n {2}test-heavy:\n/, '\n  test-heavy-gone:\n') },
   };
   // the oracle arm: put the first oracle line of test-heavy into test's recipe instead (a step in the wrong target)

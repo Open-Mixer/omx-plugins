@@ -143,6 +143,55 @@ jobs:
           dnf install -y --setopt=install_weak_deps=False gcc
           make meter-ring
 
+  test-heavy:
+    # Beside make test: the set that runs the built plugins through a host (each plugin's oracles on both faces, its
+    # MOD GUI test, host-check.sh, the round trip), in four slices of the plugins in parallel, the round trip in the
+    # first. The package build runs make test only; every check of both sets runs on every pull request
+    # (tools/test/test-split.json). The slice comes from the job's environment, so the step itself is plain
+    # `make test-heavy`, which runs every slice when OMX_HEAVY_SHARD is unset.
+    name: make test-heavy ${{ matrix.shard }} (fedora:44, amd64)
+    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          - 1/4
+          - 2/4
+          - 3/4
+          - 4/4
+    env:
+      OMX_HEAVY_SHARD: ${{ matrix.shard }}
+    container:
+      image: fedora:44
+    steps:
+      - name: Install the build dependencies
+        run: |
+          dnf install -y --setopt=install_weak_deps=False git dnf5-plugins
+
+      - name: Add the OpenMixer repository
+        uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+
+      - uses: actions/checkout@v4
+
+      - name: The checkout is a git directory this job may read
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
+      - uses: Open-Mixer/.github/.github/actions/wave-deps@openmixer-v1
+
+      - name: Install what the spec builds and tests with
+        run: |
+          dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
+          tools/ci-stale-units.sh
+
+      - name: make test-heavy, and nothing skipped
+        id: handback-test-heavy
+        run: |
+          set -euo pipefail
+          make test-heavy 2>&1 | tee test-heavy.log
+          if grep -E '^SKIP' test-heavy.log; then echo "::error::a test was skipped"; exit 1; fi
+
   selftest:
     # Its own job, beside make test: the two together outgrew one job's 30 minutes once the chain and the
     # compressor landed. Same container and dependencies; nothing is dropped.
