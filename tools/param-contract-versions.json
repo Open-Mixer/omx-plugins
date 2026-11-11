@@ -74,6 +74,9 @@
       "a5ac3b3c1b0204bacc05c4ce21c84265c7ca35a10b359eda6aac985b27cd3542",
       "5b1c1de696eb5a9be6973c2ca62cc1de55f797d360193e760b5f6923b4f64db4"
     ],
+    "omx-leveler": [
+      "af9652a09e29334a12a6099e6105ea5a0ab56496439b00645956d899f5a637a7"
+    ],
     "omx-limiter": [
       "5eac6b3d4921ead5ed21ef89862a7f21ca7a6aca16cd6c5d49a320f0e52fb65e",
       "3ae2010e9cc1760f1251a756c57c0768411aba77d416aad0f67985caee75079e"
@@ -135,6 +138,9 @@
       "c75452b5fd9339a5adb42e9bec62697ff1f201af0596211bfcc108cfb72baa5b",
       "2fc982aabf55f20d07941be4636a22c33034de41d19a62ea47d472ae04b9c214",
       "f1a99ace3897dca92e108cadb2d47aed721a5a750dacef994235028410ccd58f"
+    ],
+    "omx-width": [
+      "6a77b6877ad3ddd60e4b227e2d98aa601be552ed3e9c696acb1cbc9413b5653d"
     ]
   }
 }
