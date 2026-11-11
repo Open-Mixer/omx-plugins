@@ -236,3 +236,8 @@ lv2:displayPriority
     rdfs:label "ratio" ;
     units:render "%f:1" ;
     units:symbol ":1" .
+
+<urn:openmixer:meaning#knee>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "knee" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
