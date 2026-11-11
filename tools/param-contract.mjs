@@ -10,9 +10,10 @@
  * A plugin's contract version is the 1-based position of its fingerprint in tools/param-contract-versions.json: 1 its
  * first publication, and a later change of a symbol, unit, scale, travel or stepping changes the fingerprint and appends
  * it there, the next version. A fingerprint the file does not list is refused, so no change ships under an old version.
+ * The wizard writes a new plugin's first fingerprint (registerFirstContract); every later one is appended by hand.
  */
 import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
@@ -26,6 +27,22 @@ export function contractVersionOf(stem, fingerprint) {
   const i = known.indexOf(fingerprint);
   if (i < 0) throw new Error(`plugins/${stem}: param-contract fingerprint ${fingerprint} is not in tools/param-contract-versions.json: append it, the next version (${known.length + 1})`);
   return i + 1;
+}
+
+/**
+ * A new plugin's first publication: `fingerprint` written as version 1 of `stem` in the tree at `root`, the plugins kept
+ * in name order. Only for a stem the file has never listed (tools/omx-new-plugin.mjs, before it generates); returns
+ * whether it wrote. A listed plugin is left as it is: its changed fingerprint is still refused by contractVersionOf
+ * until a person appends it, the next version.
+ */
+export function registerFirstContract(root, stem, fingerprint) {
+  const file = join(root, 'tools', 'param-contract-versions.json');
+  const j = JSON.parse(readFileSync(file, 'utf8'));
+  if (j.plugins[stem] !== undefined) return false;
+  if (!/^[0-9a-f]{64}$/.test(fingerprint)) throw new Error(`plugins/${stem}: '${fingerprint}' is not a param-contract fingerprint`);
+  j.plugins = Object.fromEntries([...Object.entries(j.plugins), [stem, [fingerprint]]].sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0)));
+  writeFileSync(file, `${JSON.stringify(j, null, 2)}\n`);
+  return true;
 }
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
