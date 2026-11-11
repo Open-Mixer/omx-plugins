@@ -1,0 +1,72 @@
+{
+  "$comment": "The extras of omx-leveler's declaration: what its descriptor, omx-leveler.descriptor.json, has no word for (docs/declaration-as-descriptor.md). The two are the folder's hand-written files; tools/gen.mjs generates the rest and writes the travels the descriptor's links resolve to. Its parameters are by reference to omx-contract's leveler kernel and bind by name to omx-dsp's instance face. Control order, the descriptor's, is append-only.",
+  "stem": "omx-leveler",
+  "kernel": "leveler",
+  "kernels": [
+    "leveler"
+  ],
+  "url": "https://github.com/FreeMixer/omx-plugins",
+  "binding": "instance",
+  "panel": {
+    "family": "none",
+    "roles": {},
+    "sections": [
+      {
+        "key": "leveler",
+        "label": "Leveler",
+        "controls": [
+          "amount",
+          "direction",
+          "speed"
+        ]
+      }
+    ]
+  },
+  "console": {
+    "$comment": "The OpenMixer console has no leveler stage. Racked as a plugin in a channel's insert rack, it is drawn by the generic plugin editor.",
+    "placement": {
+      "group": "plugins"
+    }
+  },
+  "portHints": {
+    "enabled": {
+      "props": [
+        "lv2:toggled"
+      ]
+    },
+    "latency": {
+      "props": [
+        "lv2:integer"
+      ],
+      "unit": "units:frame"
+    },
+    "amount": {
+      "props": [
+        "lv2:integer"
+      ],
+      "unit": "units:pc"
+    },
+    "direction": {
+      "props": [
+        "lv2:enumeration",
+        "lv2:integer"
+      ],
+      "points": [
+        "0 Down",
+        "1 Up",
+        "2 Both"
+      ]
+    },
+    "speed": {
+      "props": [
+        "lv2:enumeration",
+        "lv2:integer"
+      ],
+      "points": [
+        "0 Slow",
+        "1 Medium",
+        "2 Fast"
+      ]
+    }
+  }
+}
