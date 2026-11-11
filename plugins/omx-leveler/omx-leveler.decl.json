@@ -68,5 +68,10 @@
         "2 Fast"
       ]
     }
+  },
+  "resourceHints": {
+    "threads-spawned": 0,
+    "streams-from-disk": false,
+    "opens-sockets": false
   }
 }

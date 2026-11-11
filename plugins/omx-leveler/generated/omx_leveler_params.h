@@ -75,7 +75,10 @@ static const struct omx_param_contract_row OMX_LEVELER_PARAM_CONTRACT[OMX_LEVELE
 /* org.openmixer.resource-hints.draft/0 (omx-contract RESOURCE_HINTS, tools/resource-hints.mjs): the hints the
  * declaration's "resourceHints" states. A hint it leaves out has its bit of `declared` clear: unknown, never zero. */
 static const omx_resource_hints_t OMX_LEVELER_RESOURCE_HINTS = {
-  .declared = 0u,
+  .declared = OMX_RESOURCE_HINT_THREADS_SPAWNED | OMX_RESOURCE_HINT_STREAMS_FROM_DISK | OMX_RESOURCE_HINT_OPENS_SOCKETS,
+  .threads_spawned = 0u,
+  .streams_from_disk = false,
+  .opens_sockets = false,
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
