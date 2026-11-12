@@ -144,7 +144,8 @@ jobs:
         id: handback-meter-ring
         run: |
           set -euo pipefail
-          dnf install -y --setopt=install_weak_deps=False gcc
+          # gcc only when absent: the cluster's worker image carries it and its verify runs unprivileged
+          command -v gcc >/dev/null || dnf install -y --setopt=install_weak_deps=False gcc
           make meter-ring
 
   selftest:

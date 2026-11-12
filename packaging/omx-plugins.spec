@@ -28,7 +28,7 @@ BuildRequires: (omx-contract >= 3.14.0 with omx-contract < 4)
 # git get-tar-commit-id: the source commit the tarball was made from, stamped into each installed descriptor
 BuildRequires: git-core
 # the panel layout and the MOD GUI are omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
-BuildRequires: (omx-panel >= 0.13.2 with omx-panel < 0.14)
+BuildRequires: (omx-panel >= 0.13.5 with omx-panel < 0.14)
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}
