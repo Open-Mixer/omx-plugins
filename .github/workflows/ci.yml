@@ -149,7 +149,9 @@ jobs:
     # compressor landed. Same container and dependencies; nothing is dropped.
     name: make selftest (fedora:44, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
-    timeout-minutes: 120
+    # the sabotage arms alone run 100 to 115 min on a warm runner, so 120 cut them on main too; a cold
+    # runner adds half an hour of dependency install
+    timeout-minutes: 180
     container:
       image: fedora:44
     steps:
