@@ -64,19 +64,25 @@ cp -r "$TMP/scans" "$TMP/scans2"
 LV2_PATH=$TMP/lv2 "$PROBE" describe "lv2:$(field "$P/$stem.descriptor.json" uri)" >"$TMP/scans2/$stem.lv2.json" || exit 1
 node "$ROOT/tools/round-trip.mjs" "$TMP/scans2" >"$TMP/arm2.txt" 2>&1
 red "an lv2:maximum changed in the built .ttl" 'controls\[\]\.travel\.max' "$TMP/arm2.txt"
-# the ledger's probe: LOSSES is counted against one plugin-hostd release (LOSSES_PROBE); a run against another probe
-# whose losses moved reads as that, once, not as one unnamed loss a moved count (two counts moved: one failure against
-# another probe, two unnamed losses against the ledger's own)
+# the ledger's versions: LOSSES is counted against the versions LOSSES_COUNTED names (each package whose tables or
+# contract decide what a face loses). A run where one of them is another version, or a package the count had absent is
+# installed, and counts moved, reads as that, once, naming the package, 'ledger for <package> <v>, installed <w>', not as
+# one unnamed loss a moved count (two counts moved: one failure for each package changed alone; two unnamed losses
+# against the ledger's own versions)
 node --input-type=module -e '
-import { LOSSES, LOSSES_PROBE, ledgerLines } from "'"$ROOT"'/tools/round-trip.mjs";
+import { LOSSES, LOSSES_COUNTED, ledgerLines } from "'"$ROOT"'/tools/round-trip.mjs";
 const [k0, k1] = Object.keys(LOSSES);
 const moved = { ...LOSSES, [k0]: LOSSES[k0] + 1, [k1]: LOSSES[k1] + 1 };
-const other = ledgerLines(moved, "9.9.9");
-const same = ledgerLines(moved, LOSSES_PROBE);
-const ok = other.fails === 1 && other.lines.some((l) => l.startsWith(`ledger for plugin-hostd ${LOSSES_PROBE}, probe 9.9.9:`))
-  && !other.lines.some((l) => l.startsWith("unnamed loss"))
-  && same.fails === 2 && same.lines.filter((l) => l.startsWith("unnamed loss")).length === 2;
+const shown = (v) => v ?? "(not installed)";
+const pkgs = Object.keys(LOSSES_COUNTED);
+const named = pkgs.every((p) => {
+  const other = ledgerLines(moved, { ...LOSSES_COUNTED, [p]: "9.9.9" });
+  return other.fails === 1 && other.lines.some((l) => l.startsWith(`ledger for ${p} ${shown(LOSSES_COUNTED[p])}, installed 9.9.9:`))
+    && !other.lines.some((l) => l.startsWith("unnamed loss"));
+});
+const same = ledgerLines(moved, LOSSES_COUNTED);
+const ok = pkgs.length >= 4 && named && same.fails === 2 && same.lines.filter((l) => l.startsWith("unnamed loss")).length === 2;
 process.exit(ok ? 0 : 1);
-' >"$TMP/arm3.txt" 2>&1 && echo "SABOTAGE a ledger counted against another probe: named as that, once" || { echo "FAIL round-trip self-test: a ledger counted against another probe is not named as that ($(head -c 200 "$TMP/arm3.txt"))"; fails=$((fails + 1)); }
+' >"$TMP/arm3.txt" 2>&1 && echo "SABOTAGE a ledger counted against other versions: each package named as that, once" || { echo "FAIL round-trip self-test: a ledger counted against other versions is not named as that ($(head -c 200 "$TMP/arm3.txt"))"; fails=$((fails + 1)); }
 [ "$fails" -eq 0 ] && echo "round-trip self-test: every sabotage red"
 exit $((fails > 0))
