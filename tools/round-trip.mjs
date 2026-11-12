@@ -88,7 +88,7 @@ export const FORMATS = ['clap', 'lv2'];
  */
 export const LOSSES_COUNTED = Object.freeze({
   'plugin-hostd': '0.20.3',
-  'omx-contract': '3.13.0',
+  'omx-contract': '3.14.0',
   'omx-clap-host': '0.31.2',
   'omx-plugins-contract': null,
 });
