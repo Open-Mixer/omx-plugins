@@ -456,7 +456,8 @@ jobs:
     # the preset-discovery tests crawl that location.
     name: clap-validator (fedora:44, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
-    timeout-minutes: 30
+    # the build alone took 22 min on a saturated runner set: 30 cancelled the job before the validator finished
+    timeout-minutes: 60
     container:
       image: fedora:44
     steps:
