@@ -232,9 +232,13 @@ export const descriptorText = (d) => `${JSON.stringify(descriptorOf(d).descripto
  * Throws on what a host would refuse whole.
  */
 export function panelDescription(d) {
-  // the units the faces serve beside it (the parameter contract, the declaration's): a ratio's descriptor word,
-  // ratio, has no param-contract unit in this release, so its role is judged on the unit the face serves
+  // the units the faces serve beside it (the parameter contract, the declaration's): a ratio travel with no unit of
+  // its own is served as ratio (omx-contract's param-contract unit 258, travelUnit), by the LV2 face and the contract
+  // alike, so its role is judged on that unit
   const { descriptor, extras } = descriptorOf({ ...d, descriptor: undefined });
+  descriptor.controls.forEach((c, i) => {
+    if (c.travel) c.travel.unit = travelUnit(c.travel.unit, d.descriptor?.controls[i]?.travel?.unit);
+  });
   return panelLayout(descriptor, { panel: d.panel, ns: `fx.${d.face ?? d.kernel}`, where: `plugins/${d.stem}`, ...extras });
 }
 

@@ -221,7 +221,7 @@ static const char *const OMX_GEQ_PARAM_MODULES[OMX_GEQ_PARAM_COUNT] = {
 #define OMX_GEQ_NAME "omx geq"
 #define OMX_GEQ_VENDOR "openmixer"
 #define OMX_GEQ_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_GEQ_VERSION "0.19.2"
+#define OMX_GEQ_VERSION "0.19.3"
 #define OMX_GEQ_DESCRIPTION "The console's 31-band graphic EQ: one fader per ISO third-octave band from 20 Hz to 20 kHz, each cutting or boosting by up to 15 dB."
 #define OMX_GEQ_CLAP_ID "org.openmixer.geq"
 #define OMX_GEQ_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
@@ -231,9 +231,9 @@ static const char *const OMX_GEQ_PARAM_MODULES[OMX_GEQ_PARAM_COUNT] = {
 #define OMX_GEQ_DECL_DIGEST "d0a6a22360a6ce7914f59d4b3eb245c16250f1a772ad308a64bbe05698fe2f48"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_GEQ_PARAM_CONTRACT_VERSION 1u
-#define OMX_GEQ_PARAM_CONTRACT_FINGERPRINT "fab8d4a312ea7b485a3ec91d008ddb735c80c3739231b7002744998eb423d5f0"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_GEQ_PARAM_CONTRACT_VERSION 2u
+#define OMX_GEQ_PARAM_CONTRACT_FINGERPRINT "ceff1b2ff48a000abfc1b36aa9bae9d3ebf21f7b192230848fc84f398b9b1317"
 static const struct omx_param_contract_row OMX_GEQ_PARAM_CONTRACT[OMX_GEQ_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* band01 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* band02 db */
@@ -349,7 +349,8 @@ static const struct omx_panel_role_row OMX_GEQ_PANEL_ROLES[] = {
   { "band_gain", 29u, 29u },
   { "band_gain", 30u, 30u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_GEQ_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 6u, 12u, 18u, 24u, 30u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Geq", "Geq: 25 Hz - 160 Hz", { 1u, 2u, 3u, 4u, 5u, 7u, 8u, 9u } },

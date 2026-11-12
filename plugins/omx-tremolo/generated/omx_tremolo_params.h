@@ -59,7 +59,7 @@ static const char *const OMX_TREMOLO_PARAM_MODULES[OMX_TREMOLO_PARAM_COUNT] = {
 #define OMX_TREMOLO_NAME "omx tremolo"
 #define OMX_TREMOLO_VENDOR "openmixer"
 #define OMX_TREMOLO_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TREMOLO_VERSION "0.19.2"
+#define OMX_TREMOLO_VERSION "0.19.3"
 #define OMX_TREMOLO_DESCRIPTION "The console's tremolo and auto-pan: one oscillator turned into a level change on both legs, or into a left-right pan."
 #define OMX_TREMOLO_CLAP_ID "org.openmixer.tremolo"
 #define OMX_TREMOLO_CLAP_FEATURES "audio-effect", "tremolo", "stereo"
@@ -69,9 +69,9 @@ static const char *const OMX_TREMOLO_PARAM_MODULES[OMX_TREMOLO_PARAM_COUNT] = {
 #define OMX_TREMOLO_DECL_DIGEST "b57991962924d939b9966fa18b44ce86bb73f3c940611aaf165dd227ec9b6d1a"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_TREMOLO_PARAM_CONTRACT_VERSION 1u
-#define OMX_TREMOLO_PARAM_CONTRACT_FINGERPRINT "7eda7f36d4553d98706b108002422d309b187291a28efb210a2d3c6369dee62f"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_TREMOLO_PARAM_CONTRACT_VERSION 2u
+#define OMX_TREMOLO_PARAM_CONTRACT_FINGERPRINT "4869e2dd250aba1dafcc6dd592d8caab74e279f7caedc68c68a1a2f92432ce05"
 static const struct omx_param_contract_row OMX_TREMOLO_PARAM_CONTRACT[OMX_TREMOLO_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* rateHz hz */
   { 14u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* depth pc */
@@ -105,7 +105,8 @@ static const struct omx_panel_role_row OMX_TREMOLO_PANEL_ROLES[] = {
   { "depth", 0u, 1u },
   { "mix", 0u, 2u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_TREMOLO_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };

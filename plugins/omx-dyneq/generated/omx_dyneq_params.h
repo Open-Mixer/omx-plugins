@@ -473,7 +473,7 @@ static const char *const OMX_DYNEQ_PARAM_MODULES[OMX_DYNEQ_PARAM_COUNT] = {
 #define OMX_DYNEQ_NAME "omx dyneq"
 #define OMX_DYNEQ_VENDOR "openmixer"
 #define OMX_DYNEQ_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DYNEQ_VERSION "0.19.2"
+#define OMX_DYNEQ_VERSION "0.19.3"
 #define OMX_DYNEQ_DESCRIPTION "A six-band dynamic EQ: each band is an EQ bell or shelf whose gain also moves with the level of its own band, cutting above a threshold (down) or lifting below it (up), held to a range, so a harsh or boomy band is tamed only while it is too loud."
 #define OMX_DYNEQ_CLAP_ID "org.openmixer.dyneq"
 #define OMX_DYNEQ_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
@@ -483,9 +483,9 @@ static const char *const OMX_DYNEQ_PARAM_MODULES[OMX_DYNEQ_PARAM_COUNT] = {
 #define OMX_DYNEQ_DECL_DIGEST "42f922522e41342fe1d9de839ecccca9f1537956c5418067f09bbe0ec8b15024"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_DYNEQ_PARAM_CONTRACT_VERSION 1u
-#define OMX_DYNEQ_PARAM_CONTRACT_FINGERPRINT "b1c783fb3f786f4b7f74254ece5fb34cff436b49ae4a6f6a07a51448a664395b"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_DYNEQ_PARAM_CONTRACT_VERSION 3u
+#define OMX_DYNEQ_PARAM_CONTRACT_FINGERPRINT "ae87b93cf0445f027d461a70139753d7fd71282bda7375d7a0c9863e443fb424"
 static const struct omx_param_contract_row OMX_DYNEQ_PARAM_CONTRACT[OMX_DYNEQ_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bandOn1 none */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bandOn2 none */
@@ -529,12 +529,12 @@ static const struct omx_param_contract_row OMX_DYNEQ_PARAM_CONTRACT[OMX_DYNEQ_PA
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* threshold4 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* threshold5 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* threshold6 db */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio1 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio2 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio3 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio4 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio5 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio6 none */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio1 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio2 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio3 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio4 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio5 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio6 ratio */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* range1 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* range2 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* range3 db */
@@ -698,7 +698,8 @@ static const struct omx_panel_display_row OMX_DYNEQ_PANEL_DISPLAYS[] = {
   { OMX_CLAP_DISPLAY_EQ_RESPONSE, 4u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.dyneq.display.eq_response", "Band 5" },
   { OMX_CLAP_DISPLAY_EQ_RESPONSE, 5u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.dyneq.display.eq_response", "Band 6" },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DYNEQ_PANEL_PAGES[] = {
   { "Easy", "Easy", { 18u, 19u, 20u, 21u, 22u, 23u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Band 1", "Band 1: Band 1 On - Band 1 Range", { 0u, 6u, 12u, 24u, 30u, 36u, 42u, 48u } },

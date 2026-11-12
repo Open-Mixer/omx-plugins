@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:multiband",
     "name": "omx multiband",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "A multiband compressor: two to five bands split by Linkwitz-Riley crossovers, each band its own compressor with threshold, ratio, attack, release, make-up, solo and bypass, then a mix and an output gain, for in-ear mixes, vocals and playback buses.",
     "features": [
       "audio-effect"

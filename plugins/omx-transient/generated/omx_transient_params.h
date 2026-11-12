@@ -65,7 +65,7 @@ static const char *const OMX_TRANSIENT_PARAM_MODULES[OMX_TRANSIENT_PARAM_COUNT] 
 #define OMX_TRANSIENT_NAME "omx transient"
 #define OMX_TRANSIENT_VENDOR "openmixer"
 #define OMX_TRANSIENT_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TRANSIENT_VERSION "0.19.2"
+#define OMX_TRANSIENT_VERSION "0.19.3"
 #define OMX_TRANSIENT_DESCRIPTION "The console's transient designer: more or less attack and sustain, from two envelope contrasts, with no threshold to set."
 #define OMX_TRANSIENT_CLAP_ID "org.openmixer.transient"
 #define OMX_TRANSIENT_CLAP_FEATURES "audio-effect", "transient-shaper", "stereo"
@@ -75,9 +75,9 @@ static const char *const OMX_TRANSIENT_PARAM_MODULES[OMX_TRANSIENT_PARAM_COUNT] 
 #define OMX_TRANSIENT_DECL_DIGEST "b735a9f45b45b01b0ef5660e8ac5e43729aaab9fd5b9c7cce4976934c82759a5"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_TRANSIENT_PARAM_CONTRACT_VERSION 1u
-#define OMX_TRANSIENT_PARAM_CONTRACT_FINGERPRINT "bbc6e30c71502797c8ff2202acbfef52074f75a9b2ab3e5110adabacdabed242"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_TRANSIENT_PARAM_CONTRACT_VERSION 2u
+#define OMX_TRANSIENT_PARAM_CONTRACT_FINGERPRINT "110cf0365d7f60b97a18b53213f8bfd9042bbe9110b4f60c490cca6ad8cb16b0"
 static const struct omx_param_contract_row OMX_TRANSIENT_PARAM_CONTRACT[OMX_TRANSIENT_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* attackDb db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* sustainDb db */
@@ -108,7 +108,8 @@ static const struct omx_panel_control_row OMX_TRANSIENT_PANEL_CONTROLS[] = {
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.transient.sustain_time_ms", "Sustain Time", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 4u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.transient.output_db", "Output", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_TRANSIENT_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Transient", "Transient", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },

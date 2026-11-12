@@ -287,7 +287,7 @@ static const char *const OMX_MBCOMP_PARAM_MODULES[OMX_MBCOMP_PARAM_COUNT] = {
 #define OMX_MBCOMP_NAME "omx multiband"
 #define OMX_MBCOMP_VENDOR "openmixer"
 #define OMX_MBCOMP_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_MBCOMP_VERSION "0.19.2"
+#define OMX_MBCOMP_VERSION "0.19.3"
 #define OMX_MBCOMP_DESCRIPTION "A multiband compressor: two to five bands split by Linkwitz-Riley crossovers, each band its own compressor with threshold, ratio, attack, release, make-up, solo and bypass, then a mix and an output gain, for in-ear mixes, vocals and playback buses."
 #define OMX_MBCOMP_CLAP_ID "org.openmixer.multiband"
 #define OMX_MBCOMP_CLAP_FEATURES "audio-effect", "compressor", "stereo"
@@ -297,9 +297,9 @@ static const char *const OMX_MBCOMP_PARAM_MODULES[OMX_MBCOMP_PARAM_COUNT] = {
 #define OMX_MBCOMP_DECL_DIGEST "e94249a95a2284f21f484388a13d5ab5e249fd138fc123a063260c19573edd10"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_MBCOMP_PARAM_CONTRACT_VERSION 1u
-#define OMX_MBCOMP_PARAM_CONTRACT_FINGERPRINT "56d488bf9d3b6bf373e2c762ad4fb08cf54cbfc4fda0d60e07241e3929d32148"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_MBCOMP_PARAM_CONTRACT_VERSION 3u
+#define OMX_MBCOMP_PARAM_CONTRACT_FINGERPRINT "5f536368c7d13f57ab9e11c675ff26d31c7b2e6e75ed4094e6740fde16dbfbf4"
 static const struct omx_param_contract_row OMX_MBCOMP_PARAM_CONTRACT[OMX_MBCOMP_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bands none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* xoverHz1 hz */
@@ -311,11 +311,11 @@ static const struct omx_param_contract_row OMX_MBCOMP_PARAM_CONTRACT[OMX_MBCOMP_
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* thresholdDb3 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* thresholdDb4 db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* thresholdDb5 db */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio1 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio2 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio3 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio4 none */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio5 none */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio1 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio2 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio3 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio4 ratio */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio5 ratio */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* attackMs1 ms */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* attackMs2 ms */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* attackMs3 ms */
@@ -355,10 +355,8 @@ static const omx_resource_hints_t OMX_MBCOMP_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics.
- * Declared roles not published:
- *   ratio (ratio1): the ratio role takes ratio, coef, not no unit */
-#define OMX_MBCOMP_PANEL_FINGERPRINT "50435c3a3b4655bfcb98c48f1c3161494c31cdee80372208cd5abd45713cef0e"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics. */
+#define OMX_MBCOMP_PANEL_FINGERPRINT "f23f047e9bfe7c8130f4b03d0dea116732d23bdde9f706af22882d2229d070fe"
 static const struct omx_panel_section_row OMX_MBCOMP_PANEL_SECTIONS[] = {
   { "split", "fx.mbcomp.section.split", "Split" },
   { "band1", "fx.mbcomp.section.band1", "Band 1" },
@@ -414,17 +412,22 @@ static const struct omx_panel_control_row OMX_MBCOMP_PANEL_CONTROLS[] = {
 };
 static const struct omx_panel_role_row OMX_MBCOMP_PANEL_ROLES[] = {
   { "threshold", 0u, 5u },
+  { "ratio", 0u, 10u },
   { "attack", 0u, 15u },
   { "release", 0u, 20u },
   { "makeup", 0u, 25u },
   { "mix", 0u, 40u },
   { "output", 0u, 41u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+static const struct omx_panel_display_row OMX_MBCOMP_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR, 1u, OMX_CLAP_DISPLAY_FROM_METERS, { 0u, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.mbcomp.display.gain_reduction_bar", "Gain reduction" },
+};
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_MBCOMP_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 5u, 25u, 40u, 15u, 20u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 5u, 10u, 25u, 40u, 15u, 20u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Split", "Split", { 0u, 1u, 2u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Band 1", "Band 1", { 10u, 30u, 35u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Band 1", "Band 1", { 30u, 35u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Band 2", "Band 2", { 6u, 11u, 16u, 21u, 26u, 31u, 36u, OMX_CLAP_PANEL_INVALID_ID } },
   { "Band 3", "Band 3", { 7u, 12u, 17u, 22u, 27u, 32u, 37u, OMX_CLAP_PANEL_INVALID_ID } },
   { "Band 4", "Band 4", { 8u, 13u, 18u, 23u, 28u, 33u, 38u, OMX_CLAP_PANEL_INVALID_ID } },
@@ -436,8 +439,8 @@ static const struct omx_panel_rows OMX_MBCOMP_PANEL = {
   OMX_MBCOMP_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DYNAMICS,
   OMX_MBCOMP_PANEL_SECTIONS, 7u,
   OMX_MBCOMP_PANEL_CONTROLS, 42u,
-  OMX_MBCOMP_PANEL_ROLES, 6u,
-  NULL, 0u,
+  OMX_MBCOMP_PANEL_ROLES, 7u,
+  OMX_MBCOMP_PANEL_DISPLAYS, 1u,
   NULL, 0u,
 };
 

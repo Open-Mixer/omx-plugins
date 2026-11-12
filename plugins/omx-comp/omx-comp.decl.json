@@ -201,6 +201,7 @@
       {
         "key": "comp",
         "label": "Comp",
+        "graph": "dynamics-curve",
         "controls": [
           "thresholdDb",
           "ratio",

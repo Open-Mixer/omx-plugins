@@ -59,7 +59,7 @@ static const char *const OMX_TONE_PARAM_MODULES[OMX_TONE_PARAM_COUNT] = {
 #define OMX_TONE_NAME "omx tone"
 #define OMX_TONE_VENDOR "openmixer"
 #define OMX_TONE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TONE_VERSION "0.19.2"
+#define OMX_TONE_VERSION "0.19.3"
 #define OMX_TONE_DESCRIPTION "Tilts the whole tone darker or brighter about a pivot, and sweeps a resonant DJ filter from a low-pass through open to a high-pass with one knob."
 #define OMX_TONE_CLAP_ID "org.openmixer.tone"
 #define OMX_TONE_CLAP_FEATURES "audio-effect", "filter", "stereo"
@@ -69,9 +69,9 @@ static const char *const OMX_TONE_PARAM_MODULES[OMX_TONE_PARAM_COUNT] = {
 #define OMX_TONE_DECL_DIGEST "98bc8d37e1cb6e843ad5cae6db1e41273e996044dc425c5aa435f945ed96656e"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_TONE_PARAM_CONTRACT_VERSION 1u
-#define OMX_TONE_PARAM_CONTRACT_FINGERPRINT "33df5e703efc53d22079c985ffd9a121f845f316e6e5ca997e5d2fceb5a16816"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_TONE_PARAM_CONTRACT_VERSION 2u
+#define OMX_TONE_PARAM_CONTRACT_FINGERPRINT "ad227027919a7608f40e2d366c7b5acfbc2cfa3ab76bbb0f4cc236cbcd6e06aa"
 static const struct omx_param_contract_row OMX_TONE_PARAM_CONTRACT[OMX_TONE_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* tiltDb db */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* pivotHz hz */
@@ -106,7 +106,8 @@ static const struct omx_panel_control_row OMX_TONE_PANEL_CONTROLS[] = {
 static const struct omx_panel_role_row OMX_TONE_PANEL_ROLES[] = {
   { "resonance", 0u, 3u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_TONE_PANEL_PAGES[] = {
   { "Easy", "Easy", { 3u, 0u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };

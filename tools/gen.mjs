@@ -44,7 +44,7 @@ import { faceBinding } from './instance-face.mjs';
 import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
 import { lv2Designation, lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
-import { CONTRACT_VERSION, contractFingerprint, contractOf, faceIds } from './param-contract.mjs';
+import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
 import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam } from './omx-contract.mjs';
 import { bandsMacro, baseOf, expandVariant, variantStems } from './variants.mjs';
 import { omxdspInclude, render } from './template.mjs';
@@ -544,7 +544,7 @@ export function metersOf(d) {
  * input, the port right after the face's own (enabled, latency), so an appended parameter moves it no more than them. */
 export const tempoOf = (d) => Boolean(d.descriptor?.needs?.tempo);
 
-/** The LV2 port list, in index order: the face's own ports at omx-contract's permanent indices (OMX_PLUGIN_FACE_IDS:
+/** The LV2 port list, in index order: the face's own ports at the permanent indices of contract/plugin-face.json (OMX_PLUGIN_FACE_IDS:
  * enabled 0, latency 1), then (a plugin that reads the host's tempo) the `control` atom input, then audio in (and the
  * sidechain key, when declared), audio out, then the declared parameters. Appending a parameter moves no port; adding
  * a port moves neither enabled, latency nor control. `face` is the ids (default: this tree's contract).
@@ -583,6 +583,8 @@ function emitPanelRows(d) {
   const K = d.kernel.toUpperCase();
   const x = panelDescription(d);
   const NONE = 'OMX_CLAP_PANEL_INVALID_ID';
+  // the page table holds every control in its slot: the boundaries do not move with the values, and the face blanks a hidden one
+  const everyShown = { ...x, controls: x.controls.map((c) => ({ ...c, visible: null })) };
   const id = (n) => (n === null || n === undefined ? NONE : `${n}u`);
   const enumOf = (prefix, list, v) => `OMX_CLAP_${prefix}_${list[list.indexOf(v)].toUpperCase()}`;
   const tables = [
@@ -600,11 +602,12 @@ function emitPanelRows(d) {
  * Declared roles not published:
 ${unpublished}` : ''} */
 #define OMX_${K}_PANEL_FINGERPRINT "${panelFingerprint(x)}"
-${tables.map(array).join('')}/* clap.remote-controls/2: the pages of the page rule over the sections. */
+${tables.map(array).join('')}/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_${K}_PANEL_PAGES[] = {
-${pagesOf(x, d).map((g) => `  { ${cstr(g.sectionName)}, ${cstr(g.pageName)}, { ${g.ids.map(id).join(', ')} } },`).join('\n')}
+${pagesOf(everyShown, d).map((g) => `  { ${cstr(g.sectionName)}, ${cstr(g.pageName)}, { ${g.ids.map(id).join(', ')} } },`).join('\n')}
 };
-#define OMX_${K}_PANEL_PAGE_COUNT ${pagesOf(x, d).length}u
+#define OMX_${K}_PANEL_PAGE_COUNT ${pagesOf(everyShown, d).length}u
 static const struct omx_panel_rows OMX_${K}_PANEL = {
   OMX_${K}_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_${FAMILIES[FAMILIES.indexOf(x.family)].toUpperCase()},
 ${tables.map((t) => `  ${ref(t)},`).join('\n')}
@@ -684,8 +687,8 @@ static inline uint32_t ${bandCountFn(d, el)}(const float *values) {
 #define OMX_${K}_DECL_DIGEST "${digestOf(d.params)}"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_${K}_PARAM_CONTRACT_VERSION ${CONTRACT_VERSION}u
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_${K}_PARAM_CONTRACT_VERSION ${contractVersionOf(d.stem, contractFingerprint(contractOf(d, scaleOf)))}u
 #define OMX_${K}_PARAM_CONTRACT_FINGERPRINT "${contractFingerprint(contractOf(d, scaleOf))}"
 static const struct omx_param_contract_row OMX_${K}_PARAM_CONTRACT[${P}_COUNT] = {
 ${contractOf(d, scaleOf).slice(0, -1).map((r) => `  { ${r.unitEnum}u, OMX_CLAP_SCALE_${r.scale.toUpperCase()}, ${r.step}.0 }, /* ${r.symbol} ${r.unit} */`).join('\n')}

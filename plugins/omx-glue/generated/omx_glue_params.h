@@ -83,7 +83,7 @@ static const char *const OMX_GLUE_PARAM_MODULES[OMX_GLUE_PARAM_COUNT] = {
 #define OMX_GLUE_NAME "omx glue"
 #define OMX_GLUE_VENDOR "openmixer"
 #define OMX_GLUE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_GLUE_VERSION "0.19.2"
+#define OMX_GLUE_VERSION "0.19.3"
 #define OMX_GLUE_DESCRIPTION "A bus compressor with the detents of a classic console: stepped ratio, attack and release, a key filter and a dry mix."
 #define OMX_GLUE_CLAP_ID "org.openmixer.glue"
 #define OMX_GLUE_CLAP_FEATURES "audio-effect", "compressor", "stereo"
@@ -93,9 +93,9 @@ static const char *const OMX_GLUE_PARAM_MODULES[OMX_GLUE_PARAM_COUNT] = {
 #define OMX_GLUE_DECL_DIGEST "7bcb023ca90e579d8a3ed67bd6066c428c3c8eb20cb121d2d092ce0876f6de0f"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_GLUE_PARAM_CONTRACT_VERSION 1u
-#define OMX_GLUE_PARAM_CONTRACT_FINGERPRINT "7f2c2b19ab3474118548bdfffbb3316299e5cc3bbe8d22d40791f39656d0b848"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_GLUE_PARAM_CONTRACT_VERSION 2u
+#define OMX_GLUE_PARAM_CONTRACT_FINGERPRINT "0d7112e4b0cdbdd2d87e1cc276fa30ee1c8b7e9c527ff618b9df7f2cf67ecc8b"
 static const struct omx_param_contract_row OMX_GLUE_PARAM_CONTRACT[OMX_GLUE_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* thresholdDb db */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* ratio none */
@@ -132,7 +132,8 @@ static const struct omx_panel_control_row OMX_GLUE_PANEL_CONTROLS[] = {
   { 6u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.glue.mix_pct", "Mix", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 7u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.glue.detector_topology", "Detector Topology", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_GLUE_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Glue", "Glue", { 4u, 5u, 6u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },

@@ -65,7 +65,7 @@ static const char *const OMX_CHORUS_PARAM_MODULES[OMX_CHORUS_PARAM_COUNT] = {
 #define OMX_CHORUS_NAME "omx chorus"
 #define OMX_CHORUS_VENDOR "openmixer"
 #define OMX_CHORUS_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_CHORUS_VERSION "0.19.2"
+#define OMX_CHORUS_VERSION "0.19.3"
 #define OMX_CHORUS_DESCRIPTION "The console's chorus: up to four voices read one modulated delay line, the right leg's sweep offset by the spread, mixed with the dry signal."
 #define OMX_CHORUS_CLAP_ID "org.openmixer.chorus"
 #define OMX_CHORUS_CLAP_FEATURES "audio-effect", "chorus", "stereo"
@@ -75,9 +75,9 @@ static const char *const OMX_CHORUS_PARAM_MODULES[OMX_CHORUS_PARAM_COUNT] = {
 #define OMX_CHORUS_DECL_DIGEST "7e9d7de96f6b48a792b97d200fa3c98c64f705c253f31637301752d03a5a2e51"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_CHORUS_PARAM_CONTRACT_VERSION 1u
-#define OMX_CHORUS_PARAM_CONTRACT_FINGERPRINT "0ed178cc68e5aec571483b30d59a2e0bbce5baebe61b7b209cb069601584a0ad"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_CHORUS_PARAM_CONTRACT_VERSION 2u
+#define OMX_CHORUS_PARAM_CONTRACT_FINGERPRINT "cc4815354f59f8a24dd33071d8fa5a30d25b037923b8cf13ebb61cf1d4263577"
 static const struct omx_param_contract_row OMX_CHORUS_PARAM_CONTRACT[OMX_CHORUS_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* spread none */
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* rate hz */
@@ -116,7 +116,8 @@ static const struct omx_panel_role_row OMX_CHORUS_PANEL_ROLES[] = {
   { "spread", 0u, 0u },
   { "mix", 0u, 4u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_CHORUS_PANEL_PAGES[] = {
   { "Easy", "Easy", { 1u, 4u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Chorus", "Chorus", { 0u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },

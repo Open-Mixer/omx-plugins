@@ -173,7 +173,7 @@ static const char *const OMX_DELAY_PARAM_MODULES[OMX_DELAY_PARAM_COUNT] = {
 #define OMX_DELAY_NAME "omx delay"
 #define OMX_DELAY_VENDOR "openmixer"
 #define OMX_DELAY_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DELAY_VERSION "0.19.2"
+#define OMX_DELAY_VERSION "0.19.3"
 #define OMX_DELAY_DESCRIPTION "The OpenMixer console's stereo delay: one time, free or synced to the host's tempo, feedback through a tone filter, ping-pong, read taps, a tape or analog colour, a wet/dry mix and a duck under the input."
 #define OMX_DELAY_CLAP_ID "org.openmixer.delay"
 #define OMX_DELAY_CLAP_FEATURES "audio-effect", "delay", "stereo"
@@ -183,9 +183,9 @@ static const char *const OMX_DELAY_PARAM_MODULES[OMX_DELAY_PARAM_COUNT] = {
 #define OMX_DELAY_DECL_DIGEST "3185a8fe2345bf9f9b48598b83c02556320301a873ac36ea4c18236ee59829e3"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_DELAY_PARAM_CONTRACT_VERSION 1u
-#define OMX_DELAY_PARAM_CONTRACT_FINGERPRINT "0fb8078f57eefce8cebfd48112c29e53c7e1648dcd485bad6ee881e645744c74"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_DELAY_PARAM_CONTRACT_VERSION 2u
+#define OMX_DELAY_PARAM_CONTRACT_FINGERPRINT "5d68c368c9182981147b3872a22fa1e47097e14a683897a35f7e806e1be2d4e8"
 static const struct omx_param_contract_row OMX_DELAY_PARAM_CONTRACT[OMX_DELAY_PARAM_COUNT] = {
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* fxDelayTime ms */
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* fxDelayFeedback none */
@@ -265,7 +265,8 @@ static const struct omx_panel_role_row OMX_DELAY_PANEL_ROLES[] = {
 static const struct omx_panel_default_row OMX_DELAY_PANEL_DEFAULTS[] = {
   { OMX_CLAP_PLACEMENT_RETURN, 3u, 1 },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DELAY_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Delay", "Delay", { 4u, 19u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },

@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:tone",
     "name": "omx tone",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "Tilts the whole tone darker or brighter about a pivot, and sweeps a resonant DJ filter from a low-pass through open to a high-pass with one knob.",
     "features": [
       "audio-effect"

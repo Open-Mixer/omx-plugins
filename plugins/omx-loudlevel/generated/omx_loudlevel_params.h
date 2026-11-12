@@ -65,7 +65,7 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
 #define OMX_LOUDLEVEL_NAME "omx loudlevel"
 #define OMX_LOUDLEVEL_VENDOR "openmixer"
 #define OMX_LOUDLEVEL_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_LOUDLEVEL_VERSION "0.19.2"
+#define OMX_LOUDLEVEL_VERSION "0.19.3"
 #define OMX_LOUDLEVEL_DESCRIPTION "Holds a signal at a loudness target by moving its gain slowly, with a gate so pauses are left alone."
 #define OMX_LOUDLEVEL_CLAP_ID "org.openmixer.loudlevel"
 #define OMX_LOUDLEVEL_CLAP_FEATURES "audio-effect", "utility", "stereo"
@@ -75,9 +75,9 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
 #define OMX_LOUDLEVEL_DECL_DIGEST "5ca40a12d69abada26cd79a670a6090d0dabf4de21b92531fafaccc34968ba61"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 1u
-#define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "33b959ab49e65da93fa433b0263dae01c9d5d54c62a1705229854dc45467f2dc"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 2u
+#define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "b43277adac9dfb0ebce25ca154ca1701bfcb0d071bd937c3c157108b29285c52"
 static const struct omx_param_contract_row OMX_LOUDLEVEL_PARAM_CONTRACT[OMX_LOUDLEVEL_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* targetLufs db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* rangeDb db */
@@ -108,7 +108,8 @@ static const struct omx_panel_control_row OMX_LOUDLEVEL_PANEL_CONTROLS[] = {
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.loudlevel.gate_lufs", "Gate", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 4u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.loudlevel.window", "Window", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_LOUDLEVEL_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Loudlevel", "Loudlevel", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
