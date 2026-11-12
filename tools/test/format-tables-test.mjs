@@ -8,12 +8,15 @@
  *   1. the LV2 units a face writes are the ones tools/gen.mjs held before it read the table (LV2_UNITS), each
  *      unit the table maps read from it, the declarations' own (dBu, dB/oct, ratio) beside it;
  *   2. every described control whose meaning the LV2 table maps (param:gain, ...) carries it as its port's
- *      lv2:designation in the generated TTL, and no other control does: the 169 of this release, by term;
+ *      lv2:designation in the generated TTL; one the table maps no param: term for (knee, makeup, ...) carries its
+ *      own urn:openmixer:meaning#<meaning> instead; a control of meaning unknown, or none, carries neither: the
+ *      309 of this release, by term;
  *   3. the three ratio controls state urn:openmixer:unit#ratio, and the TTL defines it;
  *   4. each generated header's OMX_<K>_PARAM_MODULES is its descriptor's groups as module paths, "" without one.
  *
- * Its arms, on a copy of the LV2 table (PLUGIN_HOSTD_TABLES): a meaning's row removed loses its designations, a unit's
- * row removed loses its unit, two rows mapping one value are refused. `make format-tables`, part of `make test`.
+ * Its arms, on a copy of the LV2 table (PLUGIN_HOSTD_TABLES): a meaning's row removed falls back to its urn, same as
+ * one the table never mapped (the fallback itself removed loses it outright), a unit's row removed loses its unit,
+ * two rows mapping one value are refused. `make format-tables`, part of `make test`.
  */
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -66,9 +69,13 @@ function designations(designationOf) {
 // 2. the designations
 const { got, want } = designations(lv2Designation);
 check('every described control whose meaning the LV2 table maps is designated by it, and no other', got, want);
+// held by value: a meaning the LV2 table maps no param: term for (knee, makeup) still carries one, urn:openmixer:meaning#<meaning>
+const compPorts = portsOf(ttlOf(join(ROOT, 'plugins', 'omx-comp'), 'omx-comp'));
+check("omx-comp.kneeDb's designation (knee, no LV2 param: term)", compPorts.kneeDb?.designation, '<urn:openmixer:meaning#knee>');
+check("omx-comp.makeupDb's designation (makeup, no LV2 param: term)", compPorts.makeupDb?.designation, '<urn:openmixer:meaning#makeup>');
 const byTerm = {};
 for (const g of got) byTerm[g.split(' ')[1]] = (byTerm[g.split(' ')[1]] ?? 0) + 1;
-check('the designations of this release, by term', Object.fromEntries(Object.entries(byTerm).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))), { 'param:gain': 93, 'param:frequency': 63, 'param:wetDryRatio': 12, 'param:release': 6, 'param:attack': 5, 'param:ratio': 5, 'param:threshold': 5, 'param:cutoffFrequency': 1, 'param:delay': 1, 'param:hold': 1, 'param:resonance': 1 });
+check('the designations of this release, by term', Object.fromEntries(Object.entries(byTerm).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))), { 'param:gain': 93, 'param:frequency': 63, '<urn:openmixer:meaning#q>': 62, 'param:wetDryRatio': 12, '<urn:openmixer:meaning#slope>': 6, 'param:release': 6, '<urn:openmixer:meaning#depth>': 5, '<urn:openmixer:meaning#rate>': 5, 'param:attack': 5, 'param:ratio': 5, 'param:threshold': 5, '<urn:openmixer:meaning#highCut>': 4, '<urn:openmixer:meaning#lowCut>': 4, '<urn:openmixer:meaning#feedback>': 3, '<urn:openmixer:meaning#knee>': 2, '<urn:openmixer:meaning#makeup>': 2, '<urn:openmixer:meaning#output>': 2, '<urn:openmixer:meaning#range>': 2, '<urn:openmixer:meaning#spread>': 2, '<urn:openmixer:meaning#tone>': 2, '<urn:openmixer:meaning#width>': 2, '<urn:openmixer:meaning#algorithm>': 1, '<urn:openmixer:meaning#ceiling>': 1, '<urn:openmixer:meaning#damping>': 1, '<urn:openmixer:meaning#drive>': 1, '<urn:openmixer:meaning#fine>': 1, '<urn:openmixer:meaning#hysteresis>': 1, '<urn:openmixer:meaning#lookahead>': 1, '<urn:openmixer:meaning#mode>': 1, '<urn:openmixer:meaning#model>': 1, '<urn:openmixer:meaning#pingpong>': 1, '<urn:openmixer:meaning#predelay>': 1, '<urn:openmixer:meaning#shift>': 1, '<urn:openmixer:meaning#size>': 1, 'param:cutoffFrequency': 1, 'param:delay': 1, 'param:hold': 1, 'param:resonance': 1 });
 
 // 3. the ratio unit
 const ratios = [];
@@ -106,7 +113,10 @@ const broken = (name, edit) => {
 const arm = (dir, code) => spawnSync(process.execPath, ['--input-type=module', '-e', code], { cwd: ROOT, env: { ...process.env, PLUGIN_HOSTD_TABLES: dir }, encoding: 'utf8' });
 const FT = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
 let r = arm(broken('no-gain', (rows) => { delete rows['param:gain']; }), `import { lv2Designation } from ${FT}; console.log(String(lv2Designation('gain')));`);
-check('arm: the param:gain row removed, gain is designated by nothing', r.stdout.trim(), 'undefined');
+check('arm: the param:gain row removed, gain falls back to its urn', r.stdout.trim(), '<urn:openmixer:meaning#gain>');
+// arm: knee has no LV2 param: term at all (the table maps none); with the fallback removed, omx-comp's kneeDb
+// (meaning knee) would lose its designation outright, same as before FreeMixer/omx-plugins#12
+check("arm: the fallback, knee (omx-comp's kneeDb) is designated by its urn", lv2Designation('knee'), '<urn:openmixer:meaning#knee>');
 r = arm(broken('no-db', (rows) => { delete rows['units:db']; }), `import { lv2UnitRef } from ${FT}; console.log(String(lv2UnitRef('dB')));`);
 check('arm: the units:db row removed, dB has no LV2 unit', r.stdout.trim(), 'undefined');
 r = arm(broken('twice', (rows) => { rows['units:unit'].word.values['urn:openmixer:unit#dB'] = 'dB'; }), `import { lv2UnitRef } from ${FT}; lv2UnitRef('dB');`);
