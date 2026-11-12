@@ -24,7 +24,10 @@
  * same value (an LV2 field's values a set, as RDF states them).
  *
  * Pass: no `differs`, every bag equal, and the lost words the ones LOSSES names, by count (a new loss is red until it
- * is named there).
+ * is named there). LOSSES is counted against the versions LOSSES_COUNTED names, in a clean build environment (the
+ * channel's BuildRequires only): a run where one of them is another version, or a package absent from the count is
+ * installed, and losses moved, says so once, `ledger for <package> <counted>, installed <found>`, and the ledger is
+ * counted again there.
  *
  * Usage: node tools/round-trip.mjs <scans dir> [--authored <stem>=<file>]... ; the scans dir holds <stem>.clap.json
  * and <stem>.lv2.json for every described plugin. --authored reads another descriptor in the plugin's place (the
@@ -37,13 +40,38 @@ import { descriptorFile } from './descriptor.mjs';
 import { lookupValues, tableRows, tableWords } from './format-tables.mjs';
 import { compareVersions } from './omx-contract.mjs';
 
-/** The installed plugin-hostd's version, as pkg-config reads it, or undefined. */
-function hostdVersion() {
+/** `cmd args`' trimmed output, or undefined when it fails or says nothing. */
+function output(cmd, args) {
   try {
-    return execFileSync(process.env.PKG_CONFIG || 'pkg-config', ['--modversion', 'plugin-hostd'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || undefined;
+    return execFileSync(cmd, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || undefined;
   } catch {
     return undefined;
   }
+}
+
+const pkgConfig = (...args) => output(process.env.PKG_CONFIG || 'pkg-config', args);
+
+/** The installed plugin-hostd's version, as pkg-config reads it, or undefined. */
+function hostdVersion() {
+  return pkgConfig('--modversion', 'plugin-hostd');
+}
+
+/** The version of `pkg`'s contract in the first contract directory holding it ($OMX_CONTRACT_PATH, else omx-contract's
+ * contractdir), or null when none does. */
+function contractVersion(pkg) {
+  const dirs = process.env.OMX_CONTRACT_PATH?.split(':').filter(Boolean) ?? [pkgConfig('--variable=contractdir', 'omx-contract')].filter(Boolean);
+  const manifest = dirs.map((d) => join(d, '3', pkg, 'MANIFEST.json')).find((f) => existsSync(f));
+  return manifest ? JSON.parse(readFileSync(manifest, 'utf8')).version ?? null : null;
+}
+
+/** The installed version of each package LOSSES_COUNTED names (null: not installed; undefined: not readable). */
+export function installedVersions() {
+  return {
+    'plugin-hostd': hostdVersion(),
+    'omx-contract': pkgConfig('--modversion', 'omx-contract'),
+    'omx-clap-host': /version:\s*(\S+)/.exec(output('omx-clap-host', ['--version']) ?? '')?.[1],
+    'omx-plugins-contract': contractVersion('omx-plugins'),
+  };
 }
 
 export const ROOT = resolve(new URL('..', import.meta.url).pathname);
@@ -52,21 +80,32 @@ export const FORMATS = ['clap', 'lv2'];
 /** The losses of this tree, `<format> <word>` -> how many words (OR2: the meaning has a CLAP word for the bypass only
  * and an LV2 term for some meanings; LV2 has no unit for ""). Each other entry is a word the format's table has no
  * row for, or one its face states otherwise, named in the header above. */
+/**
+ * The versions LOSSES is counted against, in a clean fedora:44 with the channel's BuildRequires only: plugin-hostd's
+ * format tables and probe, omx-contract's parameter contract, the CLAP host the probe loads through, and
+ * omx-plugins-contract, whose installed descriptors lend a scan the meanings a face does not carry (null: not installed,
+ * as in a build of omx-plugins).
+ */
+export const LOSSES_COUNTED = Object.freeze({
+  'plugin-hostd': '0.20.3',
+  'omx-contract': '3.14.0',
+  'omx-clap-host': '0.31.2',
+  'omx-plugins-contract': null,
+});
+
 export const LOSSES = {
   // OR2: a meaning has a CLAP word only for the bypass, an LV2 term only for some (lv2:designation); LV2 has no unit
   // for "" (a plain number)
-  'clap controls[].meaning': 309,
+  'clap controls[].meaning': 10,
   'lv2 controls[].meaning': 116,
   'lv2 controls[].travel.unit ""': 123,
-  // plugin-hostd 0.7.0's LV2 table has no row for urn:openmixer:unit#ratio, the ratio unit our faces write (gap 4)
-  'lv2 controls[].travel.unit "ratio"': 16,
   // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt (dB/oct, omx-contract 3.1.0)
   'lv2 controls[].travel.unit "dB/oct"': 2,
-  // CLAP: no row reads a unit, a linear or log scale, a step, a choice (our faces set no CLAP_PARAM_IS_ENUM), the
-  // session symbol, the LV2 URI, a side-chain's role or what an LV2 host may lend
-  'clap controls[].travel.unit': 559,
-  'clap controls[].travel.scale': 488,
-  'clap controls[].travel.step': 559,
+  // CLAP: plugin-hostd 0.20.3 reads a control's scale and, through the parameter contract, most units and steps; no
+  // row reads the rest of the units and steps, a choice (our faces set no CLAP_PARAM_IS_ENUM), the session symbol, the
+  // LV2 URI, a side-chain's role or what an LV2 host may lend
+  'clap controls[].travel.unit': 125,
+  'clap controls[].travel.step': 375,
   'clap controls[].kind': 266,
   'clap controls[].ids': 137,
   'clap controls[].values': 137,
@@ -108,6 +147,32 @@ export const LOSSES = {
   'lv2 meters[].doc': 16,
   'lv2 meters[].name': 8,
 };
+
+/**
+ * The ledger's lines and failures for the losses a run counted, against the `installed` versions of the packages
+ * LOSSES_COUNTED names. Each lost word LOSSES names by its count is named; one it does not is an unnamed loss, a failure
+ * each, when every installed version is the counted one (a version that cannot be read is not held against it). Where
+ * one differs (a bump moves the tables, an installed omx-plugins-contract lends meanings) the moved counts are ONE
+ * failure, said as that, naming each package that differs: the ledger is counted again, not read as unnamed losses.
+ */
+export function ledgerLines(losses, installed) {
+  const lines = [];
+  const keys = [...new Set([...Object.keys(LOSSES), ...Object.keys(losses)])].sort();
+  const moved = keys.filter((k) => LOSSES[k] !== losses[k]);
+  const shown = (v) => v ?? '(not installed)';
+  const differ = Object.keys(LOSSES_COUNTED).filter((p) => installed[p] !== undefined && installed[p] !== LOSSES_COUNTED[p]);
+  const elsewhere = differ.length > 0;
+  if (elsewhere && moved.length > 0) {
+    const what = differ.map((p) => `ledger for ${p} ${shown(LOSSES_COUNTED[p])}, installed ${shown(installed[p])}`).join('; ');
+    lines.push(`${what}: ${moved.length} count(s) moved; count LOSSES again in a clean build environment and set LOSSES_COUNTED`);
+  }
+  for (const k of keys) {
+    const ok = !moved.includes(k);
+    const label = ok ? 'named' : elsewhere ? 'loss against the ledger\'s versions,' : 'unnamed';
+    lines.push(`${label} loss ${k}: ${losses[k] ?? 0} word(s)${ok ? '' : `, LOSSES names ${LOSSES[k] ?? 0}`}`);
+  }
+  return { lines, fails: elsewhere ? (moved.length > 0 ? 1 : 0) : moved.length };
+}
 
 /** A break in plugin-hostd's wave tip, reported, each `differs` it causes printed with it
  * and not failing; the run fails when one no longer shows, so the entry leaves with the fix (an entry that names its
@@ -282,11 +347,9 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
     }
   }
   for (const stem of outside) lines.push(`outside ${stem}: no descriptor, outside the round trip`);
-  for (const k of [...new Set([...Object.keys(LOSSES), ...Object.keys(losses)])].sort()) {
-    const ok = LOSSES[k] === losses[k];
-    lines.push(`${ok ? 'named' : 'unnamed'} loss ${k}: ${losses[k] ?? 0} word(s)${ok ? '' : `, LOSSES names ${LOSSES[k] ?? 0}`}`);
-    if (!ok) fails++;
-  }
+  const ledger = ledgerLines(losses, installedVersions());
+  lines.push(...ledger.lines);
+  fails += ledger.fails;
   for (const [k, { count: named, at, through }] of Object.entries(UPSTREAM)) {
     const count = at?.length ?? named;
     if (through !== undefined) {
