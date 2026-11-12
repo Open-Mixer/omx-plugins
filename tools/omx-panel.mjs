@@ -26,6 +26,9 @@ if (!existsSync(at('bin', 'omx-panel.mjs'))) {
   throw new Error(`omx-panel is not installed at ${PANEL_DIR}: install omx-panel from the channel, or set OMX_PANEL_DIR to its tree (BUILDING.md)`);
 }
 process.env.OMX_PARAM_CONTRACT_H ||= fileURLToPath(new URL('../include/omx_param_contract.h', import.meta.url));
+// the roles' meanings are this tree's own (omx-panel >= 0.13.5 reads them from an installed omx-plugins-contract, which a
+// build of omx-plugins has not installed yet)
+process.env.OMX_ROLE_MEANINGS ||= fileURLToPath(new URL('../contract/role-meanings.json', import.meta.url));
 
 /** omx-panel's layout module: a descriptor, of any origin, laid out under a declared panel (its docs/panel-layout.md). */
 const layout = await import(pathToFileURL(at('tools', 'panel-description.mjs')).href);
