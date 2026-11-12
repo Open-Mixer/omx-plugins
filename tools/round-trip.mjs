@@ -94,10 +94,9 @@ export const LOSSES_COUNTED = Object.freeze({
 });
 
 export const LOSSES = {
-  // OR2: a meaning has a CLAP word only for some, an LV2 term only for some (lv2:designation); LV2 has no unit for ""
-  // (a plain number). The CLAP face carries no meaning of its own: a scan has one only from an installed
-  // omx-plugins-contract's descriptor (ten are lost with 0.19.3's installed), and a build of omx-plugins has none
-  'clap controls[].meaning': 309,
+  // OR2: a meaning has a CLAP word only for the bypass, an LV2 term only for some (lv2:designation); LV2 has no unit
+  // for "" (a plain number)
+  'clap controls[].meaning': 10,
   'lv2 controls[].meaning': 116,
   'lv2 controls[].travel.unit ""': 123,
   // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt (dB/oct, omx-contract 3.1.0)
