@@ -165,7 +165,8 @@ Its documentation is on openmixer.org.
 %{__make} install-test DESTDIR=%{buildroot} PREFIX=%{_prefix} TESTCLAPDIR=%{_libexecdir}/omx-plugins/test
 
 %check
-%make_build test
+# make test runs in the unpacked tarball, which has no git tree: it is handed the tarball's commit to stamp (#32)
+%make_build test SOURCE_COMMIT=$(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 # the shipped pins.d file still names the shipped binaries' own hashes (sabotage: a changed binary goes red)
 tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins %{buildroot}/usr/lib/clap
 # every shipped descriptor carries this release's version and the source tarball's commit (sabotage: one unstamped,
