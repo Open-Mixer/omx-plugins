@@ -1,0 +1,140 @@
+{
+  "$comment": "Each plugin's org.openmixer.param-contract/1 fingerprints in publication order: its contract version is the 1-based position of its current fingerprint (tools/param-contract.mjs contractVersionOf). A change of symbol, unit, scale, travel or stepping appends the new fingerprint, never rewrites one.",
+  "plugins": {
+    "omx-balancer": [
+      "8c1de971be63f6c0df20d1500f885d569497eec815587fe7d31d3a27f45823ee",
+      "5e755c2ceeb1ca618602fc5b9d39aef3f7edcbe81ed218d629a954588962a79d"
+    ],
+    "omx-chorus": [
+      "0ed178cc68e5aec571483b30d59a2e0bbce5baebe61b7b209cb069601584a0ad",
+      "cc4815354f59f8a24dd33071d8fa5a30d25b037923b8cf13ebb61cf1d4263577"
+    ],
+    "omx-clipper": [
+      "36a5f5efb0b03951929924dbacf8d3d02cf7a3a929917845bcc44709c3ad1b3f",
+      "2ca379ddafa020c0e207a19f14c068e2fc66d63ca27faad5da176cbd84ccf43a"
+    ],
+    "omx-comp": [
+      "9e6eb2dc019e7d5c8c4d9bfd3c4125056dc2eb2db90a34b5719e46bf0a8477cb",
+      "80e0daeb20ee68aed82fdcf501c0f6661e277ba71fb91d2d2efc2e4bb8e10375",
+      "10fc471c4d006888aa0c0ef660fff9384363e0f788378a757d059af558a8189b"
+    ],
+    "omx-deesser": [
+      "762fa5fbcc17e69ff69407b8f46f1192c7d87b40d5c03db82749a35e390bd592",
+      "674f0f034984bd72f7cecbe5df7547b3fab8923ac5aa5fdf1f3b18119109af8a",
+      "6e8f9ba1730c2a1430be5992c8744d81ee7b89a76d34a78fc63c27422df47e5c"
+    ],
+    "omx-delay": [
+      "0fb8078f57eefce8cebfd48112c29e53c7e1648dcd485bad6ee881e645744c74",
+      "5d68c368c9182981147b3872a22fa1e47097e14a683897a35f7e806e1be2d4e8"
+    ],
+    "omx-doubler": [
+      "2bc2860d318e0c31b59d7c0d7e822fbc0c28a471d0d57e34d357dd8dddd66cfe",
+      "2fe9ebb30602c04c0efc688379faa74d6743ac48dc3aa95f7f184840477c1631"
+    ],
+    "omx-drive": [
+      "d7bc8c775efd557f555f597a287da8d8310e73782215f5bbfd025dba56d5df1d",
+      "1a35b3fb687b7421dd51cdeb9fa4947172c628c8164a4f76a3f88bfaf9b17a8e"
+    ],
+    "omx-ducker": [
+      "54e675dbd3317a4a76b2aeccc359f7c81c6d438f8f457e2eb9a9e2230a094767",
+      "f12cbb46a1f457128bbce6762a7a4be4d7f0603573cacec41999ac81f6aca8a8",
+      "26cb02750c18a914890aa7b6b007905fa2cc563d1ca4a8ad1e6006f05f873864"
+    ],
+    "omx-dyneq": [
+      "b1c783fb3f786f4b7f74254ece5fb34cff436b49ae4a6f6a07a51448a664395b",
+      "fa72b31fef51f2de8c2690bda7d8f5b09f76032186bda513f187a0b70b56aa64",
+      "ae87b93cf0445f027d461a70139753d7fd71282bda7375d7a0c9863e443fb424"
+    ],
+    "omx-eq16": [
+      "f5e8fc02ca0b569ec0dde54fb0ab1fe10ec05c33ef19e1f2571524951f14e0c6",
+      "06c093ac8c7265c9c267f0b0789e1b2f2950e4e22879ec4958078f00057d92ba"
+    ],
+    "omx-eq32": [
+      "a480854f026d6a18caa231dfab1e98de1dc23213e28af4a1a08b4d4c13cfefa3",
+      "3829d7f527628dde379a6992187ca03d9c956366b98340df8f1d649056dfbe70"
+    ],
+    "omx-eq8": [
+      "717733632742a913b553f1acc9c3dec8d6ec13428b0aa34d9e36511fd205abb1",
+      "fa5d824adc0ccb18b03484bf85b0fa0a82c55a676bbc41fcd34ce207dbae30eb"
+    ],
+    "omx-flanger": [
+      "5fe17545e5852d6db37874ddaaadb5ba6a87a1b375a97ac936251fd39b6db747",
+      "d7c23cf89dc365bbaf35bdff4e3435ac9aed1f5387a987c282a0a203c8143426"
+    ],
+    "omx-geq": [
+      "fab8d4a312ea7b485a3ec91d008ddb735c80c3739231b7002744998eb423d5f0",
+      "ceff1b2ff48a000abfc1b36aa9bae9d3ebf21f7b192230848fc84f398b9b1317"
+    ],
+    "omx-glue": [
+      "7f2c2b19ab3474118548bdfffbb3316299e5cc3bbe8d22d40791f39656d0b848",
+      "0d7112e4b0cdbdd2d87e1cc276fa30ee1c8b7e9c527ff618b9df7f2cf67ecc8b"
+    ],
+    "omx-keyed-gate": [
+      "fb378b79e0e68a9b25293e3aeb0b134134cded48e07e07665f6f182c05092b3e",
+      "a5ac3b3c1b0204bacc05c4ce21c84265c7ca35a10b359eda6aac985b27cd3542",
+      "5b1c1de696eb5a9be6973c2ca62cc1de55f797d360193e760b5f6923b4f64db4"
+    ],
+    "omx-limiter": [
+      "5eac6b3d4921ead5ed21ef89862a7f21ca7a6aca16cd6c5d49a320f0e52fb65e",
+      "3ae2010e9cc1760f1251a756c57c0768411aba77d416aad0f67985caee75079e"
+    ],
+    "omx-loudlevel": [
+      "33b959ab49e65da93fa433b0263dae01c9d5d54c62a1705229854dc45467f2dc",
+      "b43277adac9dfb0ebce25ca154ca1701bfcb0d071bd937c3c157108b29285c52"
+    ],
+    "omx-multiband": [
+      "56d488bf9d3b6bf373e2c762ad4fb08cf54cbfc4fda0d60e07241e3929d32148",
+      "2093e6e94b941f469715ca034b123be763ab9b2e3f1e156d69307b0297e000cd",
+      "5f536368c7d13f57ab9e11c675ff26d31c7b2e6e75ed4094e6740fde16dbfbf4"
+    ],
+    "omx-phaser": [
+      "ce52de8667a3734d436618dd2a7c57f9a6428f2ae0d80e3ae77159efef05c13e",
+      "1513b4b4271dbe16d78fec1f7b0b3c47902ad8743df5b64bb96c65021889d513"
+    ],
+    "omx-pitch": [
+      "5e31598957873137f074ab60e22da1d9b4b7ff26f2bb238e6eb450aca61311b3",
+      "38bfaa5502a46fd716a79b1d4ab2946be65ec549fcbc54d2b4e575e4d6a3ffaf"
+    ],
+    "omx-plosive": [
+      "693fcfd3bea6c88ed44fec2e124173aba261e022c3498a57d3eda0b46fd57675",
+      "2a41eecfe15389d0caf8ba2240c4b18cef9ddbb34a843f86783be0ea67fe9ea3"
+    ],
+    "omx-reverb": [
+      "3c6d0c052481f1fbafefc5f64bb8f16b76d00dfea1598888d5c90129a2e4a99d",
+      "4bfc8b448bcedb15595b78e1694ba771f4cf8f7cd7fb2ce077d9414b9af31afc"
+    ],
+    "omx-rotary": [
+      "7b064efba0e9985f2c12b82e577a32aeecd9502f6fcfce98f373d8a88d720c79",
+      "c8df04231f5071d1830fa6e67ac6e067f46b7bb659db9eafb2a76f8d779846e8"
+    ],
+    "omx-spring": [
+      "d92f4dc985e249e557b7cd62fd8c612c268932f592740230f11a9ace230a8095",
+      "a6dbeb2327e1d07d0b7906a057185616c4723d90582d8122e25660ff6b5a4eda"
+    ],
+    "omx-strip": [
+      "1890ee14c19981c5811e3ae3dac4fea1ebc3cb9fca5c50b1d4e6c032e8edc533",
+      "b8832cb75b74bcad0b515527e218b6b7fc6d4d8d61447877be9073a52b5e7b76"
+    ],
+    "omx-suboct": [
+      "938441cf0a3c715127ab3c40b318de9af07ffeafd559a8d6edb704337b8391c4",
+      "e3f1c410cb527f1a95e0e7e5e53aac3e6447468e70dcdba4148b074ffdd165e6"
+    ],
+    "omx-tone": [
+      "33df5e703efc53d22079c985ffd9a121f845f316e6e5ca997e5d2fceb5a16816",
+      "ad227027919a7608f40e2d366c7b5acfbc2cfa3ab76bbb0f4cc236cbcd6e06aa"
+    ],
+    "omx-transient": [
+      "bbc6e30c71502797c8ff2202acbfef52074f75a9b2ab3e5110adabacdabed242",
+      "110cf0365d7f60b97a18b53213f8bfd9042bbe9110b4f60c490cca6ad8cb16b0"
+    ],
+    "omx-tremolo": [
+      "7eda7f36d4553d98706b108002422d309b187291a28efb210a2d3c6369dee62f",
+      "4869e2dd250aba1dafcc6dd592d8caab74e279f7caedc68c68a1a2f92432ce05"
+    ],
+    "omx-upward": [
+      "c75452b5fd9339a5adb42e9bec62697ff1f201af0596211bfcc108cfb72baa5b",
+      "2fc982aabf55f20d07941be4636a22c33034de41d19a62ea47d472ae04b9c214",
+      "f1a99ace3897dca92e108cadb2d47aed721a5a750dacef994235028410ccd58f"
+    ]
+  }
+}

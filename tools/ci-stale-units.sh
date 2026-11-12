@@ -44,7 +44,7 @@ case "$have" in
     echo "ci-stale-units: omx-panel $have reads the dropped sheet; building omx-panel $ref from source"
     dnf install -y --setopt=install_weak_deps=False git npm >/dev/null
     src=$(mktemp -d)
-    git clone -q --depth 1 --branch "$ref" https://github.com/FreeMixer/omx-panel.git "$src"
+    git clone -q --depth 1 --branch "$ref" https://github.com/Open-Mixer/omx-panel.git "$src"
     (cd "$src" && npm ci --silent && make install PREFIX=/usr BINDIR=/usr/bin DATADIR=/usr/share >/dev/null)
     rm -rf "$src" ;;
   * ) echo "ci-stale-units: omx-panel $have reads omx-contract's sheet" ;;

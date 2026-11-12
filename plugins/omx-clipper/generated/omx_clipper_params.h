@@ -53,7 +53,7 @@ static const char *const OMX_CLIPPER_PARAM_MODULES[OMX_CLIPPER_PARAM_COUNT] = {
 #define OMX_CLIPPER_NAME "omx clipper"
 #define OMX_CLIPPER_VENDOR "openmixer"
 #define OMX_CLIPPER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_CLIPPER_VERSION "0.19.1"
+#define OMX_CLIPPER_VERSION "0.19.3"
 #define OMX_CLIPPER_DESCRIPTION "Clips the peaks at a ceiling, with drive in front and an adjustable softness of the bend."
 #define OMX_CLIPPER_CLAP_ID "org.openmixer.clipper"
 #define OMX_CLIPPER_CLAP_FEATURES "audio-effect", "distortion", "stereo"
@@ -63,9 +63,9 @@ static const char *const OMX_CLIPPER_PARAM_MODULES[OMX_CLIPPER_PARAM_COUNT] = {
 #define OMX_CLIPPER_DECL_DIGEST "e77c8f23e4bc2293f2cfad1a340186f5a3021a47cb98d7500d66f000b7f955dd"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_CLIPPER_PARAM_CONTRACT_VERSION 1u
-#define OMX_CLIPPER_PARAM_CONTRACT_FINGERPRINT "36a5f5efb0b03951929924dbacf8d3d02cf7a3a929917845bcc44709c3ad1b3f"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_CLIPPER_PARAM_CONTRACT_VERSION 2u
+#define OMX_CLIPPER_PARAM_CONTRACT_FINGERPRINT "2ca379ddafa020c0e207a19f14c068e2fc66d63ca27faad5da176cbd84ccf43a"
 static const struct omx_param_contract_row OMX_CLIPPER_PARAM_CONTRACT[OMX_CLIPPER_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* driveDb db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ceilingDb db */
@@ -92,9 +92,10 @@ static const struct omx_panel_control_row OMX_CLIPPER_PANEL_CONTROLS[] = {
   { 1u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.clipper.ceiling_db", "Ceiling", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 2u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.clipper.softness_pct", "Softness", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_CLIPPER_PANEL_PAGES[] = {
-  { "Clipper", "Clipper", { 0u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_CLIPPER_PANEL_PAGE_COUNT 1u
 static const struct omx_panel_rows OMX_CLIPPER_PANEL = {

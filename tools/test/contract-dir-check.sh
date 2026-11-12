@@ -26,6 +26,12 @@ VERSION=$(make -s --no-print-directory -C "$HERE" version)
 # one, and the install must list it
 REQUIRED="omx-eq8 omx-eq16 omx-eq32 omx-strip"
 
+# the definition files this package owns (omx-contract's ownership audit, 2026-11-10): each must be in contract/ and
+# installed. A file that moved here from omx-contract and went missing would leave the item declared by no one, and
+# the check over contract/*.json alone would stay green (it reads what is there). CONTRACT_SRC: the self-test's copy.
+REQUIRED_DEFS="role-meanings.json plugin-face.json"
+CONTRACT_SRC=${CONTRACT_SRC:-$HERE/contract}
+
 # ship stems with a descriptor: the plugin folders the top Makefile builds whose declaration does not say
 # `"role": "test"`, holding <stem>.descriptor.json
 described() {
@@ -74,7 +80,11 @@ check() {
       || { echo "contract-dir: $stem: MANIFEST.json does not list plugins/$stem.json"; bad=$((bad + 1)); }
   done
   [ "$n" -gt 0 ] || { echo "contract-dir: no shipped plugin has a descriptor"; bad=$((bad + 1)); }
-  for f in "$HERE"/contract/*.json; do
+  for rel in $REQUIRED_DEFS; do
+    [ -f "$CONTRACT_SRC/$rel" ] || { echo "contract-dir: contract/$rel is missing: this package owns it"; bad=$((bad + 1)); continue; }
+    [ -f "$pkg/$rel" ] || { echo "contract-dir: $rel is owned here and not installed"; bad=$((bad + 1)); }
+  done
+  for f in "$CONTRACT_SRC"/*.json; do
     [ -e "$f" ] || continue   # no definition file: the unit codes are omx-contract's since 3.6.0
     rel=$(basename "$f")
     if [ ! -f "$pkg/$rel" ]; then echo "contract-dir: contract/$rel is not installed as $rel"; bad=$((bad + 1)); continue; fi
@@ -87,7 +97,7 @@ check() {
     rel=${f#"$pkg"/}
     [ "$rel" = MANIFEST.json ] && continue
     case $rel in plugins/*.json) stem=$(basename "$rel" .json); grep -qx "$stem" <<<"$stems" && continue ;; esac
-    [ -f "$HERE/contract/$rel" ] && continue
+    [ -f "$CONTRACT_SRC/$rel" ] && continue
     echo "contract-dir: $rel is installed and is no shipped plugin's descriptor nor a file of contract/"; bad=$((bad + 1))
   done < <(find "$pkg" -type f | LC_ALL=C sort)
   awk '$1 == "file" {print $2}' <<<"$listed" | while read -r rel; do [ -f "$pkg/$rel" ] || echo "contract-dir: MANIFEST.json lists $rel, which is not installed"; done | grep . && bad=$((bad + 1))
@@ -130,7 +140,7 @@ if [ "${1:-}" = --self-test ]; then
     node -e 'const fs = require("fs"); const [p, r, h] = process.argv.slice(1); const m = JSON.parse(fs.readFileSync(p, "utf8"));
       m.files[r] = h; fs.writeFileSync(p, JSON.stringify(m, null, 2) + "\n");' "$m" "$2" "$h"
   }
-  for s in left-out missing changed extra hash version $(for r in $REQUIRED; do printf 'unlisted-%s ' "$r"; done); do
+  for s in left-out missing changed extra hash version $(for r in $REQUIRED_DEFS; do printf 'owned-%s ' "$r"; done) $(for r in $REQUIRED; do printf 'unlisted-%s ' "$r"; done); do
     t=$scratch/$s; rm -rf "$t"
     case $s in
       left-out) install_into "$t" DESCRIPTORS="$rest" ;;
@@ -146,7 +156,14 @@ if [ "${1:-}" = --self-test ]; then
       unlisted-*) node -e 'const fs = require("fs"); const [f, r] = process.argv.slice(1); const m = JSON.parse(fs.readFileSync(f, "utf8"));
           delete m.files[r]; fs.writeFileSync(f, JSON.stringify(m, null, 2) + "\n");' "$p/MANIFEST.json" "plugins/${s#unlisted-}.json" ;;
     esac
-    if out=$(check "$t" none 2>&1); then echo "SABOTAGE $s: STAYED GREEN"; fail=1
+    src=$HERE/contract
+    case $s in
+      owned-*) # the owned file gone from the tree AND from the install and manifest: only the ownership list sees it
+        r=${s#owned-}; src=$scratch/src-$r; rm -rf "$src"; cp -r "$HERE/contract" "$src"; rm "$src/$r" "$p/$r"
+        node -e 'const fs = require("fs"); const [f, r] = process.argv.slice(1); const m = JSON.parse(fs.readFileSync(f, "utf8"));
+          delete m.files[r]; fs.writeFileSync(f, JSON.stringify(m, null, 2) + "\n");' "$p/MANIFEST.json" "$r" ;;
+    esac
+    if out=$(CONTRACT_SRC=$src check "$t" none 2>&1); then echo "SABOTAGE $s: STAYED GREEN"; fail=1
     elif [ -z "$out" ]; then echo "SABOTAGE $s: the check stopped naming nothing"; fail=1
     else echo "SABOTAGE $s: red (${out%%$'\n'*})"; fi
   done

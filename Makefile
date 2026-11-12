@@ -21,7 +21,9 @@
 #                   (tools/round-trip.{sh,mjs}, with its two sabotage arms; part of `make test`)
 #   make contract-union  parallel make targets render omx-contract's union into private directories and read it whole
 #                   (tools/test/contract-union-race-test.mjs; part of `make test` and `make test-faces`)
-#   make face-ids   the host's bypass and LV2 enabled and latency sit at omx-contract's permanent ids (OMX_PLUGIN_FACE_IDS), none
+#   make face-header  include/omx_plugin_face_ids.h is contract/plugin-face.json's render, byte for byte with the omx-contract
+#                   command (tools/test/face-header-check.mjs; part of `make test`)
+#   make face-ids   the host's bypass and LV2 enabled and latency sit at the permanent ids of contract/plugin-face.json (OMX_PLUGIN_FACE_IDS), none
 #                   moved by an appended parameter (tools/test/face-ids-test.mjs, with its self-test; part of `make test`)
 #   make probe-checks  clap-params-check, panel-check, clap-ext-check and port-groups-check each fail on a built face that is wrong,
 #                   one change at a time (tools/test/probe-checks-selftest.mjs; part of `make test`)
@@ -58,6 +60,9 @@
 #                    plugins are built for (tools/test/meters-abi-test.c, compile and run; part of `make test`)
 #   make param-contract-abi  include/omx_param_contract.h's extension table and entry are the layout omx-clap-core's
 #                    omx_clap_ext.h reads (tools/test/param-contract-abi-test.c, compile and run; part of `make test`)
+#   make host-contract  every shipped face opened by libomx-clap-core, whose own fingerprint of what get_info and the
+#                    contract serve must match the face's: omx_clap_host_param_contract() trusts it
+#                    (tools/test/host-contract-accept.c; part of `make test` and `make test-faces`)
 #   make strip-crosscheck   omx-strip, a chain, against the hand-ported strip it replaced, bit for bit at
 #                    the old plugin's settings (tools/test/strip-crosscheck.sh; needs the git history, and builds the
 #                    omx-contract and omx-dsp releases the old commit pinned, from sibling checkouts' tags or GitHub).
@@ -107,7 +112,7 @@
 #   make package-lists  every plugin the build makes is installed and listed by exactly the package it belongs
 #                   to, in the RPM spec and the Debian .install files: tools/package-lists-check.sh over a staged
 #                   install, with its --self-test (part of `make test`)
-VERSION := 0.19.1
+VERSION := 0.19.3
 PLUGINS := $(sort $(dir $(wildcard plugins/*/Makefile)))
 # A test plugin is built, tested and linked into libomxplugins.a like the others; `make install` never installs
 # it, and `make install-test` puts it outside the CLAP path: its declaration says `"role": "test"`
@@ -133,7 +138,7 @@ PINS_FILE  := omx-plugins.pins
 # is installed with them, and so is its generated generated/omx_<kernel>_decl.h: the constants a
 # proof predicts from (and the CLAP id) have one home, the declaration, not a hardcoded second copy
 # in the host that reads it. Neither declares anything a picker lists: macros only.
-HEADERS := include/omx_plugin_param.h include/omx_panel_description.h include/omx_param_contract.h include/omx_preset_file.h include/omx_clap_static.h include/omx_plugin_face.h $(foreach p,$(SHIP_PLUGINS),$(wildcard $(p)*.h) $(wildcard $(p)generated/*.h)) $(foreach p,$(TEST_PLUGINS),$(wildcard $(p)*.h) $(wildcard $(p)generated/*.h))
+HEADERS := include/omx_plugin_param.h include/omx_panel_description.h include/omx_param_contract.h include/omx_preset_file.h include/omx_clap_static.h include/omx_plugin_face.h include/omx_plugin_face_ids.h $(foreach p,$(SHIP_PLUGINS),$(wildcard $(p)*.h) $(wildcard $(p)generated/*.h)) $(foreach p,$(TEST_PLUGINS),$(wildcard $(p)*.h) $(wildcard $(p)generated/*.h))
 
 # libomxplugins.a: each shipped plugin's CLAP face built with -DOMX_CLAP_STATIC (no `clap_entry`;
 # its `omx_clap_entry_<kernel>` stays) and lib/omx_clap_static.c, the table of those entries by CLAP
@@ -167,11 +172,11 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi
+.PHONY: face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi host-contract
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids strip-visible-when face-dirty-order
+test: lib units panel-words face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids strip-visible-when face-dirty-order
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s round-trip
@@ -183,6 +188,7 @@ test: lib units panel-words panel-layout descriptor-view descriptor-features pla
 	@$(MAKE) -s presets-figures
 	@$(MAKE) -s meters-abi
 	@$(MAKE) -s param-contract-abi
+	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
 	@$(MAKE) -s strip-bands
 	@$(MAKE) -s test-role
@@ -193,6 +199,7 @@ test-faces: all lib contract-union eq-probe-race
 	@$(MAKE) -s lib-test
 	@$(MAKE) -s meters-abi
 	@$(MAKE) -s param-contract-abi
+	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
 	@$(MAKE) -s test-role
 	@$(MAKE) -s package-lists
@@ -200,6 +207,18 @@ units:
 	node tools/test/param-units-check.mjs --self-test
 panel-words:
 	node tools/test/panel-words-check.mjs --self-test
+# include/omx_plugin_face_ids.h is contract/plugin-face.json's render (tools/test/face-header-check.mjs, with its sabotage arms)
+face-header:
+	node tools/test/face-header-check.mjs
+	node tools/test/face-header-check.mjs --self-test
+# contract/role-meanings.json holds every role of every family once, and none other (tools/test/role-meanings-check.mjs)
+role-meanings:
+	node tools/test/role-meanings-check.mjs
+	node tools/test/role-meanings-check.mjs --self-test
+# every meter a shipped plugin exports is bound by a display of its panel, or listed unbound with a reason (tools/test/meter-binding-check.mjs)
+meter-binding:
+	node tools/test/meter-binding-check.mjs
+	node tools/test/meter-binding-check.mjs --self-test
 panel-layout:
 	node tools/test/panel-layout-test.mjs
 descriptor-view:
@@ -232,7 +251,7 @@ contract-union:
 # the four probe checkers (params, panel, CLAP extensions, port groups) each go red on a face that is wrong, one change at a time
 probe-checks:
 	node tools/test/probe-checks-selftest.mjs
-# the host's bypass (CLAP) and enabled and latency (LV2) at omx-contract's permanent ids in every plugin, none moved by an
+# the host's bypass (CLAP) and enabled and latency (LV2) at contract/plugin-face.json's permanent ids in every plugin, none moved by an
 # appended parameter or an added sidechain; the self-test holds the rule it replaced red
 face-ids:
 	node tools/test/face-ids-test.mjs
@@ -318,6 +337,10 @@ param-contract-abi:
 	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-contract omx-clap-core clap) -o build/param-contract-abi-test tools/test/param-contract-abi-test.c
 	build/param-contract-abi-test
 	@echo "ok   org.openmixer.param-contract/1 as omx-clap-core reads it: id, sizeof and offsetof"
+host-contract: all
+	@mkdir -p build
+	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/host-contract-accept tools/test/host-contract-accept.c $(shell $(PKG_CONFIG) --libs omx-clap-core)
+	build/host-contract-accept $(foreach p,$(SHIP_PLUGINS),$(p)build/$(notdir $(patsubst %/,%,$(p))).clap)
 # every level meter of the metered faces reads what tools/test/<face>.meter-level.txt holds within the bound
 # omx-dsp's fast-maths bound gives (meter-level-digest --tolerance), and a level moved past that bound is red; every
 # other meter (a gain reduction, float through libm) reads within a tolerance what tools/test/<face>.meter-others.txt holds
@@ -383,7 +406,7 @@ package-lists:
 	tools/package-lists-check.sh --self-test
 # Each shipped plugin's descriptor, plugins/<stem>/<stem>.descriptor.json, installed byte for byte into omx-contract's
 # contract directory as $(CONTRACTDIR)/<schema major>/omx-plugins/plugins/<stem>.json, and each definition file of
-# contract/ (a definition file this tree owns; none today) as
+# contract/ (a definition file this tree owns: role-meanings.json, the meaning each panel role plays) as
 # $(CONTRACTDIR)/<schema major>/omx-plugins/<file>.json, with a MANIFEST.json naming this
 # version (omx-contract docs/contract-dir.md); the packages ship it in omx-plugins-contract. The directory is
 # omx-contract-data's, under the same data directory

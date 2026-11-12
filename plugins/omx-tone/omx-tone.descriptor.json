@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:tone",
     "name": "omx tone",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.3",
     "doc": "Tilts the whole tone darker or brighter about a pivot, and sweeps a resonant DJ filter from a low-pass through open to a high-pass with one knob.",
     "features": [
       "audio-effect"
@@ -37,7 +37,7 @@
       "source": {
         "from": {
           "link": "data/kernels/tone.json#TONE_TILT_DB_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -61,7 +61,7 @@
       "source": {
         "from": {
           "link": "data/kernels/tone.json#TONE_PIVOT_HZ_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -86,7 +86,7 @@
       "source": {
         "from": {
           "link": "data/kernels/tone.json#TONE_FILTER_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -111,7 +111,7 @@
       "source": {
         "from": {
           "link": "data/kernels/tone.json#TONE_RESONANCE_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     }
