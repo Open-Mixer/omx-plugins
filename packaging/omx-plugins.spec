@@ -171,7 +171,8 @@ Its documentation is on openmixer.org.
 # a CI build host holds the channel's omx-plugins-contract before 0.17.0, whose units sheet omx-contract 3.6.0 now
 # declares: tools/ci-stale-units.sh drops it there (only under CI, never on a user's system), until 0.17.0 is out
 [ -z "${CI:-}${GITHUB_ACTIONS:-}" ] || [ "$(id -u)" != 0 ] || tools/ci-stale-units.sh
-%make_build test
+# make test runs in the unpacked tarball, which has no git tree: it is handed the tarball's commit to stamp (#32)
+%make_build test SOURCE_COMMIT=$(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 # the shipped pins.d file still names the shipped binaries' own hashes (sabotage: a changed binary goes red)
 tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins %{buildroot}/usr/lib/clap
 # every shipped descriptor carries this release's version and the source tarball's commit (sabotage: one unstamped,
