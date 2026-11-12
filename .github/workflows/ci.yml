@@ -68,6 +68,10 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # the staging channel, above the real one: omx-contract 3.14.0, the reader that knows a descriptor's integrity
+          # (#32), is staged and not yet served
+          staging: 'true'
 
       - uses: actions/checkout@v4
         with:
@@ -158,6 +162,10 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # the staging channel, above the real one: omx-contract 3.14.0, the reader that knows a descriptor's integrity
+          # (#32), is staged and not yet served
+          staging: 'true'
 
       - uses: actions/checkout@v4
         with:
@@ -197,6 +205,10 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # the staging channel, above the real one: omx-contract 3.14.0, the reader that knows a descriptor's integrity
+          # (#32), is staged and not yet served
+          staging: 'true'
 
       - uses: actions/checkout@v4
         with:
@@ -374,6 +386,10 @@ jobs:
 
       - name: Take build dependencies from the OpenMixer channel
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # the staging channel, above the real one: omx-contract 3.14.0, the reader that knows a descriptor's integrity
+          # (#32), is staged and not yet served
+          staging: 'true'
 
       # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
       - uses: Open-Mixer/.github/.github/actions/wave-deps@openmixer-v1
@@ -465,6 +481,10 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # the staging channel, above the real one: omx-contract 3.14.0, the reader that knows a descriptor's integrity
+          # (#32), is staged and not yet served
+          staging: 'true'
 
       - uses: actions/checkout@v4
 
