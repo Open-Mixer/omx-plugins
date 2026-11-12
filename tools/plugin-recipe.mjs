@@ -160,6 +160,16 @@ function makeRecipe(makefile, target) {
   return out.join('\n');
 }
 
+/**
+ * What a plugin's tests run: its `test` target's recipe and its `test-heavy` one's together. make test is the fast set
+ * a package build runs and make test-heavy the set that runs the built faces through a host (tools/test/test-split.json
+ * lists every step under one of them); a step is run when either target runs it. Undefined when neither target exists.
+ */
+function testRecipes(makefile) {
+  const parts = ['test', 'test-heavy'].map((t) => makeRecipe(makefile, t)).filter((r) => r !== undefined);
+  return parts.length ? parts.join('\n') : undefined;
+}
+
 /** The lines of `file` between the first line matching `from` and the next matching `to`. */
 function region(t, from, to) {
   if (!from) return t;
@@ -373,17 +383,17 @@ export const CHECKERS = {
       : ok(`${d} includes the omx-dsp header of ${kernels.join(', ')}`);
   },
 
-  /** The Makefile's `test` target runs every token. */
+  /** The Makefile's `test` and `test-heavy` targets together run every token. */
   makeTestRuns(root, _recipe, facts, { path, tokens }) {
     const p = fill(path, facts);
     if (!has(root, p)) return missing(`${p}: not in the tree`);
-    const r = makeRecipe(text(root, p), 'test');
+    const r = testRecipes(text(root, p));
     if (r === undefined) return missing(`${p}: no 'test' target`);
     const absent = tokens.filter((t) => !r.includes(t));
-    return absent.length ? missing(`${p}: 'make test' does not run ${absent.join(', ')}`) : ok(`${p}: make test runs ${tokens.join(', ')}`);
+    return absent.length ? missing(`${p}: neither 'make test' nor 'make test-heavy' runs ${absent.join(', ')}`) : ok(`${p}: make test and make test-heavy run ${tokens.join(', ')}`);
   },
 
-  /** An oracle test/<x>-oracle.c, not the wizard's stub, run by make test. */
+  /** An oracle test/<x>-oracle.c, not the wizard's stub, run by make test or make test-heavy. */
   oracle(root, _recipe, facts, { dir, makefile }) {
     const d = fill(dir, facts);
     const oracles = walk(root, d).filter((f) => /-oracle\.c$/.test(f));
@@ -391,9 +401,9 @@ export const CHECKERS = {
     const stubs = oracles.filter((f) => /^#define OMX_WIZARD_STUB\b/m.test(text(root, f)));
     if (stubs.length) return missing(`${stubs.join(', ')}: still the wizard's stub (OMX_WIZARD_STUB): write the comparison against the kernel`);
     const mk = fill(makefile, facts);
-    const r = has(root, mk) ? makeRecipe(text(root, mk), 'test') : undefined;
+    const r = has(root, mk) ? testRecipes(text(root, mk)) : undefined;
     const run = oracles.filter((f) => r && r.includes(f.split('/').pop().replace(/\.c$/, '')));
-    return run.length ? ok(`${run.join(', ')}, run by make test`) : missing(`${oracles.join(', ')}: not run by ${mk}'s test target`);
+    return run.length ? ok(`${run.join(', ')}, run by make test or make test-heavy`) : missing(`${oracles.join(', ')}: run by neither ${mk}'s test nor its test-heavy target`);
   },
 
   /** Each install list has a line (glob) covering the plugin's installed path. */
