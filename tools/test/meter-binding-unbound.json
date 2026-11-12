@@ -1,8 +1,6 @@
 {
   "$comment": "Meters a shipped plugin exports that no display of its panel binds, each with the reason (tools/test/meter-binding-check.mjs). An entry goes when a display binds the meter.",
   "omx-comp": {
-    "compIn": "the operating point of the transfer curve: omx-panel binds a curve's in and out only to a measured level meter, and a descriptor meter carries no measurement; it binds when omx-panel reads a descriptor level meter as measured",
-    "compOut": "the operating point of the transfer curve: omx-panel binds a curve's in and out only to a measured level meter, and a descriptor meter carries no measurement; it binds when omx-panel reads a descriptor level meter as measured",
     "compKey": "the key's level: no display kind of the closed set (gain_reduction_bar, transfer_curve, eq_response, meter) draws a sidechain level beside the curve; the meter strip reads it"
   },
   "omx-deesser": {
