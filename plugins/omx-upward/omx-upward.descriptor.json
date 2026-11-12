@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:upward",
     "name": "omx upward",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.3",
     "doc": "Lifts what is quiet toward a threshold, by a ratio and up to a limit, and leaves the loud alone.",
     "features": [
       "audio-effect"
@@ -37,7 +37,7 @@
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -61,7 +61,7 @@
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_RATIO_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_RANGE_DB_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -109,7 +109,7 @@
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_ATTACK_MS_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -133,7 +133,7 @@
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_RELEASE_MS_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     }

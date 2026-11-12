@@ -49,7 +49,7 @@
 #include "clap/stream.h"
 
 #include "omx_clap_face.h"
-#include <omxcontract/omx_plugin_face_ids.h> /* the host bypass's permanent CLAP id */
+#include "omx_plugin_face_ids.h"    /* the host bypass's permanent CLAP id, rendered from contract/plugin-face.json */
 #include <omx-clap-host/omx_clap_ext.h>
 #include <omx-clap-host/clap_meters.h>
 #include "omx_meter_ring.h"
@@ -563,59 +563,32 @@ static bool g_shown(const G *g, const struct omx_panel_control_row *c) {
   return ((c->visible_mask >> (uint32_t)v) & 1u) != 0u;
 }
 
-/** The pages of a panel with visibility rules: each section's SHOWN controls in order, eight a page (the page rule of
- * omx-panel's pagesOf), a section left with none having no page. `index` UINT32_MAX counts; else it finds the page and
- * fills `page`. */
-static uint32_t g_pages_cut(const G *g, uint32_t index, clap_remote_controls_page_t *page) {
+/** Whether the control of parameter `param` is shown at the governing values now: a slot of a hidden control is blank. The
+ * page rule is omx-panel's pagesOf: the pages and their boundaries are fixed (the generated table holds every control's
+ * id), and a control the governing values hide keeps its slot, blank, so the slots after it do not move. */
+static bool g_slot_shown(const G *g, clap_id param) {
   const struct omx_panel_rows *r = g->face->panel;
-  uint32_t total = 0;
-  for (uint32_t s = 0; s < r->section_count; ++s) {
-    uint32_t n = 0;
-    for (uint32_t c = 0; c < r->control_count; ++c)
-      if (r->controls[c].section == s && g_shown(g, &r->controls[c])) ++n;
-    const uint32_t pages = (n + OMX_PANEL_PAGE_SIZE - 1u) / OMX_PANEL_PAGE_SIZE;
-    if (index != UINT32_MAX && index >= total && index < total + pages) {
-      const uint32_t k = index - total;
-      memset(page, 0, sizeof *page);
-      snprintf(page->section_name, sizeof page->section_name, "%s", r->sections[s].label);
-      if (pages == 1u) snprintf(page->page_name, sizeof page->page_name, "%s", r->sections[s].label);
-      else snprintf(page->page_name, sizeof page->page_name, "%s %u", r->sections[s].label, k + 1u);
-      page->page_id = index;
-      uint32_t seen = 0, slot = 0;
-      for (uint32_t c = 0; c < r->control_count; ++c) {
-        if (r->controls[c].section != s || !g_shown(g, &r->controls[c])) continue;
-        if (seen / OMX_PANEL_PAGE_SIZE == k) page->param_ids[slot++] = r->controls[c].param;
-        ++seen;
-      }
-      for (; slot < CLAP_REMOTE_CONTROLS_COUNT; ++slot) page->param_ids[slot] = OMX_CLAP_PANEL_INVALID_ID;
-      page->is_for_preset = false;
-      return total + pages;
-    }
-    total += pages;
-  }
-  return total;
+  for (uint32_t c = 0; c < r->control_count; ++c)
+    if (r->controls[c].param == param) return g_shown(g, &r->controls[c]);
+  return true;
 }
 
 static uint32_t g_pages_count(const clap_plugin_t *p) {
   const G *g = G_OF(p);
-  return g->gov_count ? g_pages_cut(g, UINT32_MAX, NULL) : g->face->page_count;
+  return g->face->page_count;
 }
 
 static bool g_pages_get(const clap_plugin_t *p, uint32_t index, clap_remote_controls_page_t *page) {
   const G *g = G_OF(p);
   const struct omx_face *f = g->face;
-  if (g->gov_count) {
-    if (index >= g_pages_cut(g, UINT32_MAX, NULL)) return false;
-    g_pages_cut(g, index, page);
-    return true;
-  }
   if (index >= f->page_count) return false;
   const struct omx_panel_page_row *r = &f->pages[index];
   memset(page, 0, sizeof *page);
   snprintf(page->section_name, sizeof page->section_name, "%s", r->section_name);
   page->page_id = index;
   snprintf(page->page_name, sizeof page->page_name, "%s", r->page_name);
-  for (uint32_t k = 0; k < CLAP_REMOTE_CONTROLS_COUNT; ++k) page->param_ids[k] = r->ids[k];
+  for (uint32_t k = 0; k < CLAP_REMOTE_CONTROLS_COUNT; ++k)
+    page->param_ids[k] = r->ids[k] != OMX_CLAP_PANEL_INVALID_ID && g->gov_count && !g_slot_shown(g, r->ids[k]) ? OMX_CLAP_PANEL_INVALID_ID : r->ids[k];
   page->is_for_preset = false;
   return true;
 }

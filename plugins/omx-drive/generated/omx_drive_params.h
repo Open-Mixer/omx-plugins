@@ -101,7 +101,7 @@ static const char *const OMX_DRIVE_PARAM_MODULES[OMX_DRIVE_PARAM_COUNT] = {
 #define OMX_DRIVE_NAME "omx drive"
 #define OMX_DRIVE_VENDOR "openmixer"
 #define OMX_DRIVE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DRIVE_VERSION "0.19.1"
+#define OMX_DRIVE_VERSION "0.19.3"
 #define OMX_DRIVE_DESCRIPTION "The console's drive: one waveshaper (soft, tape, tube or exciter) run inside the console's oversampler, on the full band, the lows, the highs or a tilt, with a wet/dry mix and a trim."
 #define OMX_DRIVE_CLAP_ID "org.openmixer.drive"
 #define OMX_DRIVE_CLAP_FEATURES "audio-effect", "distortion", "stereo"
@@ -111,9 +111,9 @@ static const char *const OMX_DRIVE_PARAM_MODULES[OMX_DRIVE_PARAM_COUNT] = {
 #define OMX_DRIVE_DECL_DIGEST "0ace5ddc34e47ca5e4258c820757c6b1d5dc0c2172e8e71c39b036347f8e6e0c"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_DRIVE_PARAM_CONTRACT_VERSION 1u
-#define OMX_DRIVE_PARAM_CONTRACT_FINGERPRINT "d7bc8c775efd557f555f597a287da8d8310e73782215f5bbfd025dba56d5df1d"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_DRIVE_PARAM_CONTRACT_VERSION 2u
+#define OMX_DRIVE_PARAM_CONTRACT_FINGERPRINT "1a35b3fb687b7421dd51cdeb9fa4947172c628c8164a4f76a3f88bfaf9b17a8e"
 static const struct omx_param_contract_row OMX_DRIVE_PARAM_CONTRACT[OMX_DRIVE_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* amount db */
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* character none */
@@ -166,10 +166,11 @@ static const struct omx_panel_role_row OMX_DRIVE_PANEL_ROLES[] = {
 static const struct omx_panel_display_row OMX_DRIVE_PANEL_DISPLAYS[] = {
   { OMX_CLAP_DISPLAY_TRANSFER_CURVE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.drive.display.transfer_curve", "Drive" },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_DRIVE_PANEL_PAGES[] = {
-  { "Drive", "Drive 1", { 5u, 6u, 9u, 10u, 0u, 1u, 2u, 3u } },
-  { "Drive", "Drive 2", { 4u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 5u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Drive", "Drive", { 6u, 9u, 10u, 2u, 4u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_DRIVE_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_DRIVE_PANEL = {

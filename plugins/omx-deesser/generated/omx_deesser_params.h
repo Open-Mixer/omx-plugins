@@ -83,7 +83,7 @@ static const char *const OMX_DEESSER_PARAM_MODULES[OMX_DEESSER_PARAM_COUNT] = {
 #define OMX_DEESSER_NAME "omx deesser"
 #define OMX_DEESSER_VENDOR "openmixer"
 #define OMX_DEESSER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DEESSER_VERSION "0.19.1"
+#define OMX_DEESSER_VERSION "0.19.3"
 #define OMX_DEESSER_DESCRIPTION "The console's de-esser: a detector on a band around the sibilance drives the compressor's gain computer, and the reduction lands on that band alone or on the whole signal."
 #define OMX_DEESSER_CLAP_ID "org.openmixer.deesser"
 #define OMX_DEESSER_CLAP_FEATURES "audio-effect", "de-esser", "stereo"
@@ -93,14 +93,14 @@ static const char *const OMX_DEESSER_PARAM_MODULES[OMX_DEESSER_PARAM_COUNT] = {
 #define OMX_DEESSER_DECL_DIGEST "5229f9c0817d98fea312f088c1f8519628c36ef5f1d2b453b22f3ba0571f097f"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_DEESSER_PARAM_CONTRACT_VERSION 1u
-#define OMX_DEESSER_PARAM_CONTRACT_FINGERPRINT "762fa5fbcc17e69ff69407b8f46f1192c7d87b40d5c03db82749a35e390bd592"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_DEESSER_PARAM_CONTRACT_VERSION 3u
+#define OMX_DEESSER_PARAM_CONTRACT_FINGERPRINT "6e8f9ba1730c2a1430be5992c8744d81ee7b89a76d34a78fc63c27422df47e5c"
 static const struct omx_param_contract_row OMX_DEESSER_PARAM_CONTRACT[OMX_DEESSER_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* deessFreq hz */
   { 20u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* deessWidth oct */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* deessThreshold db */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* deessRatio none */
+  { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* deessRatio ratio */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* deessRange db */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* deessAttack ms */
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* deessRelease ms */
@@ -117,10 +117,8 @@ static const omx_resource_hints_t OMX_DEESSER_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family deesser.
- * Declared roles not published:
- *   ratio (deessRatio): the ratio role takes ratio, coef, not no unit */
-#define OMX_DEESSER_PANEL_FINGERPRINT "ea5b7494d1b44b2d78d36b42c5435a81eb7979eb776513e0295d4e11e3686b96"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family deesser. */
+#define OMX_DEESSER_PANEL_FINGERPRINT "71c3d18dee433be807a6c6c82a361606764e5516ec90199620c959d1a09f9764"
 static const struct omx_panel_section_row OMX_DEESSER_PANEL_SECTIONS[] = {
   { "de_esser", "fx.deesser.section.de_esser", "De-esser" },
 };
@@ -139,21 +137,27 @@ static const struct omx_panel_role_row OMX_DEESSER_PANEL_ROLES[] = {
   { "threshold", 0u, 2u },
   { "range", 0u, 4u },
   { "width", 0u, 1u },
+  { "ratio", 0u, 3u },
   { "attack", 0u, 5u },
   { "release", 0u, 6u },
   { "mode", 0u, 7u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
-static const struct omx_panel_page_row OMX_DEESSER_PANEL_PAGES[] = {
-  { "De-esser", "De-esser", { 7u, 0u, 1u, 2u, 3u, 4u, 5u, 6u } },
+static const struct omx_panel_display_row OMX_DEESSER_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR, 0u, OMX_CLAP_DISPLAY_FROM_METERS, { 0u, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.deesser.display.gain_reduction_bar", "Gain reduction" },
 };
-#define OMX_DEESSER_PANEL_PAGE_COUNT 1u
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
+static const struct omx_panel_page_row OMX_DEESSER_PANEL_PAGES[] = {
+  { "Easy", "Easy", { 0u, 2u, 4u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "De-esser", "De-esser", { 1u, 3u, 5u, 6u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+};
+#define OMX_DEESSER_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_DEESSER_PANEL = {
   OMX_DEESSER_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DEESSER,
   OMX_DEESSER_PANEL_SECTIONS, 1u,
   OMX_DEESSER_PANEL_CONTROLS, 8u,
-  OMX_DEESSER_PANEL_ROLES, 7u,
-  NULL, 0u,
+  OMX_DEESSER_PANEL_ROLES, 8u,
+  OMX_DEESSER_PANEL_DISPLAYS, 1u,
   NULL, 0u,
 };
 
