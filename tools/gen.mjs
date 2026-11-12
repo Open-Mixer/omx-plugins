@@ -44,7 +44,7 @@ import { faceBinding } from './instance-face.mjs';
 import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
 import { lv2Designation, lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
-import { CONTRACT_VERSION, contractFingerprint, contractOf, faceIds } from './param-contract.mjs';
+import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
 import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam } from './omx-contract.mjs';
 import { bandsMacro, baseOf, expandVariant, variantStems } from './variants.mjs';
 import { omxdspInclude, render } from './template.mjs';
@@ -543,7 +543,7 @@ export function metersOf(d) {
  * input, the port right after the face's own (enabled, latency), so an appended parameter moves it no more than them. */
 export const tempoOf = (d) => Boolean(d.descriptor?.needs?.tempo);
 
-/** The LV2 port list, in index order: the face's own ports at omx-contract's permanent indices (OMX_PLUGIN_FACE_IDS:
+/** The LV2 port list, in index order: the face's own ports at the permanent indices of contract/plugin-face.json (OMX_PLUGIN_FACE_IDS:
  * enabled 0, latency 1), then (a plugin that reads the host's tempo) the `control` atom input, then audio in (and the
  * sidechain key, when declared), audio out, then the declared parameters. Appending a parameter moves no port; adding
  * a port moves neither enabled, latency nor control. `face` is the ids (default: this tree's contract).
@@ -686,8 +686,8 @@ static inline uint32_t ${bandCountFn(d, el)}(const float *values) {
 #define OMX_${K}_DECL_DIGEST "${digestOf(d.params)}"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_${K}_PARAM_CONTRACT_VERSION ${CONTRACT_VERSION}u
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_${K}_PARAM_CONTRACT_VERSION ${contractVersionOf(d.stem, contractFingerprint(contractOf(d, scaleOf)))}u
 #define OMX_${K}_PARAM_CONTRACT_FINGERPRINT "${contractFingerprint(contractOf(d, scaleOf))}"
 static const struct omx_param_contract_row OMX_${K}_PARAM_CONTRACT[${P}_COUNT] = {
 ${contractOf(d, scaleOf).slice(0, -1).map((r) => `  { ${r.unitEnum}u, OMX_CLAP_SCALE_${r.scale.toUpperCase()}, ${r.step}.0 }, /* ${r.symbol} ${r.unit} */`).join('\n')}

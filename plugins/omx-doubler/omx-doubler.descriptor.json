@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:doubler",
     "name": "omx doubler",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "Doubles a voice or an instrument with up to four slightly delayed, detuned and drifting copies spread across the stereo field, the double-tracked sound without a second take.",
     "features": [
       "audio-effect"

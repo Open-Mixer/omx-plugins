@@ -89,7 +89,7 @@ static const char *const OMX_PLOSIVE_PARAM_MODULES[OMX_PLOSIVE_PARAM_COUNT] = {
 #define OMX_PLOSIVE_NAME "omx plosive"
 #define OMX_PLOSIVE_VENDOR "openmixer"
 #define OMX_PLOSIVE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_PLOSIVE_VERSION "0.19.2"
+#define OMX_PLOSIVE_VERSION "0.19.3"
 #define OMX_PLOSIVE_DESCRIPTION "Softens the p pops and hard t and k consonants of a voice, cutting each only while it bursts."
 #define OMX_PLOSIVE_CLAP_ID "org.openmixer.plosive"
 #define OMX_PLOSIVE_CLAP_FEATURES "audio-effect", "de-esser", "stereo"
@@ -99,9 +99,9 @@ static const char *const OMX_PLOSIVE_PARAM_MODULES[OMX_PLOSIVE_PARAM_COUNT] = {
 #define OMX_PLOSIVE_DECL_DIGEST "1f7aefaa6ad81d242266a7500ef6518bd97654dee392eaa333bd5b82f1144d59"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_PLOSIVE_PARAM_CONTRACT_VERSION 1u
-#define OMX_PLOSIVE_PARAM_CONTRACT_FINGERPRINT "693fcfd3bea6c88ed44fec2e124173aba261e022c3498a57d3eda0b46fd57675"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_PLOSIVE_PARAM_CONTRACT_VERSION 2u
+#define OMX_PLOSIVE_PARAM_CONTRACT_FINGERPRINT "2a41eecfe15389d0caf8ba2240c4b18cef9ddbb34a843f86783be0ea67fe9ea3"
 static const struct omx_param_contract_row OMX_PLOSIVE_PARAM_CONTRACT[OMX_PLOSIVE_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* consonantDb db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* sensitivityDb db */

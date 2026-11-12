@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:phaser",
     "name": "omx phaser",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "The console's phaser: identical all-pass sections swept in octaves by one oscillator, with feedback around the chain and a wet/dry mix.",
     "features": [
       "audio-effect"

@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:eq32",
     "name": "omx eq32",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "The OpenMixer console's channel EQ, 32-band form: 32 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire.",
     "features": [
       "audio-effect"

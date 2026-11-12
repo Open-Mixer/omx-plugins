@@ -65,7 +65,7 @@ static const char *const OMX_SUBOCT_PARAM_MODULES[OMX_SUBOCT_PARAM_COUNT] = {
 #define OMX_SUBOCT_NAME "omx suboct"
 #define OMX_SUBOCT_VENDOR "openmixer"
 #define OMX_SUBOCT_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_SUBOCT_VERSION "0.19.2"
+#define OMX_SUBOCT_VERSION "0.19.3"
 #define OMX_SUBOCT_DESCRIPTION "Adds a note one or two octaves below a single played line, by dividing its pitch, with a tracking range and a gate for quiet input."
 #define OMX_SUBOCT_CLAP_ID "org.openmixer.suboct"
 #define OMX_SUBOCT_CLAP_FEATURES "audio-effect", "pitch-shifter", "stereo"
@@ -75,9 +75,9 @@ static const char *const OMX_SUBOCT_PARAM_MODULES[OMX_SUBOCT_PARAM_COUNT] = {
 #define OMX_SUBOCT_DECL_DIGEST "6e650f4f11758449a64b5a67752d62f89f3c852e48f19bff02327520610abbb3"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_SUBOCT_PARAM_CONTRACT_VERSION 1u
-#define OMX_SUBOCT_PARAM_CONTRACT_FINGERPRINT "938441cf0a3c715127ab3c40b318de9af07ffeafd559a8d6edb704337b8391c4"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_SUBOCT_PARAM_CONTRACT_VERSION 2u
+#define OMX_SUBOCT_PARAM_CONTRACT_FINGERPRINT "e3f1c410cb527f1a95e0e7e5e53aac3e6447468e70dcdba4148b074ffdd165e6"
 static const struct omx_param_contract_row OMX_SUBOCT_PARAM_CONTRACT[OMX_SUBOCT_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* range none */
   { 14u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* oct1 pc */

@@ -77,7 +77,7 @@ static const char *const OMX_DOUBLER_PARAM_MODULES[OMX_DOUBLER_PARAM_COUNT] = {
 #define OMX_DOUBLER_NAME "omx doubler"
 #define OMX_DOUBLER_VENDOR "openmixer"
 #define OMX_DOUBLER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DOUBLER_VERSION "0.19.2"
+#define OMX_DOUBLER_VERSION "0.19.3"
 #define OMX_DOUBLER_DESCRIPTION "Doubles a voice or an instrument with up to four slightly delayed, detuned and drifting copies spread across the stereo field, the double-tracked sound without a second take."
 #define OMX_DOUBLER_CLAP_ID "org.openmixer.doubler"
 #define OMX_DOUBLER_CLAP_FEATURES "audio-effect", "doubler", "stereo"
@@ -87,9 +87,9 @@ static const char *const OMX_DOUBLER_PARAM_MODULES[OMX_DOUBLER_PARAM_COUNT] = {
 #define OMX_DOUBLER_DECL_DIGEST "592de6b0ab8b42b9169e9007f3fa2bd33b350d61b48292ee6fba41e8fa2f3870"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_DOUBLER_PARAM_CONTRACT_VERSION 1u
-#define OMX_DOUBLER_PARAM_CONTRACT_FINGERPRINT "2bc2860d318e0c31b59d7c0d7e822fbc0c28a471d0d57e34d357dd8dddd66cfe"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_DOUBLER_PARAM_CONTRACT_VERSION 2u
+#define OMX_DOUBLER_PARAM_CONTRACT_FINGERPRINT "2fe9ebb30602c04c0efc688379faa74d6743ac48dc3aa95f7f184840477c1631"
 static const struct omx_param_contract_row OMX_DOUBLER_PARAM_CONTRACT[OMX_DOUBLER_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* voices none */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* delayMs ms */

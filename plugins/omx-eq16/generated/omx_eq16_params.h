@@ -554,7 +554,7 @@ static const char *const OMX_EQ16_PARAM_MODULES[OMX_EQ16_PARAM_COUNT] = {
 #define OMX_EQ16_NAME "omx eq16"
 #define OMX_EQ16_VENDOR "openmixer"
 #define OMX_EQ16_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_EQ16_VERSION "0.19.2"
+#define OMX_EQ16_VERSION "0.19.3"
 #define OMX_EQ16_DESCRIPTION "The OpenMixer console's channel EQ, 16-band form: 16 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire."
 #define OMX_EQ16_CLAP_ID "org.openmixer.eq16"
 #define OMX_EQ16_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
@@ -564,9 +564,9 @@ static const char *const OMX_EQ16_PARAM_MODULES[OMX_EQ16_PARAM_COUNT] = {
 #define OMX_EQ16_DECL_DIGEST "7b5f7b1f46ebc116414f68203cf8240c72c0154227d0169c0da832ee9aad2c56"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_EQ16_PARAM_CONTRACT_VERSION 1u
-#define OMX_EQ16_PARAM_CONTRACT_FINGERPRINT "f5e8fc02ca0b569ec0dde54fb0ab1fe10ec05c33ef19e1f2571524951f14e0c6"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_EQ16_PARAM_CONTRACT_VERSION 2u
+#define OMX_EQ16_PARAM_CONTRACT_FINGERPRINT "06c093ac8c7265c9c267f0b0789e1b2f2950e4e22879ec4958078f00057d92ba"
 static const struct omx_param_contract_row OMX_EQ16_PARAM_CONTRACT[OMX_EQ16_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_on none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* hpf_freq hz */

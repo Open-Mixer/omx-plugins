@@ -62,6 +62,7 @@ import { omxdspInclude } from '../template.mjs';
 import { defaultPanel, emitPluginTtl, generateInstance, loadDecl, meterRows } from '../gen.mjs';
 import { hintErrors } from '../port-hints.mjs';
 import { expandVariant, variantBands } from '../variants.mjs';
+import { registerFirstContract } from '../param-contract.mjs';
 import { checkPlugin, debtGrowth, debtVerdict, gapLines, loadDebt, loadRecipe, pluginStems, recipeErrors } from '../plugin-recipe.mjs';
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
@@ -202,7 +203,19 @@ async function main() {
   for (const f of ['omx-wobble.decl.json', 'Makefile', 'omx_wobble_clap.c', 'omx_wobble_lv2.c', 'omx_wobble_core.h', 'test/wobble-oracle.c', 'generated/omx_wobble_params.h'])
     expect(written.includes(`${P_}/${f}`), `the wizard wrote ${P_}/${f}`);
   for (const f of ['docs/catalogue.md', 'packaging/omx-plugins.spec', '.github/workflows/ci.yml']) expect(written.includes(f), `the shared file ${f} lists the new plugin`);
+  // a new plugin's contract version is 1: the wizard wrote its fingerprint where tools/gen.mjs reads the version
+  const VERSIONS = 'tools/param-contract-versions.json';
+  const versionsOf = () => JSON.parse(readFileSync(join(tree, VERSIONS), 'utf8')).plugins;
+  const first = versionsOf()['omx-wobble'];
+  expect(written.includes(VERSIONS) && first?.length === 1 && /^[0-9a-f]{64}$/.test(first[0]), `the wizard wrote the new plugin's first contract fingerprint in ${VERSIONS} (${JSON.stringify(first)})`);
+  expect(JSON.stringify(Object.keys(versionsOf())) === JSON.stringify(Object.keys(versionsOf()).sort()), `${VERSIONS} keeps its plugins in name order`);
+  {
+    const was = readFileSync(join(tree, VERSIONS), 'utf8');
+    const wrote = ['omx-wobble', 'omx-drive'].map((stem) => registerFirstContract(tree, stem, 'f'.repeat(64)));
+    expect(!wrote.some(Boolean) && readFileSync(join(tree, VERSIONS), 'utf8') === was, 'sabotage: a plugin the file already lists is never registered again, the file left as it was');
+  }
   const header = readFileSync(join(tree, P_, 'generated/omx_wobble_params.h'), 'utf8');
+  expect(header.includes('#define OMX_WOBBLE_PARAM_CONTRACT_VERSION 1u'), 'the generated header serves contract version 1');
   expect(header.includes('{ "rateHz", "Rate", "Hz", 0.1f, 20.0f, 4.0f, 0u }'), 'the generated table carries the kernel file\'s rate travel');
   const core = readFileSync(join(tree, P_, 'omx_wobble_core.h'), 'utf8');
   expect(core.includes('/* rate_hz */ values[OMX_WOBBLE_PARAM_RATE_HZ]') && core.includes('/* mode */ (int)lrintf(values[OMX_WOBBLE_PARAM_MODE])') && !/OMX_WIZARD_STUB/.test(core),
@@ -235,6 +248,12 @@ async function main() {
   // the wizard writes the plugin described: a control's name is its descriptor's
   sabotageGen('a descriptor that moved a control\'s name', `${P_}/omx-wobble.descriptor.json`, (t) => t.replace('"name": "Depth"', '"name": "Depth Amount"'), `STALE ${P_}/generated/omx_wobble_params.h`);
   sabotageGen('a face whose argument no contract control names', face, (t) => t.replace('float depth,', 'float intensity,'), "resolve argument 'intensity'");
+  // a listed plugin whose rows are not its listed fingerprint is refused, never registered again
+  sabotageGen('a contract fingerprint the file does not list', VERSIONS, (t) => {
+    const j = JSON.parse(t);
+    j.plugins['omx-wobble'] = ['f'.repeat(64)];
+    return `${JSON.stringify(j, null, 2)}\n`;
+  }, `plugins/omx-wobble: param-contract fingerprint ${first[0]} is not in ${VERSIONS}: append it, the next version (2)`);
   sabotageGen('a hand edit to a shared file', 'docs/catalogue.md', (t) => t.replace('| **omx wobble** |', '| **omx wobble (beta)** |'), 'STALE docs/catalogue.md');
   {
     const was = readFileSync(join(tree, P_, 'omx_wobble_core.h'), 'utf8');
@@ -906,10 +925,21 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     expect(moved.status !== 0 && moved.stderr.includes('compThresholdDb -> compRatio') && moved.stderr.includes('compRatio -> compThresholdDb'),
       `sabotage chain: two parameters swapped against the release are refused, each index named (${moved.stderr.split('\n').find((l) => l.includes('->'))?.trim()})`);
     const idxs = [...moved.stderr.matchAll(/^ {2}(\d+ \S+ -> \S+)$/gm)].map((m) => m[1]);
-    expect(idxs.length === 2 && shippedAs((d) => {
+    const named = (d) => {
       swap(d);
       d.shippedDiff = idxs;
-    }).status === 0, `chain: the same swap named in shippedDiff is accepted (${idxs.join('; ')})`);
+    };
+    // a parameter that moved is served under another id: the swap is a new parameter contract, refused until a person appends it
+    const unlisted = shippedAs(named);
+    const next = unlisted.stderr.match(new RegExp(`plugins/${stem}: param-contract fingerprint ([0-9a-f]{64}) is not in tools/param-contract-versions\\.json: append it, the next version \\(2\\)`))?.[1];
+    expect(idxs.length === 2 && unlisted.status !== 0 && next !== undefined,
+      `sabotage chain: the swap named in shippedDiff, its contract fingerprint not appended, is refused naming version 2 (${unlisted.stderr.split('\n').find((l) => l.includes('param-contract fingerprint'))?.trim().slice(0, 60)})`);
+    const versionsFile = join(ct, 'tools', 'param-contract-versions.json'), versionsWas = readFileSync(versionsFile, 'utf8');
+    const versions = JSON.parse(versionsWas);
+    versions.plugins[stem].push(next);
+    writeFileSync(versionsFile, `${JSON.stringify(versions, null, 2)}\n`);
+    expect(next !== undefined && shippedAs(named).status === 0, `chain: the same swap named in shippedDiff, its fingerprint appended as version 2, is accepted (${idxs.join('; ')})`);
+    writeFileSync(versionsFile, versionsWas);
     writeFileSync(join(ct, CP, `${stem}.decl.json`), `${JSON.stringify(plan.decl, null, 2)}\n`);
     spawnSync('node', ['tools/gen.mjs', CP], { cwd: ct, encoding: 'utf8' }); // the plugin as it was released
     delete process.env.OMX_CONTRACT_DIR;

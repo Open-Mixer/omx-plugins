@@ -53,7 +53,7 @@ static const char *const OMX_LIMITER_PARAM_MODULES[OMX_LIMITER_PARAM_COUNT] = {
 #define OMX_LIMITER_NAME "omx limiter"
 #define OMX_LIMITER_VENDOR "openmixer"
 #define OMX_LIMITER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_LIMITER_VERSION "0.19.2"
+#define OMX_LIMITER_VERSION "0.19.3"
 #define OMX_LIMITER_DESCRIPTION "The precision limiter: a look-ahead, true-peak, stereo-linked brickwall."
 #define OMX_LIMITER_CLAP_ID "org.openmixer.limiter"
 #define OMX_LIMITER_CLAP_FEATURES "audio-effect", "limiter", "stereo"
@@ -63,9 +63,9 @@ static const char *const OMX_LIMITER_PARAM_MODULES[OMX_LIMITER_PARAM_COUNT] = {
 #define OMX_LIMITER_DECL_DIGEST "aaae50a0d0219bc9406793d74ddc52d57717d8a4433e4d39f174cd5ef6e4c52c"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_LIMITER_PARAM_CONTRACT_VERSION 1u
-#define OMX_LIMITER_PARAM_CONTRACT_FINGERPRINT "5eac6b3d4921ead5ed21ef89862a7f21ca7a6aca16cd6c5d49a320f0e52fb65e"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_LIMITER_PARAM_CONTRACT_VERSION 2u
+#define OMX_LIMITER_PARAM_CONTRACT_FINGERPRINT "3ae2010e9cc1760f1251a756c57c0768411aba77d416aad0f67985caee75079e"
 static const struct omx_param_contract_row OMX_LIMITER_PARAM_CONTRACT[OMX_LIMITER_PARAM_COUNT] = {
   { 256u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ceilingDb dbfs */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* lookaheadMs ms */
@@ -97,6 +97,9 @@ static const struct omx_panel_role_row OMX_LIMITER_PANEL_ROLES[] = {
   { "release", 0u, 2u },
   { "lookahead", 0u, 1u },
 };
+static const struct omx_panel_display_row OMX_LIMITER_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR, 0u, OMX_CLAP_DISPLAY_FROM_METERS, { 0u, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.limiter.display.gain_reduction_bar", "Gain reduction" },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_LIMITER_PANEL_PAGES[] = {
@@ -108,7 +111,7 @@ static const struct omx_panel_rows OMX_LIMITER_PANEL = {
   OMX_LIMITER_PANEL_SECTIONS, 1u,
   OMX_LIMITER_PANEL_CONTROLS, 3u,
   OMX_LIMITER_PANEL_ROLES, 3u,
-  NULL, 0u,
+  OMX_LIMITER_PANEL_DISPLAYS, 1u,
   NULL, 0u,
 };
 

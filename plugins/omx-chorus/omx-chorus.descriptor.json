@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:chorus",
     "name": "omx chorus",
     "vendor": "openmixer",
-    "version": "0.19.2",
+    "version": "0.19.3",
     "doc": "The console's chorus: up to four voices read one modulated delay line, the right leg's sweep offset by the spread, mixed with the dry signal.",
     "features": [
       "audio-effect"

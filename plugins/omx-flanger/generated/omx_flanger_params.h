@@ -59,7 +59,7 @@ static const char *const OMX_FLANGER_PARAM_MODULES[OMX_FLANGER_PARAM_COUNT] = {
 #define OMX_FLANGER_NAME "omx flanger"
 #define OMX_FLANGER_VENDOR "openmixer"
 #define OMX_FLANGER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_FLANGER_VERSION "0.19.2"
+#define OMX_FLANGER_VERSION "0.19.3"
 #define OMX_FLANGER_DESCRIPTION "The console's flanger: one modulated short delay with signed feedback, swept by one oscillator and mixed with the dry signal."
 #define OMX_FLANGER_CLAP_ID "org.openmixer.flanger"
 #define OMX_FLANGER_CLAP_FEATURES "audio-effect", "flanger", "stereo"
@@ -69,9 +69,9 @@ static const char *const OMX_FLANGER_PARAM_MODULES[OMX_FLANGER_PARAM_COUNT] = {
 #define OMX_FLANGER_DECL_DIGEST "323560b13042be1596a25511cdd1cabcddfc4f976cb7c1ab68f318f2ad8fc73e"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_FLANGER_PARAM_CONTRACT_VERSION 1u
-#define OMX_FLANGER_PARAM_CONTRACT_FINGERPRINT "5fe17545e5852d6db37874ddaaadb5ba6a87a1b375a97ac936251fd39b6db747"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_FLANGER_PARAM_CONTRACT_VERSION 2u
+#define OMX_FLANGER_PARAM_CONTRACT_FINGERPRINT "d7c23cf89dc365bbaf35bdff4e3435ac9aed1f5387a987c282a0a203c8143426"
 static const struct omx_param_contract_row OMX_FLANGER_PARAM_CONTRACT[OMX_FLANGER_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* rate hz */
   { 2u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* depth ms */
