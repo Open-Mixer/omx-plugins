@@ -211,10 +211,12 @@ panel-words:
 face-header:
 	node tools/test/face-header-check.mjs
 	node tools/test/face-header-check.mjs --self-test
-# contract/role-meanings.json holds every role of every family once, and none other (tools/test/role-meanings-check.mjs)
+# contract/role-meanings.json holds every role of every family once, and none other (tools/test/role-meanings-check.mjs),
+# and it is the file the tools read, never an installed omx-plugins-contract (tools/test/role-meanings-source-check.mjs)
 role-meanings:
 	node tools/test/role-meanings-check.mjs
 	node tools/test/role-meanings-check.mjs --self-test
+	node tools/test/role-meanings-source-check.mjs
 # every meter a shipped plugin exports is bound by a display of its panel, or listed unbound with a reason (tools/test/meter-binding-check.mjs)
 meter-binding:
 	node tools/test/meter-binding-check.mjs
