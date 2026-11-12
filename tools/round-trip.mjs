@@ -24,7 +24,9 @@
  * same value (an LV2 field's values a set, as RDF states them).
  *
  * Pass: no `differs`, every bag equal, and the lost words the ones LOSSES names, by count (a new loss is red until it
- * is named there).
+ * is named there). LOSSES is counted against one plugin-hostd release (LOSSES_PROBE): a run against another release
+ * whose losses moved says so once, `ledger for plugin-hostd <ledger>, probe <installed>`, and the ledger is counted
+ * again against that release.
  *
  * Usage: node tools/round-trip.mjs <scans dir> [--authored <stem>=<file>]... ; the scans dir holds <stem>.clap.json
  * and <stem>.lv2.json for every described plugin. --authored reads another descriptor in the plugin's place (the
@@ -52,21 +54,22 @@ export const FORMATS = ['clap', 'lv2'];
 /** The losses of this tree, `<format> <word>` -> how many words (OR2: the meaning has a CLAP word for the bypass only
  * and an LV2 term for some meanings; LV2 has no unit for ""). Each other entry is a word the format's table has no
  * row for, or one its face states otherwise, named in the header above. */
+/** The plugin-hostd release LOSSES is counted against (its format tables decide what each face loses). */
+export const LOSSES_PROBE = '0.20.3';
+
 export const LOSSES = {
-  // OR2: a meaning has a CLAP word only for the bypass, an LV2 term only for some (lv2:designation); LV2 has no unit
-  // for "" (a plain number)
-  'clap controls[].meaning': 309,
+  // OR2: a meaning has a CLAP word only for some (plugin-hostd 0.20.3's CLAP table reads the meanings it has rows for;
+  // ten are left), an LV2 term only for some (lv2:designation); LV2 has no unit for "" (a plain number)
+  'clap controls[].meaning': 10,
   'lv2 controls[].meaning': 116,
   'lv2 controls[].travel.unit ""': 123,
-  // plugin-hostd 0.7.0's LV2 table has no row for urn:openmixer:unit#ratio, the ratio unit our faces write (gap 4)
-  'lv2 controls[].travel.unit "ratio"': 16,
   // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt (dB/oct, omx-contract 3.1.0)
   'lv2 controls[].travel.unit "dB/oct"': 2,
-  // CLAP: no row reads a unit, a linear or log scale, a step, a choice (our faces set no CLAP_PARAM_IS_ENUM), the
-  // session symbol, the LV2 URI, a side-chain's role or what an LV2 host may lend
-  'clap controls[].travel.unit': 559,
-  'clap controls[].travel.scale': 488,
-  'clap controls[].travel.step': 559,
+  // CLAP: plugin-hostd 0.20.3 reads a control's scale and, through the parameter contract, most units and steps; no
+  // row reads the rest of the units and steps, a choice (our faces set no CLAP_PARAM_IS_ENUM), the session symbol, the
+  // LV2 URI, a side-chain's role or what an LV2 host may lend
+  'clap controls[].travel.unit': 125,
+  'clap controls[].travel.step': 375,
   'clap controls[].kind': 266,
   'clap controls[].ids': 137,
   'clap controls[].values': 137,
@@ -108,6 +111,26 @@ export const LOSSES = {
   'lv2 meters[].doc': 16,
   'lv2 meters[].name': 8,
 };
+
+/**
+ * The ledger's lines and failures for the losses a run counted, against the installed plugin-hostd `probe`. Each lost
+ * word LOSSES names by its count is named; one it does not is an unnamed loss, a failure each, when the probe is the
+ * release LOSSES was counted against. Against another release (a probe bump moves the format tables, and with them the
+ * counts) the moved counts are ONE failure, said as that: the ledger is counted again, not read as unnamed losses.
+ */
+export function ledgerLines(losses, probe) {
+  const lines = [];
+  const keys = [...new Set([...Object.keys(LOSSES), ...Object.keys(losses)])].sort();
+  const moved = keys.filter((k) => LOSSES[k] !== losses[k]);
+  const otherRelease = probe !== undefined && probe !== LOSSES_PROBE;
+  if (otherRelease && moved.length > 0) lines.push(`ledger for plugin-hostd ${LOSSES_PROBE}, probe ${probe}: ${moved.length} count(s) moved with the tables; count LOSSES again against ${probe} and set LOSSES_PROBE`);
+  for (const k of keys) {
+    const ok = !moved.includes(k);
+    const label = ok ? 'named' : otherRelease ? `loss against the ${LOSSES_PROBE} ledger,` : 'unnamed';
+    lines.push(`${label} loss ${k}: ${losses[k] ?? 0} word(s)${ok ? '' : `, LOSSES names ${LOSSES[k] ?? 0}`}`);
+  }
+  return { lines, fails: otherRelease ? (moved.length > 0 ? 1 : 0) : moved.length };
+}
 
 /** A break in plugin-hostd's wave tip, reported, each `differs` it causes printed with it
  * and not failing; the run fails when one no longer shows, so the entry leaves with the fix (an entry that names its
@@ -282,11 +305,9 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
     }
   }
   for (const stem of outside) lines.push(`outside ${stem}: no descriptor, outside the round trip`);
-  for (const k of [...new Set([...Object.keys(LOSSES), ...Object.keys(losses)])].sort()) {
-    const ok = LOSSES[k] === losses[k];
-    lines.push(`${ok ? 'named' : 'unnamed'} loss ${k}: ${losses[k] ?? 0} word(s)${ok ? '' : `, LOSSES names ${LOSSES[k] ?? 0}`}`);
-    if (!ok) fails++;
-  }
+  const ledger = ledgerLines(losses, hostdVersion());
+  lines.push(...ledger.lines);
+  fails += ledger.fails;
   for (const [k, { count: named, at, through }] of Object.entries(UPSTREAM)) {
     const count = at?.length ?? named;
     if (through !== undefined) {
