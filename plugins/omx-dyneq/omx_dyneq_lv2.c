@@ -34,6 +34,7 @@ static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(DYNEQ), .core = &OMX_DYNEQ_CORE,
     .meters = G_METERS, .meter_count = 6u, .meter_values = 6u,
     OMX_FACE_LV2_PORTS(DYNEQ, UINT32_MAX),
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_lv2_face G_LV2 = OMX_LV2_FACE(&G_FACE, OMX_DYNEQ_LV2_URI);

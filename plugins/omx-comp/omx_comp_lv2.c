@@ -34,6 +34,7 @@ static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(COMP), .core = &OMX_COMP_CORE,
     .meters = G_METERS, .meter_count = 4u, .meter_values = 6u,
     .key_symbol = "key", OMX_FACE_LV2_PORTS(COMP, OMX_COMP_LV2_PORT_KEY),
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_lv2_face G_LV2 = OMX_LV2_FACE(&G_FACE, OMX_COMP_LV2_URI);

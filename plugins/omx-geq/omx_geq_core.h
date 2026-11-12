@@ -70,6 +70,6 @@ static inline void omx_geq_core_run_v(void *c, const float *key, const float *in
 
 static const struct omx_face_core OMX_GEQ_CORE = {sizeof(OmxGeqCore), omx_geq_core_init_v, omx_geq_core_resolve_v,
                                                    omx_geq_core_latency_v, omx_geq_core_run_v,
-                                                   NULL};
+                                                   omx_face_no_meter};
 
 #endif /* OMX_GEQ_CORE_H */

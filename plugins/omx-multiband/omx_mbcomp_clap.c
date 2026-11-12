@@ -30,6 +30,7 @@ static const struct omx_face_meter G_METERS[] = {
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(MBCOMP), .features = G_FEATURES, .core = &OMX_MBCOMP_CORE,
     .meters = G_METERS, .meter_count = 5u, .meter_values = 5u,
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_clap_face G_CLAP = OMX_CLAP_FACE(&G_FACE, G_FEATURES, OMX_MBCOMP_CLAP_ID, OMX_MBCOMP_NAME, OMX_MBCOMP_VENDOR,

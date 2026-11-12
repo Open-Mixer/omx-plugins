@@ -28,8 +28,9 @@ struct omx_face_core {
   uint32_t (*latency)(const void *core);
   void (*run)(void *core, const float *key, const float *in_l, const float *in_r, float *out_l, float *out_r,
               uint32_t frames);
-  /** The kernel's reading of meter `i` after a block (the declaration's `meters`, in order); NULL when the
-   * kernel reads none. */
+  /** The kernel's reading of meter `i` after a block (the declaration's `meters`, in order); omx_face_no_meter
+   * when the kernel reads none (a function, never NULL: omx-rt-gate classifies a call through a field by the
+   * functions an initializer stores into it). */
   float (*meter)(const void *core, uint32_t i);
 };
 
@@ -56,6 +57,11 @@ struct omx_face_meter {
 struct omx_face_lv2_ports {
   uint32_t in_l, in_r, key, out_l, out_r, enabled, latency, first_param, first_meter;
 };
+
+/** What a core without a meter reading, or a face without a tempo, stores in the field: a call through the field then
+ * has a target omx-rt-gate can walk. A face asks omx_face_reads_tempo(), not the field's truth. */
+static inline float omx_face_no_meter(const void *core, uint32_t i) { (void)core; (void)i; return 0.0f; }
+static inline void omx_face_no_tempo(void *core, double bpm) { (void)core; (void)bpm; }
 
 struct omx_face {
   /* identity */
@@ -87,7 +93,8 @@ struct omx_face {
   const struct omx_face_core *core;
   /* The host's tempo, for a plugin whose descriptor says needs.tempo (its core's omx_<kernel>_core_tempo): called
    * before every resolve with the block's tempo in BPM, 0 when the host handed none (no CLAP transport, or one
-   * without CLAP_TRANSPORT_HAS_TEMPO; no LV2 time:Position with time:beatsPerMinute yet). NULL: reads no tempo. */
+   * without CLAP_TRANSPORT_HAS_TEMPO; no LV2 time:Position with time:beatsPerMinute yet). omx_face_no_tempo: reads no
+   * tempo (a function, never NULL, for the same reason as `meter`'s). */
   void (*tempo)(void *core, double bpm);
   /* With `tempo`, the LV2 face's atom input port (generated OMX_<K>_LV2_PORT_CONTROL) where time:Position arrives. */
   uint32_t lv2_control;
@@ -103,5 +110,8 @@ struct omx_face {
   .pages = OMX_##K##_PANEL_PAGES, .page_count = OMX_##K##_PANEL_PAGE_COUNT,                                         \
   .contract_version = OMX_##K##_PARAM_CONTRACT_VERSION, .contract_fingerprint = OMX_##K##_PARAM_CONTRACT_FINGERPRINT, \
   .contract = OMX_##K##_PARAM_CONTRACT, .hints = &OMX_##K##_RESOURCE_HINTS
+
+/** Whether the face's plugin reads the host's tempo. */
+static inline int omx_face_reads_tempo(const struct omx_face *f) { return f->tempo != omx_face_no_tempo; }
 
 #endif /* OMX_PLUGIN_FACE_H */

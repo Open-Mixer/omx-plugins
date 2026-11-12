@@ -88,6 +88,6 @@ static inline void omx_eq16_core_run_v(void *c, const float *key, const float *i
 
 static const struct omx_face_core OMX_EQ16_CORE = {sizeof(OmxEq16Core), omx_eq16_core_init_v, omx_eq16_core_resolve_v,
                                                    omx_eq16_core_latency_v, omx_eq16_core_run_v,
-                                                   NULL};
+                                                   omx_face_no_meter};
 
 #endif /* OMX_EQ16_CORE_H */

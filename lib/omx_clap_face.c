@@ -259,7 +259,7 @@ static clap_process_status g_process(const clap_plugin_t *p, const clap_process_
   int dirty = atomic_exchange_explicit(&g->dirty, 0, memory_order_acquire);
   /* the block's tempo, for a plugin that reads one: the transport's when it carries a tempo, else none (0); the core
    * takes it at its next resolve, so a tempo that moved resolves */
-  if (f->tempo) {
+  if (omx_face_reads_tempo(f)) {
     const clap_event_transport_t *t = pr->transport;
     const double bpm = t && (t->flags & CLAP_TRANSPORT_HAS_TEMPO) ? t->tempo : 0.0;
     if (bpm != g->tempo) g->tempo = bpm, dirty = 1;

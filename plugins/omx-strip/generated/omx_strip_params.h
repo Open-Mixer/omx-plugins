@@ -1192,8 +1192,10 @@ static const char *const OMX_STRIP_PARAM_MODULES[OMX_STRIP_PARAM_COUNT] = {
  * non-finite word its default. Its bands from this one on are passed switched off: out of the face's bank. */
 static inline uint32_t omx_strip_eq_band_count(const float *values) {
   const float w = values[OMX_STRIP_PARAM_EQ_BANDS];
-  const float n = w - w == 0.0f ? rintf(w) : OMX_STRIP_PARAM_EQ_BANDS_DEFAULT;
-  return (uint32_t)(n < OMX_STRIP_PARAM_EQ_BANDS_MIN ? OMX_STRIP_PARAM_EQ_BANDS_MIN : n > OMX_STRIP_PARAM_EQ_BANDS_MAX ? OMX_STRIP_PARAM_EQ_BANDS_MAX : n);
+  /* clamped, then rounded to the nearest (ties to even): the same count as rounding first, and lrintf is a call
+   * omx-rt-gate classifies where rintf is not */
+  const int n = w - w == 0.0f ? (int)lrintf(fminf(fmaxf(w, (float)OMX_STRIP_PARAM_EQ_BANDS_MIN), (float)OMX_STRIP_PARAM_EQ_BANDS_MAX)) : (int)OMX_STRIP_PARAM_EQ_BANDS_DEFAULT;
+  return (uint32_t)(n < (int)OMX_STRIP_PARAM_EQ_BANDS_MIN ? (int)OMX_STRIP_PARAM_EQ_BANDS_MIN : n > (int)OMX_STRIP_PARAM_EQ_BANDS_MAX ? (int)OMX_STRIP_PARAM_EQ_BANDS_MAX : n);
 }
 
 /* The identity every face publishes. */

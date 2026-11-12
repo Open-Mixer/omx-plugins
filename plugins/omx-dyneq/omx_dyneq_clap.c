@@ -31,6 +31,7 @@ static const struct omx_face_meter G_METERS[] = {
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(DYNEQ), .features = G_FEATURES, .core = &OMX_DYNEQ_CORE,
     .meters = G_METERS, .meter_count = 6u, .meter_values = 6u,
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_clap_face G_CLAP = OMX_CLAP_FACE(&G_FACE, G_FEATURES, OMX_DYNEQ_CLAP_ID, OMX_DYNEQ_NAME, OMX_DYNEQ_VENDOR,

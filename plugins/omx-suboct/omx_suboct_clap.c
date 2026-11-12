@@ -16,6 +16,7 @@ static const char *G_FEATURES[] = {OMX_SUBOCT_CLAP_FEATURES, NULL};
 
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(SUBOCT), .features = G_FEATURES, .core = &OMX_SUBOCT_CORE,
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_clap_face G_CLAP = OMX_CLAP_FACE(&G_FACE, G_FEATURES, OMX_SUBOCT_CLAP_ID, OMX_SUBOCT_NAME, OMX_SUBOCT_VENDOR,

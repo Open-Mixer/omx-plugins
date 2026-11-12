@@ -19,6 +19,7 @@
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(EQ8), .core = &OMX_EQ8_CORE,
     OMX_FACE_LV2_PORTS(EQ8, UINT32_MAX),
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_lv2_face G_LV2 = OMX_LV2_FACE(&G_FACE, OMX_EQ8_LV2_URI);

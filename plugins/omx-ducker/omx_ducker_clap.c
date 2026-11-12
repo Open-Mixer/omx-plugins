@@ -17,6 +17,7 @@ static const char *G_FEATURES[] = {OMX_DUCKER_CLAP_FEATURES, NULL};
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(DUCKER), .features = G_FEATURES, .core = &OMX_DUCKER_CORE,
     .key_symbol = "key",
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_clap_face G_CLAP = OMX_CLAP_FACE(&G_FACE, G_FEATURES, OMX_DUCKER_CLAP_ID, OMX_DUCKER_NAME, OMX_DUCKER_VENDOR,

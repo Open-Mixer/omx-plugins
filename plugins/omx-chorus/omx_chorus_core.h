@@ -72,6 +72,6 @@ static inline void omx_chorus_core_run_v(void *c, const float *key, const float 
 
 static const struct omx_face_core OMX_CHORUS_CORE = {sizeof(OmxChorusCore), omx_chorus_core_init_v, omx_chorus_core_resolve_v,
                                                    omx_chorus_core_latency_v, omx_chorus_core_run_v,
-                                                   NULL};
+                                                   omx_face_no_meter};
 
 #endif /* OMX_CHORUS_CORE_H */

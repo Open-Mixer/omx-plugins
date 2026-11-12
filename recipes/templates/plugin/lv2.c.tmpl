@@ -32,6 +32,7 @@ static const struct omx_face G_FACE = {
 {{/metered}}{{#keyed}}    .key_symbol = "{{keySymbol}}", OMX_FACE_LV2_PORTS({{K}}, OMX_{{K}}_LV2_PORT_{{keyPort}}),
 {{/keyed}}{{^keyed}}    OMX_FACE_LV2_PORTS({{K}}, UINT32_MAX),
 {{/keyed}}{{#tempo}}    .tempo = omx_{{kernel}}_core_tempo_v, .lv2_control = OMX_{{K}}_LV2_PORT_CONTROL,
+{{/tempo}}{{^tempo}}    .tempo = omx_face_no_tempo,
 {{/tempo}}};
 
 static const struct omx_lv2_face G_LV2 = OMX_LV2_FACE(&G_FACE, OMX_{{K}}_LV2_URI);

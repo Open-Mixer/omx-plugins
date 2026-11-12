@@ -28,6 +28,7 @@ static const struct omx_face_meter G_METERS[] = {
 static const struct omx_face G_FACE = {
     OMX_FACE_TABLES(DEESSER), .features = G_FEATURES, .core = &OMX_DEESSER_CORE,
     .meters = G_METERS, .meter_count = 3u, .meter_values = 5u,
+    .tempo = omx_face_no_tempo,
 };
 
 static const struct omx_clap_face G_CLAP = OMX_CLAP_FACE(&G_FACE, G_FEATURES, OMX_DEESSER_CLAP_ID, OMX_DEESSER_NAME, OMX_DEESSER_VENDOR,

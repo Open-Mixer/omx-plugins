@@ -79,7 +79,7 @@ LV2_Handle omx_lv2_face_instantiate(const LV2_Descriptor *d, double rate, const 
   s->meter = (float **)(mem + at_meters);
   s->core = mem + at_core;
   s->rate = (uint32_t)rate;
-  if (f->tempo)
+  if (omx_face_reads_tempo(f))
     for (const LV2_Feature *const *x = features; x && *x; ++x)
       if (strcmp((*x)->URI, LV2_URID__map) == 0 && (*x)->data) {
         const LV2_URID_Map *m = (const LV2_URID_Map *)(*x)->data;
@@ -104,7 +104,7 @@ void omx_lv2_face_connect_port(LV2_Handle h, uint32_t port, void *data) {
   else if (port == p->out_r) s->out_r = (float *)data;
   else if (port == p->enabled) s->enabled = (const float *)data;
   else if (port == p->latency) s->latency = (float *)data;
-  else if (s->face->tempo && port == s->face->lv2_control) s->control = (const LV2_Atom_Sequence *)data;
+  else if (omx_face_reads_tempo(s->face) && port == s->face->lv2_control) s->control = (const LV2_Atom_Sequence *)data;
   else if (port >= p->first_param && port < p->first_param + s->face->param_count)
     s->param[port - p->first_param] = (const float *)data;
   else if (port >= p->first_meter && port < p->first_meter + s->face->meter_values)
@@ -158,7 +158,7 @@ void omx_lv2_face_run(LV2_Handle h, uint32_t frames) {
     const float v = value(s, i);
     if (v != s->values[i]) s->values[i] = v, dirty = 1;
   }
-  if (s->face->tempo) {
+  if (omx_face_reads_tempo(s->face)) {
     const double bpm = block_tempo(s);
     if (bpm != s->tempo) s->tempo = bpm, dirty = 1;
     s->face->tempo(s->core, bpm);
