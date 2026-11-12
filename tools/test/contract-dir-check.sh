@@ -20,6 +20,9 @@
 #                                                  schema floor is below 3.14.0, one extra file, a manifest
 #                                                  hash that is not the file's and another version each refuse; the
 #                                                  right install passes
+# The RPM's %check runs `make test` in the unpacked source tarball, which has no git tree: the spec must hand it the
+# tarball's commit (SOURCE_COMMIT=, git get-tar-commit-id), or this check cannot stamp and the package build is red.
+# The check reads the spec for it (SPEC, the self-test's copy); the self-test removes it from a copy and goes red.
 # The reader step needs the omx-contract command (OMX_CONTRACT_CLI, its bin/omx-contract.mjs or an executable, else
 # `omx-contract` on PATH); without one it says so in one line and the file checks still run.
 # Exit: 0 pass, 1 refused, 2 the check could not run.
@@ -144,6 +147,17 @@ check() {
   return "$bad"
 }
 
+# the spec's %check hands every `make test` the source tarball's commit: <spec>
+SPEC=${SPEC:-$HERE/packaging/omx-plugins.spec}
+spec_hands_commit() {
+  local lines
+  lines=$(awk '/^%check/{c=1; next} /^%(files|changelog|install|build|prep|pre|post|preun|postun|package|description)([[:space:]]|$)/{c=0} c && !/^[[:space:]]*#/ && /make.*[[:space:]]test([[:space:]]|$)/' "$1")
+  [ -n "$lines" ] || { echo "contract-dir: $1: %check runs no make test"; return 1; }
+  if grep -v 'SOURCE_COMMIT=' <<<"$lines" | grep -q .; then
+    echo "contract-dir: $1: %check runs make test without SOURCE_COMMIT= (the unpacked tarball has no git tree)"; return 1
+  fi
+}
+
 install_into() { # <contractdir> [make args...]
   local to=$1; shift
   make -s -C "$HERE" install-contract DESTDIR= CONTRACTDIR="$to" SOURCE_COMMIT="$COMMIT" "$@" >/dev/null
@@ -206,12 +220,18 @@ if [ "${1:-}" = --self-test ]; then
       echo "SABOTAGE install with SOURCE_COMMIT='$bad': STAYED GREEN"; fail=1
     else echo "SABOTAGE install with SOURCE_COMMIT='$bad': refused"; fi
   done
+  # the spec's %check without the tarball's commit on its make test
+  grep -v '^%make_build test' "$SPEC" > "$scratch/no-commit.spec"; printf '%%check\n%%make_build test\n' >> "$scratch/no-commit.spec"
+  if out=$(spec_hands_commit "$scratch/no-commit.spec"); then echo "SABOTAGE spec without SOURCE_COMMIT: STAYED GREEN"; fail=1
+  else echo "SABOTAGE spec without SOURCE_COMMIT: red (${out%%$'\n'*})"; fi
+  spec_hands_commit "$SPEC" >/dev/null || { echo "self-test: the shipped spec does not hand make test the commit" >&2; exit 1; }
   check "$scratch/good" >/dev/null || { echo "self-test: the unsabotaged install is not green" >&2; exit 1; }
   [ "$fail" = 0 ] || exit 1
   echo "contract-dir self-test: every sabotage red"
   exit 0
 fi
 
+spec_hands_commit "$SPEC" || exit 1
 install_into "$scratch/dir" || { echo "contract-dir: make install-contract failed" >&2; exit 2; }
 if out=$(check "$scratch/dir"); then
   echo "contract-dir: $(described | wc -l) descriptors installed under 3/omx-plugins/plugins/, stamped with ${COMMIT:0:12}, listed in MANIFEST.json, read by omx-contract's reader"
