@@ -10,7 +10,7 @@
  *
  * The text comes from the plugin's descriptor (plugins/<stem>/<stem>.descriptor.json: identity, description, ports, every
  * control with its resolved travel or choices) and the panel its declaration draws (plugins/<stem>/<stem>.decl.json, or
- * the base declaration of a variant: the section keys). It reads no built file, no installed package and no version.
+ * the base declaration of a variant, or none for a hand-written LV2 face, which has no pages). It reads no built file, no installed package and no version.
  * A page is the LV2 port group and the CLAP module of a control (tools/descriptor.mjs portGroupsOf): the group path of
  * the control is the page, and its priority counts the groups down in the order their first port comes.
  */
@@ -38,6 +38,9 @@ function panelOwner(root, stem) {
   const dir = join(root, 'plugins', stem);
   const own = join(dir, `${stem}.decl.json`);
   if (existsSync(own)) return JSON.parse(readFileSync(own, 'utf8'));
+  // a hand-written LV2 face (tools/live-faces.mjs) has no declaration and its TTL declares no port groups: it has no pages
+  const panelFile = join(dir, `${stem}.panel.json`);
+  if (existsSync(panelFile)) return { ungrouped: true };
   const base = baseOf(dir);
   if (!base) throw new Error(`plugins/${stem}: no declaration and no base declaration names it`);
   return base.decl;
@@ -65,8 +68,10 @@ export function pagesOf(descriptor, decl) {
 const valueOf = (c) => {
   if (c.kind === 'toggle') return { min: 'off', max: 'on', def: c.default ? 'on' : 'off', step: 'toggle' };
   if (c.kind === 'choice') {
+    // a choice with no numeric values (a hand-written LV2 face's, tools/live-faces.mjs) is told by its ids
+    const values = c.values ?? c.ids;
     const at = c.ids.indexOf(c.default);
-    return { min: c.values[0], max: c.values[c.values.length - 1], def: `${c.labels[at]} (${c.values[at]})`, step: c.values.map((v, i) => `${v} ${c.labels[i]}`).join(', ') };
+    return { min: values[0], max: values[values.length - 1], def: `${c.labels[at]} (${values[at]})`, step: values.map((v, i) => `${v} ${c.labels[i]}`).join(', ') };
   }
   const t = c.travel;
   return { min: num(t.min), max: num(t.max), def: num(t.default), step: t.step === 1 ? 'whole steps' : `continuous, ${t.scale}` };
@@ -77,7 +82,7 @@ export function pluginPage(root, stem) {
   const descriptor = JSON.parse(readFileSync(join(root, 'plugins', stem, `${stem}.descriptor.json`), 'utf8'));
   const decl = panelOwner(root, stem);
   const pl = descriptor.plugin;
-  const pages = pagesOf(descriptor, decl);
+  const pages = decl.ungrouped ? [] : pagesOf(descriptor, decl);
   const priorityOf = new Map(pages.map((p) => [p.id, p.priority]));
   const n = descriptor.controls.length;
   const out = [BANNER, `# ${pl.name}`, '', pl.doc, '',
@@ -95,8 +100,8 @@ export function pluginPage(root, stem) {
   for (const c of descriptor.controls) {
     const v = valueOf(c);
     const unit = c.kind === 'travel' ? c.travel.unit : (c.unit ?? '');
-    const flags = [c.automatable ? 'automatable' : null, c.group ? null : 'hidden'].filter(Boolean).join(', ');
-    const page = c.group ? `${c.group.join(' / ')} (${priorityOf.get(c.group.join('/'))})` : '';
+    const flags = [c.automatable ? 'automatable' : null, c.group || decl.ungrouped ? null : 'hidden'].filter(Boolean).join(', ');
+    const page = c.group && !decl.ungrouped ? `${c.group.join(' / ')} (${priorityOf.get(c.group.join('/'))})` : '';
     out.push(`| ${c.id} | \`${c.symbol}\` | ${cell(c.name)} | ${cell(unit)} | ${cell(v.min)} | ${cell(v.max)} | ${cell(v.def)} | ${cell(v.step)} | ${flags} | ${cell(page)} |`);
   }
   out.push('', '## Bypass', '',

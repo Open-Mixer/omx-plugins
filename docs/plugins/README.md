@@ -21,9 +21,11 @@ One page for each plugin: its ids, its audio ports, its pages (the LV2 port grou
 | [omx eq16](omx-eq16.md) | `org.openmixer.eq16` | `urn:openmixer:eq16` | 86 | 18 |
 | [omx eq32](omx-eq32.md) | `org.openmixer.eq32` | `urn:openmixer:eq32` | 166 | 34 |
 | [omx eq8](omx-eq8.md) | `org.openmixer.eq8` | `urn:openmixer:eq8` | 46 | 10 |
+| [omx fbs](omx-fbs.md) | `urn:openmixer:fbs` | `urn:openmixer:fbs` | 103 | 0 |
 | [omx flanger](omx-flanger.md) | `org.openmixer.flanger` | `urn:openmixer:flanger` | 4 | 1 |
 | [omx geq](omx-geq.md) | `org.openmixer.geq` | `urn:openmixer:geq` | 31 | 1 |
 | [omx glue](omx-glue.md) | `org.openmixer.glue` | `urn:openmixer:glue` | 8 | 1 |
+| [omx hrp](omx-hrp.md) | `urn:openmixer:hrp` | `urn:openmixer:hrp` | 38 | 0 |
 | [omx keyed-gate](omx-keyed-gate.md) | `org.openmixer.keyed-gate` | `urn:openmixer:keyed-gate` | 12 | 2 |
 | [omx limiter](omx-limiter.md) | `org.openmixer.limiter` | `urn:openmixer:limiter` | 3 | 1 |
 | [omx loudlevel](omx-loudlevel.md) | `org.openmixer.loudlevel` | `urn:openmixer:loudlevel` | 5 | 1 |
