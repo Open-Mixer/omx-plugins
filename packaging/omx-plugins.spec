@@ -22,7 +22,11 @@ BuildRequires: (omx-clap-core-devel >= 0.31.0 with omx-clap-core-devel < 0.32)
 BuildRequires: (plugin-hostd-devel >= 0.20.0 with plugin-hostd-devel < 0.21)
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
 # (3.3.0: the directory and its schema are omx-contract-data's, the definitions each owner's -contract package's)
-BuildRequires: (omx-contract >= 3.13.0 with omx-contract < 4)
+# 3.14.0: the reader that knows integrity, which the install stamps into each descriptor (#32); %%check reads the
+# install through it
+BuildRequires: (omx-contract >= 3.14.0 with omx-contract < 4)
+# git get-tar-commit-id: the source commit the tarball was made from, stamped into each installed descriptor
+BuildRequires: git-core
 # the panel layout and the MOD GUI are omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
 BuildRequires: (omx-panel >= 0.13.2 with omx-panel < 0.14)
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
@@ -138,7 +142,8 @@ Summary: The OpenMixer plugins' descriptors in omx-contract's contract directory
 BuildArch: noarch
 # the contract directory, its schema and its reader's own package
 # 3.13.0: the reader that knows the roleMeanings kind contract/role-meanings.json is
-Requires: (omx-contract-data >= 3.13.0 with omx-contract-data < 4)
+# 3.14.0: each descriptor carries integrity, which an older reader refuses with the whole directory (#32)
+Requires: (omx-contract-data >= 3.14.0 with omx-contract-data < 4)
 # the files lived in omx-plugins-devel before this package
 Conflicts: %{name}-devel < %{version}-%{release}
 
@@ -158,7 +163,8 @@ Its documentation is on openmixer.org.
 
 %install
 %make_install PREFIX=%{_prefix} LIBDIR=%{_libdir} CLAPDIR=/usr/lib/clap
-%{__make} install-devel DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir}
+# each installed descriptor carries the commit the source tarball was made from (git archive records it): #32
+%{__make} install-devel DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir} SOURCE_COMMIT=$(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 %{__make} install-test DESTDIR=%{buildroot} PREFIX=%{_prefix} TESTCLAPDIR=%{_libexecdir}/omx-plugins/test
 
 %check
@@ -168,6 +174,9 @@ Its documentation is on openmixer.org.
 %make_build test
 # the shipped pins.d file still names the shipped binaries' own hashes (sabotage: a changed binary goes red)
 tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins %{buildroot}/usr/lib/clap
+# every shipped descriptor carries this release's version and the source tarball's commit (sabotage: one unstamped,
+# another commit or another version goes red)
+tools/integrity-check.sh %{buildroot}%{_datadir}/omx-contract/contract.d %{version} $(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 
 %files
 %license LICENSE

@@ -417,10 +417,14 @@ CONTRACT_SCHEMA_MAJOR := 3
 INSTALL_CONTRACT_DIR = $(firstword $(wildcard $(shell $(PKG_CONFIG) --variable=datadir omx-contract 2>/dev/null)/install-contract-dir.sh) $(wildcard $(OMX_CONTRACT_DIR)/tools/install-contract-dir.sh))
 DESCRIPTORS = $(foreach p,$(SHIP_PLUGINS),$(wildcard $(p)$(notdir $(p:/=)).descriptor.json))
 CONTRACT_FILES = $(wildcard contract/*.json)
+# the source commit each installed descriptor is stamped with (#32): the build's (a package build passes the commit its
+# tarball or checkout was made from), else this tree's HEAD; none refuses the install (tools/stamp-integrity.mjs)
+SOURCE_COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null)
 install-contract:
 	@test -n "$(INSTALL_CONTRACT_DIR)" || { echo "install-contract: no install-contract-dir.sh: install omx-contract-devel, or set OMX_CONTRACT_DIR to a checkout" >&2; exit 1; }
 	@stage=$$(mktemp -d) && trap 'rm -rf "$$stage"' EXIT && mkdir -p "$$stage/plugins" && \
 	  for f in $(DESCRIPTORS); do cp "$$f" "$$stage/plugins/$$(basename "$$f" .descriptor.json).json" || exit 1; done && \
+	  node tools/stamp-integrity.mjs --commit "$(SOURCE_COMMIT)" "$$stage"/plugins/*.json && \
 	  for f in $(CONTRACT_FILES); do cp "$$f" "$$stage/" || exit 1; done && \
 	  sh $(INSTALL_CONTRACT_DIR) omx-plugins $(VERSION) $(CONTRACT_SCHEMA_MAJOR) "$$stage" $(DESTDIR)$(CONTRACTDIR)
 # lv2bench's two output shapes (Debian, Fedora lilv 0.26.4) are both read by the Zynthian bundle probe, with its refusals

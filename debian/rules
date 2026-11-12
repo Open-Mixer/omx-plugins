@@ -15,6 +15,8 @@ override_dh_auto_install:
 	$(MAKE) install-devel DESTDIR=$(CURDIR)/debian/tmp PREFIX=/usr LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
 	# the test instruments are omx-plugins-test's, outside every CLAP search path
 	$(MAKE) install-test DESTDIR=$(CURDIR)/debian/tmp PREFIX=/usr TESTCLAPDIR=/usr/libexec/omx-plugins/test
+	@# every shipped descriptor carries this release's version and the checkout's commit, the tag's (#32)
+	tools/integrity-check.sh $(CURDIR)/debian/tmp/usr/share/omx-contract/contract.d $(shell dpkg-parsechangelog -S Version | sed 's/-[^-]*$$//; s/[~+].*//') $(shell git rev-parse HEAD)
 
 # the shipped .clap is the stripped one, so its pin is measured again after dh_strip: a pin taken at
 # dh_auto_install names bytes the package never ships. The binaries sit in omx-plugins-clap's tree,

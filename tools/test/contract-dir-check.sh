@@ -4,7 +4,8 @@
 #
 # tools/test/contract-dir-check.sh — `make install-contract` puts each shipped plugin's descriptor into omx-contract's
 # contract directory (omx-contract docs/contract-dir.md): <contractdir>/3/omx-plugins/plugins/<stem>.json, the plugin
-# folder's <stem>.descriptor.json and nothing else but its integrity, stamped at install: { version, the plugin's own,
+# folder's <stem>.descriptor.json and nothing else but its integrity, stamped at install (and the schema floor raised
+# to 3.14.0, the first schema with the word): { version, the plugin's own,
 # commit, the source commit the build was made from (SOURCE_COMMIT, else the tree's HEAD) } (#32), one per shipped
 # plugin that has one, and each definition file of
 # contract/ as <contractdir>/3/omx-plugins/<file>.json byte for byte, and nothing else, each listed in
@@ -15,7 +16,8 @@
 #   tools/test/contract-dir-check.sh               `make install-contract` into a scratch directory, then the check
 #   tools/test/contract-dir-check.sh --self-test   the check over sabotaged installs: a descriptor left out of the
 #                                                  install list, one missing, one changed, one not stamped, one
-#                                                  stamped with another commit or another version, one extra file, a manifest
+#                                                  stamped with another commit or another version, one whose
+#                                                  schema floor is below 3.14.0, one extra file, a manifest
 #                                                  hash that is not the file's and another version each refuse; the
 #                                                  right install passes
 # The reader step needs the omx-contract command (OMX_CONTRACT_CLI, its bin/omx-contract.mjs or an executable, else
@@ -80,7 +82,12 @@ check() {
       const want = JSON.parse(fs.readFileSync(src, "utf8")); const have = JSON.parse(fs.readFileSync(inst, "utf8"));
       const stamp = { version: want.plugin?.version, commit };
       if (JSON.stringify(have.integrity) !== JSON.stringify(stamp)) console.log(`its integrity is ${JSON.stringify(have.integrity)}, not ${JSON.stringify(stamp)}`);
-      const rest = { ...have }; delete rest.integrity;
+      // the stamp raises the schema floor to the first schema with the word (tools/stamp-integrity.mjs), never lowers it
+      const floor = have.requires?.["omx-contract-schema"];
+      const v = /^>= (\d+)\.(\d+)\.(\d+)$/.exec(floor ?? "")?.slice(1).map(Number);
+      if (!v) console.log("it states no schema floor");
+      else if (v[0] * 1e6 + v[1] * 1e3 + v[2] < 3014000) console.log(`it states ${floor}, below the first schema with integrity, 3.14.0`);
+      const rest = { ...have, requires: { ...have.requires, "omx-contract-schema": want.requires?.["omx-contract-schema"] } }; delete rest.integrity;
       const canon = (v) => JSON.stringify(v, (k, x) => (x && typeof x === "object" && !Array.isArray(x) ? Object.fromEntries(Object.entries(x).sort()) : x));
       if (canon(rest) !== canon(want)) console.log("it differs from the descriptor in more than its integrity");
     ' "$HERE/plugins/$stem/$stem.descriptor.json" "$pkg/$rel" "$COMMIT")
@@ -155,7 +162,7 @@ if [ "${1:-}" = --self-test ]; then
     node -e 'const fs = require("fs"); const [p, r, h] = process.argv.slice(1); const m = JSON.parse(fs.readFileSync(p, "utf8"));
       m.files[r] = h; fs.writeFileSync(p, JSON.stringify(m, null, 2) + "\n");' "$m" "$2" "$h"
   }
-  for s in left-out missing changed unstamped commit stamp-version extra hash version $(for r in $REQUIRED_DEFS; do printf 'owned-%s ' "$r"; done) $(for r in $REQUIRED; do printf 'unlisted-%s ' "$r"; done); do
+  for s in left-out missing changed unstamped commit stamp-version floor extra hash version $(for r in $REQUIRED_DEFS; do printf 'owned-%s ' "$r"; done) $(for r in $REQUIRED; do printf 'unlisted-%s ' "$r"; done); do
     t=$scratch/$s; rm -rf "$t"
     case $s in
       left-out) install_into "$t" DESCRIPTORS="$rest" ;;
@@ -165,8 +172,9 @@ if [ "${1:-}" = --self-test ]; then
     case $s in
       missing) rm "$p/plugins/$first.json" ;;
       changed) sed -i '0,/"name": "/s//"name": "x/' "$p/plugins/$first.json"; rehash "$t" "plugins/$first.json" ;;
-      unstamped|commit|stamp-version) node -e 'const fs = require("fs"); const [f, s] = process.argv.slice(1); const d = JSON.parse(fs.readFileSync(f, "utf8"));
+      unstamped|commit|stamp-version|floor) node -e 'const fs = require("fs"); const [f, s] = process.argv.slice(1); const d = JSON.parse(fs.readFileSync(f, "utf8"));
           if (s === "unstamped") delete d.integrity; else if (s === "commit") d.integrity = { ...d.integrity, commit: "0".repeat(40) };
+          else if (s === "floor") d.requires = { ...d.requires, "omx-contract-schema": ">= 3.9.0" };
           else d.integrity = { ...d.integrity, version: "0.0.1" };
           fs.writeFileSync(f, JSON.stringify(d, null, 2) + "\n");' "$p/plugins/$first.json" "$s"; rehash "$t" "plugins/$first.json" ;;
       extra) cp "$p/plugins/$first.json" "$p/plugins/omx-test-sine-voice.json"; rehash "$t" plugins/omx-test-sine-voice.json ;;
@@ -192,6 +200,12 @@ if [ "${1:-}" = --self-test ]; then
     out=$(check "$t" reader 2>&1) || true
     if grep -q "reader refuses" <<<"$out"; then echo "SABOTAGE reader: red"; else echo "SABOTAGE reader: STAYED GREEN"; fail=1; fi
   fi
+  # the install itself refuses to ship a descriptor it cannot stamp: no commit, or one that is no full commit
+  for bad in '' abc1234 "$(printf 'G%.0s' $(seq 40))"; do
+    if make -s -C "$HERE" install-contract DESTDIR= CONTRACTDIR="$scratch/nocommit" SOURCE_COMMIT="$bad" >/dev/null 2>&1; then
+      echo "SABOTAGE install with SOURCE_COMMIT='$bad': STAYED GREEN"; fail=1
+    else echo "SABOTAGE install with SOURCE_COMMIT='$bad': refused"; fi
+  done
   check "$scratch/good" >/dev/null || { echo "self-test: the unsabotaged install is not green" >&2; exit 1; }
   [ "$fail" = 0 ] || exit 1
   echo "contract-dir self-test: every sabotage red"
