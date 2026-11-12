@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com> -->
 # omx-hrp
 
 The harmonic resonance processor as an LV2 effect, for any host (spec 7.7, 7.13, 7.16;

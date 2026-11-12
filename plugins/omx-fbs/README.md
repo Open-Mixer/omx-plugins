@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com> -->
 # omx-fbs
 
 The feedback corrector as an LV2 effect, for any host (spec 7.7, 7.13, 7.16). `omx_fbs_lv2.c` is a hand-written LV2 face
