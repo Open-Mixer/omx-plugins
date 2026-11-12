@@ -21,6 +21,10 @@ stems=$(cd "$ROOT" && node --input-type=module -e 'import { described } from "./
 [ -n "$stems" ] || { echo "FAIL round-trip: no plugin is described"; exit 1; }
 
 (cd "$ROOT" && node tools/gen.mjs >/dev/null) || { echo "FAIL round-trip: node tools/gen.mjs"; exit 1; }
+# the probe writes a control's meaning from the role meanings of the contract directory it reads: this tree's
+# omx-plugins beside every other installed package, never an installed omx-plugins-contract (#35)
+OMX_CONTRACT_PATH=$(sh "$ROOT/tools/round-trip-contract-dir.sh" "$TMP/contract.d") || { echo "FAIL round-trip: the contract directory"; exit 1; }
+export OMX_CONTRACT_PATH
 mkdir -p "$TMP/scans"
 for stem in $stems; do
   P=$ROOT/plugins/$stem

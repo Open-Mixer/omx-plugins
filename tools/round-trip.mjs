@@ -55,7 +55,7 @@ export const FORMATS = ['clap', 'lv2'];
 export const LOSSES = {
   // OR2: a meaning has a CLAP word only for the bypass, an LV2 term only for some (lv2:designation); LV2 has no unit
   // for "" (a plain number)
-  'clap controls[].meaning': 309,
+  'clap controls[].meaning': 10,
   'lv2 controls[].meaning': 116,
   'lv2 controls[].travel.unit ""': 123,
   // plugin-hostd 0.7.0's LV2 table has no row for urn:openmixer:unit#ratio, the ratio unit our faces write (gap 4)

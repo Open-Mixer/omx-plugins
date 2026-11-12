@@ -295,8 +295,10 @@ params-doc:
 check-params-doc:
 	node tools/params-doc.mjs --check
 	node tools/test/params-doc-test.mjs
-# author, generate both faces, scan them back through plugin-hostd and compare, with its two sabotage arms
+# author, generate both faces, scan them back through plugin-hostd and compare, with its two sabotage arms; the probe
+# reads this tree's role meanings (tools/round-trip-contract-dir.sh), never an installed omx-plugins-contract's
 round-trip:
+	tools/test/round-trip-contract-dir-check.sh
 	tools/round-trip.sh
 	tools/round-trip.sh --self-test
 hints:
