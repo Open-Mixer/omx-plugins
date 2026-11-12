@@ -52,6 +52,9 @@ const governing = (id) => {
   const sym = symbolOf(id);
   return sym === null ? null : declaredId.get(sym) ?? `?${sym}`;
 };
+// a display's floor as the description says it: a parameter's symbol, a level in dB, or none. A face serves none as no
+// parameter and 0 dB, whatever the display's kind: omx-panel lays the gain-reduction bar out from the meters with no floor
+const floorOf = (id, db) => (Number(id) !== NONE ? symbolOf(id) : Number(db) !== 0 ? Number(db) : null);
 const served = {
   family: FAMILIES[Number(of('family')[0]?.[0])] ?? '?',
   sections,
@@ -62,7 +65,7 @@ const served = {
   displays: of('display').map(([kind, section, source, m0, m1, curve, floorId, floorDb, labelKey, label]) => ({
     kind: DISPLAY_KINDS[Number(kind)] ?? '?', sectionKey: keyOf(section), source: DISPLAY_SOURCES[Number(source)] ?? '?',
     meters: [m0, m1].map((m) => (Number(m) === NONE ? null : Number(m))), curve: source === '3' ? Number(curve) : null,
-    floor: Number(floorId) !== NONE ? symbolOf(floorId) : kind === '0' ? Number(floorDb) : null, labelKey, label,
+    floor: floorOf(floorId, floorDb), labelKey, label,
   })),
   defaults: of('default').map(([placement, id, value]) => ({ placement: PLACEMENTS[Number(placement)] ?? '?', symbol: symbolOf(id), value: Number(value) })),
 };
@@ -82,7 +85,7 @@ const ctl = (c) => [c.symbol, c.sectionKey, c.widget, c.labelKey, c.visible, c.m
 check(same(served.controls.map(ctl), want.controls.map(ctl)), 'control widgets, label keys and visibility', JSON.stringify(served.controls.map(ctl)));
 const role = (r) => [r.role, r.index, r.symbol];
 check(same(served.roles.map(role), want.roles.map(role)), `roles (${want.roles.length})`, JSON.stringify(served.roles.map(role)));
-const disp = (v) => [v.kind, v.sectionKey, v.source, v.meters, v.curve, v.floor, v.labelKey, v.label];
+const disp = (v) => [v.kind, v.sectionKey, v.source, v.meters, v.curve, v.floor === 0 ? null : v.floor, v.labelKey, v.label];
 check(same(served.displays.map(disp), want.displays.map(disp)), `displays (${want.displays.length})`, JSON.stringify(served.displays.map(disp)));
 const def = (p) => [p.placement, p.symbol, p.value];
 check(same(served.defaults.map(def), want.defaults.map(def)), `placement defaults (${want.defaults.length})`, JSON.stringify(served.defaults.map(def)));

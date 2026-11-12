@@ -59,7 +59,7 @@ static const char *const OMX_BALANCER_PARAM_MODULES[OMX_BALANCER_PARAM_COUNT] = 
 #define OMX_BALANCER_NAME "omx balancer"
 #define OMX_BALANCER_VENDOR "openmixer"
 #define OMX_BALANCER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_BALANCER_VERSION "0.19.1"
+#define OMX_BALANCER_VERSION "0.19.3"
 #define OMX_BALANCER_DESCRIPTION "Walks four bands slowly toward a target tone, so a mix settles toward a pink-noise balance without chasing notes."
 #define OMX_BALANCER_CLAP_ID "org.openmixer.balancer"
 #define OMX_BALANCER_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
@@ -69,9 +69,9 @@ static const char *const OMX_BALANCER_PARAM_MODULES[OMX_BALANCER_PARAM_COUNT] = 
 #define OMX_BALANCER_DECL_DIGEST "427d243fbeeca3d3a7f7a86bb6f9c0a2a75ff42890268e7e92547d573480a461"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
- * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (omx-contract), is the face's. */
-#define OMX_BALANCER_PARAM_CONTRACT_VERSION 1u
-#define OMX_BALANCER_PARAM_CONTRACT_FINGERPRINT "8c1de971be63f6c0df20d1500f885d569497eec815587fe7d31d3a27f45823ee"
+ * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
+#define OMX_BALANCER_PARAM_CONTRACT_VERSION 2u
+#define OMX_BALANCER_PARAM_CONTRACT_FINGERPRINT "5e755c2ceeb1ca618602fc5b9d39aef3f7edcbe81ed218d629a954588962a79d"
 static const struct omx_param_contract_row OMX_BALANCER_PARAM_CONTRACT[OMX_BALANCER_PARAM_COUNT] = {
   { 14u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* amountPct pc */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* rangeDb db */
@@ -100,9 +100,10 @@ static const struct omx_panel_control_row OMX_BALANCER_PANEL_CONTROLS[] = {
   { 2u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.balancer.speed_db_per_s", "Speed", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.balancer.slope_db_oct", "Slope", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
-/* clap.remote-controls/2: the pages of the page rule over the sections. */
+/* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
+ * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_BALANCER_PANEL_PAGES[] = {
-  { "Balancer", "Balancer", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_BALANCER_PANEL_PAGE_COUNT 1u
 static const struct omx_panel_rows OMX_BALANCER_PANEL = {

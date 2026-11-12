@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:chorus",
     "name": "omx chorus",
     "vendor": "openmixer",
-    "version": "0.19.1",
+    "version": "0.19.3",
     "doc": "The console's chorus: up to four voices read one modulated delay line, the right leg's sweep offset by the spread, mixed with the dry signal.",
     "features": [
       "audio-effect"
@@ -38,7 +38,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_SPREAD_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -63,7 +63,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_RATE_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -88,7 +88,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_DEPTH_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -112,7 +112,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_VOICES_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     },
@@ -137,7 +137,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_MIX_RANGE",
-          "at": "omx-dsp@0.31.0"
+          "at": "omx-dsp@0.32.0"
         }
       }
     }

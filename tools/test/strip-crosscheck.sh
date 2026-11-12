@@ -38,8 +38,8 @@ install_pinned() {
   if git -C "$DEPS/$1" rev-parse -q --verify "v$ver^{commit}" >/dev/null 2>&1; then
     git -C "$DEPS/$1" archive "v$ver" | tar -x -C "$src"
   else
-    curl -fsSL "https://github.com/FreeMixer/$1/archive/refs/tags/v$ver.tar.gz" | tar -xz --strip-components=1 -C "$src" ||
-      { echo "strip-crosscheck: $1 $ver is neither tag v$ver in $DEPS/$1 nor fetchable from github.com/FreeMixer/$1" >&2; exit 2; }
+    curl -fsSL "https://github.com/Open-Mixer/$1/archive/refs/tags/v$ver.tar.gz" | tar -xz --strip-components=1 -C "$src" ||
+      { echo "strip-crosscheck: $1 $ver is neither tag v$ver in $DEPS/$1 nor fetchable from github.com/Open-Mixer/$1" >&2; exit 2; }
   fi
   PKG_CONFIG_PATH=$OLD/share/pkgconfig:$OLD/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH} \
     make -s -C "$src" install PREFIX="$OLD" LIBDIR="$OLD/lib" >/dev/null || { echo "strip-crosscheck: $1 $ver does not build" >&2; exit 2; }

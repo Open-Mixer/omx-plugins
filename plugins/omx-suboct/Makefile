@@ -22,7 +22,7 @@
 NAME       := omx-suboct
 URI        := urn:openmixer:suboct
 CLAP_ID    := org.openmixer.suboct
-OMXDSP_MIN ?= 0.31.0
+OMXDSP_MIN ?= 0.32.0
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

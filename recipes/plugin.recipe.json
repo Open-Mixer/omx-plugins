@@ -121,13 +121,14 @@
     },
     {
       "id": "params-header",
-      "what": "the parameter table both faces read, generated and fresh",
+      "what": "the parameter table both faces read, generated and fresh; its contract version is the place of the plugin's fingerprint in tools/param-contract-versions.json, where the wizard writes a new plugin's first",
       "step": "generate",
       "layer": "generated",
       "made": "GENERATED",
       "target": "plugins/{stem}/generated/omx_{kernel}_params.h",
       "paths": [
-        "plugins/{stem}/generated/omx_{kernel}_params.h"
+        "plugins/{stem}/generated/omx_{kernel}_params.h",
+        "tools/param-contract-versions.json"
       ],
       "questions": [],
       "template": "tools/gen.mjs",
