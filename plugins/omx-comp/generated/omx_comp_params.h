@@ -232,7 +232,7 @@ static const struct omx_panel_role_row OMX_COMP_PANEL_ROLES[] = {
   { "mix", 0u, 6u },
 };
 static const struct omx_panel_display_row OMX_COMP_PANEL_DISPLAYS[] = {
-  { OMX_CLAP_DISPLAY_TRANSFER_CURVE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.comp.display.transfer_curve", "Comp" },
+  { OMX_CLAP_DISPLAY_TRANSFER_CURVE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { 1u, 2u }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.comp.display.transfer_curve", "Comp" },
   { OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR, 0u, OMX_CLAP_DISPLAY_FROM_METERS, { 0u, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.comp.display.gain_reduction_bar", "Gain reduction" },
 };
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
