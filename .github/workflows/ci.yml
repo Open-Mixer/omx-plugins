@@ -66,13 +66,35 @@ jobs:
           printf '%s\n' "$changed"
           # the recipe selftest (about 80 minutes) runs when the change can move it: tools/ci-scope.sh
           tools/ci-scope.sh <<<"$changed" >> "$GITHUB_OUTPUT"
+  # the Fedora cells make test, test-heavy, selftest, the rpm job and clap-validator run: check-matrix's answer
+  # (rule 11-10: fc45 beside fc44; the quick set while a release wave is open, the whole matrix declared here otherwise)
+  checks:
+    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+    timeout-minutes: 5
+    outputs:
+      rpm: ${{ steps.m.outputs.rpm }}
+      rpm-count: ${{ steps.m.outputs.rpm-count }}
+    steps:
+      - id: m
+        uses: Open-Mixer/.github/.github/actions/check-matrix@openmixer-v1
+        with:
+          wave: ${{ vars.OMX_RELEASE_MATRIX }}
+          rpm-releases: '["44", "45"]'
+          rpm-arches: '["x86_64"]'
+
 
   test:
-    name: make test (fedora:44, amd64)
+    needs: checks
+    if: needs.checks.outputs.rpm-count != '0'
+    name: make test (${{ matrix.cell.image }}, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        cell: ${{ fromJSON(needs.checks.outputs.rpm) }}
     container:
-      image: fedora:44
+      image: ${{ matrix.cell.image }}
     steps:
       - name: Install the build dependencies
         run: |
@@ -162,12 +184,15 @@ jobs:
     # first. The package build runs make test only; every check of both sets runs on every pull request
     # (tools/test/test-split.json). The slice comes from the job's environment, so the step itself is plain
     # `make test-heavy`, which runs every slice when OMX_HEAVY_SHARD is unset.
-    name: make test-heavy ${{ matrix.shard }} (fedora:44, amd64)
+    name: make test-heavy ${{ matrix.shard }} (${{ matrix.cell.image }}, amd64)
+    needs: checks
+    if: needs.checks.outputs.rpm-count != '0'
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
+        cell: ${{ fromJSON(needs.checks.outputs.rpm) }}
         shard:
           - 1/4
           - 2/4
@@ -176,7 +201,7 @@ jobs:
     env:
       OMX_HEAVY_SHARD: ${{ matrix.shard }}
     container:
-      image: fedora:44
+      image: ${{ matrix.cell.image }}
     steps:
       - name: Install the build dependencies
         run: |
@@ -208,13 +233,17 @@ jobs:
   selftest:
     # Its own job, beside make test: the two together outgrew one job's 30 minutes once the chain and the
     # compressor landed. Same container and dependencies; nothing is dropped.
-    name: make selftest (fedora:44, amd64)
-    needs: changes
-    if: needs.changes.outputs.machinery == 'true'
+    name: make selftest (${{ matrix.cell.image }}, amd64)
+    needs: [checks, changes]
+    if: (needs.changes.outputs.machinery == 'true') && needs.checks.outputs.rpm-count != '0'
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        cell: ${{ fromJSON(needs.checks.outputs.rpm) }}
     container:
-      image: fedora:44
+      image: ${{ matrix.cell.image }}
     steps:
       - name: Install the build dependencies
         run: |
@@ -243,17 +272,18 @@ jobs:
         run: make selftest
 
   rpm:
-    name: omx-plugins RPMs (fc44, ${{ matrix.arch }})
-    needs: changes
-    if: needs.changes.outputs.packages == 'true'
+    name: omx-plugins RPMs (fc${{ matrix.cell.fedora }}, ${{ matrix.cell.arch }})
+    needs: [checks, changes]
+    if: needs.changes.outputs.packages == 'true' && needs.checks.outputs.rpm-count != '0'
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
-        arch: [x86_64]  # aarch64 builds run at release only (release.yml)
+        # check-matrix's Fedora cells, x86_64 only: aarch64 builds run at release only (release.yml)
+        cell: ${{ fromJSON(needs.checks.outputs.rpm) }}
     container:
-      image: fedora:44
+      image: ${{ matrix.cell.image }}
     steps:
       - name: Install the build tools
         run: |
@@ -275,7 +305,7 @@ jobs:
         run: |
           set -euo pipefail
           for sub in clap lv2; do
-            rpm=$(ls rpms/omx-plugins-$sub-[0-9]*.${{ matrix.arch }}.rpm)
+            rpm=$(ls rpms/omx-plugins-$sub-[0-9]*.${{ matrix.cell.arch }}.rpm)
             rpm -qlp "$rpm" | grep -v '^/usr/lib/.build-id' | sort > files-$sub.txt
           done
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
@@ -289,7 +319,7 @@ jobs:
             for p in $shorts; do echo "/usr/lib/clap/omx-$p.clap"; done; } | sort > expected-clap.txt
           diff -u expected-clap.txt files-clap.txt
           # the test instruments: omx-plugins-test, outside every CLAP search path
-          rpm -qlp rpms/omx-plugins-test-[0-9]*.${{ matrix.arch }}.rpm | grep -v '^/usr/lib/.build-id' | sort > files-test.txt
+          rpm -qlp rpms/omx-plugins-test-[0-9]*.${{ matrix.cell.arch }}.rpm | grep -v '^/usr/lib/.build-id' | sort > files-test.txt
           { printf '%s\n' /usr/libexec/omx-plugins /usr/libexec/omx-plugins/test \
               /usr/share/doc/omx-plugins-test /usr/share/doc/omx-plugins-test/README.md \
               /usr/share/licenses/omx-plugins-test /usr/share/licenses/omx-plugins-test/LICENSE
@@ -314,7 +344,7 @@ jobs:
           diff -u expected-contract.txt files-contract.txt
           ! rpm -qlp "$devel" | grep -q '^/usr/share/omx-contract/'
           version=$(sed -n 's/^Version: *//p' packaging/omx-plugins.spec)
-          for rpm in rpms/omx-plugins-[0-9]*.${{ matrix.arch }}.rpm "$devel"; do
+          for rpm in rpms/omx-plugins-[0-9]*.${{ matrix.cell.arch }}.rpm "$devel"; do
             rpm -qp --requires "$rpm" | tee requires.txt
             grep -qx "omx-plugins-contract = $version-.*" requires.txt
           done
@@ -341,8 +371,9 @@ jobs:
             return 1
           }
           # the metapackage, with both formats beside it as the repository would offer them
-          dnf_retry --setopt=install_weak_deps=False rpms/omx-plugins-[0-9]*.${{ matrix.arch }}.rpm \
-            rpms/omx-plugins-clap-[0-9]*.${{ matrix.arch }}.rpm rpms/omx-plugins-lv2-[0-9]*.${{ matrix.arch }}.rpm \
+          dnf_retry --setopt=install_weak_deps=False rpms/omx-plugins-[0-9]*.${{ matrix.cell.arch }}.rpm \
+            rpms/omx-plugins-clap-[0-9]*.${{ matrix.cell.arch }}.rpm \
+            rpms/omx-plugins-lv2-[0-9]*.${{ matrix.cell.arch }}.rpm \
             rpms/omx-plugins-contract-[0-9]*.noarch.rpm
           # the descriptors come with the metapackage, no -devel installed
           rpm -qf /usr/share/omx-contract/contract.d/3/omx-plugins/MANIFEST.json | grep -q '^omx-plugins-contract-'
@@ -368,7 +399,7 @@ jobs:
             out=$(lv2info "urn:openmixer:$p"); grep -q 'Binary:' <<<"$out"
           done
           # the test instruments open by path from outside the CLAP path, each with its id
-          dnf_retry --setopt=install_weak_deps=False rpms/omx-plugins-test-[0-9]*.${{ matrix.arch }}.rpm
+          dnf_retry --setopt=install_weak_deps=False rpms/omx-plugins-test-[0-9]*.${{ matrix.cell.arch }}.rpm
           for t in $teststems; do
             out=$(omx-clap-scan --json /usr/libexec/omx-plugins/test/$t.clap); grep -q "\"id\":\"org.openmixer.${t#omx-}\"" <<<"$out"
           done
@@ -401,7 +432,7 @@ jobs:
       # with merge-multiple, and two builds of one NEVRA collide in one directory.
       - uses: actions/upload-artifact@v4
         with:
-          name: ci-check-omx-plugins-fc44-${{ matrix.arch }}
+          name: ci-check-omx-plugins-fc${{ matrix.cell.fedora }}-${{ matrix.cell.arch }}
           path: rpms/*.rpm
           if-no-files-found: error
           retention-days: 7
@@ -515,15 +546,21 @@ jobs:
           ./static-table-host $(for p in $shorts; do echo "org.openmixer.$p"; done) --test $tests
 
   clap-validator:
+    needs: checks
+    if: needs.checks.outputs.rpm-count != '0'
     # clap-validator is the CLAP project's own conformance tester (state round trips, parameter fuzzing,
     # thread rules). It runs on every built .clap, the test plugins included, and keeps one JSON report each.
     # A failed test fails the job. The factory presets are installed first, where the plugins declare them, because
     # the preset-discovery tests crawl that location.
-    name: clap-validator (fedora:44, amd64)
+    name: clap-validator (${{ matrix.cell.image }}, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        cell: ${{ fromJSON(needs.checks.outputs.rpm) }}
     container:
-      image: fedora:44
+      image: ${{ matrix.cell.image }}
     steps:
       - name: Install the build dependencies
         run: |
@@ -571,7 +608,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: clap-validator-reports
+          name: clap-validator-reports-fc${{ matrix.cell.fedora }}-${{ matrix.cell.arch }}
           path: |
             build/clap-validator/
             build/clap-validator.log
