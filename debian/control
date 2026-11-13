@@ -27,7 +27,7 @@ Build-Depends: debhelper-compat (= 13),
                plugin-qualify (>= 0.20.0~),
                plugin-qualify (<< 0.21~)
 Standards-Version: 4.6.2
-Homepage: https://github.com/FreeMixer/omx-plugins
+Homepage: https://github.com/Open-Mixer/omx-plugins
 Rules-Requires-Root: no
 
 Package: omx-plugins

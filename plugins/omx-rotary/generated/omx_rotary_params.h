@@ -82,7 +82,7 @@ static const char *const OMX_ROTARY_PARAM_MODULES[OMX_ROTARY_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_ROTARY_NAME "omx rotary"
 #define OMX_ROTARY_VENDOR "openmixer"
-#define OMX_ROTARY_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_ROTARY_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_ROTARY_VERSION "0.19.3"
 #define OMX_ROTARY_DESCRIPTION "The console's rotary speaker: a drum rotor on the low band and a horn rotor on the high band, with stop, slow and fast speeds, mixed with the dry signal."
 #define OMX_ROTARY_CLAP_ID "org.openmixer.rotary"

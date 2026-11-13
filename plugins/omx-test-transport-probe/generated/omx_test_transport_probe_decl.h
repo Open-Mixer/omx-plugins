@@ -11,7 +11,7 @@
 #define OMX_TEST_TRANSPORT_PROBE_ROLE "test"
 #define OMX_TEST_TRANSPORT_PROBE_NAME "omx test-transport-probe"
 #define OMX_TEST_TRANSPORT_PROBE_VENDOR "openmixer"
-#define OMX_TEST_TRANSPORT_PROBE_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_TEST_TRANSPORT_PROBE_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_TEST_TRANSPORT_PROBE_VERSION "0.19.3"
 #define OMX_TEST_TRANSPORT_PROBE_DESCRIPTION "A test probe: audio passes unchanged, and the transport handed to each block is recorded whole for a test to read back."
 #define OMX_TEST_TRANSPORT_PROBE_CLAP_ID "org.openmixer.test-transport-probe"

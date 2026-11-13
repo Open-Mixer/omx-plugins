@@ -82,7 +82,7 @@ static const char *const OMX_GLUE_PARAM_MODULES[OMX_GLUE_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_GLUE_NAME "omx glue"
 #define OMX_GLUE_VENDOR "openmixer"
-#define OMX_GLUE_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_GLUE_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_GLUE_VERSION "0.19.3"
 #define OMX_GLUE_DESCRIPTION "A bus compressor with the detents of a classic console: stepped ratio, attack and release, a key filter and a dry mix."
 #define OMX_GLUE_CLAP_ID "org.openmixer.glue"
