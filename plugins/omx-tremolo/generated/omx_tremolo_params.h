@@ -59,7 +59,7 @@ static const char *const OMX_TREMOLO_PARAM_MODULES[OMX_TREMOLO_PARAM_COUNT] = {
 #define OMX_TREMOLO_NAME "omx tremolo"
 #define OMX_TREMOLO_VENDOR "openmixer"
 #define OMX_TREMOLO_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TREMOLO_VERSION "0.19.3"
+#define OMX_TREMOLO_VERSION "0.19.4"
 #define OMX_TREMOLO_DESCRIPTION "The console's tremolo and auto-pan: one oscillator turned into a level change on both legs, or into a left-right pan."
 #define OMX_TREMOLO_CLAP_ID "org.openmixer.tremolo"
 #define OMX_TREMOLO_CLAP_FEATURES "audio-effect", "tremolo", "stereo"

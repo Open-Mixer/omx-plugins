@@ -22,7 +22,7 @@
 NAME       := omx-plosive
 URI        := urn:openmixer:plosive
 CLAP_ID    := org.openmixer.plosive
-OMXDSP_MIN ?= 0.32.0
+OMXDSP_MIN ?= 0.32.1
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

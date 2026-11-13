@@ -22,7 +22,7 @@
 NAME       := omx-loudlevel
 URI        := urn:openmixer:loudlevel
 CLAP_ID    := org.openmixer.loudlevel
-OMXDSP_MIN ?= 0.32.0
+OMXDSP_MIN ?= 0.32.1
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

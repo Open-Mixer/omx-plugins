@@ -12,7 +12,7 @@
 #define OMX_TEST_POOL_VOICE_NAME "omx test-pool-voice"
 #define OMX_TEST_POOL_VOICE_VENDOR "openmixer"
 #define OMX_TEST_POOL_VOICE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TEST_POOL_VOICE_VERSION "0.19.3"
+#define OMX_TEST_POOL_VOICE_VERSION "0.19.4"
 #define OMX_TEST_POOL_VOICE_DESCRIPTION "A test instrument that offers clap.thread-pool: one sine per held note, each voice one pool task with a fixed CPU load per frame."
 #define OMX_TEST_POOL_VOICE_CLAP_ID "org.openmixer.test-pool-voice"
 #define OMX_TEST_POOL_VOICE_CLAP_FEATURES "instrument", "synthesizer", "stereo"

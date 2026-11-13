@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:dyneq",
     "name": "omx dyneq",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.19.4",
     "doc": "A six-band dynamic EQ: each band is an EQ bell or shelf whose gain also moves with the level of its own band, cutting above a threshold (down) or lifting below it (up), held to a range, so a harsh or boomy band is tamed only while it is too loud.",
     "features": [
       "audio-effect"
@@ -30,7 +30,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -47,7 +47,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -64,7 +64,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -81,7 +81,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -98,7 +98,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -115,7 +115,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -147,7 +147,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -179,7 +179,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -211,7 +211,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -243,7 +243,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -275,7 +275,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -307,7 +307,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -332,7 +332,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -357,7 +357,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -382,7 +382,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -407,7 +407,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -432,7 +432,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -457,7 +457,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -482,7 +482,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -507,7 +507,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -532,7 +532,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -557,7 +557,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -582,7 +582,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -607,7 +607,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -632,7 +632,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -657,7 +657,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -682,7 +682,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -707,7 +707,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -732,7 +732,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -757,7 +757,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -789,7 +789,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -821,7 +821,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -853,7 +853,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -885,7 +885,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -917,7 +917,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -949,7 +949,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -973,7 +973,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -997,7 +997,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1021,7 +1021,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1045,7 +1045,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1069,7 +1069,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1093,7 +1093,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1117,7 +1117,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1141,7 +1141,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1165,7 +1165,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1189,7 +1189,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1213,7 +1213,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1237,7 +1237,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1261,7 +1261,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1285,7 +1285,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1309,7 +1309,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1333,7 +1333,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1357,7 +1357,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1381,7 +1381,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1405,7 +1405,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1429,7 +1429,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1453,7 +1453,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1477,7 +1477,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1501,7 +1501,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1525,7 +1525,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1549,7 +1549,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1573,7 +1573,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1597,7 +1597,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1621,7 +1621,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1645,7 +1645,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1669,7 +1669,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1686,7 +1686,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1703,7 +1703,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1720,7 +1720,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1737,7 +1737,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1754,7 +1754,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1771,7 +1771,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1795,7 +1795,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_MIX_PCT_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     }
@@ -1845,7 +1845,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band1GainDb]",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1863,7 +1863,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band2GainDb]",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1881,7 +1881,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band3GainDb]",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1899,7 +1899,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band4GainDb]",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1917,7 +1917,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band5GainDb]",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -1935,7 +1935,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band6GainDb]",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     }
