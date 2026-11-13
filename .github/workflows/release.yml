@@ -10,6 +10,12 @@ name: release
 # omx-clap-host) come from the FreeMixer channel, inside the build containers only.
 # Nothing is built for release before every plugin has a suitable real-time-safety verdict (the qualify job).
 
+# A manual run with staged on (never a tag) builds fc44 x86_64 and trixie amd64 only, against the staging channel, and
+# publishes them, signed, to the staging channel (staging/rpm and staging/deb of the channel repository), where the
+# next layer of the release chain finds them by adding the staging channel beside the real one. Nothing reaches the
+# real channel, and the real release still publishes once from the v<version> tag (Open-Mixer/.github build-rpm.yml
+# and build-deb.yml).
+
 on:
   push:
     tags: ['v*']
@@ -17,6 +23,10 @@ on:
     inputs:
       publish:
         description: 'Sign and publish; only a run on a tag publishes'
+        type: boolean
+        default: false
+      staged:
+        description: 'Build fc44 x86_64 and trixie amd64 only and publish them to the staging channel for the next layer; publishes nothing to the real channel'
         type: boolean
         default: false
   workflow_call:
@@ -32,6 +42,9 @@ on:
         type: boolean
         default: true
         description: "Build the arm64/aarch64 packages too; the pull-request dry run passes false (arm builds run at release only)"
+      staged:
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -57,6 +70,8 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          staging: ${{ inputs.staged == true }}
 
       - uses: actions/checkout@v4
 
@@ -86,6 +101,7 @@ jobs:
     needs: qualify
     uses: Open-Mixer/.github/.github/workflows/build-rpm.yml@openmixer-v1
     with:
+      staged: ${{ inputs.staged == true }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
       publish: ${{ github.event_name == 'push' || inputs.publish == true }}
@@ -100,6 +116,7 @@ jobs:
     needs: qualify
     uses: Open-Mixer/.github/.github/workflows/build-deb.yml@openmixer-v1
     with:
+      staged: ${{ inputs.staged == true }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
       publish: ${{ github.event_name == 'push' || inputs.publish == true }}
@@ -117,7 +134,8 @@ jobs:
   zynthian:
     name: Zynthian tarball (trixie, ${{ (github.event_name != 'push' && inputs.arm == false) && 'amd64' || 'arm64' }})
     needs: deb
-    if: ${{ !cancelled() && needs.deb.result == 'success' }}
+    # not on a staged run: it reads packages a staged run does not build
+    if: ${{ !cancelled() && needs.deb.result == 'success' && inputs.staged != true }}
     runs-on: ${{ (github.event_name != 'push' && inputs.arm == false) && ((inputs.runner != 'ubuntu-latest' && inputs.runner) || github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest') || 'ubuntu-24.04-arm' }}
     timeout-minutes: 15
     permissions:
