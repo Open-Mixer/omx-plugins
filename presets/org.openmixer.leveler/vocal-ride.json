@@ -1,0 +1,31 @@
+{
+  "format": "org.openmixer.preset/1",
+  "plugin": {
+    "id": "org.openmixer.leveler"
+  },
+  "id": "vocal-ride",
+  "name": "Vocal Ride",
+  "carries": "params",
+  "params": [
+    {
+      "symbol": "amount",
+      "unit": "%",
+      "value": 60
+    },
+    {
+      "symbol": "direction",
+      "unit": "",
+      "value": 2,
+      "label": "Both"
+    },
+    {
+      "symbol": "speed",
+      "unit": "",
+      "value": 1,
+      "label": "Medium"
+    }
+  ],
+  "createdAt": "2026-10-17T00:00:00Z",
+  "modifiedAt": "2026-10-17T00:00:00Z",
+  "copyOf": null
+}

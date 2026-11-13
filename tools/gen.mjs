@@ -809,6 +809,11 @@ lv2:displayPriority
     rdfs:label ${ttlStr(LV2_CUSTOM_UNITS[name].label)} ;
     units:render ${ttlStr(LV2_CUSTOM_UNITS[name].render)} ;
     units:symbol ${ttlStr(LV2_CUSTOM_UNITS[name].symbol)} .
+`).join('')}${customDesignationsOf(d).map((meaning) => `
+<urn:openmixer:meaning#${meaning}>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label ${ttlStr(meaning)} ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
 `).join('')}`;
 }
 
@@ -818,6 +823,11 @@ const hintPrefix = (d, pick) => hintPrefixes(d.hintVocabulary, d.hints ?? []).fi
 /** The plugin-defined units this plugin's ports use, in a fixed order. */
 const customUnitsOf = (d) => Object.keys(LV2_CUSTOM_UNITS).filter((name) =>
   [...d.params.map((q, i) => faceUnit(d, i)), ...metersOf(d).map((m) => m.unit)].some((u) => lv2UnitRef(u) === `<urn:openmixer:unit#${name}>`));
+
+/** The urn:openmixer:meaning#<meaning> designations (lv2Designation's fallback, FreeMixer/omx-plugins#12) this
+ * plugin's ports use, each once, in a fixed order: a port's own meaning, read for no LV2 param: term, so a
+ * validator finds the Property lv2:designation names (its range). */
+const customDesignationsOf = (d) => [...new Set(d.params.map((q, i) => faceDesignation(d, i)).filter((x) => x?.startsWith('<urn:openmixer:meaning#')).map((x) => x.slice('<urn:openmixer:meaning#'.length, -1)))];
 
 /** A control's group as a CLAP module path (plugin-hostd's group-path, written: the labels joined by "/"). */
 const moduleOf = (d, i) => (d.descriptor?.controls[i]?.group ?? []).join('/');

@@ -84,6 +84,7 @@
         lv2:minimum 0 ;
         lv2:maximum 36 ;
         units:unit units:db ;
+        lv2:designation <urn:openmixer:meaning#drive> ;
         pg:group <urn:openmixer:drive#drive>
     ] ,
     [
@@ -94,6 +95,7 @@
         lv2:default 0 ;
         lv2:minimum -1 ;
         lv2:maximum 1 ;
+        lv2:designation <urn:openmixer:meaning#tone> ;
         pg:group <urn:openmixer:drive#drive>
     ] ,
     [
@@ -130,6 +132,7 @@
         lv2:minimum -24 ;
         lv2:maximum 12 ;
         units:unit units:db ;
+        lv2:designation <urn:openmixer:meaning#output> ;
         pg:group <urn:openmixer:drive#drive>
     ] ,
     [
@@ -141,6 +144,7 @@
         lv2:minimum 0 ;
         lv2:maximum 3 ;
         lv2:portProperty lv2:integer , lv2:enumeration ;
+        lv2:designation <urn:openmixer:meaning#model> ;
         lv2:scalePoint
             [ rdfs:label "Soft" ; rdf:value 0 ] ,
             [ rdfs:label "Tape" ; rdf:value 1 ] ,
@@ -231,3 +235,23 @@ lv2:displayPriority
     lv2:name "Drive" ;
     lv2:displayPriority 1 ;
     rdfs:label "Drive" .
+
+<urn:openmixer:meaning#drive>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "drive" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#tone>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "tone" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#output>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "output" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#model>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "model" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .

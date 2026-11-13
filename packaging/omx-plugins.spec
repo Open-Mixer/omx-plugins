@@ -201,6 +201,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 /usr/lib/clap/omx-geq.clap
 /usr/lib/clap/omx-glue.clap
 /usr/lib/clap/omx-keyed-gate.clap
+/usr/lib/clap/omx-leveler.clap
 /usr/lib/clap/omx-limiter.clap
 /usr/lib/clap/omx-loudlevel.clap
 /usr/lib/clap/omx-multiband.clap
@@ -264,6 +265,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 %{_libdir}/lv2/omx-geq.lv2/
 %{_libdir}/lv2/omx-glue.lv2/
 %{_libdir}/lv2/omx-keyed-gate.lv2/
+%{_libdir}/lv2/omx-leveler.lv2/
 %{_libdir}/lv2/omx-limiter.lv2/
 %{_libdir}/lv2/omx-loudlevel.lv2/
 %{_libdir}/lv2/omx-multiband.lv2/
