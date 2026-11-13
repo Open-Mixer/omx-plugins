@@ -11,6 +11,9 @@
  *      lv2:designation in the generated TTL, and no other control does: the 169 of this release, by term;
  *   3. the three ratio controls state urn:openmixer:unit#ratio, and the TTL defines it;
  *   4. each generated header's OMX_<K>_PARAM_MODULES is its descriptor's groups as module paths, "" without one.
+ *   5. the installed contract's directories are asked of pkg-config once per pkg-config environment, not once per
+ *      table row (omx-plugins#39: tableRows asked it on every call, 47 of gen.mjs --check's 60 s), and a changed
+ *      PKG_CONFIG_PATH asks again and gets the new answer.
  *
  * Its arms, on a copy of the LV2 table (PLUGIN_HOSTD_TABLES): a meaning's row removed loses its designations, a unit's
  * row removed loses its unit, two rows mapping one value are refused. `make format-tables`, part of `make test`.
@@ -112,6 +115,31 @@ check('arm: the units:db row removed, dB has no LV2 unit', r.stdout.trim(), 'und
 r = arm(broken('twice', (rows) => { rows['units:unit'].word.values['urn:openmixer:unit#dB'] = 'dB'; }), `import { lv2UnitRef } from ${FT}; lv2UnitRef('dB');`);
 check('arm: two rows mapping dB are refused', r.status !== 0 && /maps controls\[\]\.travel\.unit "dB" from units:db and urn:openmixer:unit#dB/.test(r.stderr), true);
 rmSync(scratch, { recursive: true, force: true });
+
+// 5. pkg-config once per environment: a fake pkg-config that logs each call and answers from PKG_CONFIG_PATH
+{
+  const dir = join(ROOT, 'build', 'format-tables-pkgconfig');
+  rmSync(dir, { recursive: true, force: true });
+  mkdirSync(dir, { recursive: true });
+  const log = join(dir, 'calls');
+  writeFileSync(join(dir, 'pkg-config'), `#!/bin/sh\necho "$*" >> '${log}'\necho "/fake/$PKG_CONFIG_PATH/\${1#--variable=}"\n`, { mode: 0o755 });
+  const OC = JSON.stringify(join(ROOT, 'tools', 'omx-contract.mjs')), FTS = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
+  const r = spawnSync(process.execPath, ['--input-type=module', '-e', `
+    import { installedContractDir, installedDataDir } from ${OC};
+    import { tablesDir } from ${FTS};
+    const seen = [];
+    for (let i = 0; i < 50; i++) seen.push(tablesDir(), installedDataDir(), installedContractDir());
+    process.env.PKG_CONFIG_PATH = 'b';
+    for (let i = 0; i < 50; i++) seen.push(tablesDir(), installedDataDir());
+    console.log(JSON.stringify([...new Set(seen)]));`], {
+    encoding: 'utf8', env: { ...process.env, PKG_CONFIG: join(dir, 'pkg-config'), PKG_CONFIG_PATH: 'a', PLUGIN_HOSTD_TABLES: '' },
+  });
+  const calls = existsSync(log) ? readFileSync(log, 'utf8').trim().split('\n') : [];
+  check('pkg-config: each directory asked once per environment (2 environments, 2 variables: 4 calls)', calls.length, 4);
+  check('pkg-config: a changed PKG_CONFIG_PATH gets the new answers', r.status === 0 ? JSON.parse(r.stdout) : r.stderr.trim(),
+    ['/fake/a/contractdir/3/plugin-hostd/formats', '/fake/a/datadir', '/fake/a/contractdir', '/fake/b/contractdir/3/plugin-hostd/formats', '/fake/b/datadir']);
+  rmSync(dir, { recursive: true, force: true });
+}
 
 console.log(bad ? `format-tables: ${bad} of ${n} failed` : `format-tables: ${n}/${n} pass`);
 process.exit(bad ? 1 : 0);
