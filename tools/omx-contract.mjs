@@ -66,23 +66,30 @@ const versionOf = (dir) => {
   }
 };
 
-/** The installed omx-contract's data directory (pkg-config), or undefined. */
-export function installedDataDir() {
-  try {
-    return execFileSync(PKG_CONFIG(), ['--variable=datadir', 'omx-contract'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || undefined;
-  } catch {
-    return undefined;
+/** One omx-contract variable from pkg-config, asked once per pkg-config environment (the program, its search path,
+ * libdir and sysroot): the generators ask it per table row, and a spawn each time was most of gen.mjs's run
+ * (omx-plugins#39). A changed environment asks again; an absent package is remembered as absent too. */
+const pkgVariables = new Map();
+function pkgVariable(name) {
+  const e = process.env;
+  const key = [PKG_CONFIG(), e.PKG_CONFIG_PATH, e.PKG_CONFIG_LIBDIR, e.PKG_CONFIG_SYSROOT_DIR, name].join('\0');
+  if (!pkgVariables.has(key)) {
+    let v;
+    try {
+      v = execFileSync(PKG_CONFIG(), [`--variable=${name}`, 'omx-contract'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || undefined;
+    } catch {
+      v = undefined;
+    }
+    pkgVariables.set(key, v);
   }
+  return pkgVariables.get(key);
 }
 
+/** The installed omx-contract's data directory (pkg-config), or undefined. */
+export const installedDataDir = () => pkgVariable('datadir');
+
 /** The installed omx-contract's contract directory (pkg-config's contractdir, from 2.15.0 on), or undefined. */
-export function installedContractDir() {
-  try {
-    return execFileSync(PKG_CONFIG(), ['--variable=contractdir', 'omx-contract'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() || undefined;
-  } catch {
-    return undefined;
-  }
-}
+export const installedContractDir = () => pkgVariable('contractdir');
 
 /** The omx-contract CLI: $OMX_CONTRACT_CLI (its bin/omx-contract.mjs, or an executable), else `omx-contract`
  * on PATH; `[command, ...leading args]`, or undefined when there is none. */
