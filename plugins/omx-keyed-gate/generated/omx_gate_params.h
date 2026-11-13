@@ -106,7 +106,7 @@ static const char *const OMX_GATE_PARAM_MODULES[OMX_GATE_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_GATE_NAME "omx keyed-gate"
 #define OMX_GATE_VENDOR "openmixer"
-#define OMX_GATE_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_GATE_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_GATE_VERSION "0.19.3"
 #define OMX_GATE_DESCRIPTION "The OpenMixer console's channel gate with an external key: the stereo signal is gated while the detector listens to the sidechain input the host routes to it, or to the signal itself with the key unconnected or set to Self. One gain drives both legs. An attack under 0.5 ms engages 4x detector oversampling, which adds 72 frames of latency, reported to the host. The DSP is omx-dsp's <omxdsp/fx/omx_gate_instance.h>, the console's own gate."
 #define OMX_GATE_CLAP_ID "org.openmixer.keyed-gate"

@@ -12,7 +12,7 @@
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<https://github.com/FreeMixer/omx-plugins>
+<https://github.com/Open-Mixer/omx-plugins>
     a doap:Project ;
     doap:name "omx-plugins" ;
     doap:maintainer [ a foaf:Person ; foaf:name "Pau Aliagas" ; foaf:homepage <https://github.com/linuxnow> ] .
@@ -21,7 +21,7 @@
     a lv2:Plugin , lv2:FlangerPlugin ;
     doap:name "omx flanger" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
-    lv2:project <https://github.com/FreeMixer/omx-plugins> ;
+    lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
     lv2:minorVersion 19 ;
     lv2:microVersion 3 ;
     rdfs:comment "The console's flanger: one modulated short delay with signed feedback, swept by one oscillator and mixed with the dry signal." ;

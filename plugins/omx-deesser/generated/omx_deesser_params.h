@@ -82,7 +82,7 @@ static const char *const OMX_DEESSER_PARAM_MODULES[OMX_DEESSER_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_DEESSER_NAME "omx deesser"
 #define OMX_DEESSER_VENDOR "openmixer"
-#define OMX_DEESSER_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_DEESSER_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_DEESSER_VERSION "0.19.3"
 #define OMX_DEESSER_DESCRIPTION "The console's de-esser: a detector on a band around the sibilance drives the compressor's gain computer, and the reduction lands on that band alone or on the whole signal."
 #define OMX_DEESSER_CLAP_ID "org.openmixer.deesser"

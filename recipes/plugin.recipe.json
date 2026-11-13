@@ -18,7 +18,7 @@
   "derived": {
     "/name": "'omx ' + the stem's short name",
     "/vendor": "openmixer",
-    "/url": "https://github.com/FreeMixer/omx-plugins",
+    "/url": "https://github.com/Open-Mixer/omx-plugins",
     "/version": "the Makefile's VERSION",
     "/clap/id": "'org.openmixer.' + the short name",
     "/lv2/uri": "'urn:openmixer:' + the short name",

@@ -4,10 +4,10 @@ name: release
 
 # A version tag builds omx-plugins-clap and omx-plugins-lv2 as RPMs (Fedora 44, x86_64 and aarch64) and
 # DEBs (bookworm and trixie, amd64 and arm64), signs them, publishes them into the rpm/ and deb/ trees of
-# the FreeMixer Pages repository and attaches them to the GitHub release, with the trixie arm64 DEBs
+# the OpenMixer Pages repository and attaches them to the GitHub release, with the trixie arm64 DEBs
 # repacked as a Zynthian tarball beside them. Anything else builds unsigned trees and publishes nothing. Everything is in Open-Mixer/.github; the secrets are the organisation's.
 # The build dependencies the distributions do not carry (omx-dsp-devel, omx-clap-core-devel,
-# omx-clap-host) come from the FreeMixer channel, inside the build containers only.
+# omx-clap-host) come from the OpenMixer channel, inside the build containers only.
 # Nothing is built for release before every plugin has a suitable real-time-safety verdict (the qualify job).
 
 # A manual run with staged on (never a tag) builds fc44 x86_64 and trixie amd64 only, against the staging channel, and

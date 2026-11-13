@@ -6,7 +6,7 @@
     "comp"
   ],
   "noun": "ducker",
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "sidechain": {
     "symbol": "key",
