@@ -22,8 +22,8 @@ sudo dnf install omx-plugins
 On **Debian** bookworm or trixie, **Raspberry Pi OS** and **Zynthian**:
 
 ```sh
-curl -fsSLO https://www.openmixer.org/deb/openmixer-release.deb && sudo apt install ./openmixer-release.deb
-sudo apt install omx-plugins
+cd /tmp && curl -fsSLO https://www.openmixer.org/deb/openmixer-release.deb && sudo apt install ./openmixer-release.deb
+sudo apt update && sudo apt install omx-plugins
 ```
 
 `omx-plugins` installs both formats; `omx-plugins-clap` or `omx-plugins-lv2` takes only one.
