@@ -16,7 +16,7 @@ BuildRequires: pkgconf-pkg-config
 # proven on; from 1.0 the next major), once here and in debian/control
 # the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
 BuildRequires: (omx-dsp-devel >= 0.32.0 with omx-dsp-devel < 0.33)
-BuildRequires: (omx-contract-devel >= 3.13.0 with omx-contract-devel < 4)
+BuildRequires: (omx-contract-devel >= 3.17.1 with omx-contract-devel < 3.18)
 BuildRequires: (omx-clap-core-devel >= 0.31.0 with omx-clap-core-devel < 0.32)
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
 BuildRequires: (plugin-hostd-devel >= 0.20.0 with plugin-hostd-devel < 0.21)
@@ -24,7 +24,7 @@ BuildRequires: (plugin-hostd-devel >= 0.20.0 with plugin-hostd-devel < 0.21)
 # (3.3.0: the directory and its schema are omx-contract-data's, the definitions each owner's -contract package's)
 # 3.14.0: the reader that knows integrity, which the install stamps into each descriptor (#32); %%check reads the
 # install through it
-BuildRequires: (omx-contract >= 3.14.0 with omx-contract < 4)
+BuildRequires: (omx-contract >= 3.17.1 with omx-contract < 3.18)
 # git get-tar-commit-id: the source commit the tarball was made from, stamped into each installed descriptor
 BuildRequires: git-core
 # the panel layout and the MOD GUI are omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
@@ -124,7 +124,7 @@ Its documentation is on openmixer.org.
 Summary: Headers and static library of the OpenMixer plugins, for projects that build on them
 Requires: (omx-dsp-devel >= 0.32.0 with omx-dsp-devel < 0.33)
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
-Requires: (omx-contract-devel >= 3.13.0 with omx-contract-devel < 4)
+Requires: (omx-contract-devel >= 3.17.1 with omx-contract-devel < 3.18)
 Requires: %{name}-contract = %{version}-%{release}
 Requires: (clap-devel >= 1.2.7 with clap-devel < 2)
 
@@ -143,7 +143,7 @@ BuildArch: noarch
 # the contract directory, its schema and its reader's own package
 # 3.13.0: the reader that knows the roleMeanings kind contract/role-meanings.json is
 # 3.14.0: each descriptor carries integrity, which an older reader refuses with the whole directory (#32)
-Requires: (omx-contract-data >= 3.14.0 with omx-contract-data < 4)
+Requires: (omx-contract-data >= 3.17.1 with omx-contract-data < 3.18)
 # the files lived in omx-plugins-devel before this package
 Conflicts: %{name}-devel < %{version}-%{release}
 
