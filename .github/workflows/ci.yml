@@ -405,7 +405,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [bookworm, trixie]
+        # the quick set while a release wave is open (OMX_RELEASE_MATRIX=quick: trixie alone, as the shared release dry run
+        # below builds), bookworm and trixie otherwise; a quick wave's packages are not in bookworm yet
+        suite: ${{ fromJSON(vars.OMX_RELEASE_MATRIX == 'quick' && '["trixie"]' || '["bookworm", "trixie"]') }}
         arch: [amd64]  # arm64 builds run at release only (release.yml)
     container:
       image: debian:${{ matrix.suite }}
