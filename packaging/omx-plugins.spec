@@ -16,15 +16,15 @@ BuildRequires: pkgconf-pkg-config
 # proven on; from 1.0 the next major), once here and in debian/control
 # the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
 BuildRequires: (omx-dsp-devel >= 0.32.0 with omx-dsp-devel < 0.33)
-BuildRequires: (omx-contract-devel >= 3.17.1 with omx-contract-devel < 3.18)
-BuildRequires: (omx-clap-core-devel >= 0.31.0 with omx-clap-core-devel < 0.32)
+BuildRequires: (omx-contract-devel >= 3.17.1 with omx-contract-devel < 4)
+BuildRequires: (omx-clap-core-devel >= 0.32.3 with omx-clap-core-devel < 0.33)
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
-BuildRequires: (plugin-hostd-devel >= 0.20.0 with plugin-hostd-devel < 0.21)
+BuildRequires: (plugin-hostd-devel >= 0.20.5 with plugin-hostd-devel < 0.21)
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
 # (3.3.0: the directory and its schema are omx-contract-data's, the definitions each owner's -contract package's)
 # 3.14.0: the reader that knows integrity, which the install stamps into each descriptor (#32); %%check reads the
 # install through it
-BuildRequires: (omx-contract >= 3.17.1 with omx-contract < 3.18)
+BuildRequires: (omx-contract >= 3.17.1 with omx-contract < 4)
 # git get-tar-commit-id: the source commit the tarball was made from, stamped into each installed descriptor
 BuildRequires: git-core
 # the panel layout and the MOD GUI are omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
@@ -42,12 +42,12 @@ BuildRequires: diffutils
 BuildRequires: lilv
 BuildRequires: lilv-devel
 BuildRequires: sord
-BuildRequires: (omx-clap-host >= 0.31.0 with omx-clap-host < 0.32)
+BuildRequires: (omx-clap-host >= 0.32.3 with omx-clap-host < 0.33)
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
-BuildRequires: (plugin-hostd >= 0.20.0 with plugin-hostd < 0.21)
+BuildRequires: (plugin-hostd >= 0.20.5 with plugin-hostd < 0.21)
 # %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
 # shipped pins.d file to the shipped binaries' hashes (tools/pins-check.sh)
-BuildRequires: (plugin-qualify >= 0.20.0 with plugin-qualify < 0.21)
+BuildRequires: (plugin-qualify >= 0.20.4 with plugin-qualify < 0.21)
 # the shipped .clap is the stripped one (find-debuginfo runs after %%install), so its pin is measured
 # again once the buildroot is stripped: a pin taken at %%install names bytes the package never ships
 %define __spec_install_post \
@@ -63,7 +63,7 @@ Requires: %{name}-lv2%{?_isa} = %{version}-%{release}
 # each plugin's descriptor, which a host and the console read at run time
 Requires: %{name}-contract = %{version}-%{release}
 # the first plugin-hostd release that reads pins.d (plugin-hostd issue #42)
-Recommends: (plugin-hostd >= 0.20.0 with plugin-hostd < 0.21)
+Recommends: (plugin-hostd >= 0.20.5 with plugin-hostd < 0.21)
 
 %description
 Take the sound of the OpenMixer console into your DAW or onto your own rig:
@@ -124,7 +124,7 @@ Its documentation is on openmixer.org.
 Summary: Headers and static library of the OpenMixer plugins, for projects that build on them
 Requires: (omx-dsp-devel >= 0.32.0 with omx-dsp-devel < 0.33)
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
-Requires: (omx-contract-devel >= 3.17.1 with omx-contract-devel < 3.18)
+Requires: (omx-contract-devel >= 3.17.1 with omx-contract-devel < 4)
 Requires: %{name}-contract = %{version}-%{release}
 Requires: (clap-devel >= 1.2.7 with clap-devel < 2)
 
@@ -143,7 +143,7 @@ BuildArch: noarch
 # the contract directory, its schema and its reader's own package
 # 3.13.0: the reader that knows the roleMeanings kind contract/role-meanings.json is
 # 3.14.0: each descriptor carries integrity, which an older reader refuses with the whole directory (#32)
-Requires: (omx-contract-data >= 3.17.1 with omx-contract-data < 3.18)
+Requires: (omx-contract-data >= 3.17.1 with omx-contract-data < 4)
 # the files lived in omx-plugins-devel before this package
 Conflicts: %{name}-devel < %{version}-%{release}
 
@@ -305,7 +305,7 @@ tools/integrity-check.sh %{buildroot}%{_datadir}/omx-contract/contract.d %{versi
 * Mon Nov 09 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.2-1
 - built and tested on the one-panel wave's releases, each with a floor and a
   ceiling: omx-dsp >= 0.32.0 and < 0.33, omx-contract >= 3.12.0 and < 4,
-  omx-clap-core and omx-clap-host >= 0.31.0 and < 0.32, plugin-hostd >= 0.20.0
+  omx-clap-core and omx-clap-host >= 0.32.2 and < 0.33, plugin-hostd >= 0.20.0
   and < 0.21, omx-panel >= 0.12.0 and < 0.13, plugin-qualify >= 0.20.0 and
   < 0.21, and the CLAP headers >= 1.2.7 (1.2.10 on Debian) and < 2
 - the control-surface pages and faces come from omx-panel's one cut and are
