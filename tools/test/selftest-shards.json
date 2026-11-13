@@ -1,0 +1,33 @@
+{
+  "comment": "make selftest's parts (tools/test/recipe-selftest.mjs, each a part('<id>') block) and the CI shards that run them, packed by measured time: each shard's estimate is setupMinutes plus its parts plus any part it needs and does not hold, under budgetMinutes by marginMinutes. The minutes are the slowest each part took in the CI selftest jobs of runs 43251106422, 43284688355, 43286335296 (timed out at 120) and 43397091336, 43442893449 (green), read from the PASS lines' timestamps; chain never finished in a slow run (16.1 measured through its red arm, the restore arm as long again). setupMinutes is the median wait from job start to make selftest over those five jobs (0.5 to 36.9, dnf). A shard runs as OMX_SELFTEST_SHARD=i/n; each part prints its own PART line, the figure to read when the table is refreshed. tools/test/selftest-shards-check.mjs holds the selftest, this file and the CI matrix to each other.",
+  "budgetMinutes": 45,
+  "setupMinutes": 17,
+  "marginMinutes": 3,
+  "parts": {
+    "wizard": { "minutes": 3.7 },
+    "generators": { "minutes": 19.7, "needs": ["wizard"] },
+    "commit-plan": { "minutes": 0.6, "needs": ["wizard"] },
+    "checkers": { "minutes": 24.0 },
+    "debt-whole": { "minutes": 14.0 },
+    "debt-unheld": { "minutes": 16.6 },
+    "debt-paid": { "minutes": 13.5 },
+    "debt-ghost": { "minutes": 16.0 },
+    "debt-growth": { "minutes": 0.1 },
+    "recipe": { "minutes": 2.4 },
+    "refusals": { "minutes": 0.1, "needs": ["wizard"] },
+    "variants": { "minutes": 0.1 },
+    "port-hints": { "minutes": 13.3 },
+    "oracle": { "minutes": 0.1, "needs": ["wizard"] },
+    "chain": { "minutes": 21.0 }
+  },
+  "shards": [
+    ["wizard", "generators", "commit-plan", "refusals", "oracle"],
+    ["checkers"],
+    ["chain"],
+    ["debt-whole", "debt-growth"],
+    ["debt-unheld"],
+    ["debt-paid"],
+    ["debt-ghost"],
+    ["recipe", "variants", "port-hints"]
+  ]
+}
