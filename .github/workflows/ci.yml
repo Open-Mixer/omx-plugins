@@ -2,7 +2,7 @@
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 name: ci
 
-# On every push and pull request: the whole suite on Fedora, with no test skipped; the RPMs and DEBs
+# On every push and pull request: the whole suite on Fedora, with no test skipped. On workflow_dispatch also: the RPMs and DEBs
 # built (their own make test included), their file lists checked and the packages installed and loaded
 # by a CLAP and an LV2 scanner; and the release workflow as a dry run. Nothing is signed or published
 # here. The build dependencies come from the packaging (dnf builddep, apt-get build-dep), the ones
@@ -13,6 +13,7 @@ on:
   pull_request:
   push:
     branches: [main, dedupe/all]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -24,36 +25,37 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  # The packages and their release dry run are built from the whole tree but the top-level pages and the licence: a pull
-  # request that changes only those skips them (the jobs below that need this one). main and tags run them always.
+  # The packages (and the jobs that need this one) run only on workflow_dispatch: a pull request or a push runs the tests
+  # alone (owner 2026-11-09). release.yml builds on a v* tag; fast-release dispatches this workflow on a release head.
   changes:
     name: what the pull request changes
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
       packages: ${{ steps.diff.outputs.packages }}
+      machinery: ${{ steps.diff.outputs.machinery }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
-      # The checkout of a pull request is its merge commit and the first parent is the base, so this diff is what the
-      # pull request adds. Any other event, or a diff that cannot be read, says true: main and tags always run it.
+      # Packaging runs only on workflow_dispatch (the release dry run fast-release dispatches on a release head);
+      # a pull request or a push runs the tests alone. release.yml builds and publishes on a v* tag.
+      # The checkout of a pull request is its merge commit and the first parent is the base, so the diff is what the
+      # pull request adds. Any other event, or a diff that cannot be read, runs the recipe selftest.
       - id: diff
         env:
           EVENT: ${{ github.event_name }}
         run: |
           set -euo pipefail
+          if [ "$EVENT" = workflow_dispatch ]; then echo "packages=true"; else echo "packages=false"; fi >> "$GITHUB_OUTPUT"
           if [ "$EVENT" != pull_request ] || ! changed=$(git diff --name-only HEAD^1 HEAD) || [ -z "$changed" ]; then
-            echo "packages=true" >> "$GITHUB_OUTPUT"
+            echo "machinery=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
           printf '%s\n' "$changed"
-          if grep -qvE '^(fuzz/|bench/|[^/]*\.md$|LICENSE$)' <<<"$changed"; then
-            echo "packages=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "packages=false" >> "$GITHUB_OUTPUT"
-          fi
+          # the recipe selftest (about 80 minutes) runs when the change can move it: tools/ci-scope.sh
+          tools/ci-scope.sh <<<"$changed" >> "$GITHUB_OUTPUT"
 
   test:
     name: make test (fedora:44, amd64)
@@ -197,6 +199,8 @@ jobs:
     # Its own job, beside make test: the two together outgrew one job's 30 minutes once the chain and the
     # compressor landed. Same container and dependencies; nothing is dropped.
     name: make selftest (fedora:44, amd64)
+    needs: changes
+    if: needs.changes.outputs.machinery == 'true'
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     # the sabotage arms alone run 100 to 115 min on a warm runner, so 120 cut them on main too; a cold
     # runner adds half an hour of dependency install
@@ -403,7 +407,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [bookworm, trixie]
+        # the quick set while a release wave is open (OMX_RELEASE_MATRIX=quick: trixie alone, as the shared release dry run
+        # below builds), bookworm and trixie otherwise; a quick wave's packages are not in bookworm yet
+        suite: ${{ fromJSON(vars.OMX_RELEASE_MATRIX == 'quick' && '["trixie"]' || '["bookworm", "trixie"]') }}
         arch: [amd64]  # arm64 builds run at release only (release.yml)
     container:
       image: debian:${{ matrix.suite }}
