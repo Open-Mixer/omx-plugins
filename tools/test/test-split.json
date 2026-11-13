@@ -1,0 +1,30 @@
+{
+  "comment": "Every check the repository runs from make test or make test-heavy, once: tools/test/test-split-check.mjs holds the Makefile, the plugin Makefile template and the CI workflow to it. make test is the fast set the package %check runs; make test-heavy is the set that loads the built plugins into a host, run on every pull request in its own CI jobs. A check moves from one list to the other; it never leaves both.",
+  "test": {
+    "prerequisites": [
+      "lib", "units", "panel-words", "face-header", "role-meanings", "meter-binding", "panel-layout", "descriptor-view",
+      "descriptor-features", "placement-strips", "lv2-units", "lv2-deprecated", "lv2-maintainer", "lv2-manifest",
+      "release-version", "resource-hints", "format-tables", "contract-union", "contract-dir", "lv2bench-ran",
+      "ci-scope", "probe-checks", "eq-probe-race", "band-groups", "phaser-depth", "geq-widgets", "summary-numbers",
+      "param-tie", "face-ids", "strip-visible-when", "face-dirty-order", "test-split"
+    ],
+    "steps": [
+      "per-plugin test", "presets-figures", "lib-test", "hints", "manual", "presets", "meters-abi", "param-contract-abi",
+      "host-contract", "meter-level", "strip-bands", "test-role", "package-lists"
+    ]
+  },
+  "test-heavy": {
+    "prerequisites": ["lib"],
+    "steps": ["per-plugin test-heavy", "round-trip"]
+  },
+  "plugin": {
+    "test": [
+      "clap-probe params", "clap-probe live", "clap-probe state", "panel-probe clap", "panel-probe lv2",
+      "clap-ext-probe", "resource-hints-check.mjs --binaries", "port-groups-probe", "presets-host-check.mjs"
+    ],
+    "test-heavy": [
+      "{{kernel}}-oracle clap", "{{kernel}}-oracle lv2", "{{oracle}} clap", "{{oracle}} lv2", "modgui-test.sh",
+      "host-check.sh"
+    ]
+  }
+}

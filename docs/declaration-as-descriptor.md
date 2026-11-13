@@ -124,7 +124,7 @@ stands in for the installed tables.
 
 The authored descriptor is also what our built faces must serve, read back as plugin-hostd reads anyone's plugin
 (ruling B: the proof of one vocabulary is the round trip). `make round-trip` (`tools/round-trip.{sh,mjs}`, part of
-`make test`) takes every plugin with a descriptor, generates it (`node tools/gen.mjs`), builds both faces, runs
+`make test-heavy`) takes every plugin with a descriptor, generates it (`node tools/gen.mjs`), builds both faces, runs
 `plugin-hostd-probe describe` on each built face and compares the scanned descriptor with the authored one word by
 word, one line each: `equal`, `lost <format> <word>` (the face does not carry it: no row of the format's table reads it
 back, or the scan leaves it `unknown`), or `differs`. A lost word is printed by name, never filled in.
