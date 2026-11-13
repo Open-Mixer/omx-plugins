@@ -10,7 +10,7 @@
 | omx-contract ≥ 3.12.0 (`pkg-config omx-contract`) | `omx-contract-devel` (channel) | `libomx-contract-dev` (channel) | the declarations: every parameter's travel, read from its installed `omx-contract.json`, and the EQ default rule (its C render; the generators build a small probe, so they need the C compiler too) |
 | openmixer CLAP extensions | `omx-clap-core-devel` (channel) | `libomx-clap-core-dev` (channel) | `<omx-clap-host/omx_clap_ext.h>` |
 | the omx-contract command ≥ 3.12.0 | `omx-contract` (channel) | `omx-contract` (channel) | the generators: the union of the contract directory, read through `omx-contract render --installed` |
-| CLAP 1.2 headers | `clap-devel` | `clap-headers` (built from the pinned CLAP, see FreeMixer/.github) | the CLAP face |
+| CLAP 1.2 headers | `clap-devel` | `clap-headers` (built from the pinned CLAP, see Open-Mixer/.github) | the CLAP face |
 | LV2 headers | `lv2-devel` | `lv2-dev` | the LV2 face |
 | C compiler, make, pkg-config | `gcc make pkgconf-pkg-config` | `build-essential pkgconf` | |
 | lilv | `lilv lilv-devel` | `lilv-utils liblilv-dev` | tests: the oracles' LV2 host, `lv2ls`, `lv2info` |
@@ -214,7 +214,7 @@ unless `nocheck` is set. The version lives in three places that CI keeps equal: 
 `Makefile` (`make version`), the spec's `Version:` and the top of `debian/changelog`.
 
 A `v<version>` tag runs `.github/workflows/release.yml`: RPMs for Fedora 44 (x86_64, aarch64)
-and DEBs for bookworm and trixie (amd64, arm64), signed and published into the FreeMixer package
+and DEBs for bookworm and trixie (amd64, arm64), signed and published into the OpenMixer package
 channel and attached to the GitHub release. Beside them goes
 `omx-plugins-zynthian-<version>-arm64.tar.gz`: the files of the trixie arm64 `omx-plugins-lv2` and
 `omx-plugins-clap` packages, repacked by `tools/zynthian-bundle.sh` as `lv2/` and `clap/` directories for
