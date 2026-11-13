@@ -354,42 +354,62 @@ async function main() {
     // a control both read by reference (its descriptor link) and the face's own (its extras' reason)
     ['paramsByReference', 'params-by-reference', () => edit(`${P}/omx-drive.decl.json`, (s) => s.replace('"controls": {\n', '"controls": {\n    "amount": { "own": "switch" },\n'))],
   ];
+  // Each arm checks the entry it breaks, not the whole plugin (omx-plugins#39: two whole checks an arm, ~36 s each, an
+  // entry alone at most ~2.4 s): green before the break, so an arm never passes on a red a former arm left; red,
+  // naming its step, while broken; green once restored. After every arm, one whole check: the tree is whole again.
+  const only = (id) => ({ ...recipe, artifacts: recipe.artifacts.filter((e) => e.id === id), laws: recipe.laws.filter((e) => e.id === id) });
   for (const [family, id, breakIt] of SABOTAGE) {
+    const before = gapLines(await checkPlugin(t, only(id), 'omx-drive'));
     const restore = breakIt();
-    const r = await checkPlugin(t, recipe, 'omx-drive');
+    const r = await checkPlugin(t, only(id), 'omx-drive');
     const entry = r.results.find((x) => x.id === id);
     const line = gapLines(r).find((l) => l.startsWith(`omx-drive: ${entry?.kind === 'law' ? 'law ' : ''}${id} missing (wizard step '${entry?.step}'`));
     restore();
-    const back = gapLines(await checkPlugin(t, recipe, 'omx-drive'));
-    expect(line && back.length === 0, `sabotage ${family}: ${id} goes red naming step '${entry?.step}', green restored${line ? ` — ${line.slice(0, 140)}` : ''}`);
+    const back = gapLines(await checkPlugin(t, only(id), 'omx-drive'));
+    expect(entry && before.length === 0 && line && back.length === 0,
+      `sabotage ${family}: ${id} green, then red naming step '${entry?.step}', green restored${line ? ` — ${line.slice(0, 140)}` : ''}`);
   }
+  const whole3 = gapLines(await checkPlugin(t, recipe, 'omx-drive'));
+  expect(whole3.length === 0, `every sabotage restored: omx-drive is complete again${whole3.length ? `: ${whole3.join('; ')}` : ''}`);
 
   // ---- 3b. the debt ratchet, both directions ---------------------------------------------------
-  const ratchet = async () => {
-    const reports = [];
-    for (const st of pluginStems(t)) reports.push(await checkPlugin(t, recipe, st));
-    return debtVerdict(reports, loadDebt(t));
-  };
-  const whole = await ratchet();
+  // checkPlugin reads the tree and never the debt (only debtVerdict does), so the whole tree is checked ONCE: the arms
+  // that change only the debt list judge those same reports, and the arm that edits docs/catalogue.md re-checks, for
+  // every plugin, the entries that read that file (a sharedListed entry compares its own checker.file and nothing
+  // else), merged over the whole reports by id: the verdict of the edited tree, entry for entry, for the cost of those
+  // entries (omx-plugins#39: each arm used to re-check every plugin, ~10 minutes each).
+  const wholeReports = [];
+  for (const st of pluginStems(t)) wholeReports.push(await checkPlugin(t, recipe, st));
+  const ratchet = (reports, debt, known) => debtVerdict(reports, debt, known);
+  const whole = ratchet(wholeReports, loadDebt(t));
   expect(!whole.fresh.length && !whole.stale.length && whole.held.length === loadDebt(t).length,
     `the debt holds today's gaps exactly (${whole.held.length} held, ${whole.fresh.length} new, ${whole.stale.length} stale)`);
+  const reading = (file) => ({ ...recipe, artifacts: recipe.artifacts.filter((e) => e.checker?.file === file || (e.paths ?? []).includes(file)),
+    laws: recipe.laws.filter((e) => e.checker?.file === file) });
+  const recheck = async (file) => {
+    const only = reading(file);
+    const out = [];
+    for (const r of wholeReports) {
+      const moved = new Map((await checkPlugin(t, only, r.stem)).results.map((x) => [`${x.kind} ${x.id}`, x]));
+      out.push({ ...r, results: r.results.map((x) => moved.get(`${x.kind} ${x.id}`) ?? x) });
+    }
+    return out;
+  };
+  expect(reading('docs/catalogue.md').artifacts.length > 0, `the entries that read docs/catalogue.md are found (${reading('docs/catalogue.md').artifacts.map((e) => e.id).join(', ')})`);
   let undo = edit('docs/catalogue.md', (s) => s.replace('### omx drive\n', '### drive\n'));
-  const unheld = await ratchet();
+  const unheldReports = await recheck('docs/catalogue.md');
   undo();
+  const unheld = ratchet(unheldReports, loadDebt(t));
   expect(unheld.fresh.includes("omx-drive manual-section"), `sabotage: a gap the debt does not hold fails the ratchet (${unheld.fresh.join(", ")})`);
   // An entry owed by a plugin that has the artifact: written here, so the arm does not depend on
   // which plugin still owes something.
   const owedEntry = '{ "plugin": "omx-drive", "entry": "makefile", "owedBy": "selftest" }';
   undo = edit('recipes/completeness-debt.json', (s) => (/"debt": \[\s*\]/.test(s) ? s.replace(/"debt": \[\s*\]/, `"debt": [\n    ${owedEntry}\n  ]`) : s.replace('"debt": [', `"debt": [\n    ${owedEntry},`)));
-  const paid = await ratchet();
+  const paid = ratchet(wholeReports, loadDebt(t));
   undo();
   expect(paid.stale.some((x) => x.startsWith('omx-drive makefile')), `sabotage: a debt entry now satisfied fails the ratchet as stale (${paid.stale.join(', ')})`);
 
-  const ghost = await (async () => {
-    const reports = [];
-    for (const st of pluginStems(t)) reports.push(await checkPlugin(t, recipe, st));
-    return debtVerdict(reports, [...loadDebt(t), { plugin: 'omx-ghost', entry: 'makefile', owedBy: 'nobody' }], pluginStems(t));
-  })();
+  const ghost = ratchet(wholeReports, [...loadDebt(t), { plugin: 'omx-ghost', entry: 'makefile', owedBy: 'nobody' }], pluginStems(t));
   expect((ghost.unknown ?? []).length === 1 && ghost.unknown[0].startsWith('omx-ghost makefile'), `sabotage: a debt entry for a plugin that does not exist fails the ratchet (${(ghost.unknown ?? []).join(', ')})`);
   {
     // an empty plugin set: the run itself fails, rather than passing over nothing
