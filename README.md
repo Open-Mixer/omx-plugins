@@ -12,7 +12,7 @@ drawn from one declaration: its CLAP parameters, its LV2 ports and its MOD GUI c
 
 ## Install
 
-On **Fedora**, from the FreeMixer package channel:
+On **Fedora**, from the OpenMixer package channel:
 
 ```sh
 sudo dnf install https://www.openmixer.org/rpm/openmixer-release.noarch.rpm
