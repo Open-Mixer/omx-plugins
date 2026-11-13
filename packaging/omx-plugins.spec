@@ -17,9 +17,9 @@ BuildRequires: pkgconf-pkg-config
 # the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
 BuildRequires: (omx-dsp-devel >= 0.32.0 with omx-dsp-devel < 0.33)
 BuildRequires: (omx-contract-devel >= 3.13.0 with omx-contract-devel < 4)
-BuildRequires: (omx-clap-core-devel >= 0.31.0 with omx-clap-core-devel < 0.32)
+BuildRequires: (omx-clap-core-devel >= 0.32.3 with omx-clap-core-devel < 0.33)
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
-BuildRequires: (plugin-hostd-devel >= 0.20.0 with plugin-hostd-devel < 0.21)
+BuildRequires: (plugin-hostd-devel >= 0.20.5 with plugin-hostd-devel < 0.21)
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
 # (3.3.0: the directory and its schema are omx-contract-data's, the definitions each owner's -contract package's)
 BuildRequires: (omx-contract >= 3.13.0 with omx-contract < 4)
@@ -38,12 +38,12 @@ BuildRequires: diffutils
 BuildRequires: lilv
 BuildRequires: lilv-devel
 BuildRequires: sord
-BuildRequires: (omx-clap-host >= 0.31.0 with omx-clap-host < 0.32)
+BuildRequires: (omx-clap-host >= 0.32.3 with omx-clap-host < 0.33)
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
-BuildRequires: (plugin-hostd >= 0.20.0 with plugin-hostd < 0.21)
+BuildRequires: (plugin-hostd >= 0.20.5 with plugin-hostd < 0.21)
 # %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
 # shipped pins.d file to the shipped binaries' hashes (tools/pins-check.sh)
-BuildRequires: (plugin-qualify >= 0.20.0 with plugin-qualify < 0.21)
+BuildRequires: (plugin-qualify >= 0.20.4 with plugin-qualify < 0.21)
 # the shipped .clap is the stripped one (find-debuginfo runs after %%install), so its pin is measured
 # again once the buildroot is stripped: a pin taken at %%install names bytes the package never ships
 %define __spec_install_post \
@@ -59,7 +59,7 @@ Requires: %{name}-lv2%{?_isa} = %{version}-%{release}
 # each plugin's descriptor, which a host and the console read at run time
 Requires: %{name}-contract = %{version}-%{release}
 # the first plugin-hostd release that reads pins.d (plugin-hostd issue #42)
-Recommends: (plugin-hostd >= 0.20.0 with plugin-hostd < 0.21)
+Recommends: (plugin-hostd >= 0.20.5 with plugin-hostd < 0.21)
 
 %description
 Take the sound of the OpenMixer console into your DAW or onto your own rig:
@@ -295,7 +295,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 * Mon Nov 09 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.2-1
 - built and tested on the one-panel wave's releases, each with a floor and a
   ceiling: omx-dsp >= 0.32.0 and < 0.33, omx-contract >= 3.12.0 and < 4,
-  omx-clap-core and omx-clap-host >= 0.31.0 and < 0.32, plugin-hostd >= 0.20.0
+  omx-clap-core and omx-clap-host >= 0.32.2 and < 0.33, plugin-hostd >= 0.20.0
   and < 0.21, omx-panel >= 0.12.0 and < 0.13, plugin-qualify >= 0.20.0 and
   < 0.21, and the CLAP headers >= 1.2.7 (1.2.10 on Debian) and < 2
 - the control-surface pages and faces come from omx-panel's one cut and are
