@@ -128,15 +128,16 @@ check:
 # factory presets listed by the CLAP face's preset discovery and lilv, and loaded through
 # clap.preset-load, exactly the preset files' (docs/presets.md), each sabotaged red by --self-test.
 # Every test runs, and the target fails if any failed, so a new plugin shows all its red tests at
-# once.
-test: all check $(B)/clap-probe $(B)/panel-probe $(B)/clap-ext-probe $(B)/port-groups-probe $(B)/preset-probe $(B)/suboct-oracle
+# once. `test` is the fast set a package build runs (in-process probes and declaration checks);
+# `test-heavy` runs the built faces through a host: the kernel-identity oracle (both faces, every
+# declared rate, every parameter a step off), the hand-written oracles, the MOD GUI test and the
+# external scanners of host-check.sh. Both run on every pull request (tools/test/test-split.json).
+test: all check $(B)/clap-probe $(B)/panel-probe $(B)/clap-ext-probe $(B)/port-groups-probe $(B)/preset-probe
 	@fail=0; \
 	$(B)/clap-probe params $(B)/$(NAME).clap > $(B)/clap-params.txt && \
 	  node $(ROOT)/tools/clap-params-check.mjs $(CURDIR) $(B)/clap-params.txt || fail=1; \
 	$(B)/clap-probe live $(B)/$(NAME).clap || fail=1; \
 	$(B)/clap-probe state $(B)/$(NAME).clap || fail=1; \
-	$(B)/suboct-oracle clap $(B)/$(NAME).clap || fail=1; \
-	$(B)/suboct-oracle lv2 $(BUNDLE) $(URI) || fail=1; \
 	$(B)/panel-probe clap $(B)/$(NAME).clap > $(B)/panel-clap.txt && \
 	  node $(ROOT)/tools/panel-check.mjs $(CURDIR) clap $(B)/panel-clap.txt || fail=1; \
 	$(B)/panel-probe lv2 $(BUNDLE) $(URI) > $(B)/panel-lv2.txt && \
@@ -146,8 +147,14 @@ test: all check $(B)/clap-probe $(B)/panel-probe $(B)/clap-ext-probe $(B)/port-g
 	node $(ROOT)/tools/test/resource-hints-check.mjs --binaries $(CURDIR) $(B)/$(NAME).clap $(BUNDLE)/$(NAME).so || fail=1; \
 	$(B)/port-groups-probe $(BUNDLE) $(URI) > $(B)/port-groups.txt && \
 	  node $(ROOT)/tools/port-groups-check.mjs $(CURDIR) $(B)/port-groups.txt || fail=1; \
-	MODGUI_SOURCE='$(MODGUI_SOURCE)' sh $(OMX_PANEL_DIR)/tools/modgui-test.sh $(BUNDLE) $(NAME).descriptor.json $(PANEL_FILE) || fail=1; \
 	node $(ROOT)/tools/test/presets-host-check.mjs --self-test $(B)/preset-probe $(CURDIR) || fail=1; \
+	exit $$fail
+
+test-heavy: all check $(B)/suboct-oracle
+	@fail=0; \
+	$(B)/suboct-oracle clap $(B)/$(NAME).clap || fail=1; \
+	$(B)/suboct-oracle lv2 $(BUNDLE) $(URI) || fail=1; \
+	MODGUI_SOURCE='$(MODGUI_SOURCE)' sh $(OMX_PANEL_DIR)/tools/modgui-test.sh $(BUNDLE) $(NAME).descriptor.json $(PANEL_FILE) || fail=1; \
 	sh $(ROOT)/tools/host-check.sh $(B)/$(NAME).clap $(BUNDLE) $(URI) $(CLAP_ID) || fail=1; \
 	exit $$fail
 
@@ -159,4 +166,4 @@ install: all
 clean:
 	rm -rf $(B)
 
-.PHONY: all gen check test install clean
+.PHONY: all gen check test test-heavy install clean

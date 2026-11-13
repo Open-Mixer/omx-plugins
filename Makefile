@@ -5,7 +5,9 @@
 # `install` and `clean`.
 #
 #   make            build every plugin
-#   make test       every plugin's tests (what the package builds run), then `make hints` and `make manual`
+#   make test       the fast set (what the package builds run): declaration checks, in-process probes, hints, manual
+#   make test-heavy the built plugins through a host: oracles, MOD GUI test, host-check.sh, the round trip; CI runs
+#                   it on every pull request in slices (OMX_HEAVY_SHARD=i/n); tools/test/test-split.json lists both
 #   make units      the declared units' contract codes (tools/param-contract.mjs) are omx-contract's header's
 #                   (OMX_PARAM_CONTRACT_UNITS, omx_param_units.h), its vendor block is dbfs, dbu, ratio, lufs, a unit
 #                   changed on either side red (tools/test/param-units-check.mjs)
@@ -172,14 +174,13 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi host-contract
+.PHONY: face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi host-contract test-split test-heavy
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib units panel-words face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids strip-visible-when face-dirty-order
+test: lib units panel-words face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids strip-visible-when face-dirty-order test-split
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
-	@$(MAKE) -s round-trip
 	@$(MAKE) -s presets-figures
 	@$(MAKE) -s lib-test
 	@$(MAKE) -s hints
@@ -193,6 +194,21 @@ test: lib units panel-words face-header role-meanings meter-binding panel-layout
 	@$(MAKE) -s strip-bands
 	@$(MAKE) -s test-role
 	@$(MAKE) -s package-lists
+# the set that runs the built plugins through a host: each plugin's kernel-identity and hand-written oracles on both
+# faces, its MOD GUI test and host-check.sh's external scanners, then the round trip through plugin-hostd. It runs on
+# every pull request in its own CI jobs, not in the package build. OMX_HEAVY_SHARD=i/n runs the i-th of n slices of
+# the plugins (the round trip in slice 1); unset, it runs all of them (tools/test/test-split.json lists both sets)
+OMX_HEAVY_SHARD ?=
+HEAVY_I = $(word 1,$(subst /, ,$(OMX_HEAVY_SHARD)))
+HEAVY_N = $(word 2,$(subst /, ,$(OMX_HEAVY_SHARD)))
+HEAVY_PLUGINS = $(if $(OMX_HEAVY_SHARD),$(shell printf '%s\n' $(PLUGINS) | awk -v i=$(HEAVY_I) -v n=$(HEAVY_N) '(NR - 1) % n == i - 1'),$(PLUGINS))
+HEAVY_ROUND_TRIP = $(if $(OMX_HEAVY_SHARD),$(filter 1,$(HEAVY_I)),all)
+test-heavy: lib
+	@case '$(OMX_HEAVY_SHARD)' in ''|[1-9]/[1-9]|[1-9]/[1-9][0-9]|[1-9][0-9]/[1-9][0-9]) ;; \
+	  *) echo "test-heavy: OMX_HEAVY_SHARD='$(OMX_HEAVY_SHARD)' is not i/n" >&2; exit 2;; esac
+	@echo "test-heavy: $(words $(HEAVY_PLUGINS)) plugins$(if $(HEAVY_ROUND_TRIP), and the round trip)$(if $(OMX_HEAVY_SHARD), (slice $(OMX_HEAVY_SHARD)))"
+	@for p in $(HEAVY_PLUGINS); do $(MAKE) -C $$p test-heavy || exit 1; done
+	@if [ -n '$(HEAVY_ROUND_TRIP)' ]; then $(MAKE) -s round-trip; fi
 # what runs with no omx-contract command (debian/rules: no .deb ships the command yet): the built faces, the static
 # table and the ABI checks; nothing here reads the contract directory (the round trip generates, so it runs in make test)
 test-faces: all lib contract-union eq-probe-race
@@ -268,6 +284,10 @@ param-tie:
 # before the values (weak-memory targets), with its sabotage arms
 face-dirty-order:
 	node tools/test/face-dirty-order-check.mjs --self-test
+# make test and make test-heavy together run every check tools/test/test-split.json lists, each in its own target,
+# and CI runs the heavy set on every pull request, every shard (tools/test/test-split-check.mjs, its sabotage arms)
+test-split:
+	node tools/test/test-split-check.mjs --self-test
 summary-numbers:
 	node tools/test/summary-numbers-test.mjs --self-test
 phaser-depth:

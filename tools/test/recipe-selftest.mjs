@@ -870,9 +870,14 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
       readFileSync(join(ct, CP, `generated/${stem}.lv2/manifest.ttl`), 'utf8').includes('#preset-gate-first>'),
       `chain: its factory preset declared, the preset file and the bundle's pset:Preset are generated${presetGen.status === 0 && manifestGen.status === 0 ? '' : `: ${`${presetGen.stderr}${manifestGen.stderr}`.trim().split('\n')[0]}`}`);
     const make = (...a) => spawnSync('make', ['-C', join(ct, CP), ...a], { encoding: 'utf8' });
+    // make test is the fast set; the oracles, both faces through a host, are make test-heavy's (tools/test/test-split.json)
+    const failLines = (r) => `${r.stdout}${r.stderr}`.split('\n').filter((l) => /^FAIL|\bError\b|\berror\b|^presets-host-check/.test(l)).slice(0, 3).join(' | ');
     const green = make('test');
-    expect(green.status === 0 && /ORACLE-GREEN clap/.test(green.stdout) && /ORACLE-GREEN lv2/.test(green.stdout),
-      `chain: make test is green, both faces the chain of faces bit for bit${green.status === 0 ? '' : `: ${`${green.stdout}${green.stderr}`.split('\n').filter((l) => /^FAIL|\bError\b|\berror\b|^presets-host-check/.test(l)).slice(0, 3).join(' | ')}`}`);
+    expect(green.status === 0, `chain: make test is green${green.status === 0 ? '' : `: ${failLines(green)}`}`);
+    const heavy = make('test-heavy');
+    const faces = ['clap', 'lv2'].filter((f) => !new RegExp(`ORACLE-GREEN ${f}`).test(heavy.stdout));
+    expect(heavy.status === 0 && faces.length === 0,
+      `chain: make test-heavy is green, both faces the chain of faces bit for bit${heavy.status !== 0 ? `: ${failLines(heavy)}` : faces.length ? `: no ORACLE-GREEN on ${faces.join(', ')}` : ''}`);
     const oracle = () => {
       const b = make('build/omx-chainproof.clap', 'build/chainproof-oracle');
       if (b.status !== 0) return `build failed: ${b.stderr.trim().split('\n').at(-1)}`;

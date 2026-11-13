@@ -46,4 +46,8 @@ test: all check $(B)/sine-voice-oracle
 clean:
 	rm -rf $(B)
 
-.PHONY: all check test clean
+# a test plugin's own oracle and sabotage are its whole check and run in `test`: nothing of it is left for the
+# heavy set, so its `test-heavy` (which make test-heavy reaches in every plugin) does nothing
+test-heavy: ;
+
+.PHONY: all check test test-heavy clean

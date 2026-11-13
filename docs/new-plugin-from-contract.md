@@ -150,7 +150,7 @@ The identity test proves the faces run omx-dsp's kernel; it does not say what th
 an effect moves out of the console engine, the engine's own oracle comes with it: the declaration
 names it in `oracles`, a list of names, and each `test/<name>.c` is written by hand (it is not
 generated, and `tools/gen.mjs` refuses a name whose file is missing). The generated Makefile builds
-each one as it builds the identity test and runs it in `make test` on both faces, as
+each one as it builds the identity test and runs it in `make test-heavy` on both faces, as
 `<name> clap <stem>.clap` and `<name> lv2 <bundle> <uri>`. Such an oracle opens the built faces as a
 host does and reads only their audio, so an arm that read the kernel's state in the engine says what
 of it a host can see. It runs at the nine rates an audio interface clocks at (`OMX_ORACLE_FULL_RATES`, 32 to
