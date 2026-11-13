@@ -70,6 +70,8 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          staging: 'true'
 
       - uses: actions/checkout@v4
         with:
@@ -85,6 +87,14 @@ jobs:
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
           tools/ci-stale-units.sh
+
+      # an ordinary run builds against the channel: name where each omx package came from, refuse one from staging (D25,
+      # plugin-hostd-protocol#27: a stale staged contract package outranked the channel)
+      - name: Every omx package comes from the channel
+        run: |
+          set -euo pipefail
+          dnf repoquery --installed --qf '%{name} %{version} %{from_repo}\n' 'omx-*' 'plugin-*' | tee /tmp/from-repo
+          if grep staging /tmp/from-repo; then echo "a package above came from the staging channel: an ordinary run builds against the channel"; exit 1; fi
 
       - name: The version agrees everywhere it is written
         id: handback-version
@@ -174,6 +184,8 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          staging: 'true'
 
       - uses: actions/checkout@v4
 
@@ -187,6 +199,14 @@ jobs:
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
           tools/ci-stale-units.sh
+
+      # an ordinary run builds against the channel: name where each omx package came from, refuse one from staging (D25,
+      # plugin-hostd-protocol#27: a stale staged contract package outranked the channel)
+      - name: Every omx package comes from the channel
+        run: |
+          set -euo pipefail
+          dnf repoquery --installed --qf '%{name} %{version} %{from_repo}\n' 'omx-*' 'plugin-*' | tee /tmp/from-repo
+          if grep staging /tmp/from-repo; then echo "a package above came from the staging channel: an ordinary run builds against the channel"; exit 1; fi
 
       - name: make test-heavy, and nothing skipped
         id: handback-test-heavy
@@ -212,6 +232,8 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          staging: 'true'
 
       - uses: actions/checkout@v4
         with:
@@ -227,6 +249,14 @@ jobs:
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
           tools/ci-stale-units.sh
+
+      # an ordinary run builds against the channel: name where each omx package came from, refuse one from staging (D25,
+      # plugin-hostd-protocol#27: a stale staged contract package outranked the channel)
+      - name: Every omx package comes from the channel
+        run: |
+          set -euo pipefail
+          dnf repoquery --installed --qf '%{name} %{version} %{from_repo}\n' 'omx-*' 'plugin-*' | tee /tmp/from-repo
+          if grep staging /tmp/from-repo; then echo "a package above came from the staging channel: an ordinary run builds against the channel"; exit 1; fi
 
       - name: The recipe machinery, sabotaged arm by arm
         id: handback-selftest
