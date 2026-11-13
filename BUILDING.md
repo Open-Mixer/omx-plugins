@@ -45,7 +45,8 @@ and what `pkg-config` finds installed, when an installed release is outside it.
 
 ```sh
 make                      # every plugin: plugins/<name>/build/
-make test                 # every plugin's tests, then the static table's (make lib-test)
+make test                 # the fast set the package builds run: declaration checks, in-process probes, lib-test
+make test-heavy           # the built faces through a host: oracles, MOD GUI, host-check, round trip (CI, every PR)
 make install DESTDIR=/tmp/stage LIBDIR=/usr/lib64   # <CLAPDIR>/*.clap (default /usr/lib/clap, any LIBDIR), <LIBDIR>/lv2/*.lv2/
 make install-devel DESTDIR=/tmp/stage LIBDIR=/usr/lib64   # headers, <LIBDIR>/libomxplugins.a, <LIBDIR>/pkgconfig/omxplugins.pc, and each plugin's descriptor
                                                          # in <DATADIR>/omx-contract/contract.d/3/omx-plugins/ (make install-contract, CONTRACTDIR=)
@@ -80,7 +81,11 @@ word (`tools/round-trip.{sh,mjs}`): `equal`, `lost <format> <word>` or `differs`
 that is not equal or a loss it does not name, and its self-test breaks a copy of a descriptor and of a built `.ttl`
 and wants both red ([docs/declaration-as-descriptor.md](docs/declaration-as-descriptor.md)).
 
-`make test` for a plugin runs, in order:
+A plugin's checks are split between its `make test` (the fast set a package build runs) and its
+`make test-heavy` (the steps that run the built faces through a host: 3 to 6 below and the declared
+oracles), which CI runs on every pull request in four parallel slices (`OMX_HEAVY_SHARD=i/4`).
+`tools/test/test-split.json` lists every step under its target and `make test-split` holds the
+Makefiles and CI to it, so a step cannot fall out of both. Together they run, in order:
 
 1. **freshness**: every generated file matches what its declaration generates today;
 2. **parameters**: the built CLAP plugin's parameters, read through `clap_plugin_params`, are the
