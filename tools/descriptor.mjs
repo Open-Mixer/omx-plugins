@@ -24,7 +24,7 @@ import { meaningOfRole, panelLayout } from './omx-panel.mjs';
 export const descriptorFile = (stem) => `${stem}.descriptor.json`;
 
 /** The schema the descriptor words are in, and the release that added them. */
-export const DESCRIPTOR_SCHEMA = 'https://github.com/Open-Mixer/omx-contract/raw/v3/schema/omx-contract.schema.json';
+export const DESCRIPTOR_SCHEMA = 'https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json';
 export const DESCRIPTOR_SCHEMA_FLOOR = '3.7.0';
 /** The release that added `meters` (omx-contract docs/descriptors.md): the floor of a descriptor that states them. */
 export const DESCRIPTOR_METERS_FLOOR = '3.9.0';
