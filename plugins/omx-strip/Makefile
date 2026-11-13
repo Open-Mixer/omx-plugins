@@ -22,7 +22,7 @@
 NAME       := omx-strip
 URI        := urn:openmixer:strip
 CLAP_ID    := org.openmixer.strip
-OMXDSP_MIN ?= 0.32.0
+OMXDSP_MIN ?= 0.32.1
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

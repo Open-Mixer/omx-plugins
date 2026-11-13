@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:balancer",
     "name": "omx balancer",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.19.4",
     "doc": "Walks four bands slowly toward a target tone, so a mix settles toward a pink-noise balance without chasing notes.",
     "features": [
       "audio-effect"
@@ -37,7 +37,7 @@
       "source": {
         "from": {
           "link": "data/kernels/balancer.json#BALANCER_AMOUNT_PCT_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -61,7 +61,7 @@
       "source": {
         "from": {
           "link": "data/kernels/balancer.json#BALANCER_RANGE_DB_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/balancer.json#BALANCER_SPEED_DB_PER_S_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     },
@@ -109,7 +109,7 @@
       "source": {
         "from": {
           "link": "data/kernels/balancer.json#BALANCER_SLOPE_DB_OCT_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.32.1"
         }
       }
     }

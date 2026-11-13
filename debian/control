@@ -6,11 +6,11 @@ Priority: optional
 Maintainer: Pau Aliagas <linuxnow@gmail.com>
 Build-Depends: debhelper-compat (= 13),
                clap-headers (>= 1.2.10~), clap-headers (<< 2~),
-               libomxdsp-dev (>= 0.32.0~), libomxdsp-dev (<< 0.33~),
-               libomx-contract-dev (>= 3.13.0~), libomx-contract-dev (<< 4~),
-               omx-contract (>= 3.13.0~), omx-contract (<< 4~),
-               libomx-clap-core-dev (>= 0.32.3~), libomx-clap-core-dev (<< 0.33~),
-               plugin-hostd-dev (>= 0.20.5~), plugin-hostd-dev (<< 0.21~),
+               libomxdsp-dev (>= 0.32.1~), libomxdsp-dev (<< 0.33~),
+               libomx-contract-dev (>= 3.18.0~), libomx-contract-dev (<< 4~),
+               omx-contract (>= 3.18.0~), omx-contract (<< 4~),
+               libomx-clap-core-dev (>= 0.32.5~), libomx-clap-core-dev (<< 0.33~),
+               plugin-hostd-dev (>= 0.20.7~), plugin-hostd-dev (<< 0.21~),
                omx-panel (>= 0.13.5~), omx-panel (<< 0.14~),
                lv2-dev,
                pkgconf,
@@ -20,9 +20,9 @@ Build-Depends: debhelper-compat (= 13),
                lilv-utils <!nocheck>,
                sordi <!nocheck>,
                serdi <!nocheck>,
-               omx-clap-host (>= 0.32.3~) <!nocheck>,
+               omx-clap-host (>= 0.32.5~) <!nocheck>,
                omx-clap-host (<< 0.33~) <!nocheck>,
-               plugin-hostd (>= 0.20.5~) <!nocheck>,
+               plugin-hostd (>= 0.20.7~) <!nocheck>,
                plugin-hostd (<< 0.21~) <!nocheck>,
                plugin-qualify (>= 0.20.4~),
                plugin-qualify (<< 0.21~)
@@ -34,7 +34,7 @@ Package: omx-plugins
 Section: metapackages
 Architecture: any
 Depends: omx-plugins-clap (= ${binary:Version}), omx-plugins-lv2 (= ${binary:Version}), omx-plugins-contract (= ${source:Version}), ${misc:Depends}
-Recommends: plugin-hostd (>= 0.20.5~), plugin-hostd (<< 0.21~)
+Recommends: plugin-hostd (>= 0.20.7~), plugin-hostd (<< 0.21~)
 Description: OpenMixer delay, drive, EQ, strip, gate and effects (CLAP, LV2)
  Take the sound of the OpenMixer console into your DAW or onto your own rig:
  delay, drive, the channel EQ as an 8-band EQ, a 16-band EQ or a 32-band EQ,
@@ -87,7 +87,7 @@ Description: OpenMixer test instruments, for host tests and plugin measurement
 Package: omx-plugins-dev
 Section: libdevel
 Architecture: any
-Depends: libomxdsp-dev (>= 0.32.0~), libomxdsp-dev (<< 0.33~), libomx-contract-dev (>= 3.13.0~), libomx-contract-dev (<< 4~), omx-plugins-contract (= ${source:Version}), clap-headers (>= 1.2.10~), clap-headers (<< 2~), ${misc:Depends}
+Depends: libomxdsp-dev (>= 0.32.1~), libomxdsp-dev (<< 0.33~), libomx-contract-dev (>= 3.18.0~), libomx-contract-dev (<< 4~), omx-plugins-contract (= ${source:Version}), clap-headers (>= 1.2.10~), clap-headers (<< 2~), ${misc:Depends}
 Description: Headers and static library of the OpenMixer plugins
  The headers other projects include to use the OpenMixer plugins' parameters
  and instance code, such as omx_delay_core.h and each plugin's generated
@@ -101,7 +101,7 @@ Description: Headers and static library of the OpenMixer plugins
 Package: omx-plugins-contract
 Architecture: all
 Multi-Arch: foreign
-Depends: omx-contract-data (>= 3.13.0~), omx-contract-data (<< 4~), ${misc:Depends}
+Depends: omx-contract-data (>= 3.18.0~), omx-contract-data (<< 4~), ${misc:Depends}
 Breaks: omx-plugins-dev (<< ${source:Version})
 Replaces: omx-plugins-dev (<< ${source:Version})
 Description: OpenMixer plugins' descriptors in omx-contract's contract directory

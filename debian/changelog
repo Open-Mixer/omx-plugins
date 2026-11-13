@@ -1,3 +1,14 @@
+omx-plugins (0.19.4) unstable; urgency=medium
+
+  * Built and tested on the closing wave's releases, each with a floor and a
+    ceiling: omx-contract >= 3.18.0 and << 4, omx-clap-core and omx-clap-host
+    >= 0.32.5 and << 0.33, omx-dsp >= 0.32.1 and << 0.33, plugin-hostd >=
+    0.20.7 and << 0.21.
+  * The DEB build dependencies take the released omx-clap-core and
+    omx-clap-host 0.32 series: the ceilings are < 0.33 (#41).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Fri, 13 Nov 2026 17:55:00 +0100
+
 omx-plugins (0.19.3) unstable; urgency=medium
 
   * omx-plugins-contract installs role-meanings.json (the meaning each panel

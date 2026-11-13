@@ -22,7 +22,7 @@
 NAME       := omx-reverb
 URI        := urn:openmixer:reverb
 CLAP_ID    := org.openmixer.reverb
-OMXDSP_MIN ?= 0.32.0
+OMXDSP_MIN ?= 0.32.1
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build
