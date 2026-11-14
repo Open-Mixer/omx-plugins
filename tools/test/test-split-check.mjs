@@ -170,6 +170,17 @@ if (process.argv.includes('--self-test')) {
     moved.splice(testAt + 2, 0, line);
     arms['the kernel oracle moved back into a plugin\'s test'] = { ...t, template: moved.join('\n') };
   }
+  // the accepted shapes: a ci.yml whose trigger set is workflow_dispatch (or workflow_call) runs the split and is green
+  const onBlock = (ci, keys) => ci.replace(/\non:\n[\s\S]*?\n(?=\S)/, `\non:\n${keys.map((k) => `  ${k}:\n`).join('')}\n`);
+  for (const [name, ci] of Object.entries({
+    'a ci.yml triggered by workflow_dispatch only': onBlock(t.ci, ['workflow_dispatch']),
+    'a ci.yml triggered by workflow_call only': onBlock(t.ci, ['workflow_call']),
+  })) {
+    const errs = splitErrors({ ...t, ci });
+    if (errs.length === 0) console.log(`PASS test-split accepted: ${name} is green`);
+    else { console.log(`FAIL test-split accepted: ${name} is refused: ${errs.join('; ')}`); failed++; }
+  }
+  arms['a ci.yml with no pull_request, workflow_dispatch or workflow_call trigger'] = { ...t, ci: onBlock(t.ci, ['schedule']) };
   for (const [name, sabotaged] of Object.entries(arms)) {
     let red;
     try { red = splitErrors(sabotaged).length > 0; } catch (e) { red = false; console.log(`FAIL test-split sabotage: ${name}: ${e.message}`); }
