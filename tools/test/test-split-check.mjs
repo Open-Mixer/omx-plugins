@@ -105,7 +105,7 @@ export function splitErrors(t) {
     for (const target of ['test', 'test-heavy']) if (!rule(text, target)) errors.push(`plugins/${name}/Makefile: no \`${target}\` target`);
   }
   // CI runs the heavy set (every shard) on a pull request, or on a dispatch or a call when the pull request is checked elsewhere
-  if (!/^ {2}(pull_request|workflow_dispatch|workflow_call):/m.test(t.ci)) errors.push('ci.yml: runs on none of pull_request, workflow_dispatch, workflow_call');
+  if (!/^\s*(pull_request|workflow_dispatch|workflow_call):/m.test(t.ci)) errors.push('ci.yml: runs on none of pull_request, workflow_dispatch, workflow_call');
   const job = t.ci.match(/\n {2}test-heavy:\n([\s\S]*?)(?=\n {2}[a-z][a-z0-9-]*:\n|$)/);
   if (!job) errors.push('ci.yml: no `test-heavy` job');
   else {
@@ -175,11 +175,13 @@ if (process.argv.includes('--self-test')) {
   for (const [name, ci] of Object.entries({
     'a ci.yml triggered by workflow_dispatch only': onBlock(t.ci, ['workflow_dispatch']),
     'a ci.yml triggered by workflow_call only': onBlock(t.ci, ['workflow_call']),
+    'a ci.yml triggered by pull_request': onBlock(t.ci, ['pull_request']),
   })) {
     const errs = splitErrors({ ...t, ci });
     if (errs.length === 0) console.log(`PASS test-split accepted: ${name} is green`);
     else { console.log(`FAIL test-split accepted: ${name} is refused: ${errs.join('; ')}`); failed++; }
   }
+  arms['a push-only ci.yml'] = { ...t, ci: onBlock(t.ci, ['push']) };
   arms['a ci.yml with no pull_request, workflow_dispatch or workflow_call trigger'] = { ...t, ci: onBlock(t.ci, ['schedule']) };
   for (const [name, sabotaged] of Object.entries(arms)) {
     let red;
