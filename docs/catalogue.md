@@ -27,6 +27,7 @@ Every plugin, what it does, and its controls; the parameter pages, the factory p
 | **omx geq** | `org.openmixer.geq` | `urn:openmixer:geq` | The console's 31-band graphic EQ: one fader per ISO third-octave band, 20 Hz to 20 kHz, ±15 dB each, designed in double precision so the lowest bands hold their shape at 192 kHz. Stereo, zero latency. |
 | **omx glue** | `org.openmixer.glue` | `urn:openmixer:glue` | A bus compressor with the detents of a classic console: stepped ratio, attack and release, a key filter and a dry mix. |
 | **omx keyed-gate** | `org.openmixer.keyed-gate` | `urn:openmixer:keyed-gate` | The console's channel gate with a sidechain key: the detector listens to the key your host routes to it, or to the signal itself. One gain for both legs, so the stereo image never shifts. Real-time safe. |
+| **omx leveler** | `org.openmixer.leveler` | `urn:openmixer:leveler` | Rides a signal's level up, down or both ways, by how much and how fast you set. |
 | **omx limiter** | `org.openmixer.limiter` | `urn:openmixer:limiter` | The precision limiter: a look-ahead, true-peak, stereo-linked brickwall. |
 | **omx loudlevel** | `org.openmixer.loudlevel` | `urn:openmixer:loudlevel` | Holds a signal at a loudness target by moving its gain slowly, with a gate so pauses are left alone. |
 | **omx multiband** | `org.openmixer.multiband` | `urn:openmixer:multiband` | A multiband compressor: two to five bands split by Linkwitz-Riley crossovers, each band its own compressor with threshold, ratio, attack, release, make-up, solo and bypass, then a mix and an output gain, for in-ear mixes, vocals and playback buses. |
@@ -409,6 +410,16 @@ Plus the host's bypass. An attack under 0.5 ms engages the 4x detector path, whi
 of latency, reported to the host; otherwise the latency is zero. Its LV2 URI, ports and defaults
 are those of the keyed gate bundle the OpenMixer console used to ship, so a session saved with that
 bundle loads this one.
+
+### omx leveler
+
+| Parameter | Range | Default |
+|---|---|---|
+| Amount | 0 to 100 %, whole steps | 0 % |
+| Direction | Down / Up / Both | Both |
+| Speed | Slow / Medium / Fast | Medium |
+
+Plus the host's bypass.
 
 ### omx limiter
 

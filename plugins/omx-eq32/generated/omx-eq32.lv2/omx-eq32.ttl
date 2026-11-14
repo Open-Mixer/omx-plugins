@@ -97,6 +97,7 @@
         lv2:portProperty lv2:integer ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation <urn:openmixer:meaning#lowCut> ;
         pg:group <urn:openmixer:eq32#hpf>
     ] ,
     [
@@ -109,6 +110,7 @@
         lv2:maximum 24 ;
         lv2:portProperty lv2:integer , lv2:enumeration ;
         units:unit <urn:openmixer:unit#dBoct> ;
+        lv2:designation <urn:openmixer:meaning#slope> ;
         lv2:scalePoint
             [ rdfs:label "12 dB/oct" ; rdf:value 12 ] ,
             [ rdfs:label "24 dB/oct" ; rdf:value 24 ] ;
@@ -136,6 +138,7 @@
         lv2:portProperty lv2:integer ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation <urn:openmixer:meaning#highCut> ;
         pg:group <urn:openmixer:eq32#lpf>
     ] ,
     [
@@ -148,6 +151,7 @@
         lv2:maximum 24 ;
         lv2:portProperty lv2:integer , lv2:enumeration ;
         units:unit <urn:openmixer:unit#dBoct> ;
+        lv2:designation <urn:openmixer:meaning#slope> ;
         lv2:scalePoint
             [ rdfs:label "12 dB/oct" ; rdf:value 12 ] ,
             [ rdfs:label "24 dB/oct" ; rdf:value 24 ] ;
@@ -205,6 +209,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band1>
     ] ,
     [
@@ -270,6 +275,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band2>
     ] ,
     [
@@ -335,6 +341,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band3>
     ] ,
     [
@@ -400,6 +407,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band4>
     ] ,
     [
@@ -465,6 +473,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band5>
     ] ,
     [
@@ -530,6 +539,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band6>
     ] ,
     [
@@ -595,6 +605,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band7>
     ] ,
     [
@@ -660,6 +671,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band8>
     ] ,
     [
@@ -725,6 +737,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band9>
     ] ,
     [
@@ -790,6 +803,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band10>
     ] ,
     [
@@ -855,6 +869,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band11>
     ] ,
     [
@@ -920,6 +935,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band12>
     ] ,
     [
@@ -985,6 +1001,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band13>
     ] ,
     [
@@ -1050,6 +1067,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band14>
     ] ,
     [
@@ -1115,6 +1133,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band15>
     ] ,
     [
@@ -1180,6 +1199,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band16>
     ] ,
     [
@@ -1245,6 +1265,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band17>
     ] ,
     [
@@ -1310,6 +1331,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band18>
     ] ,
     [
@@ -1375,6 +1397,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band19>
     ] ,
     [
@@ -1440,6 +1463,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band20>
     ] ,
     [
@@ -1505,6 +1529,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band21>
     ] ,
     [
@@ -1570,6 +1595,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band22>
     ] ,
     [
@@ -1635,6 +1661,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band23>
     ] ,
     [
@@ -1700,6 +1727,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band24>
     ] ,
     [
@@ -1765,6 +1793,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band25>
     ] ,
     [
@@ -1830,6 +1859,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band26>
     ] ,
     [
@@ -1895,6 +1925,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band27>
     ] ,
     [
@@ -1960,6 +1991,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band28>
     ] ,
     [
@@ -2025,6 +2057,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band29>
     ] ,
     [
@@ -2090,6 +2123,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band30>
     ] ,
     [
@@ -2155,6 +2189,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band31>
     ] ,
     [
@@ -2220,6 +2255,7 @@
         lv2:default 1 ;
         lv2:minimum 0.3 ;
         lv2:maximum 116 ;
+        lv2:designation <urn:openmixer:meaning#q> ;
         pg:group <urn:openmixer:eq32#band32>
     ] ,
     [
@@ -2485,3 +2521,23 @@ lv2:displayPriority
     rdfs:label "decibels per octave" ;
     units:render "%f dB/oct" ;
     units:symbol "dB/oct" .
+
+<urn:openmixer:meaning#lowCut>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "lowCut" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#slope>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "slope" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#highCut>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "highCut" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#q>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "q" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .

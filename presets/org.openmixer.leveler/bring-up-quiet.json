@@ -1,0 +1,31 @@
+{
+  "format": "org.openmixer.preset/1",
+  "plugin": {
+    "id": "org.openmixer.leveler"
+  },
+  "id": "bring-up-quiet",
+  "name": "Bring Up Quiet",
+  "carries": "params",
+  "params": [
+    {
+      "symbol": "amount",
+      "unit": "%",
+      "value": 50
+    },
+    {
+      "symbol": "direction",
+      "unit": "",
+      "value": 1,
+      "label": "Up"
+    },
+    {
+      "symbol": "speed",
+      "unit": "",
+      "value": 2,
+      "label": "Fast"
+    }
+  ],
+  "createdAt": "2026-10-17T00:00:00Z",
+  "modifiedAt": "2026-10-17T00:00:00Z",
+  "copyOf": null
+}

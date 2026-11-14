@@ -1,0 +1,31 @@
+{
+  "format": "org.openmixer.preset/1",
+  "plugin": {
+    "id": "org.openmixer.leveler"
+  },
+  "id": "dialogue-down",
+  "name": "Dialogue Down",
+  "carries": "params",
+  "params": [
+    {
+      "symbol": "amount",
+      "unit": "%",
+      "value": 75
+    },
+    {
+      "symbol": "direction",
+      "unit": "",
+      "value": 0,
+      "label": "Down"
+    },
+    {
+      "symbol": "speed",
+      "unit": "",
+      "value": 0,
+      "label": "Slow"
+    }
+  ],
+  "createdAt": "2026-10-17T00:00:00Z",
+  "modifiedAt": "2026-10-17T00:00:00Z",
+  "copyOf": null
+}

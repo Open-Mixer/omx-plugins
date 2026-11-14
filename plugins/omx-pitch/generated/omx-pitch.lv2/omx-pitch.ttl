@@ -83,6 +83,7 @@
         lv2:maximum 12 ;
         lv2:portProperty lv2:integer ;
         units:unit units:semitone12TET ;
+        lv2:designation <urn:openmixer:meaning#shift> ;
         pg:group <urn:openmixer:pitch#pitch>
     ] ,
     [
@@ -95,6 +96,7 @@
         lv2:maximum 50 ;
         lv2:portProperty lv2:integer ;
         units:unit units:cent ;
+        lv2:designation <urn:openmixer:meaning#fine> ;
         pg:group <urn:openmixer:pitch#pitch>
     ] ,
     [
@@ -124,3 +126,13 @@ lv2:displayPriority
     lv2:name "Pitch" ;
     lv2:displayPriority 1 ;
     rdfs:label "Pitch" .
+
+<urn:openmixer:meaning#shift>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "shift" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#fine>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "fine" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .

@@ -118,5 +118,7 @@ export function lv2UnitNames() {
   return Object.fromEntries(pairs.map(([unit, key]) => [unit, key.split(/[:#]/).pop()]));
 }
 
-/** The LV2 designation of a meaning, the LV2 table read backwards (gain -> param:gain), or undefined. */
-export const lv2Designation = (meaning) => (meaning ? outboundValue('lv2', MEANING_WORD, meaning) : undefined);
+/** The LV2 designation of a meaning, the LV2 table read backwards (gain -> param:gain); a meaning the table maps no
+ * param: term for (knee, makeup, ...) falls back to its own urn (<urn:openmixer:meaning#knee>, FreeMixer/omx-plugins#12),
+ * generated into every face from the declarations. None for "" or unknown (a plugin stating no meaning). */
+export const lv2Designation = (meaning) => (meaning && meaning !== 'unknown' ? outboundValue('lv2', MEANING_WORD, meaning) ?? `<urn:openmixer:meaning#${meaning}>` : undefined);

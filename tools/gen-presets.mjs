@@ -249,6 +249,11 @@ const DEFINITIONS = {
     ['programme', 'Programme', { targetLufs: -23, rangeDb: 6, speedDbPerS: 0.8, gateLufs: -55, window: 'Short-term' }],
     ['fast-ride', 'Fast Ride', { targetLufs: -18, rangeDb: 12, speedDbPerS: 3, window: 'Momentary' }],
   ],
+  'org.openmixer.leveler': [
+    ['vocal-ride', 'Vocal Ride', { amount: 60, direction: 'Both', speed: 'Medium' }],
+    ['dialogue-down', 'Dialogue Down', { amount: 75, direction: 'Down', speed: 'Slow' }],
+    ['bring-up-quiet', 'Bring Up Quiet', { amount: 50, direction: 'Up', speed: 'Fast' }],
+  ],
   'org.openmixer.balancer': [
     ['gentle', 'Gentle', { amountPct: 40, rangeDb: 3, speedDbPerS: 0.5, slopeDbOct: -3 }],
     ['full-mix', 'Full Mix', { amountPct: 70, rangeDb: 6, speedDbPerS: 1, slopeDbOct: -3 }],

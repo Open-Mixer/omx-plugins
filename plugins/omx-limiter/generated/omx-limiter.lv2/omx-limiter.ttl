@@ -91,6 +91,7 @@
         lv2:minimum -12 ;
         lv2:maximum 0 ;
         units:unit <urn:openmixer:unit#dBFS> ;
+        lv2:designation <urn:openmixer:meaning#ceiling> ;
         pg:group <urn:openmixer:limiter#limiter>
     ] ,
     [
@@ -102,6 +103,7 @@
         lv2:minimum 0.5 ;
         lv2:maximum 5 ;
         units:unit units:ms ;
+        lv2:designation <urn:openmixer:meaning#lookahead> ;
         pg:group <urn:openmixer:limiter#limiter>
     ] ,
     [
@@ -138,3 +140,13 @@ lv2:displayPriority
     rdfs:label "decibels (full scale)" ;
     units:render "%f dBFS" ;
     units:symbol "dBFS" .
+
+<urn:openmixer:meaning#ceiling>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "ceiling" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#lookahead>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "lookahead" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .

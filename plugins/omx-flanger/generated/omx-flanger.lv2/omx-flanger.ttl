@@ -84,6 +84,7 @@
         lv2:maximum 5 ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation <urn:openmixer:meaning#rate> ;
         pg:group <urn:openmixer:flanger#flanger>
     ] ,
     [
@@ -95,6 +96,7 @@
         lv2:minimum 0 ;
         lv2:maximum 5 ;
         units:unit units:ms ;
+        lv2:designation <urn:openmixer:meaning#depth> ;
         pg:group <urn:openmixer:flanger#flanger>
     ] ,
     [
@@ -105,6 +107,7 @@
         lv2:default 0.6 ;
         lv2:minimum -0.95 ;
         lv2:maximum 0.95 ;
+        lv2:designation <urn:openmixer:meaning#feedback> ;
         pg:group <urn:openmixer:flanger#flanger>
     ] ,
     [
@@ -134,3 +137,18 @@ lv2:displayPriority
     lv2:name "Flanger" ;
     lv2:displayPriority 1 ;
     rdfs:label "Flanger" .
+
+<urn:openmixer:meaning#rate>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "rate" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#depth>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "depth" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
+
+<urn:openmixer:meaning#feedback>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label "feedback" ;
+    rdfs:comment "A control's meaning (schema/omx-contract.schema.json's meaning), which LV2's param: vocabulary has no term for." .
