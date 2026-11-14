@@ -16,7 +16,7 @@
  *     plugin's `test` and `test-heavy` recipes is one listed step, in the listed target, and every listed
  *     step is there;
  *   - every plugin Makefile has both targets (the hand-written test plugins too), so the loops reach them;
- *   - .github/workflows/ci.yml runs make test-heavy on pull requests, in a matrix whose shards are 1/n..n/n.
+ *   - .github/workflows/ci.yml runs make test-heavy on a pull request, dispatch or call, in a matrix whose shards are 1/n..n/n.
  * A step dropped from both targets, moved without the list, or a shard left out is red.
  *
  * --self-test: each sabotage arm must be red, the unsabotaged tree green.
@@ -104,8 +104,8 @@ export function splitErrors(t) {
   for (const [name, text] of Object.entries(t.plugins)) {
     for (const target of ['test', 'test-heavy']) if (!rule(text, target)) errors.push(`plugins/${name}/Makefile: no \`${target}\` target`);
   }
-  // CI runs the heavy set on every pull request, every shard
-  if (!/^\s*pull_request:/m.test(t.ci)) errors.push('ci.yml: does not run on pull requests');
+  // CI runs the heavy set (every shard) on a pull request, or on a dispatch or a call when the pull request is checked elsewhere
+  if (!/^ {2}(pull_request|workflow_dispatch|workflow_call):/m.test(t.ci)) errors.push('ci.yml: runs on none of pull_request, workflow_dispatch, workflow_call');
   const job = t.ci.match(/\n {2}test-heavy:\n([\s\S]*?)(?=\n {2}[a-z][a-z0-9-]*:\n|$)/);
   if (!job) errors.push('ci.yml: no `test-heavy` job');
   else {
@@ -145,7 +145,7 @@ const errors = splitErrors(t);
 let failed = report(errors);
 if (!failed) {
   const list = JSON.parse(t.list);
-  console.log(`PASS test-split: make test runs ${list.test.prerequisites.length + list.test.steps.length} listed targets and steps, make test-heavy ${list['test-heavy'].steps.length}; a plugin's test ${list.plugin.test.length} steps, its test-heavy ${list.plugin['test-heavy'].length}; CI runs the heavy set on pull requests`);
+  console.log(`PASS test-split: make test runs ${list.test.prerequisites.length + list.test.steps.length} listed targets and steps, make test-heavy ${list['test-heavy'].steps.length}; a plugin's test ${list.plugin.test.length} steps, its test-heavy ${list.plugin['test-heavy'].length}; CI runs the heavy set on pull requests, dispatch or call`);
 }
 
 if (process.argv.includes('--self-test')) {
