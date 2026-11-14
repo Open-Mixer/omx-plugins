@@ -394,7 +394,7 @@ jobs:
           name: ci-check-omx-plugins-fc44-${{ matrix.arch }}
           path: rpms/*.rpm
           if-no-files-found: error
-          retention-days: 7
+          retention-days: ${{ (startsWith(github.ref, 'refs/tags/')) && 7 || 2 }}
 
   deb:
     name: omx-plugins DEBs (${{ matrix.suite }}, ${{ matrix.arch }})
@@ -566,7 +566,7 @@ jobs:
             build/clap-validator/
             build/clap-validator.log
           if-no-files-found: error
-          retention-days: 30
+          retention-days: ${{ (startsWith(github.ref, 'refs/tags/')) && 30 || 2 }}
 
   release-dry-run:
     name: release workflow, dry run
