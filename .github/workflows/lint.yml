@@ -1,0 +1,30 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
+name: lint
+
+# The one workflow that runs on a pull request: it is cheap. No other workflow runs on a push or a pull request;
+# the suite runs in the cluster verify row, and ci.yml and release.yml run on dispatch and on tags.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: Open-Mixer/.github/.github/actions/trigger-gate@openmixer-v1
+        with:
+          lint-workflow: lint.yml
+      - uses: Open-Mixer/.github/.github/actions/commit-message-check@openmixer-v1
