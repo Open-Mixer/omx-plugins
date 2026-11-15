@@ -17,7 +17,7 @@ BuildRequires: pkgconf-pkg-config
 # the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
 BuildRequires: (omx-dsp-devel >= 0.32.0 with omx-dsp-devel < 0.33)
 BuildRequires: (omx-contract-devel >= 3.13.0 with omx-contract-devel < 4)
-BuildRequires: (omx-clap-core-devel >= 0.32.3 with omx-clap-core-devel < 0.33)
+BuildRequires: (omx-clap-core-devel >= 0.33.0 with omx-clap-core-devel < 0.34)
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
 BuildRequires: (plugin-hostd-devel >= 0.20.5 with plugin-hostd-devel < 0.21)
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
@@ -38,7 +38,7 @@ BuildRequires: diffutils
 BuildRequires: lilv
 BuildRequires: lilv-devel
 BuildRequires: sord
-BuildRequires: (omx-clap-host >= 0.32.3 with omx-clap-host < 0.33)
+BuildRequires: (omx-clap-host >= 0.33.0 with omx-clap-host < 0.34)
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
 BuildRequires: (plugin-hostd >= 0.20.5 with plugin-hostd < 0.21)
 # %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
