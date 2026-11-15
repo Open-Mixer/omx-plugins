@@ -28,3 +28,8 @@ jobs:
         with:
           lint-workflow: lint.yml
       - uses: Open-Mixer/.github/.github/actions/commit-message-check@openmixer-v1
+
+  # The shared checks on what this repository publishes: a pull request's own commits carry no attribution line, no
+  # tracked file points into a private repository, and no local copy of these checks is kept.
+  public-sources:
+    uses: Open-Mixer/.github/.github/workflows/public-sources-check.yml@openmixer-v1
