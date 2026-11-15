@@ -83,6 +83,11 @@ const hint = (member, f) => (rows) => {
   return rows.map((r, k) => (k === i ? [r[0], r[1], f(r[2])] : r));
 };
 const bit = (m) => (v) => `${Number(v) ^ m}`;
+/** The `port <index> <symbol>` row of `symbol` dropped: an LV2 face that lost that port. */
+const dropPort = (symbol) => (rows) => {
+  const at = rows.findIndex((r) => r[0] === 'port' && r[2] === symbol);
+  return rows.filter((_, i) => i !== need(at < 0 ? undefined : at, `port ${symbol} row`));
+};
 const flip = (v) => `${v.slice(0, -1)}${v.endsWith('0') ? '1' : '0'}`;
 
 // ---- the arms: [what changed, change, the FAIL line that must name it] ----
@@ -119,6 +124,14 @@ const displayArms = (face) => [
   ['a floor in dB given to the transfer curve', set('display', 0, 8, '-60'), new RegExp(`FAIL panel ${face} displays`)],
   ['a floor in dB given to the gain-reduction bar', set('display', 1, 8, '-60'), new RegExp(`FAIL panel ${face} displays`)],
   ['a floor parameter given to the gain-reduction bar', set('display', 1, 7, '0'), new RegExp(`FAIL panel ${face} displays`)],
+  // the forward check (#65): the meter a display reads is one the BUILT face serves, through clap.meters/1 on CLAP (the
+  // probe's `meter` rows) and as the declared output port on LV2 — not only one the declaration names
+  ...(face === 'clap'
+    ? [
+        ['the meter the gain-reduction bar reads not served through clap.meters/1', drop('meter', 0), /FAIL panel clap display meters are served/],
+        ['the meter the gain-reduction bar reads served under another name', set('meter', 0, 2, 'other'), /FAIL panel clap display meters are served/],
+      ]
+    : [['the output port of the meter the gain-reduction bar reads lost', dropPort('gateGr'), /FAIL panel lv2 display meters are served/]]),
 ];
 
 const extArms = [
