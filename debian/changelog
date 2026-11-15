@@ -1,3 +1,17 @@
+omx-plugins (0.19.5) unstable; urgency=medium
+
+  * Built and tested on the 3.19.0 pass's releases, each with a floor and a
+    ceiling: omx-contract >= 3.19.0 and < 4, omx-clap-core and omx-clap-host
+    >= 0.33.0 and < 0.34 (the wave's one omx-clap-core minor), omx-dsp >=
+    0.32.2 and < 0.33, plugin-hostd >= 0.20.8 and < 0.21 (D30).
+  * The generated headers, descriptors and LV2 plugin files carry 0.19.5, and
+    every descriptor's link is read at omx-dsp 0.32.2, the floor the packaging
+    builds against.
+  * Selftest: pkg-config asked once per environment, the ratchet checks the
+    tree once, each checker arm its entry (#43).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sun, 15 Nov 2026 16:30:00 +0100
+
 omx-plugins (0.19.3) unstable; urgency=medium
 
   * omx-plugins-contract installs role-meanings.json (the meaning each panel
