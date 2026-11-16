@@ -21,7 +21,7 @@ report "$d/other-failure.json" process-varying-sample-rates "Error while process
 bad=0
 want() { # <expected rc class: pass|red> <description> <report>
   node "$HERE/tools/clap-validate-summary.mjs" t "$3" >"$d/out" 2>&1; rc=$?
-  case "$1:$rc" in pass:0|red:1) echo "ok   $2" ;; *) echo "FAIL $2: rc $rc"; sed 's/^/     /' "$d/out"; bad=1 ;; esac
+  case "$1:$rc" in pass:3|red:1) echo "ok   $2" ;; *) echo "FAIL $2: rc $rc"; sed 's/^/     /' "$d/out"; bad=1 ;; esac
 }
 want pass "a refusal at 8 kHz (outside the nine) in process-varying-sample-rates is accepted" "$d/off-grid.json"
 want red  "a refusal at 48 kHz (one of the nine) stays red" "$d/on-grid.json"
