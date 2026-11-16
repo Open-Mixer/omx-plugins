@@ -81,7 +81,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: The version agrees everywhere it is written
         id: handback-version
@@ -183,7 +182,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: make test-heavy, and nothing skipped
         id: handback-test-heavy
@@ -223,7 +221,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: The recipe machinery, sabotaged arm by arm
         id: handback-selftest
@@ -526,7 +523,6 @@ jobs:
         run: |
           set -euo pipefail
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
           dnf copr enable -y ycollet/audinux
           dnf install -y --setopt=install_weak_deps=False clap-validator nodejs
 

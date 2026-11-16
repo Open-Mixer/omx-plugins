@@ -156,9 +156,6 @@ Its documentation is on openmixer.org.
 %{__make} install-test DESTDIR=%{buildroot} PREFIX=%{_prefix} TESTCLAPDIR=%{_libexecdir}/omx-plugins/test
 
 %check
-# a CI build host holds the channel's omx-plugins-contract before 0.17.0, whose units sheet omx-contract 3.6.0 now
-# declares: tools/ci-stale-units.sh drops it there (only under CI, never on a user's system), until 0.17.0 is out
-[ -z "${CI:-}${GITHUB_ACTIONS:-}" ] || [ "$(id -u)" != 0 ] || tools/ci-stale-units.sh
 %make_build test
 # the shipped pins.d file still names the shipped binaries' own hashes (sabotage: a changed binary goes red)
 tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins %{buildroot}/usr/lib/clap
