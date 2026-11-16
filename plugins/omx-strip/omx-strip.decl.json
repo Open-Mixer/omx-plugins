@@ -2932,8 +2932,8 @@
       "lpf_on": "lpfOn"
     },
     "choiceUnits": {
-      "hpfSlope": "dB",
-      "lpfSlope": "dB"
+      "hpfSlope": "dB/oct",
+      "lpfSlope": "dB/oct"
     },
     "sections": [
       {
