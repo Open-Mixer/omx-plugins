@@ -13,6 +13,7 @@ omx-plugins (0.19.5) unstable; urgency=medium
     apart, and the wet is ducked under the dry and de-essed in its band (#70).
   * The compressor gains a release mode (#72).
   * A new input trim plugin: a clean gain, lift or pad, with presets (#76).
+  * A new stereo width plugin, with presets (#73).
   * The build floors omx-clap-core-devel and omx-clap-host at 0.32.6: the
     panel-words test reads the panel families from omx-clap-core's header when
     it builds, and the utility family is there from 0.32.6.

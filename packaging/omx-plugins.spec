@@ -65,7 +65,7 @@ Take the sound of the OpenMixer console into your DAW or onto your own rig:
 delay, drive, the channel EQ as an 8-band EQ, a 16-band EQ or a 32-band EQ, a
 31-band graphic EQ, the full channel strip and the keyed gate with its sidechain
 input, and the console's effects: chorus, flanger, phaser, tremolo, rotary
-speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, doubler, tone control, ducker, input trim, limiter, compressor
+speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, doubler, tone control, stereo width, ducker, input trim, limiter, compressor
 with its sidechain key, multiband compressor and dynamic EQ. They come
 as CLAP plugins for Bitwig, REAPER and Carla, and as LV2 plugins for Ardour,
 Carla, MOD and Zynthian. Each one runs the same DSP as the console, so a track sounds the same
@@ -216,6 +216,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 /usr/lib/clap/omx-tremolo.clap
 /usr/lib/clap/omx-trim.clap
 /usr/lib/clap/omx-upward.clap
+/usr/lib/clap/omx-width.clap
 # END GENERATED clap-files
 
 %files test
@@ -280,6 +281,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 %{_libdir}/lv2/omx-tremolo.lv2/
 %{_libdir}/lv2/omx-trim.lv2/
 %{_libdir}/lv2/omx-upward.lv2/
+%{_libdir}/lv2/omx-width.lv2/
 # END GENERATED lv2-files
 
 %changelog
@@ -297,6 +299,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
   and the wet is ducked under the dry and de-essed in its band (#70)
 - the compressor gains a release mode (#72)
 - a new input trim plugin: a clean gain, lift or pad, with presets (#76)
+- a new stereo width plugin, with presets (#73)
 - the build floors omx-clap-core-devel and omx-clap-host at 0.32.6: the
   panel-words test reads the panel families from omx-clap-core's header when
   it builds, and the utility family is there from 0.32.6

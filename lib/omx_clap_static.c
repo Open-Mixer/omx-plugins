@@ -49,6 +49,7 @@ const struct omx_clap_static_plugin OMX_CLAP_STATIC_PLUGINS[] = {
     {"org.openmixer.tremolo", &omx_clap_entry_tremolo},
     {"org.openmixer.trim", &omx_clap_entry_trim},
     {"org.openmixer.upward", &omx_clap_entry_upward},
+    {"org.openmixer.width", &omx_clap_entry_width},
     /* END GENERATED clap-table */
 };
 
