@@ -21,7 +21,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 0.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-bright-hall>
     a pset:Preset ;
@@ -39,7 +48,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 2.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 2.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-bright-plate>
     a pset:Preset ;
@@ -57,7 +75,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 1.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 1.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-bright-room>
     a pset:Preset ;
@@ -75,7 +102,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 0.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-chamber>
     a pset:Preset ;
@@ -93,7 +129,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 2.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 2.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-concert-hall>
     a pset:Preset ;
@@ -111,7 +156,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 2.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 2.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-gated-snare>
     a pset:Preset ;
@@ -129,7 +183,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 4.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 4.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-reverse-swell>
     a pset:Preset ;
@@ -147,7 +210,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 3.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 3.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-rich-plate>
     a pset:Preset ;
@@ -165,7 +237,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 1.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 1.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-short-plate>
     a pset:Preset ;
@@ -183,7 +264,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 1.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 1.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-small-room>
     a pset:Preset ;
@@ -201,7 +291,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 0.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-studio-hall>
     a pset:Preset ;
@@ -219,7 +318,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 2.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 2.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-studio-room>
     a pset:Preset ;
@@ -237,7 +345,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 0.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-vintage-plate>
     a pset:Preset ;
@@ -255,7 +372,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 1.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 1.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-vintage-room>
     a pset:Preset ;
@@ -273,7 +399,16 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 0.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
 
 <urn:openmixer:reverb#preset-vocal-plate>
     a pset:Preset ;
@@ -291,4 +426,13 @@
         [ lv2:symbol "hold" ; pset:value 120.0 ] ,
         [ lv2:symbol "release" ; pset:value 20.0 ] ,
         [ lv2:symbol "gateThreshold" ; pset:value -40.0 ] ,
-        [ lv2:symbol "algorithm" ; pset:value 1.0 ] .
+        [ lv2:symbol "algorithm" ; pset:value 1.0 ] ,
+        [ lv2:symbol "earlyDb" ; pset:value -60.0 ] ,
+        [ lv2:symbol "tailDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "earlySizePct" ; pset:value 50.0 ] ,
+        [ lv2:symbol "duckDb" ; pset:value 0.0 ] ,
+        [ lv2:symbol "duckThresholdDb" ; pset:value -30.0 ] ,
+        [ lv2:symbol "duckReleaseMs" ; pset:value 250.0 ] ,
+        [ lv2:symbol "wetDeess" ; pset:value 0.0 ] ,
+        [ lv2:symbol "deessFreqHz" ; pset:value 7000.0 ] ,
+        [ lv2:symbol "deessThresholdDb" ; pset:value -30.0 ] .
