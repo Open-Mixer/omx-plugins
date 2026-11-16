@@ -4,11 +4,11 @@
 
 # omx reverb
 
-The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal.
+The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal; the early reflections and the tail set apart, the wet ducked under the dry and de-essed in its band.
 
 - CLAP id: `org.openmixer.reverb`
 - LV2 URI: `urn:openmixer:reverb`
-- Parameters: 13, plus the host's bypass
+- Parameters: 22, plus the host's bypass
 
 ## Audio ports
 
@@ -23,30 +23,42 @@ A page is where a host shows a parameter. In LV2 each page is a port group, `pg:
 
 | Page | LV2 group symbol | Priority | CLAP module | Parameters |
 |---|---|---|---|---|
-| Plate | `plate` | 4 | `Plate` | 1 |
-| Reverb | `reverb` | 3 | `Reverb` | 8 |
-| Reverse | `reverse` | 2 | `Reverse` | 1 |
-| Gated | `gated` | 1 | `Gated` | 3 |
+| Plate | `plate` | 7 | `Plate` | 1 |
+| Reverb | `reverb` | 6 | `Reverb` | 8 |
+| Reverse | `reverse` | 5 | `Reverse` | 1 |
+| Gated | `gated` | 4 | `Gated` | 3 |
+| Early | `early` | 3 | `Early` | 3 |
+| Duck | `duck` | 2 | `Duck` | 3 |
+| De-ess | `deess` | 1 | `De-ess` | 3 |
 
 ## Parameters
 
-Ids are the order below, 0 to 12; a parameter appended later takes the next id. The bypass's id is its own (below).
+Ids are the order below, 0 to 21; a parameter appended later takes the next id. The bypass's id is its own (below).
 
 | Id | Symbol | Name | Unit | Min | Max | Default | Step or values | Flags | Page (priority) |
 |---|---|---|---|---|---|---|---|---|---|
-| 0 | `plateModDepth` | Plate Mod Depth | % | 0 | 400 | 100 | whole steps | automatable | Plate (4) |
-| 1 | `mix` | Mix |  | 0 | 1 | 0.3 | continuous, linear | automatable | Reverb (3) |
-| 2 | `size` | Size |  | 0 | 1 | 0.7 | continuous, linear | automatable | Reverb (3) |
-| 3 | `damping` | Damping |  | 0 | 1 | 0.5 | continuous, linear | automatable | Reverb (3) |
-| 4 | `width` | Width |  | 0 | 1 | 1 | continuous, linear | automatable | Reverb (3) |
-| 5 | `predelay` | Predelay | ms | 0 | 100 | 0 | whole steps | automatable | Reverb (3) |
-| 6 | `lowcut` | Lowcut | Hz | 0 | 20000 | 0 | whole steps | automatable | Reverb (3) |
-| 7 | `highcut` | Highcut | Hz | 0 | 20000 | 20000 | whole steps | automatable | Reverb (3) |
-| 8 | `reverse` | Reverse | ms | 50 | 500 | 300 | whole steps | automatable | Reverse (2) |
-| 9 | `hold` | Hold | ms | 10 | 2000 | 120 | whole steps | automatable | Gated (1) |
-| 10 | `release` | Release | ms | 1 | 500 | 20 | whole steps | automatable | Gated (1) |
-| 11 | `gateThreshold` | Gate Threshold | dBFS | -80 | 0 | -40 | whole steps | automatable | Gated (1) |
-| 12 | `algorithm` | Algorithm |  | 0 | 4 | Room (0) | 0 Room, 1 Plate, 2 Hall, 3 Reverse, 4 Gated | automatable | Reverb (3) |
+| 0 | `plateModDepth` | Plate Mod Depth | % | 0 | 400 | 100 | whole steps | automatable | Plate (7) |
+| 1 | `mix` | Mix |  | 0 | 1 | 0.3 | continuous, linear | automatable | Reverb (6) |
+| 2 | `size` | Size |  | 0 | 1 | 0.7 | continuous, linear | automatable | Reverb (6) |
+| 3 | `damping` | Damping |  | 0 | 1 | 0.5 | continuous, linear | automatable | Reverb (6) |
+| 4 | `width` | Width |  | 0 | 1 | 1 | continuous, linear | automatable | Reverb (6) |
+| 5 | `predelay` | Predelay | ms | 0 | 100 | 0 | whole steps | automatable | Reverb (6) |
+| 6 | `lowcut` | Lowcut | Hz | 0 | 20000 | 0 | whole steps | automatable | Reverb (6) |
+| 7 | `highcut` | Highcut | Hz | 0 | 20000 | 20000 | whole steps | automatable | Reverb (6) |
+| 8 | `reverse` | Reverse | ms | 50 | 500 | 300 | whole steps | automatable | Reverse (5) |
+| 9 | `hold` | Hold | ms | 10 | 2000 | 120 | whole steps | automatable | Gated (4) |
+| 10 | `release` | Release | ms | 1 | 500 | 20 | whole steps | automatable | Gated (4) |
+| 11 | `gateThreshold` | Gate Threshold | dBFS | -80 | 0 | -40 | whole steps | automatable | Gated (4) |
+| 12 | `algorithm` | Algorithm |  | 0 | 4 | Room (0) | 0 Room, 1 Plate, 2 Hall, 3 Reverse, 4 Gated | automatable | Reverb (6) |
+| 13 | `earlyDb` | Early | dB | -60 | 0 | -60 | continuous, linear | automatable | Early (3) |
+| 14 | `tailDb` | Tail | dB | -60 | 0 | 0 | continuous, linear | automatable | Early (3) |
+| 15 | `earlySizePct` | Early Size | % | 0 | 100 | 50 | whole steps | automatable | Early (3) |
+| 16 | `duckDb` | Duck | dB | -24 | 0 | 0 | continuous, linear | automatable | Duck (2) |
+| 17 | `duckThresholdDb` | Duck Threshold | dB | -60 | 0 | -30 | whole steps | automatable | Duck (2) |
+| 18 | `duckReleaseMs` | Duck Release | ms | 20 | 2000 | 250 | whole steps | automatable | Duck (2) |
+| 19 | `wetDeess` | Wet De-ess |  | off | on | off | toggle | automatable | De-ess (1) |
+| 20 | `deessFreqHz` | De-ess Freq | Hz | 2000 | 16000 | 7000 | whole steps | automatable | De-ess (1) |
+| 21 | `deessThresholdDb` | De-ess Threshold | dB | -60 | 0 | -30 | continuous, linear | automatable | De-ess (1) |
 
 ## Bypass
 

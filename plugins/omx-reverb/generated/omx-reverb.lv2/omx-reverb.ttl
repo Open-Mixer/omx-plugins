@@ -7,6 +7,7 @@
 @prefix omxres: <https://www.openmixer.org/ns/resource-hints#> .
 @prefix param: <http://lv2plug.in/ns/ext/parameters#> .
 @prefix pg:    <http://lv2plug.in/ns/ext/port-groups#> .
+@prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
@@ -24,7 +25,7 @@
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
     lv2:minorVersion 19 ;
     lv2:microVersion 5 ;
-    rdfs:comment "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal." ;
+    rdfs:comment "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal; the early reflections and the tail set apart, the wet ducked under the dry and de-essed in its band." ;
     lv2:optionalFeature lv2:hardRTCapable ;
     omxres:threadsSpawned "0"^^xsd:integer ;
     omxres:streamsFromDisk false ;
@@ -227,6 +228,110 @@
             [ rdfs:label "Reverse" ; rdf:value 3 ] ,
             [ rdfs:label "Gated" ; rdf:value 4 ] ;
         pg:group <urn:openmixer:reverb#reverb>
+    ] ,
+    [
+        a lv2:ControlPort , lv2:InputPort ;
+        lv2:index 19 ;
+        lv2:symbol "earlyDb" ;
+        lv2:name "Early" ;
+        lv2:default -60 ;
+        lv2:minimum -60 ;
+        lv2:maximum 0 ;
+        units:unit units:db ;
+        pg:group <urn:openmixer:reverb#early>
+    ] ,
+    [
+        a lv2:ControlPort , lv2:InputPort ;
+        lv2:index 20 ;
+        lv2:symbol "tailDb" ;
+        lv2:name "Tail" ;
+        lv2:default 0 ;
+        lv2:minimum -60 ;
+        lv2:maximum 0 ;
+        units:unit units:db ;
+        pg:group <urn:openmixer:reverb#early>
+    ] ,
+    [
+        a lv2:ControlPort , lv2:InputPort ;
+        lv2:index 21 ;
+        lv2:symbol "earlySizePct" ;
+        lv2:name "Early Size" ;
+        lv2:default 50 ;
+        lv2:minimum 0 ;
+        lv2:maximum 100 ;
+        lv2:portProperty lv2:integer ;
+        units:unit units:pc ;
+        pg:group <urn:openmixer:reverb#early>
+    ] ,
+    [
+        a lv2:ControlPort , lv2:InputPort ;
+        lv2:index 22 ;
+        lv2:symbol "duckDb" ;
+        lv2:name "Duck" ;
+        lv2:default 0 ;
+        lv2:minimum -24 ;
+        lv2:maximum 0 ;
+        units:unit units:db ;
+        pg:group <urn:openmixer:reverb#duck>
+    ] ,
+    [
+        a lv2:ControlPort , lv2:InputPort ;
+        lv2:index 23 ;
+        lv2:symbol "duckThresholdDb" ;
+        lv2:name "Duck Threshold" ;
+        lv2:default -30 ;
+        lv2:minimum -60 ;
+        lv2:maximum 0 ;
+        lv2:portProperty lv2:integer ;
+        units:unit units:db ;
+        pg:group <urn:openmixer:reverb#duck>
+    ] ,
+    [
+        a lv2:ControlPort , lv2:InputPort ;
+        lv2:index 24 ;
+        lv2:symbol "duckReleaseMs" ;
+        lv2:name "Duck Release" ;
+        lv2:default 250 ;
+        lv2:minimum 20 ;
+        lv2:maximum 2000 ;
+        lv2:portProperty lv2:integer ;
+        units:unit units:ms ;
+        pg:group <urn:openmixer:reverb#duck>
+    ] ,
+    [
+        a lv2:ControlPort , lv2:InputPort ;
+        lv2:index 25 ;
+        lv2:symbol "wetDeess" ;
+        lv2:name "Wet De-ess" ;
+        lv2:default 0 ;
+        lv2:minimum 0 ;
+        lv2:maximum 1 ;
+        lv2:portProperty lv2:toggled ;
+        pg:group <urn:openmixer:reverb#deess>
+    ] ,
+    [
+        a lv2:ControlPort , lv2:InputPort ;
+        lv2:index 26 ;
+        lv2:symbol "deessFreqHz" ;
+        lv2:name "De-ess Freq" ;
+        lv2:default 7000 ;
+        lv2:minimum 2000 ;
+        lv2:maximum 16000 ;
+        lv2:portProperty lv2:integer ;
+        lv2:portProperty pprops:logarithmic ;
+        units:unit units:hz ;
+        pg:group <urn:openmixer:reverb#deess>
+    ] ,
+    [
+        a lv2:ControlPort , lv2:InputPort ;
+        lv2:index 27 ;
+        lv2:symbol "deessThresholdDb" ;
+        lv2:name "De-ess Threshold" ;
+        lv2:default -30 ;
+        lv2:minimum -60 ;
+        lv2:maximum 0 ;
+        units:unit units:db ;
+        pg:group <urn:openmixer:reverb#deess>
     ] .
 
 # lv2:displayPriority on a port group is the term Zynthian reads to order a plugin's groups (zynthian_lv2.py), and the
@@ -241,29 +346,50 @@ lv2:displayPriority
     a pg:Group ;
     lv2:symbol "reverb" ;
     lv2:name "Reverb" ;
-    lv2:displayPriority 3 ;
+    lv2:displayPriority 6 ;
     rdfs:label "Reverb" .
 
 <urn:openmixer:reverb#reverse>
     a pg:Group ;
     lv2:symbol "reverse" ;
     lv2:name "Reverse" ;
-    lv2:displayPriority 2 ;
+    lv2:displayPriority 5 ;
     rdfs:label "Reverse" .
 
 <urn:openmixer:reverb#gated>
     a pg:Group ;
     lv2:symbol "gated" ;
     lv2:name "Gated" ;
-    lv2:displayPriority 1 ;
+    lv2:displayPriority 4 ;
     rdfs:label "Gated" .
 
 <urn:openmixer:reverb#plate>
     a pg:Group ;
     lv2:symbol "plate" ;
     lv2:name "Plate" ;
-    lv2:displayPriority 4 ;
+    lv2:displayPriority 7 ;
     rdfs:label "Plate" .
+
+<urn:openmixer:reverb#early>
+    a pg:Group ;
+    lv2:symbol "early" ;
+    lv2:name "Early" ;
+    lv2:displayPriority 3 ;
+    rdfs:label "Early" .
+
+<urn:openmixer:reverb#duck>
+    a pg:Group ;
+    lv2:symbol "duck" ;
+    lv2:name "Duck" ;
+    lv2:displayPriority 2 ;
+    rdfs:label "Duck" .
+
+<urn:openmixer:reverb#deess>
+    a pg:Group ;
+    lv2:symbol "deess" ;
+    lv2:name "De-ess" ;
+    lv2:displayPriority 1 ;
+    rdfs:label "De-ess" .
 
 <urn:openmixer:unit#dBFS>
     a units:Unit ;

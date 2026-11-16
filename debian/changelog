@@ -9,6 +9,9 @@ omx-plugins (0.19.5) unstable; urgency=medium
     builds against.
   * Selftest: pkg-config asked once per environment, the ratchet checks the
     tree once, each checker arm its entry (#43).
+  * The reverb gains a return: the early reflections and the tail are set
+    apart, and the wet is ducked under the dry and de-essed in its band (#70).
+  * The compressor gains a release mode (#72).
 
  -- Pau Aliagas <linuxnow@gmail.com>  Sun, 15 Nov 2026 16:30:00 +0100
 

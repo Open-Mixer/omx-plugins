@@ -16,7 +16,8 @@
     "omx-comp": [
       "9e6eb2dc019e7d5c8c4d9bfd3c4125056dc2eb2db90a34b5719e46bf0a8477cb",
       "80e0daeb20ee68aed82fdcf501c0f6661e277ba71fb91d2d2efc2e4bb8e10375",
-      "10fc471c4d006888aa0c0ef660fff9384363e0f788378a757d059af558a8189b"
+      "10fc471c4d006888aa0c0ef660fff9384363e0f788378a757d059af558a8189b",
+      "406476383bdf2dc44974fcecfa00d20f98fa03c0930b474b4a7443b39c5eaa05"
     ],
     "omx-deesser": [
       "762fa5fbcc17e69ff69407b8f46f1192c7d87b40d5c03db82749a35e390bd592",
@@ -101,7 +102,8 @@
     ],
     "omx-reverb": [
       "3c6d0c052481f1fbafefc5f64bb8f16b76d00dfea1598888d5c90129a2e4a99d",
-      "4bfc8b448bcedb15595b78e1694ba771f4cf8f7cd7fb2ce077d9414b9af31afc"
+      "4bfc8b448bcedb15595b78e1694ba771f4cf8f7cd7fb2ce077d9414b9af31afc",
+      "4ba02d00b3f036e5c1ef5382391c23bfdc4d4d4263923d9a05f5493f40a1eaf8"
     ],
     "omx-rotary": [
       "7b064efba0e9985f2c12b82e577a32aeecd9502f6fcfce98f373d8a88d720c79",

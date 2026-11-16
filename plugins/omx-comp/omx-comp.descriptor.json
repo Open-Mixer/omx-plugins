@@ -499,6 +499,38 @@
           "at": "omx-dsp@0.32.4"
         }
       }
+    },
+    {
+      "id": 19,
+      "symbol": "releaseMode",
+      "name": "Release Mode",
+      "kind": "choice",
+      "ids": [
+        "0",
+        "1",
+        "2"
+      ],
+      "labels": [
+        "Fixed",
+        "Opto",
+        "Auto"
+      ],
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "default": "0",
+      "group": [
+        "Comp"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/comp.json#COMP_RELEASE_MODES",
+          "at": "omx-dsp@0.32.4"
+        }
+      }
     }
   ],
   "ports": [

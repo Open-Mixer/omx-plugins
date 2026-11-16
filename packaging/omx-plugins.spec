@@ -291,6 +291,9 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
   builds against
 - selftest: pkg-config asked once per environment, the ratchet checks the tree
   once, each checker arm its entry (#43)
+- the reverb gains a return: the early reflections and the tail are set apart,
+  and the wet is ducked under the dry and de-essed in its band (#70)
+- the compressor gains a release mode (#72)
 
 * Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
 - omx-plugins-contract installs role-meanings.json (the meaning each panel

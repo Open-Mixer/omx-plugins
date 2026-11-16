@@ -9,15 +9,6 @@
  *
  * GENERATED — DO NOT EDIT BY HAND. Produced by tools/gen.mjs from plugins/omx-reverb/omx-reverb.decl.json and
  * the face's resolve() prototype: each argument takes the parameter whose contract control it names.
- * `early_db` is no parameter: the declaration holds it at its kernel's declared default, OMX_REVERB_EARLY_DB_RANGE_DEFAULT.
- * `tail_db` is no parameter: the declaration holds it at its kernel's declared default, OMX_REVERB_TAIL_DB_RANGE_DEFAULT.
- * `early_size_pct` is no parameter: the declaration holds it at its kernel's declared default, OMX_REVERB_EARLY_SIZE_PCT_RANGE_DEFAULT.
- * `duck_db` is no parameter: the declaration holds it at its kernel's declared default, OMX_REVERB_DUCK_DB_RANGE_DEFAULT.
- * `duck_threshold_db` is no parameter: the declaration holds it at its kernel's declared default, OMX_REVERB_DUCK_THRESHOLD_DB_RANGE_DEFAULT.
- * `duck_release_ms` is no parameter: the declaration holds it at its kernel's declared default, OMX_REVERB_DUCK_RELEASE_MS_RANGE_DEFAULT.
- * `wet_deess` is no parameter: the declaration holds it at its kernel's declared default, OMX_REVERB_WET_DEESSES_DEFAULT.
- * `deess_freq_hz` is no parameter: the declaration holds it at its kernel's declared default, OMX_REVERB_DEESS_FREQ_HZ_RANGE_DEFAULT.
- * `deess_threshold_db` is no parameter: the declaration holds it at its kernel's declared default, OMX_REVERB_DEESS_THRESHOLD_DB_RANGE_DEFAULT.
  */
 #ifndef OMX_REVERB_CORE_H
 #define OMX_REVERB_CORE_H
@@ -61,15 +52,15 @@ static inline void omx_reverb_core_resolve(OmxReverbCore *c, const float *values
                                   /* release */ values[OMX_REVERB_PARAM_RELEASE],
                                   /* gate_threshold */ values[OMX_REVERB_PARAM_GATE_THRESHOLD],
                                   /* algorithm */ (int)lrintf(values[OMX_REVERB_PARAM_ALGORITHM]),
-                                  /* early_db */ (float)OMX_REVERB_EARLY_DB_RANGE_DEFAULT,
-                                  /* tail_db */ (float)OMX_REVERB_TAIL_DB_RANGE_DEFAULT,
-                                  /* early_size_pct */ (float)OMX_REVERB_EARLY_SIZE_PCT_RANGE_DEFAULT,
-                                  /* duck_db */ (float)OMX_REVERB_DUCK_DB_RANGE_DEFAULT,
-                                  /* duck_threshold_db */ (float)OMX_REVERB_DUCK_THRESHOLD_DB_RANGE_DEFAULT,
-                                  /* duck_release_ms */ (float)OMX_REVERB_DUCK_RELEASE_MS_RANGE_DEFAULT,
-                                  /* wet_deess */ (int)OMX_REVERB_WET_DEESSES_DEFAULT,
-                                  /* deess_freq_hz */ (float)OMX_REVERB_DEESS_FREQ_HZ_RANGE_DEFAULT,
-                                  /* deess_threshold_db */ (float)OMX_REVERB_DEESS_THRESHOLD_DB_RANGE_DEFAULT);
+                                  /* early_db */ values[OMX_REVERB_PARAM_EARLY_DB],
+                                  /* tail_db */ values[OMX_REVERB_PARAM_TAIL_DB],
+                                  /* early_size_pct */ values[OMX_REVERB_PARAM_EARLY_SIZE_PCT],
+                                  /* duck_db */ values[OMX_REVERB_PARAM_DUCK_DB],
+                                  /* duck_threshold_db */ values[OMX_REVERB_PARAM_DUCK_THRESHOLD_DB],
+                                  /* duck_release_ms */ values[OMX_REVERB_PARAM_DUCK_RELEASE_MS],
+                                  /* wet_deess */ (int)lrintf(values[OMX_REVERB_PARAM_WET_DEESS]),
+                                  /* deess_freq_hz */ values[OMX_REVERB_PARAM_DEESS_FREQ_HZ],
+                                  /* deess_threshold_db */ values[OMX_REVERB_PARAM_DEESS_THRESHOLD_DB]);
 }
 
 /** The latency the kernel adds, in samples. */

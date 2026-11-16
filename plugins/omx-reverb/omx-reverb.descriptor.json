@@ -11,7 +11,7 @@
     "name": "omx reverb",
     "vendor": "openmixer",
     "version": "0.19.5",
-    "doc": "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal.",
+    "doc": "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal; the early reflections and the tail set apart, the wet ducked under the dry and de-essed in its band.",
     "features": [
       "audio-effect"
     ]
@@ -347,6 +347,224 @@
       "source": {
         "from": {
           "link": "data/kernels/reverb.json#REVERB_ALGORITHMS",
+          "at": "omx-dsp@0.32.4"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "symbol": "earlyDb",
+      "name": "Early",
+      "doc": "The early reflections' level, dB: the declared tap set (REVERB_EARLY_TAP_MS, REVERB_EARLY_TAP_GAINS) read from the pre-delayed feed, even taps on the left, odd on the right, beside the tail. The travel's floor is off, no early reflections at all, and is the come-up value, so a fresh reverb is the one that shipped, bit for bit.",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": -60,
+        "scale": "linear"
+      },
+      "group": [
+        "Early"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/reverb.json#REVERB_EARLY_DB_RANGE",
+          "at": "omx-dsp@0.32.4"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "symbol": "tailDb",
+      "name": "Tail",
+      "doc": "The tail's level, dB: the reverb network's output. 0 dB is the tail as it shipped, the come-up value; the travel's floor is off, the early reflections alone.",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Early"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/reverb.json#REVERB_TAIL_DB_RANGE",
+          "at": "omx-dsp@0.32.4"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "symbol": "earlySizePct",
+      "name": "Early Size",
+      "doc": "The early reflections' room, percent: every tap's time scaled from REVERB_EARLY_SIZE_MIN of the table at 0 % to REVERB_EARLY_SIZE_MAX at 100 %.",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "%",
+        "default": 50,
+        "scale": "stepped"
+      },
+      "group": [
+        "Early"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/reverb.json#REVERB_EARLY_SIZE_PCT_RANGE",
+          "at": "omx-dsp@0.32.4"
+        }
+      }
+    },
+    {
+      "id": 16,
+      "symbol": "duckDb",
+      "name": "Duck",
+      "doc": "The wet's ducking depth, dB, the delay's duck (omx_duck): the tail and its reflections pull down while the dry is loud. 0 ducks nothing.",
+      "kind": "travel",
+      "travel": {
+        "min": -24,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": 0,
+        "scale": "linear"
+      },
+      "group": [
+        "Duck"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/reverb.json#REVERB_DUCK_DB_RANGE",
+          "at": "omx-dsp@0.32.4"
+        }
+      }
+    },
+    {
+      "id": 17,
+      "symbol": "duckThresholdDb",
+      "name": "Duck Threshold",
+      "doc": "The dry level the ducking starts at, dBFS.",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 1,
+        "unit": "dB",
+        "default": -30,
+        "scale": "stepped"
+      },
+      "group": [
+        "Duck"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/reverb.json#REVERB_DUCK_THRESHOLD_DB_RANGE",
+          "at": "omx-dsp@0.32.4"
+        }
+      }
+    },
+    {
+      "id": 18,
+      "symbol": "duckReleaseMs",
+      "name": "Duck Release",
+      "doc": "How fast the wet comes back once the dry falls, ms; the attack is FX_DUCK_ATTACK_MS.",
+      "kind": "travel",
+      "travel": {
+        "min": 20,
+        "max": 2000,
+        "step": 1,
+        "unit": "ms",
+        "default": 250,
+        "scale": "stepped"
+      },
+      "group": [
+        "Duck"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/reverb.json#REVERB_DUCK_RELEASE_MS_RANGE",
+          "at": "omx-dsp@0.32.4"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "symbol": "wetDeess",
+      "name": "Wet De-ess",
+      "doc": "The wet's de-esser: on, the de-esser kernel in split mode on the wet, at deessFreqHz and deessThresholdDb with the de-esser's own come-up width, ratio, range, attack and release; off, the wet as it is.",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "De-ess"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/reverb.json#REVERB_WET_DEESSES",
+          "at": "omx-dsp@0.32.4"
+        }
+      }
+    },
+    {
+      "id": 20,
+      "symbol": "deessFreqHz",
+      "name": "De-ess Freq",
+      "doc": "The wet de-esser's band, Hz: the de-esser's frequency travel by reference.",
+      "kind": "travel",
+      "travel": {
+        "min": 2000,
+        "max": 16000,
+        "step": 1,
+        "unit": "Hz",
+        "default": 7000,
+        "scale": "log"
+      },
+      "group": [
+        "De-ess"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/reverb.json#REVERB_DEESS_FREQ_HZ_RANGE",
+          "at": "omx-dsp@0.32.4"
+        }
+      }
+    },
+    {
+      "id": 21,
+      "symbol": "deessThresholdDb",
+      "name": "De-ess Threshold",
+      "doc": "The wet de-esser's threshold, dB: the de-esser's threshold travel by reference.",
+      "kind": "travel",
+      "travel": {
+        "min": -60,
+        "max": 0,
+        "step": 0,
+        "unit": "dB",
+        "default": -30,
+        "scale": "linear"
+      },
+      "group": [
+        "De-ess"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/reverb.json#REVERB_DEESS_THRESHOLD_DB_RANGE",
           "at": "omx-dsp@0.32.4"
         }
       }
