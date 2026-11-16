@@ -66,7 +66,7 @@ Take the sound of the OpenMixer console into your DAW or onto your own rig:
 delay, drive, the channel EQ as an 8-band EQ, a 16-band EQ or a 32-band EQ, a
 31-band graphic EQ, the full channel strip and the keyed gate with its sidechain
 input, and the console's effects: chorus, flanger, phaser, tremolo, rotary
-speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, doubler, tone control, ducker, limiter, compressor
+speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, doubler, tone control, stereo width, ducker, limiter, compressor
 with its sidechain key, multiband compressor and dynamic EQ. They come
 as CLAP plugins for Bitwig, REAPER and Carla, and as LV2 plugins for Ardour,
 Carla, MOD and Zynthian. Each one runs the same DSP as the console, so a track sounds the same
@@ -216,6 +216,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 /usr/lib/clap/omx-transient.clap
 /usr/lib/clap/omx-tremolo.clap
 /usr/lib/clap/omx-upward.clap
+/usr/lib/clap/omx-width.clap
 # END GENERATED clap-files
 
 %files test
@@ -279,6 +280,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 %{_libdir}/lv2/omx-transient.lv2/
 %{_libdir}/lv2/omx-tremolo.lv2/
 %{_libdir}/lv2/omx-upward.lv2/
+%{_libdir}/lv2/omx-width.lv2/
 # END GENERATED lv2-files
 
 %changelog
