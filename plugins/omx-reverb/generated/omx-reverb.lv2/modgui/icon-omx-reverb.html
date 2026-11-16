@@ -1,4 +1,4 @@
-<div class="omx-pedal{{{cns}}} omx-family-reverb omx-look-vintage" data-omx-pedal data-cell-w="72" data-cell-h="106" data-title-h="18" data-section-pad="8" data-section-gap="10" data-section-top="52" data-pad="16" data-row-controls="8" data-head-h="20" data-base-w="592" style="width:624px;height:700px">
+<div class="omx-pedal{{{cns}}} omx-family-reverb omx-look-vintage" data-omx-pedal data-cell-w="72" data-cell-h="106" data-title-h="18" data-section-pad="8" data-section-gap="10" data-section-top="52" data-pad="16" data-row-controls="8" data-head-h="20" data-base-w="592" style="width:624px;height:1114px">
     <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
     <!-- Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com> -->
     <!-- GENERATED — DO NOT EDIT BY HAND. Produced by tools/modgui-gen.mjs from -->
@@ -98,6 +98,60 @@
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="plateModDepth"></div>
                 <span class="omx-control-title">Plate Mod Depth</span>
                 <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="plateModDepth" data-unit="%"></div>
+            </div>
+        </div>
+        <div class="omx-section" data-section="early" data-curves="0" style="left:16px;top:694px;width:592px;height:128px">
+            <h2 class="omx-section-title">Early</h2>
+            <div class="omx-control omx-knob" style="left:8px;top:18px" title="Early" data-symbol="earlyDb" data-min="-60" data-max="0" data-default="-60">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="earlyDb"></div>
+                <span class="omx-control-title">Early</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="earlyDb" data-unit="dB"></div>
+            </div>
+            <div class="omx-control omx-knob" style="left:80px;top:18px" title="Tail" data-symbol="tailDb" data-min="-60" data-max="0" data-default="0">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="tailDb"></div>
+                <span class="omx-control-title">Tail</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="tailDb" data-unit="dB"></div>
+            </div>
+            <div class="omx-control omx-knob" style="left:152px;top:18px" title="Early Size" data-symbol="earlySizePct" data-min="0" data-max="100" data-default="50">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="earlySizePct"></div>
+                <span class="omx-control-title">Early Size</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="earlySizePct" data-unit="%"></div>
+            </div>
+        </div>
+        <div class="omx-section" data-section="duck" data-curves="0" style="left:16px;top:832px;width:592px;height:128px">
+            <h2 class="omx-section-title">Duck</h2>
+            <div class="omx-control omx-knob" style="left:8px;top:18px" title="Duck" data-symbol="duckDb" data-min="-24" data-max="0" data-default="0">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="duckDb"></div>
+                <span class="omx-control-title">Duck</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="duckDb" data-unit="dB"></div>
+            </div>
+            <div class="omx-control omx-knob" style="left:80px;top:18px" title="Duck Threshold" data-symbol="duckThresholdDb" data-min="-60" data-max="0" data-default="-30">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="duckThresholdDb"></div>
+                <span class="omx-control-title">Duck Threshold</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="duckThresholdDb" data-unit="dB"></div>
+            </div>
+            <div class="omx-control omx-knob" style="left:152px;top:18px" title="Duck Release" data-symbol="duckReleaseMs" data-min="20" data-max="2000" data-default="250">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="duckReleaseMs"></div>
+                <span class="omx-control-title">Duck Release</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="duckReleaseMs" data-unit="ms"></div>
+            </div>
+        </div>
+        <div class="omx-section" data-section="deess" data-curves="0" style="left:16px;top:970px;width:592px;height:128px">
+            <h2 class="omx-section-title">De-ess</h2>
+            <div class="omx-control omx-switch" style="left:8px;top:18px" title="Wet De-ess" data-symbol="wetDeess" data-min="0" data-max="1" data-default="0">
+                <div class="omx-switch-image" mod-role="input-control-port" mod-port-symbol="wetDeess" mod-widget="switch"></div>
+                <span class="omx-control-title">Wet De-ess</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="wetDeess" data-unit="" data-onoff></div>
+            </div>
+            <div class="omx-control omx-knob" style="left:80px;top:18px" title="De-ess Freq" data-symbol="deessFreqHz" data-min="2000" data-max="16000" data-default="7000">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="deessFreqHz"></div>
+                <span class="omx-control-title">De-ess Freq</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="deessFreqHz" data-unit="Hz"></div>
+            </div>
+            <div class="omx-control omx-knob" style="left:152px;top:18px" title="De-ess Threshold" data-symbol="deessThresholdDb" data-min="-60" data-max="0" data-default="-30">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="deessThresholdDb"></div>
+                <span class="omx-control-title">De-ess Threshold</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="deessThresholdDb" data-unit="dB"></div>
             </div>
         </div>
     <div class="mod-pedal-input">

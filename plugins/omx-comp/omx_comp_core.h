@@ -9,7 +9,6 @@
  *
  * GENERATED — DO NOT EDIT BY HAND. Produced by tools/gen.mjs from plugins/omx-comp/omx-comp.decl.json and
  * the face's resolve() prototype: each argument takes the parameter whose contract control it names.
- * `release_mode` is no parameter: the declaration holds it at its kernel's declared default, OMX_COMP_RELEASE_MODES_DEFAULT.
  */
 #ifndef OMX_COMP_CORE_H
 #define OMX_COMP_CORE_H
@@ -59,7 +58,7 @@ static inline void omx_comp_core_resolve(OmxCompCore *c, const float *values, in
                                   /* detect_link */ (int)lrintf(values[OMX_COMP_PARAM_DETECT_LINK]),
                                   /* duck */ (int)lrintf(values[OMX_COMP_PARAM_DUCK]),
                                   /* range_db */ values[OMX_COMP_PARAM_RANGE_DB],
-                                  /* release_mode */ (int)OMX_COMP_RELEASE_MODES_DEFAULT);
+                                  /* release_mode */ (int)lrintf(values[OMX_COMP_PARAM_RELEASE_MODE]));
 }
 
 /** The latency the kernel adds, in samples. */

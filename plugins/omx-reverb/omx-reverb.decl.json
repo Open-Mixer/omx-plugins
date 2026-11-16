@@ -7,17 +7,9 @@
   ],
   "url": "https://github.com/FreeMixer/omx-plugins",
   "binding": "instance",
-  "held": [
-    "earlyDb",
-    "tailDb",
-    "earlySizePct",
-    "duckDb",
-    "duckThresholdDb",
-    "duckReleaseMs",
-    "wetDeess",
-    "deessFreqHz",
-    "deessThresholdDb"
-  ],
+  "engaged": {
+    "deessThresholdDb": -60
+  },
   "controls": {
     "algorithm": {
       "values": [
@@ -100,6 +92,29 @@
         "lv2:integer"
       ],
       "unit": "units:frame"
+    },
+    "earlySizePct": {
+      "props": [
+        "lv2:integer"
+      ],
+      "unit": "units:pc"
+    },
+    "duckReleaseMs": {
+      "props": [
+        "lv2:integer"
+      ],
+      "unit": "units:ms"
+    },
+    "deessFreqHz": {
+      "props": [
+        "lv2:integer"
+      ],
+      "unit": "units:hz"
+    },
+    "wetDeess": {
+      "props": [
+        "lv2:toggled"
+      ]
     }
   },
   "resourceHints": {
@@ -107,6 +122,9 @@
     "streams-from-disk": false,
     "opens-sockets": false
   },
+  "oracles": [
+    "reverb-return"
+  ],
   "panel": {
     "family": "reverb",
     "roles": {
@@ -156,6 +174,33 @@
         "label": "Plate",
         "controls": [
           "plateModDepth"
+        ]
+      },
+      {
+        "key": "early",
+        "label": "Early",
+        "controls": [
+          "earlyDb",
+          "tailDb",
+          "earlySizePct"
+        ]
+      },
+      {
+        "key": "duck",
+        "label": "Duck",
+        "controls": [
+          "duckDb",
+          "duckThresholdDb",
+          "duckReleaseMs"
+        ]
+      },
+      {
+        "key": "deess",
+        "label": "De-ess",
+        "controls": [
+          "wetDeess",
+          "deessFreqHz",
+          "deessThresholdDb"
         ]
       }
     ]

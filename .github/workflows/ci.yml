@@ -2,7 +2,7 @@
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 name: ci
 
-# On every push and pull request: the whole suite on Fedora, with no test skipped. On workflow_dispatch also: the RPMs and DEBs
+# On workflow_dispatch only (a pull request and a push run the lint workflow; the cluster verify row runs the suite): the whole suite on Fedora, with no test skipped. On workflow_dispatch also: the RPMs and DEBs
 # built (their own make test included), their file lists checked and the packages installed and loaded
 # by a CLAP and an LV2 scanner; and the release workflow as a dry run. Nothing is signed or published
 # here. The build dependencies come from the packaging (dnf builddep, apt-get build-dep), the ones
@@ -10,9 +10,6 @@ name: ci
 # request into dedupe/all, and a push to it, take the siblings listed in .github/wave-deps from their own dedupe/all.
 
 on:
-  pull_request:
-  push:
-    branches: [main, dedupe/all]
   workflow_dispatch:
 
 permissions:
@@ -269,8 +266,8 @@ jobs:
             rpm -qlp "$rpm" | grep -v '^/usr/lib/.build-id' | sort > files-$sub.txt
           done
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
-          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
-          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
+          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward"
+          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward"
           tests="org.openmixer.test-note-echo org.openmixer.test-pool-voice org.openmixer.test-sine-voice org.openmixer.test-transport-probe"
           teststems="omx-test-note-echo omx-test-pool-voice omx-test-sine-voice omx-test-transport-probe"
           # END GENERATED plugins
@@ -346,8 +343,8 @@ jobs:
           out=$(rpm -ql omx-plugins); grep -qx /usr/share/omx/presets/org.openmixer.drive/amp-tube.json <<<"$out"
           test "$(grep -c '^/usr/share/omx/presets/.*\.json$' <<<"$out")" = "$(find presets -name '*.json' | wc -l)"
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
-          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
-          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
+          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward"
+          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward"
           tests="org.openmixer.test-note-echo org.openmixer.test-pool-voice org.openmixer.test-sine-voice org.openmixer.test-transport-probe"
           teststems="omx-test-note-echo omx-test-pool-voice omx-test-sine-voice omx-test-transport-probe"
           # END GENERATED plugins
@@ -379,8 +376,8 @@ jobs:
           devel=$(find rpms -maxdepth 1 -name "omx-plugins-devel-[0-9]*.rpm" ! -name "*.src.rpm" | head -1)
           dnf_retry --setopt=install_weak_deps=False "$devel" rpms/omx-plugins-contract-[0-9]*.noarch.rpm
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
-          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
-          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
+          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward"
+          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward"
           tests="org.openmixer.test-note-echo org.openmixer.test-pool-voice org.openmixer.test-sine-voice org.openmixer.test-transport-probe"
           teststems="omx-test-note-echo omx-test-pool-voice omx-test-sine-voice omx-test-transport-probe"
           # END GENERATED plugins
@@ -469,8 +466,8 @@ jobs:
           out=$(dpkg -L omx-plugins); grep -qx /usr/share/omx/presets/org.openmixer.drive/amp-tube.json <<<"$out"
           test "$(grep -c '^/usr/share/omx/presets/.*\.json$' <<<"$out")" = "$(find presets -name '*.json' | wc -l)"
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
-          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
-          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
+          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward"
+          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward"
           tests="org.openmixer.test-note-echo org.openmixer.test-pool-voice org.openmixer.test-sine-voice org.openmixer.test-transport-probe"
           teststems="omx-test-note-echo omx-test-pool-voice omx-test-sine-voice omx-test-transport-probe"
           # END GENERATED plugins
@@ -496,8 +493,8 @@ jobs:
           set -euo pipefail
           apt-get install -y --no-install-recommends ./debs/omx-plugins-dev_*.deb
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
-          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
-          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
+          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward"
+          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward"
           tests="org.openmixer.test-note-echo org.openmixer.test-pool-voice org.openmixer.test-sine-voice org.openmixer.test-transport-probe"
           teststems="omx-test-note-echo omx-test-pool-voice omx-test-sine-voice omx-test-transport-probe"
           # END GENERATED plugins
@@ -580,8 +577,3 @@ jobs:
     with:
       publish: false
       arm: false  # arm64/aarch64 build at release only
-
-  # The shared checks on what this repository publishes: a pull request's own commits carry no attribution line, no
-  # tracked file points into a private repository, and no local copy of these checks is kept.
-  public-sources:
-    uses: Open-Mixer/.github/.github/workflows/public-sources-check.yml@openmixer-v1

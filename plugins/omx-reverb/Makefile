@@ -105,6 +105,10 @@ $(B)/preset-probe: $(ROOT)/tools/preset-probe.c | $(B)
 $(B)/reverb-oracle: test/reverb-oracle.c $(CORE) | $(B)
 	$(CC) $(CFLAGS) $(WARN) -I$(GEN) -I$(ROOT)/include $(DSP_CFLAGS) $(ABI_CFLAGS) -o $@ $< $(LILV) -ldl $(LDLIBS)
 
+# Hand-written (the declaration's `oracles`): moved from the console engine with the effect.
+$(B)/reverb-return: test/reverb-return.c $(CORE) | $(B)
+	$(CC) $(CFLAGS) $(WARN) -I$(GEN) -I$(ROOT)/include -I$(ROOT)/tools/test $(DSP_CFLAGS) $(ABI_CFLAGS) -o $@ $< $(LILV) -ldl -lpthread $(LDLIBS)
+
 gen:
 	node $(ROOT)/tools/gen.mjs $(CURDIR)
 	node $(ROOT)/tools/panel-file.mjs $(CURDIR) $(PANEL_FILE)
@@ -132,6 +136,7 @@ check:
 # `test-heavy` runs the built faces through a host: the kernel-identity oracle (both faces, every
 # declared rate, every parameter a step off), the hand-written oracles, the MOD GUI test and the
 # external scanners of host-check.sh. Both run on every pull request (tools/test/test-split.json).
+# reverb-return: the hand-written oracle the declaration names, on both faces.
 test: all check $(B)/clap-probe $(B)/panel-probe $(B)/clap-ext-probe $(B)/port-groups-probe $(B)/preset-probe
 	@fail=0; \
 	$(B)/clap-probe params $(B)/$(NAME).clap > $(B)/clap-params.txt && \
@@ -150,10 +155,12 @@ test: all check $(B)/clap-probe $(B)/panel-probe $(B)/clap-ext-probe $(B)/port-g
 	node $(ROOT)/tools/test/presets-host-check.mjs --self-test $(B)/preset-probe $(CURDIR) || fail=1; \
 	exit $$fail
 
-test-heavy: all check $(B)/reverb-oracle
+test-heavy: all check $(B)/reverb-oracle $(B)/reverb-return
 	@fail=0; \
 	$(B)/reverb-oracle clap $(B)/$(NAME).clap || fail=1; \
 	$(B)/reverb-oracle lv2 $(BUNDLE) $(URI) || fail=1; \
+	$(B)/reverb-return clap $(B)/$(NAME).clap || fail=1; \
+	$(B)/reverb-return lv2 $(BUNDLE) $(URI) || fail=1; \
 	MODGUI_SOURCE='$(MODGUI_SOURCE)' sh $(OMX_PANEL_DIR)/tools/modgui-test.sh $(BUNDLE) $(NAME).descriptor.json $(PANEL_FILE) || fail=1; \
 	sh $(ROOT)/tools/host-check.sh $(B)/$(NAME).clap $(BUNDLE) $(URI) $(CLAP_ID) || fail=1; \
 	exit $$fail
