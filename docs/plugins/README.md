@@ -31,7 +31,7 @@ One page for each plugin: its ids, its audio ports, its pages (the LV2 port grou
 | [omx phaser](omx-phaser.md) | `org.openmixer.phaser` | `urn:openmixer:phaser` | 6 | 1 |
 | [omx pitch](omx-pitch.md) | `org.openmixer.pitch` | `urn:openmixer:pitch` | 3 | 1 |
 | [omx plosive](omx-plosive.md) | `org.openmixer.plosive` | `urn:openmixer:plosive` | 9 | 1 |
-| [omx reverb](omx-reverb.md) | `org.openmixer.reverb` | `urn:openmixer:reverb` | 13 | 4 |
+| [omx reverb](omx-reverb.md) | `org.openmixer.reverb` | `urn:openmixer:reverb` | 22 | 7 |
 | [omx rotary](omx-rotary.md) | `org.openmixer.rotary` | `urn:openmixer:rotary` | 8 | 1 |
 | [omx spring](omx-spring.md) | `org.openmixer.spring` | `urn:openmixer:spring` | 5 | 1 |
 | [omx strip](omx-strip.md) | `org.openmixer.strip` | `urn:openmixer:strip` | 192 | 6 |

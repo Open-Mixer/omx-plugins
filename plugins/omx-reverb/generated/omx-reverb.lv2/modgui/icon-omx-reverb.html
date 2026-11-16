@@ -1,4 +1,4 @@
-<div class="omx-pedal{{{cns}}} omx-family-reverb" style="width:624px;height:490px">
+<div class="omx-pedal{{{cns}}} omx-family-reverb" style="width:624px;height:814px">
     <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
     <!-- Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com> -->
     <!-- GENERATED — DO NOT EDIT BY HAND. Produced by tools/modgui-gen.mjs from -->
@@ -84,6 +84,51 @@
             <div class="omx-control omx-knob" style="left:8px;top:18px" title="Plate Mod Depth" data-symbol="plateModDepth" data-min="0" data-max="400" data-default="100">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="plateModDepth"></div>
                 <span class="omx-control-title">Plate Mod Depth</span>
+            </div>
+        </div>
+        <div class="omx-section" data-section="early" style="left:16px;top:484px;width:592px;height:98px">
+            <h2 class="omx-section-title">Early</h2>
+            <div class="omx-control omx-knob" style="left:8px;top:18px" title="Early" data-symbol="earlyDb" data-min="-60" data-max="0" data-default="-60">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="earlyDb"></div>
+                <span class="omx-control-title">Early</span>
+            </div>
+            <div class="omx-control omx-knob" style="left:80px;top:18px" title="Tail" data-symbol="tailDb" data-min="-60" data-max="0" data-default="0">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="tailDb"></div>
+                <span class="omx-control-title">Tail</span>
+            </div>
+            <div class="omx-control omx-knob" style="left:152px;top:18px" title="Early Size" data-symbol="earlySizePct" data-min="0" data-max="100" data-default="50">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="earlySizePct"></div>
+                <span class="omx-control-title">Early Size</span>
+            </div>
+        </div>
+        <div class="omx-section" data-section="duck" style="left:16px;top:592px;width:592px;height:98px">
+            <h2 class="omx-section-title">Duck</h2>
+            <div class="omx-control omx-knob" style="left:8px;top:18px" title="Duck" data-symbol="duckDb" data-min="-24" data-max="0" data-default="0">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="duckDb"></div>
+                <span class="omx-control-title">Duck</span>
+            </div>
+            <div class="omx-control omx-knob" style="left:80px;top:18px" title="Duck Threshold" data-symbol="duckThresholdDb" data-min="-60" data-max="0" data-default="-30">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="duckThresholdDb"></div>
+                <span class="omx-control-title">Duck Threshold</span>
+            </div>
+            <div class="omx-control omx-knob" style="left:152px;top:18px" title="Duck Release" data-symbol="duckReleaseMs" data-min="20" data-max="2000" data-default="250">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="duckReleaseMs"></div>
+                <span class="omx-control-title">Duck Release</span>
+            </div>
+        </div>
+        <div class="omx-section" data-section="deess" style="left:16px;top:700px;width:592px;height:98px">
+            <h2 class="omx-section-title">De-ess</h2>
+            <div class="omx-control omx-switch" style="left:8px;top:18px" title="Wet De-ess" data-symbol="wetDeess" data-min="0" data-max="1" data-default="0">
+                <div class="omx-switch-image" mod-role="input-control-port" mod-port-symbol="wetDeess" mod-widget="switch"></div>
+                <span class="omx-control-title">Wet De-ess</span>
+            </div>
+            <div class="omx-control omx-knob" style="left:80px;top:18px" title="De-ess Freq" data-symbol="deessFreqHz" data-min="2000" data-max="16000" data-default="7000">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="deessFreqHz"></div>
+                <span class="omx-control-title">De-ess Freq</span>
+            </div>
+            <div class="omx-control omx-knob" style="left:152px;top:18px" title="De-ess Threshold" data-symbol="deessThresholdDb" data-min="-60" data-max="0" data-default="-30">
+                <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="deessThresholdDb"></div>
+                <span class="omx-control-title">De-ess Threshold</span>
             </div>
         </div>
     <div class="mod-pedal-input">
