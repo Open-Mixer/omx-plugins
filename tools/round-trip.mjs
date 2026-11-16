@@ -105,27 +105,27 @@ export const LOSSES = {
   // row reads the rest of the units and steps, a choice (our faces set no CLAP_PARAM_IS_ENUM), the session symbol, the
   // LV2 URI, a side-chain's role or what an LV2 host may lend
   'clap controls[].travel.unit': 125,
-  'clap controls[].travel.step': 379,
+  'clap controls[].travel.step': 380,
   'clap controls[].kind': 268,
   'clap controls[].ids': 138,
   'clap controls[].values': 138,
   'clap controls[].labels': 138,
   'clap controls[].default': 268,
-  'clap controls[].symbol': 835,
-  'clap plugin.uri': 32,
+  'clap controls[].symbol': 836,
+  'clap plugin.uri': 33,
   'clap ports[].role': 3,
-  'clap needs.extensions.optional': 32,
+  'clap needs.extensions.optional': 33,
   // LV2: no row reads a step, automation, the plugin's version or vendor (our .ttl writes no doap:maintainer); a
   // control's id is its symbol and a point's id its label, so the CLAP id and our point ids are no LV2 word; the
   // audio ports are one per channel, with the generator's symbols and names
-  'lv2 controls[].travel.step': 567,
-  'lv2 controls[].automatable': 835,
-  'lv2 controls[].id': 835,
+  'lv2 controls[].travel.step': 568,
+  'lv2 controls[].automatable': 836,
+  'lv2 controls[].id': 836,
   'lv2 controls[].ids': 138,
-  'lv2 plugin.version': 32,
-  'lv2 plugin.vendor': 32,
-  'lv2 ports[].id': 67,
-  'lv2 ports[].name': 67,
+  'lv2 plugin.version': 33,
+  'lv2 plugin.vendor': 33,
+  'lv2 ports[].id': 69,
+  'lv2 ports[].name': 69,
   // LV2 port groups are flat: a control in a section's subgroup (an EQ's band, #257) carries the group, not the
   // section above it (omx-eq8, omx-eq16 and omx-eq32: five controls a band, 8 + 16 + 32 bands)
   'lv2 controls[].group (panel section)': 280,

@@ -41,6 +41,7 @@ Every plugin, what it does, and its controls; the parameter pages, the factory p
 | **omx tone** | `org.openmixer.tone` | `urn:openmixer:tone` | Tilts the whole tone darker or brighter about a pivot, and sweeps a resonant DJ filter from a low-pass through open to a high-pass with one knob. |
 | **omx transient** | `org.openmixer.transient` | `urn:openmixer:transient` | The console's transient designer: more or less attack and sustain, from two envelope contrasts, with no threshold to set. |
 | **omx tremolo** | `org.openmixer.tremolo` | `urn:openmixer:tremolo` | The console's tremolo and auto-pan: one oscillator turned into a level change on both legs, or into a left-right pan. |
+| **omx trim** | `org.openmixer.trim` | `urn:openmixer:trim` | The OpenMixer console's input trim: one gain control, -24 to +24 dB in 0.1 dB steps, applied first in the channel as a click-free ramp, stereo, zero latency; at 0 dB a racked instance is a wire. |
 | **omx upward** | `org.openmixer.upward` | `urn:openmixer:upward` | Lifts what is quiet toward a threshold, by a ratio and up to a limit, and leaves the loud alone. |
 
 <!-- END GENERATED catalogue -->
@@ -641,6 +642,14 @@ Plus the host's bypass.
 | Depth | 0 to 100 % | 50 % |
 | Mix | 0 to 100 % | 100 % |
 | Mode | Tremolo / Pan | Tremolo |
+
+Plus the host's bypass.
+
+### omx trim
+
+| Parameter | Range | Default |
+|---|---|---|
+| Trim | -24 to 24 dB | 0 dB |
 
 Plus the host's bypass.
 
