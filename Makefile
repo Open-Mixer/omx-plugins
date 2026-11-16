@@ -41,6 +41,8 @@
 #                   hidden, and no page holds a hidden band (tools/test/strip-visible-when-test.mjs; part of `make test`)
 #   make strip-eq-curve  omx-strip's MOD GUI holds the EQ curve with the HPF's and LPF's roll-off in it (tools/test/strip-eq-curve-test.mjs;
 #                   needs the omx-dsp twin and fails without it; part of `make test`)
+#   make strip-order-enumeration  omx-strip's Order is a choice naming its 120 stage orders, in the descriptor and as LV2 scale points
+#                   (tools/test/strip-order-enumeration-test.mjs; part of `make test`)
 #   make strip-pages-follow  omx-strip's CLAP remote-control pages follow Bands: 4, 32, 9 and 4 bands read back through the
 #                   extension from the built face, the host told by changed() (tools/test/strip-pages-follow-test.mjs; part of `make test`)
 #   make band-groups  omx-eq8's generated descriptor and TTL hold one LV2 port group per band, Band 1 ... Band 8 in band
@@ -176,11 +178,11 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: strip-eq-curve face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi host-contract test-split test-heavy
+.PHONY: strip-eq-curve strip-order-enumeration face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi host-contract test-split test-heavy
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib units panel-words face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids strip-visible-when strip-eq-curve face-dirty-order test-split
+test: lib units panel-words face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids strip-visible-when strip-eq-curve strip-order-enumeration face-dirty-order test-split
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s presets-figures
@@ -303,6 +305,9 @@ strip-visible-when:
 # omx-strip's EQ screen draws the EQ curve with the HPF's and LPF's roll-off (needs the omx-dsp twin: red, not skipped, without it)
 strip-eq-curve:
 	node tools/test/strip-eq-curve-test.mjs
+# omx-strip's Order is a choice naming the stage order: 120 labels in the descriptor, 120 scale points on the LV2 port
+strip-order-enumeration:
+	node tools/test/strip-order-enumeration-test.mjs
 # the strip's CLAP remote-control pages follow Bands: the built face and a host that offers clap.remote-controls,
 # read back through the extension at 4, 32, 9, 9 and 4 bands (tools/test/clap-pages-follow-probe.c)
 strip-pages-follow:
