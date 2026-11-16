@@ -7,6 +7,11 @@
   ],
   "url": "https://github.com/FreeMixer/omx-plugins",
   "binding": "instance",
+  "resourceHints": {
+    "threads-spawned": 0,
+    "streams-from-disk": false,
+    "opens-sockets": false
+  },
   "panel": {
     "family": "none",
     "roles": {},
