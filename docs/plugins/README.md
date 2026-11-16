@@ -41,3 +41,4 @@ One page for each plugin: its ids, its audio ports, its pages (the LV2 port grou
 | [omx tremolo](omx-tremolo.md) | `org.openmixer.tremolo` | `urn:openmixer:tremolo` | 4 | 1 |
 | [omx trim](omx-trim.md) | `org.openmixer.trim` | `urn:openmixer:trim` | 1 | 1 |
 | [omx upward](omx-upward.md) | `org.openmixer.upward` | `urn:openmixer:upward` | 5 | 1 |
+| [omx width](omx-width.md) | `org.openmixer.width` | `urn:openmixer:width` | 5 | 1 |
