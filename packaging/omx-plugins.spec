@@ -16,7 +16,7 @@ BuildRequires: pkgconf-pkg-config
 # the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
 BuildRequires: omx-dsp-devel >= 0.32.4
 BuildRequires: omx-contract-devel >= 3.19.0
-BuildRequires: omx-clap-core-devel >= 0.32.5
+BuildRequires: omx-clap-core-devel >= 0.32.6
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
 BuildRequires: plugin-hostd-devel >= 0.20.8
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
@@ -37,7 +37,7 @@ BuildRequires: diffutils
 BuildRequires: lilv
 BuildRequires: lilv-devel
 BuildRequires: sord
-BuildRequires: omx-clap-host >= 0.32.5
+BuildRequires: omx-clap-host >= 0.32.6
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
 BuildRequires: plugin-hostd >= 0.20.8
 # %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
@@ -297,6 +297,9 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
   and the wet is ducked under the dry and de-essed in its band (#70)
 - the compressor gains a release mode (#72)
 - a new input trim plugin: a clean gain, lift or pad, with presets (#76)
+- the build floors omx-clap-core-devel and omx-clap-host at 0.32.6: the
+  panel-words test reads the panel families from omx-clap-core's header when
+  it builds, and the utility family is there from 0.32.6
 
 * Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
 - omx-plugins-contract installs role-meanings.json (the meaning each panel
