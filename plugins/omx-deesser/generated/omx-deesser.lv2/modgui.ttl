@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-deesser.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx deesser" ;
+        modgui:javascript <modgui/script-omx-deesser.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "deessMode" ;

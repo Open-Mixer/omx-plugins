@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-doubler.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx doubler" ;
+        modgui:javascript <modgui/script-omx-doubler.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "voices" ;

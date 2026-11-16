@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-rotary.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx rotary" ;
+        modgui:javascript <modgui/script-omx-rotary.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "hornSlowHz" ;

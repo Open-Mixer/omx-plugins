@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-balancer.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx balancer" ;
+        modgui:javascript <modgui/script-omx-balancer.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "amountPct" ;

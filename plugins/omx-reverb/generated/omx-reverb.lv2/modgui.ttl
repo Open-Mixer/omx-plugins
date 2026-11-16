@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-reverb.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx reverb" ;
+        modgui:javascript <modgui/script-omx-reverb.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "algorithm" ;

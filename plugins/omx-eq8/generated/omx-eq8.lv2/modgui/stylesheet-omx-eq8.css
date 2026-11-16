@@ -7,41 +7,135 @@
  * Colours and font: the OpenMixer console's dark theme, resolved in tools/look.json.
  * Look: vintage (the modgui-look setting).
  */
-.omx-pedal{{{cns}}} { position: relative; box-sizing: border-box; background: radial-gradient(140% 90% at 30% 0%, #f6efdd, #e9dfc7 55%, #cfc2a3); box-shadow: inset 0 2px 0 rgba(255,255,255,0.6), inset 0 -3px 0 rgba(90,70,40,0.25), 0 16px 26px rgba(0,0,0,0.6); border-radius: 14px; color: #f3ead4; font-family: "Inter", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-.omx-pedal{{{cns}}} .omx-head { position: absolute; left: 10px; right: 10px; top: 5px; background: linear-gradient(180deg, #2c2924, #1b1916); border-radius: 4px; }
-.omx-pedal{{{cns}}}::before, .omx-pedal{{{cns}}}::after { content: ''; position: absolute; top: 9px; width: 9px; height: 9px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fafafa, #8a8a8a); box-shadow: 0 1px 1px rgba(0,0,0,0.45); }
-.omx-pedal{{{cns}}}::before { left: 9px; }
-.omx-pedal{{{cns}}}::after { right: 9px; }
+.omx-pedal{{{cns}}}.omx-look-vintage { position: relative; box-sizing: border-box; background: radial-gradient(140% 90% at 30% 0%, #f6efdd, #e9dfc7 55%, #cfc2a3); box-shadow: inset 0 2px 0 rgba(255,255,255,0.6), inset 0 -3px 0 rgba(90,70,40,0.25), 0 16px 26px rgba(0,0,0,0.6); border-radius: 14px; color: #f3ead4; font-family: "Inter", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-head { position: absolute; left: 10px; right: 10px; top: 5px; background: linear-gradient(180deg, #2c2924, #1b1916); border-radius: 4px; }
+.omx-pedal{{{cns}}}.omx-look-vintage::before, .omx-pedal{{{cns}}}.omx-look-vintage::after { content: ''; position: absolute; top: 9px; width: 9px; height: 9px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fafafa, #8a8a8a); box-shadow: 0 1px 1px rgba(0,0,0,0.45); }
+.omx-pedal{{{cns}}}.omx-look-vintage::before { left: 9px; }
+.omx-pedal{{{cns}}}.omx-look-vintage::after { right: 9px; }
 
-.omx-pedal{{{cns}}} .omx-brand { position: absolute; left: 16px; top: 5px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #b9ab8a; }
-.omx-pedal{{{cns}}} .omx-label { position: absolute; left: 16px; top: 17px; font-size: 14px; font-weight: 600; font-family: Georgia, "Times New Roman", serif; }
-.omx-pedal{{{cns}}} .omx-bypass { position: absolute; right: 16px; top: 10px; width: 20px; height: 20px; cursor: pointer; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #f4f4f4, #a9a9a9 60%, #6a6a6a); box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 -2px 3px rgba(0,0,0,0.35); }
-.omx-pedal{{{cns}}} .omx-bypass-light { width: 10px; height: 10px; margin: 5px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #6b4a44, #2a1512); position: absolute; left: -20px; top: 0; }
-.omx-pedal{{{cns}}} .omx-bypass-light.on { background: radial-gradient(circle at 35% 30%, #ffd2c8 0, #e8442d 45%, #7a160b); box-shadow: 0 0 9px 2px rgba(232,68,45,0.6), 0 0 0 2px #1c1a16; }
-.omx-pedal{{{cns}}} .omx-section { position: absolute; box-sizing: border-box; background: none; border-radius: 6px; }
-.omx-pedal{{{cns}}} .omx-section-title { margin: 0; padding: 3px 8px; height: 18px; box-sizing: border-box; font-size: 10px; font-weight: 600; text-transform: uppercase; color: #5a4d34; }
-.omx-pedal{{{cns}}} .omx-colhead { position: absolute; width: 72px; height: 14px; line-height: 14px; text-align: center; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; color: #5a4d34; }
-.omx-pedal{{{cns}}} .omx-control { position: absolute; width: 72px; height: 86px; text-align: center; }
-.omx-pedal{{{cns}}} .omx-knob-image { width: 48px; height: 48px; margin: 4px auto 0; background-image: url(/resources/knobs/omx-knob.png{{{ns}}}); background-repeat: no-repeat; background-size: auto 48px; cursor: pointer; }
-.omx-pedal{{{cns}}} .omx-switch-image { position: relative; width: 40px; height: 20px; margin: 18px auto 14px; border-radius: 10px; background: linear-gradient(180deg, #2c2924, #1b1916); box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 3px rgba(60,45,20,0.45); cursor: pointer; }
-.omx-pedal{{{cns}}} .omx-switch-image::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #8a97a3; }
-.omx-pedal{{{cns}}} .omx-switch-image.on { background: #e0952a; box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); transform: translateY(1px); }
-.omx-pedal{{{cns}}} .omx-switch-image:active { background: #3a352c; box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); transform: translateY(1px); }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-brand { position: absolute; left: 16px; top: 5px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #b9ab8a; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-label { position: absolute; left: 16px; top: 17px; font-size: 14px; font-weight: 600; font-family: Georgia, "Times New Roman", serif; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-bypass { position: absolute; right: 16px; top: 10px; width: 20px; height: 20px; cursor: pointer; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #f4f4f4, #a9a9a9 60%, #6a6a6a); box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 -2px 3px rgba(0,0,0,0.35); }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-bypass-light { width: 10px; height: 10px; margin: 5px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #6b4a44, #2a1512); position: absolute; left: -20px; top: 0; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-bypass-light.on { background: radial-gradient(circle at 35% 30%, #ffd2c8 0, #e8442d 45%, #7a160b); box-shadow: 0 0 9px 2px rgba(232,68,45,0.6), 0 0 0 2px #1c1a16; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-section { position: absolute; box-sizing: border-box; background: none; border-radius: 6px; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-section-title { margin: 0; padding: 3px 8px; height: 18px; box-sizing: border-box; font-size: 10px; font-weight: 600; text-transform: uppercase; color: #5a4d34; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-colhead { position: absolute; width: 72px; height: 14px; line-height: 14px; text-align: center; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; color: #5a4d34; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-control { position: absolute; width: 72px; height: 86px; text-align: center; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-knob-image { width: 48px; height: 48px; margin: 4px auto 0; background-image: url(/resources/knobs/omx-knob-vintage.png{{{ns}}}); background-repeat: no-repeat; background-size: auto 48px; cursor: pointer; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-switch-image { position: relative; width: 40px; height: 20px; margin: 18px auto 14px; border-radius: 10px; background: linear-gradient(180deg, #2c2924, #1b1916); box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 3px rgba(60,45,20,0.45); cursor: pointer; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-switch-image::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-switch-image.on { background: #e0952a; box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); transform: translateY(1px); }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-switch-image:active { background: #3a352c; box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); transform: translateY(1px); }
 
-.omx-pedal{{{cns}}} .omx-switch-image.on::after { left: 23px; background: #eaf0f4; }
-.omx-pedal{{{cns}}} .omx-control-title { display: block; margin-top: 1px; font-size: 10px; line-height: 10px; color: #3d3424; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; white-space: normal; overflow: hidden; height: 20px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow-wrap: anywhere; }
-.omx-pedal{{{cns}}} .omx-scribble { position: absolute; left: 7px; top: 74px; box-sizing: border-box; width: 58px; height: 12px; border-radius: 3px; background: #05070a; color: #e8732c; text-shadow: 0 0 6px 1px #e8732c; box-shadow: inset 0 2px 3px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.55); font-family: ui-monospace, "DejaVu Sans Mono", monospace; font-size: 10px; line-height: 12px; text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; }
-.omx-pedal{{{cns}}} .omx-selector-image { position: relative; box-sizing: border-box; width: 64px; height: 22px; margin: 17px auto 13px; border: 1px solid #3a444f; border-radius: 4px; background: linear-gradient(180deg, #2c2924, #1b1916); box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 3px rgba(60,45,20,0.45); cursor: pointer; }
-.omx-pedal{{{cns}}} .omx-selector-image:active { background: #3a352c; box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); transform: translateY(1px); }
-.omx-pedal{{{cns}}} .omx-selector-value { font-size: 10px; line-height: 20px; color: #f3ead4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.omx-pedal{{{cns}}} .omx-selector-list { display: none; position: absolute; left: 0; top: 22px; z-index: 10; min-width: 100%; background: #242b33; border: 1px solid #3a444f; border-radius: 4px; }
-.omx-pedal{{{cns}}} .omx-selector-image.selecting .omx-selector-list, .omx-pedal{{{cns}}} .omx-selector-image.open .omx-selector-list { display: block; }
-.omx-pedal{{{cns}}} .omx-selector-option { padding: 2px 6px; font-size: 10px; text-align: left; white-space: nowrap; }
-.omx-pedal{{{cns}}} .omx-selector-option.selected { color: #28c8e6; }
-.omx-pedal{{{cns}}} .omx-curve { position: absolute; box-sizing: border-box; border: 1px solid #3a444f; border-radius: 4px; background: linear-gradient(rgba(233,223,198,.10) 1px, transparent 1px) 0 0 / 100% 12px, linear-gradient(90deg, rgba(233,223,198,.10) 1px, transparent 1px) 0 0 / 12px 100%, #05070a; box-shadow: inset 0 3px 8px rgba(0,0,0,0.75), 0 1px 0 rgba(255,255,255,0.12); }
-.omx-pedal{{{cns}}} .omx-curve-plot { position: absolute; left: 0; top: 0; }
-.omx-pedal{{{cns}}} .omx-curve-axis { stroke: #3a444f; stroke-width: 0.5; }
-.omx-pedal{{{cns}}} .omx-curve-line { stroke: #e8732c; stroke-width: 1.5; stroke-linejoin: round; }
-.omx-pedal{{{cns}}} .omx-curve-plot circle { fill: #e9dfc6; }
-.omx-pedal{{{cns}}} .omx-curve-plot text { fill: #e9dfc6; font-size: 10px; }
-.omx-pedal{{{cns}}} .omx-curve-caption { position: absolute; left: 6px; bottom: 2px; font-size: 10px; color: #e9dfc6; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-switch-image.on::after { left: 23px; background: #eaf0f4; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-control-title { display: block; margin-top: 1px; font-size: 10px; line-height: 10px; color: #3d3424; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; white-space: normal; overflow: hidden; height: 20px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow-wrap: anywhere; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-scribble { position: absolute; left: 7px; top: 74px; box-sizing: border-box; width: 58px; height: 12px; border-radius: 3px; background: #05070a; color: #e8732c; text-shadow: 0 0 6px 1px #e8732c; box-shadow: inset 0 2px 3px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.55); font-family: ui-monospace, "DejaVu Sans Mono", monospace; font-size: 10px; line-height: 12px; text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-selector-image { position: relative; box-sizing: border-box; width: 64px; height: 22px; margin: 17px auto 13px; border: 1px solid #3a444f; border-radius: 4px; background: linear-gradient(180deg, #2c2924, #1b1916); box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 3px rgba(60,45,20,0.45); cursor: pointer; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-selector-image:active { background: #3a352c; box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); transform: translateY(1px); }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-selector-value { font-size: 10px; line-height: 20px; color: #f3ead4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-selector-list { display: none; position: absolute; left: 0; top: 22px; z-index: 10; min-width: 100%; background: #242b33; border: 1px solid #3a444f; border-radius: 4px; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-selector-image.selecting .omx-selector-list, .omx-pedal{{{cns}}}.omx-look-vintage .omx-selector-image.open .omx-selector-list { display: block; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-selector-option { padding: 2px 6px; font-size: 10px; text-align: left; white-space: nowrap; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-selector-option.selected { color: #28c8e6; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-curve { position: absolute; box-sizing: border-box; border: 1px solid #3a444f; border-radius: 4px; background: linear-gradient(rgba(233,223,198,.10) 1px, transparent 1px) 0 0 / 100% 12px, linear-gradient(90deg, rgba(233,223,198,.10) 1px, transparent 1px) 0 0 / 12px 100%, #05070a; box-shadow: inset 0 3px 8px rgba(0,0,0,0.75), 0 1px 0 rgba(255,255,255,0.12); }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-curve-plot { position: absolute; left: 0; top: 0; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-curve-axis { stroke: #3a444f; stroke-width: 0.5; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-curve-line { stroke: #e8732c; stroke-width: 1.5; stroke-linejoin: round; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-curve-plot circle { fill: #e9dfc6; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-curve-plot text { fill: #e9dfc6; font-size: 10px; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-curve-caption { position: absolute; left: 6px; bottom: 2px; font-size: 10px; color: #e9dfc6; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-lookswitch { position: absolute; right: 46px; top: 12px; height: 16px; display: flex; gap: 2px; }
+.omx-pedal{{{cns}}}.omx-look-vintage .omx-look-key { box-sizing: border-box; width: 16px; height: 16px; line-height: 14px; text-align: center; font-size: 9px; font-weight: 600; cursor: pointer; border-radius: 3px; border: 1px solid #3a444f; color: #f3ead4; background: linear-gradient(180deg, #2c2924, #1b1916); box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 3px rgba(60,45,20,0.45); user-select: none; }
+.omx-pedal{{{cns}}}.omx-look-vintage.omx-look-vintage .omx-look-key[data-look="vintage"], .omx-pedal{{{cns}}}.omx-look-vintage.omx-look-console .omx-look-key[data-look="console"], .omx-pedal{{{cns}}}.omx-look-vintage.omx-look-3d .omx-look-key[data-look="3d"] { background: #e0952a; }
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
+ * GENERATED — DO NOT EDIT BY HAND. Produced by tools/modgui-gen.mjs from
+ * plugins/omx-eq8/omx-eq8.decl.json (its panel block) and tools/look.json
+ * Regenerate: `node tools/modgui-gen.mjs`, then commit the result.
+ * Colours and font: the OpenMixer console's dark theme, resolved in tools/look.json.
+ */
+.omx-pedal{{{cns}}}.omx-look-console { position: relative; box-sizing: border-box; background: #15191e; box-shadow: inset 0 0 0 1px #3a444f; border-radius: 10px; color: #eaf0f4; font-family: "Inter", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-head { position: absolute; left: 0; right: 0; top: 0; border-bottom: 2px solid #28c8e6; }
+
+.omx-pedal{{{cns}}}.omx-look-console .omx-brand { position: absolute; left: 16px; top: 5px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-label { position: absolute; left: 16px; top: 17px; font-size: 14px; font-weight: 600; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-bypass { position: absolute; right: 16px; top: 10px; width: 20px; height: 20px; cursor: pointer; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-bypass-light { width: 10px; height: 10px; margin: 5px; border-radius: 50%; background: #242b33; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-bypass-light.on { background: #28c8e6; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-section { position: absolute; box-sizing: border-box; background: #1c2127; border-radius: 6px; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-section-title { margin: 0; padding: 3px 8px; height: 18px; box-sizing: border-box; font-size: 10px; font-weight: 600; text-transform: uppercase; color: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-colhead { position: absolute; width: 72px; height: 14px; line-height: 14px; text-align: center; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; color: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-control { position: absolute; width: 72px; height: 86px; text-align: center; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-knob-image { width: 48px; height: 48px; margin: 4px auto 0; background-image: url(/resources/knobs/omx-knob-console.png{{{ns}}}); background-repeat: no-repeat; background-size: auto 48px; cursor: pointer; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-switch-image { position: relative; width: 40px; height: 20px; margin: 18px auto 14px; border-radius: 10px; background: #242b33; cursor: pointer; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-switch-image::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-switch-image.on { background: #28c8e6; }
+
+.omx-pedal{{{cns}}}.omx-look-console .omx-switch-image.on::after { left: 23px; background: #eaf0f4; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-control-title { display: block; margin-top: 1px; font-size: 10px; line-height: 10px; color: #8a97a3; white-space: normal; overflow: hidden; height: 20px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow-wrap: anywhere; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-scribble { position: absolute; left: 7px; top: 74px; box-sizing: border-box; width: 58px; height: 12px; border-radius: 3px; background: #0f1317; color: #28c8e6; box-shadow: inset 0 0 0 1px #3a444f; font-family: ui-monospace, "DejaVu Sans Mono", monospace; font-size: 10px; line-height: 12px; text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-selector-image { position: relative; box-sizing: border-box; width: 64px; height: 22px; margin: 17px auto 13px; border: 1px solid #3a444f; border-radius: 4px; background: #242b33; cursor: pointer; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-selector-value { font-size: 10px; line-height: 20px; color: #eaf0f4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-selector-list { display: none; position: absolute; left: 0; top: 22px; z-index: 10; min-width: 100%; background: #242b33; border: 1px solid #3a444f; border-radius: 4px; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-selector-image.selecting .omx-selector-list, .omx-pedal{{{cns}}}.omx-look-console .omx-selector-image.open .omx-selector-list { display: block; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-selector-option { padding: 2px 6px; font-size: 10px; text-align: left; white-space: nowrap; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-selector-option.selected { color: #28c8e6; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-curve { position: absolute; box-sizing: border-box; border: 1px solid #3a444f; border-radius: 4px; background: #242b33; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-curve-plot { position: absolute; left: 0; top: 0; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-curve-axis { stroke: #3a444f; stroke-width: 0.5; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-curve-line { stroke: #28c8e6; stroke-width: 1.5; stroke-linejoin: round; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-curve-plot circle { fill: #eaf0f4; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-curve-plot text { fill: #eaf0f4; font-size: 10px; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-curve-caption { position: absolute; left: 6px; bottom: 2px; font-size: 10px; color: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-lookswitch { position: absolute; right: 46px; top: 12px; height: 16px; display: flex; gap: 2px; }
+.omx-pedal{{{cns}}}.omx-look-console .omx-look-key { box-sizing: border-box; width: 16px; height: 16px; line-height: 14px; text-align: center; font-size: 9px; font-weight: 600; cursor: pointer; border-radius: 3px; border: 1px solid #3a444f; color: #eaf0f4; background: #242b33; user-select: none; }
+.omx-pedal{{{cns}}}.omx-look-console.omx-look-vintage .omx-look-key[data-look="vintage"], .omx-pedal{{{cns}}}.omx-look-console.omx-look-console .omx-look-key[data-look="console"], .omx-pedal{{{cns}}}.omx-look-console.omx-look-3d .omx-look-key[data-look="3d"] { background: #28c8e6; }
+/*
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ * Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
+ * GENERATED — DO NOT EDIT BY HAND. Produced by tools/modgui-gen.mjs from
+ * plugins/omx-eq8/omx-eq8.decl.json (its panel block) and tools/look.json
+ * Regenerate: `node tools/modgui-gen.mjs`, then commit the result.
+ * Colours and font: the OpenMixer console's dark theme, resolved in tools/look.json.
+ * Look: 3d (the modgui-look setting).
+ */
+.omx-pedal{{{cns}}}.omx-look-3d { position: relative; box-sizing: border-box; background: linear-gradient(180deg, #15191e 0%, #0d1115 100%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.14), inset 0 0 0 1px #3a444f, inset 0 -2px 0 rgba(0,0,0,0.45), 0 8px 18px rgba(0,0,0,0.55); border-radius: 10px; color: #eaf0f4; font-family: "Inter", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-head { position: absolute; left: 0; right: 0; top: 0; border-bottom: 2px solid #28c8e6; }
+
+.omx-pedal{{{cns}}}.omx-look-3d .omx-brand { position: absolute; left: 16px; top: 5px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-label { position: absolute; left: 16px; top: 17px; font-size: 14px; font-weight: 600; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-bypass { position: absolute; right: 16px; top: 10px; width: 20px; height: 20px; cursor: pointer; border-radius: 50%; background: linear-gradient(180deg, #242b33 0%, #1c2127 100%); box-shadow: 0 2px 0 #0d1115, 0 3px 5px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12); }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-bypass-light { width: 10px; height: 10px; margin: 5px; border-radius: 50%; background: #0d1115; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-bypass-light.on { background: #28c8e6; box-shadow: 0 0 8px 2px #28c8e6; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-section { position: absolute; box-sizing: border-box; background: #1c2127; border-radius: 6px; box-shadow: inset 0 3px 6px rgba(0,0,0,0.55), inset 0 -1px 0 rgba(255,255,255,0.05); }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-section-title { margin: 0; padding: 3px 8px; height: 18px; box-sizing: border-box; font-size: 10px; font-weight: 600; text-transform: uppercase; color: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-colhead { position: absolute; width: 72px; height: 14px; line-height: 14px; text-align: center; font-size: 10px; font-weight: 600; letter-spacing: 0.05em; color: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-control { position: absolute; width: 72px; height: 86px; text-align: center; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-knob-image { width: 48px; height: 48px; margin: 4px auto 0; background-image: url(/resources/knobs/omx-knob-3d.png{{{ns}}}); background-repeat: no-repeat; background-size: auto 48px; cursor: pointer; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-switch-image { position: relative; width: 40px; height: 20px; margin: 18px auto 14px; border-radius: 10px; background: linear-gradient(180deg, #242b33 0%, #1c2127 100%); box-shadow: 0 2px 0 #0d1115, 0 3px 5px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12); cursor: pointer; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-switch-image::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-switch-image.on { background: #28c8e6; box-shadow: inset 0 2px 4px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.08); transform: translateY(1px); }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-switch-image:active { background: #1c2127; box-shadow: inset 0 2px 4px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.08); transform: translateY(1px); }
+
+.omx-pedal{{{cns}}}.omx-look-3d .omx-switch-image.on::after { left: 23px; background: #eaf0f4; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-control-title { display: block; margin-top: 1px; font-size: 10px; line-height: 10px; color: #8a97a3; white-space: normal; overflow: hidden; height: 20px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; overflow-wrap: anywhere; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-scribble { position: absolute; left: 7px; top: 74px; box-sizing: border-box; width: 58px; height: 12px; border-radius: 3px; background: linear-gradient(180deg, #0a0d10, #12171b); color: #7ee8f7; text-shadow: 0 0 4px rgba(40,200,230,0.6); box-shadow: inset 0 2px 3px rgba(0,0,0,0.85), 0 1px 0 rgba(255,255,255,0.06); font-family: ui-monospace, "DejaVu Sans Mono", monospace; font-size: 10px; line-height: 12px; text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-selector-image { position: relative; box-sizing: border-box; width: 64px; height: 22px; margin: 17px auto 13px; border: 1px solid #3a444f; border-radius: 4px; background: linear-gradient(180deg, #242b33 0%, #1c2127 100%); box-shadow: 0 2px 0 #0d1115, 0 3px 5px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12); cursor: pointer; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-selector-image:active { background: #1c2127; box-shadow: inset 0 2px 4px rgba(0,0,0,0.55), 0 1px 0 rgba(255,255,255,0.08); transform: translateY(1px); }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-selector-value { font-size: 10px; line-height: 20px; color: #eaf0f4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-selector-list { display: none; position: absolute; left: 0; top: 22px; z-index: 10; min-width: 100%; background: #242b33; border: 1px solid #3a444f; border-radius: 4px; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-selector-image.selecting .omx-selector-list, .omx-pedal{{{cns}}}.omx-look-3d .omx-selector-image.open .omx-selector-list { display: block; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-selector-option { padding: 2px 6px; font-size: 10px; text-align: left; white-space: nowrap; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-selector-option.selected { color: #28c8e6; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-curve { position: absolute; box-sizing: border-box; border: 1px solid #3a444f; border-radius: 4px; background: linear-gradient(180deg, #0d1115 0%, #242b33 100%); box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06); }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-curve-plot { position: absolute; left: 0; top: 0; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-curve-axis { stroke: #3a444f; stroke-width: 0.5; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-curve-line { stroke: #28c8e6; stroke-width: 1.5; stroke-linejoin: round; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-curve-plot circle { fill: #eaf0f4; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-curve-plot text { fill: #eaf0f4; font-size: 10px; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-curve-caption { position: absolute; left: 6px; bottom: 2px; font-size: 10px; color: #8a97a3; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-lookswitch { position: absolute; right: 46px; top: 12px; height: 16px; display: flex; gap: 2px; }
+.omx-pedal{{{cns}}}.omx-look-3d .omx-look-key { box-sizing: border-box; width: 16px; height: 16px; line-height: 14px; text-align: center; font-size: 9px; font-weight: 600; cursor: pointer; border-radius: 3px; border: 1px solid #3a444f; color: #eaf0f4; background: linear-gradient(180deg, #242b33 0%, #1c2127 100%); box-shadow: 0 2px 0 #0d1115, 0 3px 5px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.12); user-select: none; }
+.omx-pedal{{{cns}}}.omx-look-3d.omx-look-vintage .omx-look-key[data-look="vintage"], .omx-pedal{{{cns}}}.omx-look-3d.omx-look-console .omx-look-key[data-look="console"], .omx-pedal{{{cns}}}.omx-look-3d.omx-look-3d .omx-look-key[data-look="3d"] { background: #28c8e6; }

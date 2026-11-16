@@ -10,7 +10,73 @@ function (event, funcs) {
             this.textContent = value >= 0.5 ? 'ON' : 'OFF';
         });
     };
+    // the look: the pedal wears the class its template names (the shipped default), unless the browser remembers another; a key swaps it.
+    // Every storage access is guarded: with storage absent or throwing the pedal wears the shipped default and the keys still work.
+    var LOOKS = ['vintage', 'console', '3d'];
+    var found = event.icon.find('.omx-pedal');
+    var pedal = found && found[0];
+    var wear = function (name) {
+        if (!pedal || !pedal.classList) return;
+        for (var i = 0; i < LOOKS.length; i++) pedal.classList.remove('omx-look-' + LOOKS[i]);
+        pedal.classList.add('omx-look-' + name);
+    };
+    var remember = function () {
+        var saved = null;
+        try { saved = localStorage.getItem('omx-look'); } catch (e) { saved = null; }
+        if (LOOKS.indexOf(saved) >= 0) wear(saved);
+        event.icon.find('[data-look]').each(function () {
+            if (this.omxBound) return;
+            this.omxBound = true;
+            var name = this.getAttribute('data-look');
+            var stop = function (e) { e.stopPropagation(); };
+            this.addEventListener('mousedown', stop);
+            this.addEventListener('touchstart', stop);
+            this.addEventListener('click', function (e) {
+                e.stopPropagation();
+                wear(name);
+                try { localStorage.setItem('omx-look', name); } catch (err) { /* the look is worn for this session only */ }
+            });
+        });
+    };
+    // the needles: an output port's value is the target of the meter that names it; a timer lags the needle towards it by the declared
+    // time constant (a first-order lag, value += (target - value) * (1 - exp(-dt / tau))), so a level rises and falls like a VU
+    var angle = function (d, value) {
+        var min = parseFloat(d.getAttribute('data-min')), max = parseFloat(d.getAttribute('data-max'));
+        var a0 = parseFloat(d.getAttribute('data-angle-min')), a1 = parseFloat(d.getAttribute('data-angle-max'));
+        var clamp = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
+        if (d.getAttribute('data-reversed') === '1') return a1 - clamp((max - value) / (max - min)) * (a1 - a0);
+        return a0 + clamp((value - min) / (max - min)) * (a1 - a0);
+    };
+    var draw = function (d) {
+        var needle = d.querySelector('.omx-vu-needle');
+        if (needle) needle.style.transform = 'rotate(' + angle(d, d.omxVu.cur).toFixed(2) + 'deg)';
+    };
+    var tick = function () {
+        var now = Date.now();
+        event.icon.find('[data-vu]').each(function () {
+            var v = this.omxVu;
+            if (!v) return;
+            var dt = now - v.t;
+            v.t = now;
+            v.cur += (v.target - v.cur) * (1 - Math.exp(-dt / parseFloat(this.getAttribute('data-tau'))));
+            draw(this);
+        });
+    };
+    var vuSet = function (symbol, value, jump) {
+        event.icon.find('[data-vu]').each(function () {
+            if (this.getAttribute('data-vu-symbol') !== symbol) return;
+            if (!this.omxVu) this.omxVu = { cur: jump ? value : (this.getAttribute('data-reversed') === '1' ? parseFloat(this.getAttribute('data-max')) : parseFloat(this.getAttribute('data-min'))), target: value, t: Date.now() };
+            this.omxVu.target = value;
+            this.omxVu.t = this.omxVu.t || Date.now();
+            draw(this);
+        });
+        if (pedal && !pedal.omxTimer && typeof setInterval === 'function') {
+            var first = event.icon.find('[data-vu]')[0];
+            pedal.omxTimer = setInterval(tick, first ? parseFloat(first.getAttribute('data-step')) : 30);
+        }
+    };
     var show = function (symbol, value) {
+        vuSet(symbol, value, event.type === 'start');
         onoff(symbol, value);
         var v = Math.round(value);
         event.icon.find('[data-visible-port="' + symbol + '"]').each(function () {
@@ -89,6 +155,7 @@ function (event, funcs) {
         root.style.height = (y - n('data-section-gap') + n('data-pad')) + 'px';
     };
     if (event.type === 'start') {
+        remember();
         for (var i = 0; i < event.ports.length; i++) show(event.ports[i].symbol, event.ports[i].value);
         relayout();
     } else if (event.type === 'change') {

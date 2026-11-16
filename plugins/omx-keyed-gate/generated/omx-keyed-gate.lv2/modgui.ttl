@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-keyed-gate.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx keyed-gate" ;
+        modgui:javascript <modgui/script-omx-keyed-gate.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "threshold" ;

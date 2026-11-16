@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-limiter.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx limiter" ;
+        modgui:javascript <modgui/script-omx-limiter.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "ceilingDb" ;
