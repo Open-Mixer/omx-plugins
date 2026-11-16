@@ -5,7 +5,7 @@
       "lib", "units", "panel-words", "face-header", "role-meanings", "meter-binding", "panel-layout", "descriptor-view",
       "descriptor-features", "placement-strips", "lv2-units", "lv2-deprecated", "lv2-maintainer", "lv2-manifest",
       "release-version", "resource-hints", "format-tables", "contract-union", "contract-dir", "lv2bench-ran",
-      "ci-scope", "probe-checks", "eq-probe-race", "band-groups", "phaser-depth", "geq-widgets", "summary-numbers",
+      "ci-scope", "no-ci-bridge", "probe-checks", "eq-probe-race", "band-groups", "phaser-depth", "geq-widgets", "summary-numbers",
       "param-tie", "face-ids", "comp-release-mode", "strip-visible-when", "face-dirty-order", "test-split"
     ],
     "steps": [
