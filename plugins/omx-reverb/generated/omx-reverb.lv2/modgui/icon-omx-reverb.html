@@ -1,4 +1,4 @@
-<div class="omx-pedal{{{cns}}} omx-family-reverb" style="width:624px;height:490px">
+<div class="omx-pedal{{{cns}}} omx-family-reverb" style="width:624px;height:580px">
     <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
     <!-- Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com> -->
     <!-- GENERATED — DO NOT EDIT BY HAND. Produced by tools/modgui-gen.mjs from -->
@@ -13,9 +13,10 @@
         <span class="omx-label">{{label}}</span>
         <div class="omx-bypass" mod-role="bypass"><div class="omx-bypass-light" mod-role="bypass-light"></div></div>
     </div>
-        <div class="omx-section" data-section="reverb" style="left:16px;top:52px;width:592px;height:98px">
+        <div class="omx-section" data-section="reverb" style="left:16px;top:52px;width:592px;height:188px">
             <h2 class="omx-section-title">Reverb</h2>
-            <div class="omx-control omx-selector" style="left:8px;top:18px" title="Algorithm" data-symbol="algorithm" data-min="0" data-max="4" data-default="0">
+            <div class="omx-curve" data-kind="time_response" data-basis="modelled" style="left:8px;top:18px;width:576px;height:84px"><span class="omx-curve-caption">modelled</span></div>
+            <div class="omx-control omx-selector" style="left:8px;top:108px" title="Algorithm" data-symbol="algorithm" data-min="0" data-max="4" data-default="0">
                 <div class="omx-selector-image" mod-role="input-control-port" mod-port-symbol="algorithm" mod-widget="custom-select">
                     <div class="omx-selector-value" mod-role="input-control-value" mod-port-symbol="algorithm"></div>
                     <div class="omx-selector-list">
@@ -28,62 +29,74 @@
                 </div>
                 <span class="omx-control-title">Algorithm</span>
             </div>
-            <div class="omx-control omx-knob" style="left:80px;top:18px" title="Size" data-symbol="size" data-min="0" data-max="1" data-default="0.7">
+            <div class="omx-control omx-knob" style="left:80px;top:108px" title="Size" data-symbol="size" data-min="0" data-max="1" data-default="0.7">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="size"></div>
                 <span class="omx-control-title">Size</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="size" data-unit=""></div>
             </div>
-            <div class="omx-control omx-knob" style="left:152px;top:18px" title="Damping" data-symbol="damping" data-min="0" data-max="1" data-default="0.5">
+            <div class="omx-control omx-knob" style="left:152px;top:108px" title="Damping" data-symbol="damping" data-min="0" data-max="1" data-default="0.5">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="damping"></div>
                 <span class="omx-control-title">Damping</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="damping" data-unit=""></div>
             </div>
-            <div class="omx-control omx-knob" style="left:224px;top:18px" title="Predelay" data-symbol="predelay" data-min="0" data-max="100" data-default="0">
+            <div class="omx-control omx-knob" style="left:224px;top:108px" title="Predelay" data-symbol="predelay" data-min="0" data-max="100" data-default="0">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="predelay"></div>
                 <span class="omx-control-title">Predelay</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="predelay" data-unit="ms"></div>
             </div>
-            <div class="omx-control omx-knob" style="left:296px;top:18px" title="Width" data-symbol="width" data-min="0" data-max="1" data-default="1">
+            <div class="omx-control omx-knob" style="left:296px;top:108px" title="Width" data-symbol="width" data-min="0" data-max="1" data-default="1">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="width"></div>
                 <span class="omx-control-title">Width</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="width" data-unit=""></div>
             </div>
-            <div class="omx-control omx-knob" style="left:368px;top:18px" title="Mix" data-symbol="mix" data-min="0" data-max="1" data-default="0.3">
+            <div class="omx-control omx-knob" style="left:368px;top:108px" title="Mix" data-symbol="mix" data-min="0" data-max="1" data-default="0.3">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="mix"></div>
                 <span class="omx-control-title">Mix</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="mix" data-unit=""></div>
             </div>
-            <div class="omx-control omx-knob" style="left:440px;top:18px" title="Lowcut" data-symbol="lowcut" data-min="0" data-max="20000" data-default="0">
+            <div class="omx-control omx-knob" style="left:440px;top:108px" title="Lowcut" data-symbol="lowcut" data-min="0" data-max="20000" data-default="0">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="lowcut"></div>
                 <span class="omx-control-title">Lowcut</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="lowcut" data-unit="Hz"></div>
             </div>
-            <div class="omx-control omx-knob" style="left:512px;top:18px" title="Highcut" data-symbol="highcut" data-min="0" data-max="20000" data-default="20000">
+            <div class="omx-control omx-knob" style="left:512px;top:108px" title="Highcut" data-symbol="highcut" data-min="0" data-max="20000" data-default="20000">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="highcut"></div>
                 <span class="omx-control-title">Highcut</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="highcut" data-unit="Hz"></div>
             </div>
         </div>
-        <div class="omx-section" data-section="reverse" style="left:16px;top:160px;width:592px;height:98px">
+        <div class="omx-section" data-section="reverse" style="left:16px;top:250px;width:592px;height:98px">
             <h2 class="omx-section-title">Reverse</h2>
             <div class="omx-control omx-knob" style="left:8px;top:18px" title="Reverse" data-symbol="reverse" data-min="50" data-max="500" data-default="300">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="reverse"></div>
                 <span class="omx-control-title">Reverse</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="reverse" data-unit="ms"></div>
             </div>
         </div>
-        <div class="omx-section" data-section="gated" style="left:16px;top:268px;width:592px;height:98px">
+        <div class="omx-section" data-section="gated" style="left:16px;top:358px;width:592px;height:98px">
             <h2 class="omx-section-title">Gated</h2>
             <div class="omx-control omx-knob" style="left:8px;top:18px" title="Hold" data-symbol="hold" data-min="10" data-max="2000" data-default="120">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="hold"></div>
                 <span class="omx-control-title">Hold</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="hold" data-unit="ms"></div>
             </div>
             <div class="omx-control omx-knob" style="left:80px;top:18px" title="Release" data-symbol="release" data-min="1" data-max="500" data-default="20">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="release"></div>
                 <span class="omx-control-title">Release</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="release" data-unit="ms"></div>
             </div>
             <div class="omx-control omx-knob" style="left:152px;top:18px" title="Gate Threshold" data-symbol="gateThreshold" data-min="-80" data-max="0" data-default="-40">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="gateThreshold"></div>
                 <span class="omx-control-title">Gate Threshold</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="gateThreshold" data-unit="dBFS"></div>
             </div>
         </div>
-        <div class="omx-section" data-section="plate" style="left:16px;top:376px;width:592px;height:98px">
+        <div class="omx-section" data-section="plate" style="left:16px;top:466px;width:592px;height:98px">
             <h2 class="omx-section-title">Plate</h2>
             <div class="omx-control omx-knob" style="left:8px;top:18px" title="Plate Mod Depth" data-symbol="plateModDepth" data-min="0" data-max="400" data-default="100">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="plateModDepth"></div>
                 <span class="omx-control-title">Plate Mod Depth</span>
+                <div class="omx-scribble" mod-role="input-control-value" mod-port-symbol="plateModDepth" data-unit="%"></div>
             </div>
         </div>
     <div class="mod-pedal-input">

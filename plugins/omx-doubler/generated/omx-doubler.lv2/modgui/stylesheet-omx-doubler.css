@@ -5,25 +5,35 @@
  * plugins/omx-doubler/omx-doubler.decl.json (its panel block) and tools/look.json
  * Regenerate: `node tools/modgui-gen.mjs`, then commit the result.
  * Colours and font: the OpenMixer console's dark theme, resolved in tools/look.json.
+ * Look: vintage (the modgui-look setting).
  */
-.omx-pedal{{{cns}}} { position: relative; box-sizing: border-box; background: #15191e; box-shadow: inset 0 0 0 1px #3a444f; border-radius: 10px; color: #eaf0f4; font-family: "Inter", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-.omx-pedal{{{cns}}} .omx-head { position: absolute; left: 0; right: 0; top: 0; border-bottom: 2px solid #28c8e6; }
-.omx-pedal{{{cns}}} .omx-brand { position: absolute; left: 16px; top: 5px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8a97a3; }
-.omx-pedal{{{cns}}} .omx-label { position: absolute; left: 16px; top: 17px; font-size: 14px; font-weight: 600; }
-.omx-pedal{{{cns}}} .omx-bypass { position: absolute; right: 16px; top: 10px; width: 20px; height: 20px; cursor: pointer; }
-.omx-pedal{{{cns}}} .omx-bypass-light { width: 10px; height: 10px; margin: 5px; border-radius: 50%; background: #242b33; }
-.omx-pedal{{{cns}}} .omx-bypass-light.on { background: #28c8e6; }
-.omx-pedal{{{cns}}} .omx-section { position: absolute; box-sizing: border-box; background: #1c2127; border-radius: 6px; }
-.omx-pedal{{{cns}}} .omx-section-title { margin: 0; padding: 3px 8px; height: 18px; box-sizing: border-box; font-size: 10px; font-weight: 600; text-transform: uppercase; color: #8a97a3; }
+.omx-pedal{{{cns}}} { position: relative; box-sizing: border-box; background: radial-gradient(140% 90% at 30% 0%, #f6efdd, #e9dfc7 55%, #cfc2a3); box-shadow: inset 0 2px 0 rgba(255,255,255,0.6), inset 0 -3px 0 rgba(90,70,40,0.25), 0 16px 26px rgba(0,0,0,0.6); border-radius: 14px; color: #f3ead4; font-family: "Inter", "Helvetica Neue", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.omx-pedal{{{cns}}} .omx-head { position: absolute; left: 10px; right: 10px; top: 5px; background: linear-gradient(180deg, #2c2924, #1b1916); border-radius: 4px; }
+.omx-pedal{{{cns}}}::before, .omx-pedal{{{cns}}}::after { content: ''; position: absolute; top: 9px; width: 9px; height: 9px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #fafafa, #8a8a8a); box-shadow: 0 1px 1px rgba(0,0,0,0.45); }
+.omx-pedal{{{cns}}}::before { left: 9px; }
+.omx-pedal{{{cns}}}::after { right: 9px; }
+
+.omx-pedal{{{cns}}} .omx-brand { position: absolute; left: 16px; top: 5px; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #b9ab8a; }
+.omx-pedal{{{cns}}} .omx-label { position: absolute; left: 16px; top: 17px; font-size: 14px; font-weight: 600; font-family: Georgia, "Times New Roman", serif; }
+.omx-pedal{{{cns}}} .omx-bypass { position: absolute; right: 16px; top: 10px; width: 20px; height: 20px; cursor: pointer; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #f4f4f4, #a9a9a9 60%, #6a6a6a); box-shadow: 0 4px 6px rgba(0,0,0,0.6), inset 0 -2px 3px rgba(0,0,0,0.35); }
+.omx-pedal{{{cns}}} .omx-bypass-light { width: 10px; height: 10px; margin: 5px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #6b4a44, #2a1512); position: absolute; left: -20px; top: 0; }
+.omx-pedal{{{cns}}} .omx-bypass-light.on { background: radial-gradient(circle at 35% 30%, #ffd2c8 0, #e8442d 45%, #7a160b); box-shadow: 0 0 9px 2px rgba(232,68,45,0.6), 0 0 0 2px #1c1a16; }
+.omx-pedal{{{cns}}} .omx-section { position: absolute; box-sizing: border-box; background: none; border-radius: 6px; }
+.omx-pedal{{{cns}}} .omx-section-title { margin: 0; padding: 3px 8px; height: 18px; box-sizing: border-box; font-size: 10px; font-weight: 600; text-transform: uppercase; color: #5a4d34; }
 .omx-pedal{{{cns}}} .omx-control { position: absolute; width: 72px; height: 76px; text-align: center; }
 .omx-pedal{{{cns}}} .omx-knob-image { width: 48px; height: 48px; margin: 4px auto 0; background-image: url(/resources/knobs/omx-knob.png{{{ns}}}); background-repeat: no-repeat; background-size: auto 48px; cursor: pointer; }
-.omx-pedal{{{cns}}} .omx-switch-image { position: relative; width: 40px; height: 20px; margin: 18px auto 14px; border-radius: 10px; background: #242b33; cursor: pointer; }
+.omx-pedal{{{cns}}} .omx-switch-image { position: relative; width: 40px; height: 20px; margin: 18px auto 14px; border-radius: 10px; background: linear-gradient(180deg, #2c2924, #1b1916); box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 3px rgba(60,45,20,0.45); cursor: pointer; }
 .omx-pedal{{{cns}}} .omx-switch-image::after { content: ''; position: absolute; top: 3px; left: 3px; width: 14px; height: 14px; border-radius: 50%; background: #8a97a3; }
-.omx-pedal{{{cns}}} .omx-switch-image.on { background: #28c8e6; }
+.omx-pedal{{{cns}}} .omx-switch-image.on { background: #e0952a; box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); transform: translateY(1px); }
+.omx-pedal{{{cns}}} .omx-switch-image:active { background: #3a352c; box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); transform: translateY(1px); }
+
 .omx-pedal{{{cns}}} .omx-switch-image.on::after { left: 23px; background: #eaf0f4; }
-.omx-pedal{{{cns}}} .omx-control-title { display: block; margin-top: 6px; font-size: 10px; color: #8a97a3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.omx-pedal{{{cns}}} .omx-selector-image { position: relative; box-sizing: border-box; width: 64px; height: 22px; margin: 17px auto 13px; border: 1px solid #3a444f; border-radius: 4px; background: #242b33; cursor: pointer; }
-.omx-pedal{{{cns}}} .omx-selector-value { font-size: 10px; line-height: 20px; color: #eaf0f4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.omx-pedal{{{cns}}} .omx-control-title { display: block; margin-top: 1px; font-size: 10px; line-height: 10px; color: #3d3424; text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.omx-pedal{{{cns}}} .omx-scribble { position: absolute; left: 7px; top: 64px; box-sizing: border-box; width: 58px; height: 12px; border-radius: 3px; background: #05070a; color: #e8732c; text-shadow: 0 0 6px 1px #e8732c; box-shadow: inset 0 2px 3px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.55); font-family: ui-monospace, "DejaVu Sans Mono", monospace; font-size: 10px; line-height: 12px; text-align: center; font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; }
+.omx-pedal{{{cns}}} .omx-scribble::after { content: attr(data-unit); margin-left: 0.3em; }
+.omx-pedal{{{cns}}} .omx-selector-image { position: relative; box-sizing: border-box; width: 64px; height: 22px; margin: 17px auto 13px; border: 1px solid #3a444f; border-radius: 4px; background: linear-gradient(180deg, #2c2924, #1b1916); box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 2px 3px rgba(60,45,20,0.45); cursor: pointer; }
+.omx-pedal{{{cns}}} .omx-selector-image:active { background: #3a352c; box-shadow: inset 0 1px 3px rgba(0,0,0,0.6); transform: translateY(1px); }
+.omx-pedal{{{cns}}} .omx-selector-value { font-size: 10px; line-height: 20px; color: #f3ead4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .omx-pedal{{{cns}}} .omx-selector-list { display: none; position: absolute; left: 0; top: 22px; z-index: 10; min-width: 100%; background: #242b33; border: 1px solid #3a444f; border-radius: 4px; }
 .omx-pedal{{{cns}}} .omx-selector-image.selecting .omx-selector-list, .omx-pedal{{{cns}}} .omx-selector-image.open .omx-selector-list { display: block; }
 .omx-pedal{{{cns}}} .omx-selector-option { padding: 2px 6px; font-size: 10px; text-align: left; white-space: nowrap; }
