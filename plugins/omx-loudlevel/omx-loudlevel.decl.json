@@ -22,8 +22,10 @@
     "opens-sockets": false
   },
   "panel": {
-    "family": "none",
-    "roles": {},
+    "family": "dynamics",
+    "roles": {
+      "threshold": "gateLufs"
+    },
     "sections": [
       {
         "key": "loudlevel",

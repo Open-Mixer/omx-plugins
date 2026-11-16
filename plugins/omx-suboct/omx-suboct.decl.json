@@ -14,6 +14,7 @@
     "opens-sockets": false
   },
   "panel": {
+    "$comment": "TODO: family none: it has no shift control (the octaves are fixed, each a level) so the pitch family is not backed; it waits for the utility family or an octave-divider family, then declares it.",
     "family": "none",
     "roles": {},
     "sections": [

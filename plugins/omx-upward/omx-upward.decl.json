@@ -14,8 +14,13 @@
     "opens-sockets": false
   },
   "panel": {
-    "family": "none",
-    "roles": {},
+    "family": "dynamics",
+    "roles": {
+      "threshold": "thresholdDb",
+      "ratio": "ratio",
+      "attack": "attackMs",
+      "release": "releaseMs"
+    },
     "sections": [
       {
         "key": "upward",

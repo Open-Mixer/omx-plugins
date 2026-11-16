@@ -82,8 +82,8 @@ static const omx_resource_hints_t OMX_CLIPPER_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family none. */
-#define OMX_CLIPPER_PANEL_FINGERPRINT "8de33b0a494463ab73407d81f51ecf7f597a2d40e2b044d037d4ed3a96b2cb69"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family drive. */
+#define OMX_CLIPPER_PANEL_FINGERPRINT "f659b66480ba28166e3898af62ea5f88bf08e29ae0479a0bb34c23eb2bbe4164"
 static const struct omx_panel_section_row OMX_CLIPPER_PANEL_SECTIONS[] = {
   { "clipper", "fx.clipper.section.clipper", "Clipper" },
 };
@@ -92,6 +92,9 @@ static const struct omx_panel_control_row OMX_CLIPPER_PANEL_CONTROLS[] = {
   { 1u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.clipper.ceiling_db", "Ceiling", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 2u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.clipper.softness_pct", "Softness", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
+static const struct omx_panel_role_row OMX_CLIPPER_PANEL_ROLES[] = {
+  { "drive", 0u, 0u },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_CLIPPER_PANEL_PAGES[] = {
@@ -99,10 +102,10 @@ static const struct omx_panel_page_row OMX_CLIPPER_PANEL_PAGES[] = {
 };
 #define OMX_CLIPPER_PANEL_PAGE_COUNT 1u
 static const struct omx_panel_rows OMX_CLIPPER_PANEL = {
-  OMX_CLIPPER_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
+  OMX_CLIPPER_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DRIVE,
   OMX_CLIPPER_PANEL_SECTIONS, 1u,
   OMX_CLIPPER_PANEL_CONTROLS, 3u,
-  NULL, 0u,
+  OMX_CLIPPER_PANEL_ROLES, 1u,
   NULL, 0u,
   NULL, 0u,
 };

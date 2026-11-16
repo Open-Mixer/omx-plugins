@@ -14,8 +14,10 @@
     "opens-sockets": false
   },
   "panel": {
-    "family": "none",
-    "roles": {},
+    "family": "drive",
+    "roles": {
+      "drive": "driveDb"
+    },
     "sections": [
       {
         "key": "clipper",

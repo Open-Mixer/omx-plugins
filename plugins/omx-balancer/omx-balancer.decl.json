@@ -19,6 +19,7 @@
     "opens-sockets": false
   },
   "panel": {
+    "$comment": "TODO: family none until the utility family lands in omx-contract and omx-panel (a four-band tone balancer fits no family today); then declare family utility.",
     "family": "none",
     "roles": {},
     "sections": [

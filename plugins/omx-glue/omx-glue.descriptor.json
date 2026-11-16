@@ -33,6 +33,7 @@
       "group": [
         "Glue"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
@@ -168,6 +169,7 @@
       "group": [
         "Glue"
       ],
+      "meaning": "makeup",
       "automatable": true,
       "source": {
         "from": {
@@ -216,6 +218,7 @@
       "group": [
         "Glue"
       ],
+      "meaning": "wetDryRatio",
       "automatable": true,
       "source": {
         "from": {
