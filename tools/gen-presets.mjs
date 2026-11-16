@@ -274,6 +274,11 @@ const DEFINITIONS = {
     ['kick', 'Kick', { hpfOn: 1, hpfFreq: 30, gateOn: 1, ...Object.fromEntries(Object.entries(GATE(-35, -60, -38, -30, 0.5, 30, 80, 4, 20)).map(([k, v]) => [`gate${k[0].toUpperCase()}${k.slice(1).replace(/_(.)/g, (_, c) => c.toUpperCase())}`, v])), eqOn: 1, ...eqBands([low(60, 3), bell(350, -4, 1.4), bell(4000, 3)], 'strip'), compOn: 1, compThreshold: -14, compRatio: 4, compAttack: 8, compRelease: 90, compMakeup: 3 }],
     ['bass', 'Bass', { hpfOn: 1, hpfFreq: 35, eqOn: 1, ...eqBands([low(80, 2), bell(800, -2, 1.2), bell(2500, 2)], 'strip'), compOn: 1, compThreshold: -16, compRatio: 3.5, compAttack: 15, compRelease: 150, compMakeup: 3 }],
   ],
+  'org.openmixer.trim': [
+    ['pad-10', 'Pad 10 dB', { trimDb: -10 }],
+    ['lift-6', 'Lift 6 dB', { trimDb: 6 }],
+    ['quiet-source', 'Quiet Source', { trimDb: 12 }],
+  ],
 };
 
 /** The values of one preset as the file lists them: every parameter, the plugin's order. */
