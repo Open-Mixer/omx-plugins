@@ -12,7 +12,7 @@
     }
   },
   "contract": {
-    "range": "packaging/omx-plugins.spec: BuildRequires (omx-contract-devel >= floor with omx-contract-devel < ceiling)",
+    "range": "packaging/omx-plugins.spec: BuildRequires (omx-contract-devel >= floor)",
     "byReferenceSince": "1.1.0"
   },
   "derived": {

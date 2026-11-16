@@ -35,11 +35,11 @@ The channel is the OpenMixer package repository, added by installing the openmix
 `https://www.openmixer.org/deb/openmixer-release.deb` for apt). With it installed, `dnf builddep packaging/omx-plugins.spec` or `apt-get build-dep ./` installs
 everything above.
 
-The ranges are written once, in the packaging: `packaging/omx-plugins.spec` (`BuildRequires`, a floor and a
-ceiling: `(omx-dsp-devel >= 0.30.0 with omx-dsp-devel < 0.31)`) and `debian/control` (the same: `(>= 0.30.0~)` and
-`(<< 0.31~)`); `tools/deps-check.sh` holds the two equal. Nothing else names a version: the Makefile reads the
-floors and ceilings from the spec, and building the archive stops, naming the dependency, the range
-and what `pkg-config` finds installed, when an installed release is outside it.
+The ranges are written once, in the packaging: `packaging/omx-plugins.spec` (`BuildRequires`, a floor only,
+no ceiling: `omx-dsp-devel >= 0.30.0`) and `debian/control` (the same: `(>= 0.30.0~)`); `tools/deps-check.sh` holds
+the two equal. Nothing else names a version: the Makefile reads the floors from the spec, and building the
+archive stops, naming the dependency, the floor and what `pkg-config` finds installed, when an installed
+release is below it.
 
 ## Build, test, install
 
