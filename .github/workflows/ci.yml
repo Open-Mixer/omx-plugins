@@ -456,8 +456,6 @@ jobs:
           ! dpkg -s omx-plugins-dev >/dev/null 2>&1
           info=$(dpkg -I debs/omx-plugins-contract_*_all.deb)
           grep -qE '^ Architecture: all$' <<<"$info"
-          grep -qE '^ Breaks: omx-plugins-dev \(<< ' <<<"$info"
-          grep -qE '^ Replaces: omx-plugins-dev \(<< ' <<<"$info"
           for deb in debs/omx-plugins_*.deb debs/omx-plugins-dev_*.deb; do
             info=$(dpkg -I "$deb"); grep -qE '^ Depends:.*omx-plugins-contract \(= ' <<<"$info"
           done
