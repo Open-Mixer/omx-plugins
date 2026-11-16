@@ -28,7 +28,7 @@ check('it has the 120 orders as labels, the desk\'s first', order?.labels?.lengt
 check('every label is the order its value runs', JSON.stringify(order?.labels) === JSON.stringify(rows), 'labels differ from the permutations');
 check('the values are 0..119', JSON.stringify(order?.values) === JSON.stringify([...Array(120).keys()]));
 const ttl = readFileSync(join(ROOT, 'plugins', 'omx-strip', 'generated', 'omx-strip.lv2', 'omx-strip.ttl'), 'utf8');
-const port = ttl.split('lv2:symbol "order" ;')[1]?.split('] ,')[0] ?? '';
+const port = ttl.split('lv2:symbol "order" ;')[1]?.split('lv2:symbol')[0] ?? '';
 check('its LV2 port is an enumeration', /lv2:enumeration/.test(port), 'no lv2:enumeration');
 check('its LV2 port has 120 scale points', (port.match(/lv2:scalePoint/g) ?? []).length === 120 || (port.match(/rdfs:label "/g) ?? []).length === 120, `${(port.match(/rdfs:label "/g) ?? []).length} labels`);
 console.log(`strip-order-enumeration: ${n - bad}/${n} passed`);

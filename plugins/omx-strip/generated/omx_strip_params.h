@@ -1419,7 +1419,7 @@ static const omx_resource_hints_t OMX_STRIP_RESOURCE_HINTS = {
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family eq. */
-#define OMX_STRIP_PANEL_FINGERPRINT "5046284ebd7acc55187e2a61613d84f5189a5964758ac2f444ba4dbbd90c88b9"
+#define OMX_STRIP_PANEL_FINGERPRINT "52a4f2399db18697af205da387525dbf1882f1c40387b52097f373bdb2ca341a"
 static const struct omx_panel_section_row OMX_STRIP_PANEL_SECTIONS[] = {
   { "trim", "fx.strip.section.trim", "Input" },
   { "filter", "fx.strip.section.filter", "Filters" },
@@ -1620,7 +1620,7 @@ static const struct omx_panel_control_row OMX_STRIP_PANEL_CONTROLS[] = {
   { 47u, 4u, OMX_CLAP_WIDGET_AUTO, "fx.strip.comp_kind", "Comp Kind", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 48u, 4u, OMX_CLAP_WIDGET_KNOB, "fx.strip.comp_mix", "Comp Mix", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 49u, 4u, OMX_CLAP_WIDGET_AUTO, "fx.strip.comp_detector_oversampling", "Comp Detector Oversampling", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
-  { 50u, 5u, OMX_CLAP_WIDGET_KNOB, "fx.strip.order", "Order", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 50u, 5u, OMX_CLAP_WIDGET_AUTO, "fx.strip.order", "Order", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
 static const struct omx_panel_role_row OMX_STRIP_PANEL_ROLES[] = {
   { "band_type", 0u, 20u },

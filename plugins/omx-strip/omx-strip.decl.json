@@ -2531,6 +2531,7 @@
     },
     "order": {
       "props": [
+        "lv2:enumeration",
         "lv2:integer"
       ]
     },

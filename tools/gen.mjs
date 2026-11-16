@@ -225,7 +225,12 @@ function flattenChain(file, d) {
       out.push({ ...p, kernel: el.kernel, element: el.id });
     }
   }
-  if (d.order === 'permutable') out.push({ symbol: 'order', name: 'Order', unit: '', min: 0, max: factorial(d.chain.length) - 1, def: 0, kind: 'integer', own: 'stage-order' });
+  if (d.order === 'permutable') {
+    // the order names its stages: one scale point per permutation, "Input > Filters > ...", the panel's section label of each element
+    const nameOf = (el) => d.panel?.sections?.find((s) => s.key === el.id)?.label ?? el.id;
+    const points = permutations(d.chain.length).map((row, k) => ({ value: k, label: row.map((i) => nameOf(d.chain[i])).join(' > ') }));
+    out.push({ symbol: 'order', name: 'Order', unit: '', min: 0, max: factorial(d.chain.length) - 1, def: 0, kind: 'integer', own: 'stage-order', points });
+  }
   else if (d.order !== undefined) throw new Error(`${file}: "order" is "permutable" or left out (the declared order)`);
   // what an element gained after the plugin shipped comes AFTER every parameter it had, so no id and no LV2 parameter
   // port moves: element by element in chain order, its band count (`bandCount`), then its `appended` parameters
@@ -930,12 +935,15 @@ export function tailMs(params) {
 }
 
 /** A choice's values (a set's ids by index, a toggle's 0 and 1), or undefined for a travel. */
-const valuesOf = (p) => (p.kind === 'toggle' ? [0, 1] : choicesOf(p)?.map((c) => c.value));
+// the stage order is a choice for the hosts that draw it (120 labelled scale points), a travel for the oracle: its plan samples the
+// travel (a middle permutation, not the next one), as it did before the order was named
+const planChoicesOf = (p) => (p.own === 'stage-order' ? undefined : choicesOf(p));
+const valuesOf = (p) => (p.kind === 'toggle' ? [0, 1] : planChoicesOf(p)?.map((c) => c.value));
 
 /** A parameter's value at `at` (a fraction of its travel, or 'def'). */
 function valueAt(p, at) {
   if (at === 'def') return p.def;
-  const choices = choicesOf(p);
+  const choices = planChoicesOf(p);
   if (choices) return choices[Math.round(at * (choices.length - 1))].value;
   const x = p.min + at * (p.max - p.min);
   return p.kind === 'integer' ? Math.round(x) : x;
@@ -1134,7 +1142,7 @@ export const oracleStretch = (face) => (face.keyed ? 64 : 1);
 // pole; a time travel (ms, s) by 5 %: a slow detector's pole at 176.4 kHz is 1 - 1e-5, and 1 % of a release
 // travel moves it by about two float steps, which can round to none
 const stepShare = (p) => (p.unit === 'ms' || p.unit === 's' ? 0.05 : 0.01);
-const stepOf = (p) => (p.kind === 'toggle' || choicesOf(p) ? 1 : p.kind === 'integer' ? Math.max(1, Math.round((p.max - p.min) * stepShare(p))) : (p.max - p.min) * stepShare(p));
+const stepOf = (p) => (p.kind === 'toggle' || planChoicesOf(p) ? 1 : p.kind === 'integer' ? Math.max(1, Math.round((p.max - p.min) * stepShare(p))) : (p.max - p.min) * stepShare(p));
 
 /**
  * The controls of `kernel` a declaration (or a chain element) `holds`: no parameter, no port, each
