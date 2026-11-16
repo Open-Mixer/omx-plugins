@@ -64,7 +64,7 @@ typedef struct {
 LV2_Handle omx_lv2_face_instantiate(const LV2_Descriptor *d, double rate, const char *bundle,
                                     const LV2_Feature *const *features) {
   (void)bundle;
-  if (!(rate > 0.0)) return NULL;
+  if (!(rate > 0.0 && rate < 4294967296.0)) return NULL; /* positive, and inside the 32-bit rate every core holds */
   const struct omx_face *f = ((const struct omx_lv2_face *)d)->face;
   const size_t n = f->param_count;
   const size_t at_values = sizeof(Face) + n * sizeof(const float *);
@@ -89,7 +89,7 @@ LV2_Handle omx_lv2_face_instantiate(const LV2_Descriptor *d, double rate, const 
                            m->map(m->handle, LV2_ATOM__Int),    m->map(m->handle, LV2_ATOM__Long)};
         s->mapped = 1;
       }
-  f->core->init(s->core, s->rate);
+  if (!f->core->init(s->core, s->rate)) return free(mem), NULL;
   s->dirty = 1;
   return s;
 }
@@ -113,7 +113,7 @@ void omx_lv2_face_connect_port(LV2_Handle h, uint32_t port, void *data) {
 
 void omx_lv2_face_activate(LV2_Handle h) {
   Face *s = (Face *)h;
-  s->face->core->init(s->core, s->rate);
+  (void)s->face->core->init(s->core, s->rate); /* the rate instantiate took */
   s->dirty = 1;
 }
 

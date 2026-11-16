@@ -205,14 +205,17 @@ static bool g_activate(const clap_plugin_t *p, double sample_rate, uint32_t min_
   G *g = G_OF(p);
   const struct omx_face_core *c = g->face->core;
   if (g->active || !(sample_rate > 0.0)) return false;
+  /* finite and inside the 32-bit rate every core holds, then the kernel's own answer: a refused rate is
+   * never a wire (the cast of a larger double is undefined) */
+  if (!(sample_rate < 4294967296.0)) return false;
   g->rate = (uint32_t)sample_rate;
-  c->init(g->core, g->rate);
+  if (!c->init(g->core, g->rate)) return false;
   /* The latency the host reads after activation is the one the current values give: resolved on a
    * probe instance, so the running core's state is not touched before its first block. Activation is
    * the one place the CLAP latency extension lets it change, and where the host is told it did. */
   void *probe = malloc(c->size);
   if (!probe) return false;
-  c->init(probe, g->rate);
+  if (!c->init(probe, g->rate)) return free(probe), false;
   c->resolve(probe, g->values, g->values[G_BYPASS(g)] > 0.5f);
   const uint32_t lat = c->latency(probe);
   free(probe);
@@ -240,7 +243,7 @@ static void g_stop_processing(const clap_plugin_t *p) { G_OF(p)->processing = 0;
 
 static void g_reset(const clap_plugin_t *p) {
   G *g = G_OF(p);
-  g->face->core->init(g->core, g->rate);
+  (void)g->face->core->init(g->core, g->rate); /* the rate activate took */
   atomic_store(&g->dirty, 1);
 }
 
