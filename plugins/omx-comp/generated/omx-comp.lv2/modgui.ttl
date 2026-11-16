@@ -59,5 +59,9 @@
             lv2:index 10 ;
             lv2:symbol "detectorTopology" ;
             lv2:name "Detector Topology" ;
+        ] , [
+            lv2:index 11 ;
+            lv2:symbol "releaseMode" ;
+            lv2:name "Release Mode" ;
         ] ;
     ] .

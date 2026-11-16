@@ -31,7 +31,16 @@ enum {
   OMX_REVERB_PARAM_RELEASE = 10,
   OMX_REVERB_PARAM_GATE_THRESHOLD = 11,
   OMX_REVERB_PARAM_ALGORITHM = 12,
-  OMX_REVERB_PARAM_COUNT = 13
+  OMX_REVERB_PARAM_EARLY_DB = 13,
+  OMX_REVERB_PARAM_TAIL_DB = 14,
+  OMX_REVERB_PARAM_EARLY_SIZE_PCT = 15,
+  OMX_REVERB_PARAM_DUCK_DB = 16,
+  OMX_REVERB_PARAM_DUCK_THRESHOLD_DB = 17,
+  OMX_REVERB_PARAM_DUCK_RELEASE_MS = 18,
+  OMX_REVERB_PARAM_WET_DEESS = 19,
+  OMX_REVERB_PARAM_DEESS_FREQ_HZ = 20,
+  OMX_REVERB_PARAM_DEESS_THRESHOLD_DB = 21,
+  OMX_REVERB_PARAM_COUNT = 22
 };
 
 static const omx_plugin_param OMX_REVERB_PARAMS[OMX_REVERB_PARAM_COUNT] = {
@@ -48,6 +57,15 @@ static const omx_plugin_param OMX_REVERB_PARAMS[OMX_REVERB_PARAM_COUNT] = {
   { "release", "Release", "ms", 1.0f, 500.0f, 20.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "gateThreshold", "Gate Threshold", "dBFS", -80.0f, 0.0f, -40.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "algorithm", "Algorithm", "", 0.0f, 4.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "earlyDb", "Early", "dB", -60.0f, 0.0f, -60.0f, 0u },
+  { "tailDb", "Tail", "dB", -60.0f, 0.0f, 0.0f, 0u },
+  { "earlySizePct", "Early Size", "%", 0.0f, 100.0f, 50.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "duckDb", "Duck", "dB", -24.0f, 0.0f, 0.0f, 0u },
+  { "duckThresholdDb", "Duck Threshold", "dB", -60.0f, 0.0f, -30.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "duckReleaseMs", "Duck Release", "ms", 20.0f, 2000.0f, 250.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "wetDeess", "Wet De-ess", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
+  { "deessFreqHz", "De-ess Freq", "Hz", 2000.0f, 16000.0f, 7000.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "deessThresholdDb", "De-ess Threshold", "dB", -60.0f, 0.0f, -30.0f, 0u },
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -66,6 +84,15 @@ static const char *const OMX_REVERB_PARAM_MODULES[OMX_REVERB_PARAM_COUNT] = {
   "Gated",
   "Gated",
   "Reverb",
+  "Early",
+  "Early",
+  "Early",
+  "Duck",
+  "Duck",
+  "Duck",
+  "De-ess",
+  "De-ess",
+  "De-ess",
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -108,24 +135,51 @@ static const char *const OMX_REVERB_PARAM_MODULES[OMX_REVERB_PARAM_COUNT] = {
 #define OMX_REVERB_PARAM_ALGORITHM_MIN 0.0f
 #define OMX_REVERB_PARAM_ALGORITHM_MAX 4.0f
 #define OMX_REVERB_PARAM_ALGORITHM_DEFAULT 0.0f
+#define OMX_REVERB_PARAM_EARLY_DB_MIN -60.0f
+#define OMX_REVERB_PARAM_EARLY_DB_MAX 0.0f
+#define OMX_REVERB_PARAM_EARLY_DB_DEFAULT -60.0f
+#define OMX_REVERB_PARAM_TAIL_DB_MIN -60.0f
+#define OMX_REVERB_PARAM_TAIL_DB_MAX 0.0f
+#define OMX_REVERB_PARAM_TAIL_DB_DEFAULT 0.0f
+#define OMX_REVERB_PARAM_EARLY_SIZE_PCT_MIN 0.0f
+#define OMX_REVERB_PARAM_EARLY_SIZE_PCT_MAX 100.0f
+#define OMX_REVERB_PARAM_EARLY_SIZE_PCT_DEFAULT 50.0f
+#define OMX_REVERB_PARAM_DUCK_DB_MIN -24.0f
+#define OMX_REVERB_PARAM_DUCK_DB_MAX 0.0f
+#define OMX_REVERB_PARAM_DUCK_DB_DEFAULT 0.0f
+#define OMX_REVERB_PARAM_DUCK_THRESHOLD_DB_MIN -60.0f
+#define OMX_REVERB_PARAM_DUCK_THRESHOLD_DB_MAX 0.0f
+#define OMX_REVERB_PARAM_DUCK_THRESHOLD_DB_DEFAULT -30.0f
+#define OMX_REVERB_PARAM_DUCK_RELEASE_MS_MIN 20.0f
+#define OMX_REVERB_PARAM_DUCK_RELEASE_MS_MAX 2000.0f
+#define OMX_REVERB_PARAM_DUCK_RELEASE_MS_DEFAULT 250.0f
+#define OMX_REVERB_PARAM_WET_DEESS_MIN 0.0f
+#define OMX_REVERB_PARAM_WET_DEESS_MAX 1.0f
+#define OMX_REVERB_PARAM_WET_DEESS_DEFAULT 0.0f
+#define OMX_REVERB_PARAM_DEESS_FREQ_HZ_MIN 2000.0f
+#define OMX_REVERB_PARAM_DEESS_FREQ_HZ_MAX 16000.0f
+#define OMX_REVERB_PARAM_DEESS_FREQ_HZ_DEFAULT 7000.0f
+#define OMX_REVERB_PARAM_DEESS_THRESHOLD_DB_MIN -60.0f
+#define OMX_REVERB_PARAM_DEESS_THRESHOLD_DB_MAX 0.0f
+#define OMX_REVERB_PARAM_DEESS_THRESHOLD_DB_DEFAULT -30.0f
 
 /* The identity every face publishes. */
 #define OMX_REVERB_NAME "omx reverb"
 #define OMX_REVERB_VENDOR "openmixer"
 #define OMX_REVERB_URL "https://github.com/FreeMixer/omx-plugins"
 #define OMX_REVERB_VERSION "0.19.3"
-#define OMX_REVERB_DESCRIPTION "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal."
+#define OMX_REVERB_DESCRIPTION "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal; the early reflections and the tail set apart, the wet ducked under the dry and de-essed in its band."
 #define OMX_REVERB_CLAP_ID "org.openmixer.reverb"
 #define OMX_REVERB_CLAP_FEATURES "audio-effect", "reverb", "stereo"
 #define OMX_REVERB_LV2_URI "urn:openmixer:reverb"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
-#define OMX_REVERB_DECL_SOURCE "omx reverb: Plate Mod Depth 0 to 400 %, Mix 0 to 1, Size 0 to 1, Damping 0 to 1, Width 0 to 1, Predelay 0 to 100 ms, Lowcut 0 to 20000 Hz, Highcut 0 to 20000 Hz, Reverse 50 to 500 ms, Hold 10 to 2000 ms, Release 1 to 500 ms, Gate Threshold -80 to 0 dBFS, Algorithm 0 to 4"
-#define OMX_REVERB_DECL_DIGEST "a42c6e20426afd868f08938af4dfb54b487bdf4d8a5d9b13f75a967319df7009"
+#define OMX_REVERB_DECL_SOURCE "omx reverb: Plate Mod Depth 0 to 400 %, Mix 0 to 1, Size 0 to 1, Damping 0 to 1, Width 0 to 1, Predelay 0 to 100 ms, Lowcut 0 to 20000 Hz, Highcut 0 to 20000 Hz, Reverse 50 to 500 ms, Hold 10 to 2000 ms, Release 1 to 500 ms, Gate Threshold -80 to 0 dBFS, Algorithm 0 to 4, Early -60 to 0 dB, Tail -60 to 0 dB, Early Size 0 to 100 %, Duck -24 to 0 dB, Duck Threshold -60 to 0 dB, Duck Release 20 to 2000 ms, Wet De-ess 0 to 1, De-ess Freq 2000 to 16000 Hz, De-ess Threshold -60 to 0 dB"
+#define OMX_REVERB_DECL_DIGEST "866cf73c756e73371f6d9c25064e9658a03ad325a803fffe572f8d226ec9ff64"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_REVERB_PARAM_CONTRACT_VERSION 2u
-#define OMX_REVERB_PARAM_CONTRACT_FINGERPRINT "4bfc8b448bcedb15595b78e1694ba771f4cf8f7cd7fb2ce077d9414b9af31afc"
+#define OMX_REVERB_PARAM_CONTRACT_VERSION 3u
+#define OMX_REVERB_PARAM_CONTRACT_FINGERPRINT "4ba02d00b3f036e5c1ef5382391c23bfdc4d4d4263923d9a05f5493f40a1eaf8"
 static const struct omx_param_contract_row OMX_REVERB_PARAM_CONTRACT[OMX_REVERB_PARAM_COUNT] = {
   { 14u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* plateModDepth pc */
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* mix none */
@@ -140,6 +194,15 @@ static const struct omx_param_contract_row OMX_REVERB_PARAM_CONTRACT[OMX_REVERB_
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* release ms */
   { 256u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* gateThreshold dbfs */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* algorithm none */
+  { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* earlyDb db */
+  { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* tailDb db */
+  { 14u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* earlySizePct pc */
+  { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* duckDb db */
+  { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* duckThresholdDb db */
+  { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* duckReleaseMs ms */
+  { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* wetDeess none */
+  { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* deessFreqHz hz */
+  { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* deessThresholdDb db */
 };
 
 /* org.openmixer.resource-hints.draft/0 (omx-contract RESOURCE_HINTS, tools/resource-hints.mjs): the hints the
@@ -153,12 +216,15 @@ static const omx_resource_hints_t OMX_REVERB_RESOURCE_HINTS = {
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family reverb. */
-#define OMX_REVERB_PANEL_FINGERPRINT "7626d07e785ceff25b3603d57d7ad73c2bf132c17ab248bf6d227e1d2e93a722"
+#define OMX_REVERB_PANEL_FINGERPRINT "07a58828dbb8796cc24e118102c6411cf2132c0929565f4bb21825c1a1f614da"
 static const struct omx_panel_section_row OMX_REVERB_PANEL_SECTIONS[] = {
   { "reverb", "fx.reverb.section.reverb", "Reverb" },
   { "reverse", "fx.reverb.section.reverse", "Reverse" },
   { "gated", "fx.reverb.section.gated", "Gated" },
   { "plate", "fx.reverb.section.plate", "Plate" },
+  { "early", "fx.reverb.section.early", "Early" },
+  { "duck", "fx.reverb.section.duck", "Duck" },
+  { "deess", "fx.reverb.section.deess", "De-ess" },
 };
 static const struct omx_panel_control_row OMX_REVERB_PANEL_CONTROLS[] = {
   { 12u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.reverb.algorithm", "Algorithm", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
@@ -174,6 +240,15 @@ static const struct omx_panel_control_row OMX_REVERB_PANEL_CONTROLS[] = {
   { 10u, 2u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.release", "Release", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 11u, 2u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.gate_threshold", "Gate Threshold", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 0u, 3u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.plate_mod_depth", "Plate Mod Depth", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 13u, 4u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.early_db", "Early", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 14u, 4u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.tail_db", "Tail", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 15u, 4u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.early_size_pct", "Early Size", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 16u, 5u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.duck_db", "Duck", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 17u, 5u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.duck_threshold_db", "Duck Threshold", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 18u, 5u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.duck_release_ms", "Duck Release", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 19u, 6u, OMX_CLAP_WIDGET_SWITCH, "fx.reverb.wet_deess", "Wet De-ess", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 20u, 6u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.deess_freq_hz", "De-ess Freq", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 21u, 6u, OMX_CLAP_WIDGET_KNOB, "fx.reverb.deess_threshold_db", "De-ess Threshold", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
 static const struct omx_panel_role_row OMX_REVERB_PANEL_ROLES[] = {
   { "size", 0u, 2u },
@@ -196,12 +271,15 @@ static const struct omx_panel_page_row OMX_REVERB_PANEL_PAGES[] = {
   { "Reverse", "Reverse", { 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Gated", "Gated", { 9u, 10u, 11u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Plate", "Plate", { 0u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Early", "Early", { 13u, 14u, 15u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Duck", "Duck", { 16u, 17u, 18u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "De-ess", "De-ess", { 19u, 20u, 21u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_REVERB_PANEL_PAGE_COUNT 5u
+#define OMX_REVERB_PANEL_PAGE_COUNT 8u
 static const struct omx_panel_rows OMX_REVERB_PANEL = {
   OMX_REVERB_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_REVERB,
-  OMX_REVERB_PANEL_SECTIONS, 4u,
-  OMX_REVERB_PANEL_CONTROLS, 13u,
+  OMX_REVERB_PANEL_SECTIONS, 7u,
+  OMX_REVERB_PANEL_CONTROLS, 22u,
   OMX_REVERB_PANEL_ROLES, 8u,
   NULL, 0u,
   OMX_REVERB_PANEL_DEFAULTS, 1u,
@@ -217,7 +295,7 @@ static const struct omx_panel_rows OMX_REVERB_PANEL = {
 #define OMX_REVERB_LV2_PORT_OUT_R 5u
 #define OMX_REVERB_LV2_PORT_FIRST_PARAM 6u
 /* The meters' output control ports, one per channel in the order their values are published, from here on. */
-#define OMX_REVERB_LV2_PORT_FIRST_METER 19u
-#define OMX_REVERB_LV2_PORT_COUNT 19u
+#define OMX_REVERB_LV2_PORT_FIRST_METER 28u
+#define OMX_REVERB_LV2_PORT_COUNT 28u
 
 #endif /* OMX_REVERB_PARAMS_H */

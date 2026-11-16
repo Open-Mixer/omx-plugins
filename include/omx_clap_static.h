@@ -87,6 +87,7 @@ extern const clap_plugin_entry_t omx_clap_entry_suboct;
 extern const clap_plugin_entry_t omx_clap_entry_tone;
 extern const clap_plugin_entry_t omx_clap_entry_transient;
 extern const clap_plugin_entry_t omx_clap_entry_tremolo;
+extern const clap_plugin_entry_t omx_clap_entry_trim;
 extern const clap_plugin_entry_t omx_clap_entry_upward;
 extern const clap_plugin_entry_t omx_clap_entry_width;
 /* END GENERATED clap-entries */

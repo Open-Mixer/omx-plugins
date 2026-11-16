@@ -44,7 +44,7 @@ Description: OpenMixer delay, drive, EQ, strip, gate and effects (CLAP, LV2)
  sub-octaver, plosive tamer,
  clipper, upward compressor, bus compressor, loudness leveler,
  spectral balancer, spring reverb, doubler, tone control, stereo width, ducker,
- limiter, compressor with its sidechain key, multiband compressor and dynamic
+ input trim, limiter, compressor with its sidechain key, multiband compressor and dynamic
  EQ. They come as CLAP plugins for Bitwig, REAPER and Carla, and as LV2
  plugins for Ardour, Carla, MOD and Zynthian. Each one runs the same DSP as the
  console, so a track sounds the same in a session as it does on the desk,
@@ -67,7 +67,7 @@ Description: OpenMixer delay, drive, EQ, strip, gate and effects as CLAP plugins
  sub-octaver, plosive tamer,
  clipper, upward compressor, bus compressor, loudness leveler,
  spectral balancer, spring reverb,
- limiter, compressor) as CLAP plugins, installed in /usr/lib/clap where Bitwig,
+ input trim, limiter, compressor) as CLAP plugins, installed in /usr/lib/clap where Bitwig,
  REAPER, Carla and other CLAP hosts find them. They run the console's own DSP,
  so they sound like the desk, sample for sample.
  .
@@ -122,7 +122,7 @@ Description: OpenMixer delay, drive, EQ, strip, gate and effects as LV2 plugins
  sub-octaver, plosive tamer,
  clipper, upward compressor, bus compressor, loudness leveler,
  spectral balancer, spring reverb,
- limiter, compressor) as LV2 plugins, installed in /usr/lib/lv2 where Ardour,
+ input trim, limiter, compressor) as LV2 plugins, installed in /usr/lib/lv2 where Ardour,
  Carla, MOD and Zynthian find them, with a MOD GUI where the plugin has one.
  They run the console's own DSP, so they sound like the desk, sample for
  sample.

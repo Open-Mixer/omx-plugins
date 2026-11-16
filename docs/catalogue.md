@@ -33,7 +33,7 @@ Every plugin, what it does, and its controls; the parameter pages, the factory p
 | **omx phaser** | `org.openmixer.phaser` | `urn:openmixer:phaser` | The console's phaser: identical all-pass sections swept in octaves by one oscillator, with feedback around the chain and a wet/dry mix. |
 | **omx pitch** | `org.openmixer.pitch` | `urn:openmixer:pitch` | The console's pitch shifter: shifts both channels up or down by semitones and cents, without changing their length, mixed with the dry signal. |
 | **omx plosive** | `org.openmixer.plosive` | `urn:openmixer:plosive` | Softens the p pops and hard t and k consonants of a voice, cutting each only while it bursts. |
-| **omx reverb** | `org.openmixer.reverb` | `urn:openmixer:reverb` | The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal. |
+| **omx reverb** | `org.openmixer.reverb` | `urn:openmixer:reverb` | The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal; the early reflections and the tail set apart, the wet ducked under the dry and de-essed in its band. |
 | **omx rotary** | `org.openmixer.rotary` | `urn:openmixer:rotary` | The console's rotary speaker: a drum rotor on the low band and a horn rotor on the high band, with stop, slow and fast speeds, mixed with the dry signal. |
 | **omx spring** | `org.openmixer.spring` | `urn:openmixer:spring` | A spring reverb: a delay, a chain of all-passes and a darkening loop, with decay, length, tension and damping. |
 | **omx strip** | `org.openmixer.strip` | `urn:openmixer:strip` | The console's channel strip in one plugin: input trim, HPF/LPF, gate, EQ of 1 to 32 bands (4 at first) and compressor, in the desk's order or any other. Stereo, real-time safe. |
@@ -41,6 +41,7 @@ Every plugin, what it does, and its controls; the parameter pages, the factory p
 | **omx tone** | `org.openmixer.tone` | `urn:openmixer:tone` | Tilts the whole tone darker or brighter about a pivot, and sweeps a resonant DJ filter from a low-pass through open to a high-pass with one knob. |
 | **omx transient** | `org.openmixer.transient` | `urn:openmixer:transient` | The console's transient designer: more or less attack and sustain, from two envelope contrasts, with no threshold to set. |
 | **omx tremolo** | `org.openmixer.tremolo` | `urn:openmixer:tremolo` | The console's tremolo and auto-pan: one oscillator turned into a level change on both legs, or into a left-right pan. |
+| **omx trim** | `org.openmixer.trim` | `urn:openmixer:trim` | The OpenMixer console's input trim: one gain control, -24 to +24 dB in 0.1 dB steps, applied first in the channel as a click-free ramp, stereo, zero latency; at 0 dB a racked instance is a wire. |
 | **omx upward** | `org.openmixer.upward` | `urn:openmixer:upward` | Lifts what is quiet toward a threshold, by a ratio and up to a limit, and leaves the loud alone. |
 | **omx width** | `org.openmixer.width` | `urn:openmixer:width` | Widens or narrows the stereo image, with an optional pseudo-stereo spread for a mono source and a bass-mono cutoff that keeps the lows centred. |
 
@@ -104,6 +105,7 @@ Plus the host's bypass.
 | Detect Link | Linked / Mid / Side / Max | Linked |
 | Duck | off / on | off |
 | Duck Range | -40 to 0 dB, whole steps | -12 dB |
+| Release Mode | Fixed / Opto / Auto | Fixed |
 
 Plus the host's bypass.
 
@@ -538,6 +540,15 @@ Plus the host's bypass.
 | Release | 1 to 500 ms, whole steps | 20 ms |
 | Gate Threshold | -80 to 0 dBFS, whole steps | -40 dBFS |
 | Algorithm | Room / Plate / Hall / Reverse / Gated | Room |
+| Early | -60 to 0 dB | -60 dB |
+| Tail | -60 to 0 dB | 0 dB |
+| Early Size | 0 to 100 %, whole steps | 50 % |
+| Duck | -24 to 0 dB | 0 dB |
+| Duck Threshold | -60 to 0 dB, whole steps | -30 dB |
+| Duck Release | 20 to 2000 ms, whole steps | 250 ms |
+| Wet De-ess | off / on | off |
+| De-ess Freq | 2000 to 16000 Hz, whole steps | 7000 Hz |
+| De-ess Threshold | -60 to 0 dB | -30 dB |
 
 Plus the host's bypass.
 
@@ -632,6 +643,14 @@ Plus the host's bypass.
 | Depth | 0 to 100 % | 50 % |
 | Mix | 0 to 100 % | 100 % |
 | Mode | Tremolo / Pan | Tremolo |
+
+Plus the host's bypass.
+
+### omx trim
+
+| Parameter | Range | Default |
+|---|---|---|
+| Trim | -24 to 24 dB | 0 dB |
 
 Plus the host's bypass.
 

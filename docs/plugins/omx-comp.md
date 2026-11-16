@@ -8,7 +8,7 @@ The console's compressor: threshold, ratio and knee set how hard it holds the le
 
 - CLAP id: `org.openmixer.comp`
 - LV2 URI: `urn:openmixer:comp`
-- Parameters: 19, plus the host's bypass
+- Parameters: 20, plus the host's bypass
 
 ## Audio ports
 
@@ -24,13 +24,13 @@ A page is where a host shows a parameter. In LV2 each page is a port group, `pg:
 
 | Page | LV2 group symbol | Priority | CLAP module | Parameters |
 |---|---|---|---|---|
-| Comp | `comp` | 3 | `Comp` | 11 |
+| Comp | `comp` | 3 | `Comp` | 12 |
 | Key | `key` | 2 | `Key` | 6 |
 | Duck | `duck` | 1 | `Duck` | 2 |
 
 ## Parameters
 
-Ids are the order below, 0 to 18; a parameter appended later takes the next id. The bypass's id is its own (below).
+Ids are the order below, 0 to 19; a parameter appended later takes the next id. The bypass's id is its own (below).
 
 | Id | Symbol | Name | Unit | Min | Max | Default | Step or values | Flags | Page (priority) |
 |---|---|---|---|---|---|---|---|---|---|
@@ -53,6 +53,7 @@ Ids are the order below, 0 to 18; a parameter appended later takes the next id. 
 | 16 | `detectLink` | Detect Link |  | 0 | 3 | Linked (0) | 0 Linked, 1 Mid, 2 Side, 3 Max | automatable | Key (2) |
 | 17 | `duck` | Duck |  | off | on | off | toggle | automatable | Duck (1) |
 | 18 | `rangeDb` | Duck Range | dB | -40 | 0 | -12 | whole steps | automatable | Duck (1) |
+| 19 | `releaseMode` | Release Mode |  | 0 | 2 | Fixed (0) | 0 Fixed, 1 Opto, 2 Auto | automatable | Comp (3) |
 
 ## Bypass
 
