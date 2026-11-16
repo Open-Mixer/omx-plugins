@@ -16,7 +16,7 @@ BuildRequires: pkgconf-pkg-config
 # the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
 BuildRequires: omx-dsp-devel >= 0.32.4
 BuildRequires: omx-contract-devel >= 3.19.0
-BuildRequires: omx-clap-core-devel >= 0.33.0
+BuildRequires: omx-clap-core-devel >= 0.32.5
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
 BuildRequires: plugin-hostd-devel >= 0.20.8
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
@@ -37,7 +37,7 @@ BuildRequires: diffutils
 BuildRequires: lilv
 BuildRequires: lilv-devel
 BuildRequires: sord
-BuildRequires: omx-clap-host >= 0.33.0
+BuildRequires: omx-clap-host >= 0.32.5
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
 BuildRequires: plugin-hostd >= 0.20.8
 # %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
@@ -284,7 +284,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 * Sun Nov 15 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.5-1
 - built and tested on the 3.19.0 pass's releases, each a floor only, no
   ceiling: omx-contract >= 3.19.0, omx-clap-core and omx-clap-host >=
-  0.33.0 (the wave's one omx-clap-core minor), omx-dsp >= 0.32.4,
+  0.32.5 (the release that carries the property work), omx-dsp >= 0.32.4,
   plugin-hostd >= 0.20.8 (D30)
 - the generated headers, descriptors and LV2 plugin files carry 0.19.5, and
   every descriptor's link is read at omx-dsp 0.32.4, the floor the packaging

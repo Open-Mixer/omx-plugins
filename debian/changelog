@@ -2,7 +2,7 @@ omx-plugins (0.19.5) unstable; urgency=medium
 
   * Built and tested on the 3.19.0 pass's releases, each a floor only, no
     ceiling: omx-contract >= 3.19.0, omx-clap-core and omx-clap-host >=
-    0.33.0 (the wave's one omx-clap-core minor), omx-dsp >= 0.32.4,
+    0.32.5 (the release that carries the property work), omx-dsp >= 0.32.4,
     plugin-hostd >= 0.20.8 (D30).
   * The generated headers, descriptors and LV2 plugin files carry 0.19.5, and
     every descriptor's link is read at omx-dsp 0.32.4, the floor the packaging
