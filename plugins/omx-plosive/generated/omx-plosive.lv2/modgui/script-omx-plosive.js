@@ -13,7 +13,7 @@ function (event, funcs) {
     // the look: the pedal wears the class its template names (the shipped default), unless the browser remembers another; a key swaps it.
     // Every storage access is guarded: with storage absent or throwing the pedal wears the shipped default and the keys still work.
     var LOOKS = ['vintage', 'console', '3d'];
-    var found = event.icon.find('.omx-pedal');
+    var found = event.icon.find('[data-omx-pedal]');
     var pedal = found && found[0];
     var wear = function (name) {
         if (!pedal || !pedal.classList) return;
@@ -91,7 +91,7 @@ function (event, funcs) {
     // a control that is hidden takes no room: the sections are laid out again over the shown controls, as the generator lays out
     // the come-up face (the same grid: a row holds data-row-controls controls, an edge band starts a row of its own)
     var relayout = function () {
-        var found = event.icon.find('.omx-pedal');
+        var found = event.icon.find('[data-omx-pedal]');
         var root = found && found[0];
         if (!root || !root.querySelectorAll) return;
         var n = function (name) { return parseFloat(root.getAttribute(name)); };
@@ -113,11 +113,12 @@ function (event, funcs) {
                 if (k.className.indexOf('omx-control') < 0 || k.style.display === 'none') continue;
                 if (matrix && k.getAttribute('data-mx-col')) { cells.push(k); continue; }
                 var band = k.getAttribute('data-band') || '';
-                if (any && (col === n('data-row-controls') || band !== prev)) { col = 0; row++; }
+                var span = parseFloat(k.getAttribute('data-span')) || 1;
+                if (any && (col + span > n('data-row-controls') || band !== prev)) { col = 0; row++; }
                 prev = band; any = true;
                 k.style.left = (n('data-section-pad') + col * n('data-cell-w')) + 'px';
                 k.style.top = (n('data-title-h') + curves + row * n('data-cell-h')) + 'px';
-                col++;
+                col += span;
             }
             var top = n('data-title-h') + curves + (any ? row + 1 : 0) * n('data-cell-h');
             var h = top + n('data-section-pad') / 2;
@@ -136,7 +137,7 @@ function (event, funcs) {
                     if (head.className.indexOf('omx-colhead') < 0) continue;
                     var hk = head.getAttribute('data-mx-col');
                     head.style.display = hk in at ? '' : 'none';
-                    if (hk in at) { head.style.left = (n('data-section-pad') + at[hk] * n('data-cell-w')) + 'px'; head.style.top = top + 'px'; }
+                    if (hk in at) { head.style.left = (n('data-section-pad') + at[hk] * n('data-cell-w')) + 'px'; head.style.top = (top + 6) + 'px'; }
                 }
                 if (order.length) h += n('data-head-h') + parseFloat(sec.getAttribute('data-mx-rows')) * n('data-cell-h');
                 wide = Math.max(wide, order.length * n('data-cell-w') + 2 * n('data-section-pad'));
