@@ -42,6 +42,7 @@ Every plugin, what it does, and its controls; the parameter pages, the factory p
 | **omx transient** | `org.openmixer.transient` | `urn:openmixer:transient` | The console's transient designer: more or less attack and sustain, from two envelope contrasts, with no threshold to set. |
 | **omx tremolo** | `org.openmixer.tremolo` | `urn:openmixer:tremolo` | The console's tremolo and auto-pan: one oscillator turned into a level change on both legs, or into a left-right pan. |
 | **omx upward** | `org.openmixer.upward` | `urn:openmixer:upward` | Lifts what is quiet toward a threshold, by a ratio and up to a limit, and leaves the loud alone. |
+| **omx width** | `org.openmixer.width` | `urn:openmixer:width` | Widens or narrows the stereo image, with an optional pseudo-stereo spread for a mono source and a bass-mono cutoff that keeps the lows centred. |
 
 <!-- END GENERATED catalogue -->
 
@@ -643,6 +644,18 @@ Plus the host's bypass.
 | Range | 0 to 24 dB | 6 dB |
 | Attack | 0.1 to 100 ms | 5 ms |
 | Release | 5 to 3000 ms, whole steps | 200 ms |
+
+Plus the host's bypass.
+
+### omx width
+
+| Parameter | Range | Default |
+|---|---|---|
+| Width | 0 to 200 %, whole steps | 100 % |
+| Pseudo | Off / Comb / Haas | Off |
+| Pseudo Delay | 0 to 30 ms | 12 ms |
+| Bass Mono | off / on | off |
+| Bass Mono Frequency | 20 to 300 Hz, whole steps | 120 Hz |
 
 Plus the host's bypass.
 
