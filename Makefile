@@ -345,8 +345,10 @@ presets-figures:
 recipe-test: selftest completeness
 completeness:
 	node tools/plugin-recipe.mjs
+	node tools/round-trip.mjs --check
 selftest:
 	node tools/test/recipe-selftest.mjs
+	node tools/test/round-trip-ledger-check.mjs
 	tools/qualify-release.sh --self-test
 	tools/gen-pins.sh --self-test
 	tools/pins-check.sh --self-test
