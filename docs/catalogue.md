@@ -103,6 +103,7 @@ Plus the host's bypass.
 | Detect Link | Linked / Mid / Side / Max | Linked |
 | Duck | off / on | off |
 | Duck Range | -40 to 0 dB, whole steps | -12 dB |
+| Release Mode | Fixed / Opto / Auto | Fixed |
 
 Plus the host's bypass.
 
