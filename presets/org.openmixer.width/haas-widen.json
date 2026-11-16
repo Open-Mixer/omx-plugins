@@ -1,0 +1,40 @@
+{
+  "format": "org.openmixer.preset/1",
+  "plugin": {
+    "id": "org.openmixer.width"
+  },
+  "id": "haas-widen",
+  "name": "Haas Widen",
+  "carries": "params",
+  "params": [
+    {
+      "symbol": "widthPct",
+      "unit": "%",
+      "value": 100
+    },
+    {
+      "symbol": "pseudo",
+      "unit": "",
+      "value": 2,
+      "label": "Haas"
+    },
+    {
+      "symbol": "pseudoMs",
+      "unit": "ms",
+      "value": 18
+    },
+    {
+      "symbol": "bassMono",
+      "unit": "",
+      "value": 0
+    },
+    {
+      "symbol": "bassMonoHz",
+      "unit": "Hz",
+      "value": 120
+    }
+  ],
+  "createdAt": "2026-10-17T00:00:00Z",
+  "modifiedAt": "2026-10-17T00:00:00Z",
+  "copyOf": null
+}

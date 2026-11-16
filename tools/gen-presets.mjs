@@ -259,6 +259,12 @@ const DEFINITIONS = {
     ['long-drip', 'Long Drip', { decayS: 4, lengthMs: 50, tensionPct: 70, dampHz: 3000, mixPct: 35 }],
     ['tight', 'Tight Spring', { decayS: 1, lengthMs: 25, tensionPct: 30, dampHz: 6000, mixPct: 20 }],
   ],
+  'org.openmixer.width': [
+    ['wide', 'Wide', { widthPct: 140 }],
+    ['mono-source-spread', 'Mono Source Spread', { widthPct: 100, pseudo: 1, pseudoMs: 12 }],
+    ['haas-widen', 'Haas Widen', { widthPct: 100, pseudo: 2, pseudoMs: 18 }],
+    ['tight-bass', 'Tight Bass', { widthPct: 130, bassMono: 1, bassMonoHz: 120 }],
+  ],
   'org.openmixer.tremolo': [
     ['classic', 'Classic', { rateHz: 5, depth: 60 }],
     ['slow-swell', 'Slow Swell', { rateHz: 0.8, depth: 80 }],

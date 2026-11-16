@@ -1,0 +1,39 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
+# GENERATED — DO NOT EDIT BY HAND. Produced by tools/modgui-gen.mjs from
+# plugins/omx-width/omx-width.decl.json (its panel block) and tools/look.json
+# Regenerate: `node tools/modgui-gen.mjs`, then commit the result.
+@prefix lv2:    <http://lv2plug.in/ns/lv2core#> .
+@prefix modgui: <http://moddevices.com/ns/modgui#> .
+
+<urn:openmixer:width>
+    modgui:gui [
+        modgui:resourcesDirectory <modgui> ;
+        modgui:iconTemplate <modgui/icon-omx-width.html> ;
+        modgui:stylesheet <modgui/stylesheet-omx-width.css> ;
+        modgui:screenshot <modgui/screenshot-omx-width.png> ;
+        modgui:thumbnail <modgui/thumbnail-omx-width.png> ;
+        modgui:brand "openmixer" ;
+        modgui:label "omx width" ;
+        modgui:port [
+            lv2:index 0 ;
+            lv2:symbol "widthPct" ;
+            lv2:name "Width" ;
+        ] , [
+            lv2:index 1 ;
+            lv2:symbol "pseudo" ;
+            lv2:name "Pseudo" ;
+        ] , [
+            lv2:index 2 ;
+            lv2:symbol "pseudoMs" ;
+            lv2:name "Pseudo Delay" ;
+        ] , [
+            lv2:index 3 ;
+            lv2:symbol "bassMono" ;
+            lv2:name "Bass Mono" ;
+        ] , [
+            lv2:index 4 ;
+            lv2:symbol "bassMonoHz" ;
+            lv2:name "Bass Mono Frequency" ;
+        ] ;
+    ] .

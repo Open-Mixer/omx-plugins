@@ -43,7 +43,7 @@ Description: OpenMixer delay, drive, EQ, strip, gate and effects (CLAP, LV2)
  tremolo, rotary speaker, reverb, pitch shifter, transient shaper, de-esser,
  sub-octaver, plosive tamer,
  clipper, upward compressor, bus compressor, loudness leveler,
- spectral balancer, spring reverb, doubler, tone control, ducker,
+ spectral balancer, spring reverb, doubler, tone control, stereo width, ducker,
  input trim, limiter, compressor with its sidechain key, multiband compressor and dynamic
  EQ. They come as CLAP plugins for Bitwig, REAPER and Carla, and as LV2
  plugins for Ardour, Carla, MOD and Zynthian. Each one runs the same DSP as the
