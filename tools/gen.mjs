@@ -227,7 +227,7 @@ function flattenChain(file, d) {
   }
   if (d.order === 'permutable') {
     // the order names its stages: one scale point per permutation, "Input > Filters > ...", the panel's section label of each element
-    const nameOf = (el) => d.panel?.sections?.find((s) => s.key === el.id)?.label ?? el.id;
+    const nameOf = (el) => { const sec = d.panel?.sections?.find((s) => s.key === el.id); return sec?.short ?? sec?.label ?? el.id; };
     const points = permutations(d.chain.length).map((row, k) => ({ value: k, label: row.map((i) => nameOf(d.chain[i])).join(' > ') }));
     out.push({ symbol: 'order', name: 'Order', unit: '', min: 0, max: factorial(d.chain.length) - 1, def: 0, kind: 'integer', own: 'stage-order', points });
   }

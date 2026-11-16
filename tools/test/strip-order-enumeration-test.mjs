@@ -21,10 +21,10 @@ const check = (what, ok, detail = '') => { n++; if (!ok) bad++; console.log(`${o
 
 const d = loadDecl(join(ROOT, 'plugins', 'omx-strip'));
 const order = descriptorOf(d).descriptor.controls.find((c) => c.symbol === 'order');
-const NAMES = { trim: 'Input', filter: 'Filters', gate: 'Gate', eq: 'EQ', comp: 'Comp' };
+const NAMES = { trim: 'In', filter: 'Flt', gate: 'Gate', eq: 'EQ', comp: 'Comp' };  // the sections' declared short labels
 const rows = permutations(d.chain.length).map((row) => row.map((i) => NAMES[d.chain[i].id]).join(' > '));
 check('the Order control is a choice', order?.kind === 'choice', `kind ${order?.kind}`);
-check('it has the 120 orders as labels, the desk\'s first', order?.labels?.length === 120 && order.labels[0] === 'Input > Filters > Gate > EQ > Comp' && order.labels[119] === 'Comp > EQ > Gate > Filters > Input', JSON.stringify(order?.labels?.slice(0, 2)));
+check('it has the 120 orders as labels, the desk\'s first', order?.labels?.length === 120 && order.labels[0] === 'In > Flt > Gate > EQ > Comp' && order.labels[119] === 'Comp > EQ > Gate > Flt > In', JSON.stringify(order?.labels?.slice(0, 2)));
 check('every label is the order its value runs', JSON.stringify(order?.labels) === JSON.stringify(rows), 'labels differ from the permutations');
 check('the values are 0..119', JSON.stringify(order?.values) === JSON.stringify([...Array(120).keys()]));
 const ttl = readFileSync(join(ROOT, 'plugins', 'omx-strip', 'generated', 'omx-strip.lv2', 'omx-strip.ttl'), 'utf8');

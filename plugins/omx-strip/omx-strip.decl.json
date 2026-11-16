@@ -2940,6 +2940,7 @@
       {
         "key": "trim",
         "label": "Input",
+        "short": "In",
         "controls": [
           "trimOn",
           "trimDb"
@@ -2948,6 +2949,7 @@
       {
         "key": "filter",
         "label": "Filters",
+        "short": "Flt",
         "controls": [
           "filterOn",
           "hpfOn",
@@ -2961,6 +2963,7 @@
       {
         "key": "gate",
         "label": "Gate",
+        "short": "Gate",
         "controls": [
           "gateOn",
           "gateThreshold",
@@ -2977,6 +2980,7 @@
       {
         "key": "eq",
         "label": "EQ",
+        "short": "EQ",
         "controls": [
           "eqOn",
           "eqBands",
@@ -3166,6 +3170,7 @@
       {
         "key": "comp",
         "label": "Comp",
+        "short": "Comp",
         "controls": [
           "compOn",
           "compThreshold",
@@ -3832,7 +3837,7 @@
     "tiers": {
       "trimOn": "advanced",
       "trimDb": "easy",
-      "filterOn": "advanced",
+      "filterOn": "easy",
       "hpfOn": "easy",
       "hpfFreq": "easy",
       "hpfSlope": "advanced",
