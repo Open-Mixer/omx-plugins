@@ -373,6 +373,21 @@
         lv2:portProperty lv2:integer ;
         units:unit units:db ;
         pg:group <urn:openmixer:comp#duck>
+    ] ,
+    [
+        a lv2:ControlPort , lv2:InputPort ;
+        lv2:index 32 ;
+        lv2:symbol "releaseMode" ;
+        lv2:name "Release Mode" ;
+        lv2:default 0 ;
+        lv2:minimum 0 ;
+        lv2:maximum 2 ;
+        lv2:portProperty lv2:integer , lv2:enumeration ;
+        lv2:scalePoint
+            [ rdfs:label "Fixed" ; rdf:value 0 ] ,
+            [ rdfs:label "Opto" ; rdf:value 1 ] ,
+            [ rdfs:label "Auto" ; rdf:value 2 ] ;
+        pg:group <urn:openmixer:comp#comp>
     ] .
 
 # lv2:displayPriority on a port group is the term Zynthian reads to order a plugin's groups (zynthian_lv2.py), and the
