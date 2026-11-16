@@ -121,7 +121,7 @@
     },
     {
       "id": "params-header",
-      "what": "the parameter table both faces read, generated and fresh; its contract version is the place of the plugin's fingerprint in tools/param-contract-versions.json, where the wizard writes a new plugin's first",
+      "what": "the parameter table both faces read, generated and fresh; its contract version is 1, and tools/param-contract-versions.json holds the plugin's current fingerprint, where the wizard writes a new plugin's first",
       "step": "generate",
       "layer": "generated",
       "made": "GENERATED",

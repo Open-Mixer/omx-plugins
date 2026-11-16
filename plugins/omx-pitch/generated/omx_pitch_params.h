@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-pitch/omx-pitch.decl.json.
- * Regenerate: `make -C plugins/omx-pitch gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-pitch gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_pitch_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -64,7 +64,7 @@ static const char *const OMX_PITCH_PARAM_MODULES[OMX_PITCH_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_PITCH_PARAM_CONTRACT_VERSION 2u
+#define OMX_PITCH_PARAM_CONTRACT_VERSION 1u
 #define OMX_PITCH_PARAM_CONTRACT_FINGERPRINT "38bfaa5502a46fd716a79b1d4ab2946be65ec549fcbc54d2b4e575e4d6a3ffaf"
 static const struct omx_param_contract_row OMX_PITCH_PARAM_CONTRACT[OMX_PITCH_PARAM_COUNT] = {
   { 22u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* semitones semitone12TET */

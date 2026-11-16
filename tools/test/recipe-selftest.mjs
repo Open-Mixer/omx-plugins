@@ -43,9 +43,8 @@
  *      then `order`), and its `make test` is green: both faces bit-identical to the chain of faces
  *      called directly at every declared rate, each parameter one step off seen. The generated
  *      core with two orders swapped makes the oracle red; restored, green. gen refuses a `key` on
- *      an element whose face takes none, and a parameter of another element's kernel; held to a
- *      released tag (`shipped`), a list that differs from it is refused, each index named, unless
- *      `shippedDiff` names exactly those, and a tree with no such tag says it was not checked.
+ *      an element whose face takes none, and a parameter of another element's kernel; a list with two
+ *      parameters swapped is a new parameter contract, refused until its fingerprint is in the ledger.
  *
  * Works in build/selftest/ (removed first). Needs git, and omx-dsp's headers as the build does.
  * Exit 1 when any check failed, including an arm that stopped early.
@@ -207,7 +206,7 @@ async function main() {
   const VERSIONS = 'tools/param-contract-versions.json';
   const versionsOf = () => JSON.parse(readFileSync(join(tree, VERSIONS), 'utf8')).plugins;
   const first = versionsOf()['omx-wobble'];
-  expect(written.includes(VERSIONS) && first?.length === 1 && /^[0-9a-f]{64}$/.test(first[0]), `the wizard wrote the new plugin's first contract fingerprint in ${VERSIONS} (${JSON.stringify(first)})`);
+  expect(written.includes(VERSIONS) && /^[0-9a-f]{64}$/.test(first), `the wizard wrote the new plugin's first contract fingerprint in ${VERSIONS} (${JSON.stringify(first)})`);
   expect(JSON.stringify(Object.keys(versionsOf())) === JSON.stringify(Object.keys(versionsOf()).sort()), `${VERSIONS} keeps its plugins in name order`);
   {
     const was = readFileSync(join(tree, VERSIONS), 'utf8');
@@ -926,44 +925,26 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
       d.chain[2].params[0].kernel = 'gate';
     }, "names kernel 'gate', not the element's 'comp'");
     writeFileSync(join(ct, CP, `${stem}.decl.json`), `${JSON.stringify(plan.decl, null, 2)}\n`);
-    // a chain converted from a release: gen holds it to that release's parameter list
-    // gen reads the declaration, then generates (the list a change moves is no longer the committed one)
-    const shippedAs = (mutate, ...mode) => {
-      const d = structuredClone(plan.decl);
-      d.shipped = 'v9.9.9';
-      mutate(d);
-      writeFileSync(join(ct, CP, `${stem}.decl.json`), `${JSON.stringify(d, null, 2)}\n`);
-      return spawnSync('node', ['tools/gen.mjs', ...mode, CP], { cwd: ct, encoding: 'utf8' });
-    };
-    const untagged = shippedAs(() => {}, '--check');
-    expect(untagged.status === 0 && untagged.stderr.includes('v9.9.9 is not readable here'), `chain: with no such tag, gen says the release list is not checked (${untagged.stderr.trim().split('\n')[0]})`);
-    git(ct, 'init', '-q');
-    git(ct, 'add', '-A');
-    git(ct, 'commit', '-q', '-m', 'released');
-    git(ct, 'tag', 'v9.9.9');
-    expect(shippedAs(() => {}, '--check').status === 0, 'chain: the released list unchanged, gen is green');
-    const swap = (d) => {
-      const ps = d.chain[2].params;
+    // a parameter that moved is served under another id: the swap is a new parameter contract, refused until a person
+    // writes its fingerprint in the ledger
+    const swapped = structuredClone(plan.decl);
+    {
+      const ps = swapped.chain[2].params;
       [ps[0], ps[1]] = [ps[1], ps[0]];
+    }
+    const runSwapped = () => {
+      writeFileSync(join(ct, CP, `${stem}.decl.json`), `${JSON.stringify(swapped, null, 2)}\n`);
+      return spawnSync('node', ['tools/gen.mjs', CP], { cwd: ct, encoding: 'utf8' });
     };
-    const moved = shippedAs(swap);
-    expect(moved.status !== 0 && moved.stderr.includes('compThresholdDb -> compRatio') && moved.stderr.includes('compRatio -> compThresholdDb'),
-      `sabotage chain: two parameters swapped against the release are refused, each index named (${moved.stderr.split('\n').find((l) => l.includes('->'))?.trim()})`);
-    const idxs = [...moved.stderr.matchAll(/^ {2}(\d+ \S+ -> \S+)$/gm)].map((m) => m[1]);
-    const named = (d) => {
-      swap(d);
-      d.shippedDiff = idxs;
-    };
-    // a parameter that moved is served under another id: the swap is a new parameter contract, refused until a person appends it
-    const unlisted = shippedAs(named);
-    const next = unlisted.stderr.match(new RegExp(`plugins/${stem}: param-contract fingerprint ([0-9a-f]{64}) is not in tools/param-contract-versions\\.json: append it, the next version \\(2\\)`))?.[1];
-    expect(idxs.length === 2 && unlisted.status !== 0 && next !== undefined,
-      `sabotage chain: the swap named in shippedDiff, its contract fingerprint not appended, is refused naming version 2 (${unlisted.stderr.split('\n').find((l) => l.includes('param-contract fingerprint'))?.trim().slice(0, 60)})`);
+    const unlisted = runSwapped();
+    const next = unlisted.stderr.match(new RegExp(`plugins/${stem}: param-contract fingerprint ([0-9a-f]{64}) is not the one in tools/param-contract-versions\\.json`))?.[1];
+    expect(unlisted.status !== 0 && next !== undefined,
+      `sabotage chain: two parameters swapped, the contract fingerprint not written in the ledger, is refused (${unlisted.stderr.split('\n').find((l) => l.includes('param-contract fingerprint'))?.trim().slice(0, 60)})`);
     const versionsFile = join(ct, 'tools', 'param-contract-versions.json'), versionsWas = readFileSync(versionsFile, 'utf8');
     const versions = JSON.parse(versionsWas);
-    versions.plugins[stem].push(next);
+    versions.plugins[stem] = next;
     writeFileSync(versionsFile, `${JSON.stringify(versions, null, 2)}\n`);
-    expect(next !== undefined && shippedAs(named).status === 0, `chain: the same swap named in shippedDiff, its fingerprint appended as version 2, is accepted (${idxs.join('; ')})`);
+    expect(next !== undefined && runSwapped().status === 0, 'chain: the same swap with its fingerprint written in the ledger is accepted');
     writeFileSync(versionsFile, versionsWas);
     writeFileSync(join(ct, CP, `${stem}.decl.json`), `${JSON.stringify(plan.decl, null, 2)}\n`);
     spawnSync('node', ['tools/gen.mjs', CP], { cwd: ct, encoding: 'utf8' }); // the plugin as it was released

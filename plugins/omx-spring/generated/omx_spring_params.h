@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-spring/omx-spring.decl.json.
- * Regenerate: `make -C plugins/omx-spring gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-spring gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_spring_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -76,7 +76,7 @@ static const char *const OMX_SPRING_PARAM_MODULES[OMX_SPRING_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_SPRING_PARAM_CONTRACT_VERSION 2u
+#define OMX_SPRING_PARAM_CONTRACT_VERSION 1u
 #define OMX_SPRING_PARAM_CONTRACT_FINGERPRINT "a6dbeb2327e1d07d0b7906a057185616c4723d90582d8122e25660ff6b5a4eda"
 static const struct omx_param_contract_row OMX_SPRING_PARAM_CONTRACT[OMX_SPRING_PARAM_COUNT] = {
   { 1u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* decayS s */

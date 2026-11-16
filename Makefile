@@ -25,8 +25,8 @@
 #                   (tools/test/contract-union-race-test.mjs; part of `make test` and `make test-faces`)
 #   make face-header  include/omx_plugin_face_ids.h is contract/plugin-face.json's render, byte for byte with the omx-contract
 #                   command (tools/test/face-header-check.mjs; part of `make test`)
-#   make face-ids   the host's bypass and LV2 enabled and latency sit at the permanent ids of contract/plugin-face.json (OMX_PLUGIN_FACE_IDS), none
-#                   moved by an appended parameter (tools/test/face-ids-test.mjs, with its self-test; part of `make test`)
+#   make face-ids   the host's bypass and LV2 enabled and latency sit at the permanent ids of contract/plugin-face.json (OMX_PLUGIN_FACE_IDS)
+#                   (tools/test/face-ids-test.mjs; part of `make test`)
 #   make probe-checks  clap-params-check, panel-check, clap-ext-check and port-groups-check each fail on a built face that is wrong,
 #                   one change at a time (tools/test/probe-checks-selftest.mjs; part of `make test`)
 #   make eq-probe-race  parallel make targets each build build/eq-default-probe privately and run it whole
@@ -269,11 +269,9 @@ contract-union:
 # the four probe checkers (params, panel, CLAP extensions, port groups) each go red on a face that is wrong, one change at a time
 probe-checks:
 	node tools/test/probe-checks-selftest.mjs
-# the host's bypass (CLAP) and enabled and latency (LV2) at contract/plugin-face.json's permanent ids in every plugin, none moved by an
-# appended parameter or an added sidechain; the self-test holds the rule it replaced red
+# the host's bypass (CLAP) and enabled and latency (LV2) at contract/plugin-face.json's permanent ids in every plugin, and the meters' ports structural
 face-ids:
 	node tools/test/face-ids-test.mjs
-	node tools/test/face-ids-test.mjs --self-test
 
 comp-release-mode:
 	node tools/test/comp-release-mode-test.mjs

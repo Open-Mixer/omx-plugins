@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-balancer/omx-balancer.decl.json.
- * Regenerate: `make -C plugins/omx-balancer gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-balancer gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_balancer_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -70,7 +70,7 @@ static const char *const OMX_BALANCER_PARAM_MODULES[OMX_BALANCER_PARAM_COUNT] = 
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_BALANCER_PARAM_CONTRACT_VERSION 2u
+#define OMX_BALANCER_PARAM_CONTRACT_VERSION 1u
 #define OMX_BALANCER_PARAM_CONTRACT_FINGERPRINT "5e755c2ceeb1ca618602fc5b9d39aef3f7edcbe81ed218d629a954588962a79d"
 static const struct omx_param_contract_row OMX_BALANCER_PARAM_CONTRACT[OMX_BALANCER_PARAM_COUNT] = {
   { 14u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* amountPct pc */

@@ -8,7 +8,7 @@
  *   1. no Breaks/Conflicts on an older omx-clap-host in the CLAP package (debian/control, the rpm spec).
  *   2. no Breaks/Replaces/Conflicts/BuildConflicts naming omx-plugins-dev or -devel, and no CI check requiring them.
  *   3. no `shipped`/`shippedDiff` (the schema, any declaration, tools/gen.mjs).
- *   4. the parameter-contract ledger holds one fingerprint per plugin: the current one, version 1.
+ *   4. the parameter-contract ledger holds one fingerprint per plugin: the current one (the version is 1).
  *   5. no append-only upgrade proofs: face-ids parts 2-3 (and their --self-test arms), comp-release-mode part 2, the
  *      "append-only" comment of tools/gen.mjs, and descriptor-view's "predates the descriptor words" skip.
  *
@@ -46,7 +46,7 @@ function found(t) {
   cm('tools/gen.mjs', /shippedSymbols|checkShipped|\.shippedDiff/, 'the shipped check in gen.mjs');
   for (const f of Object.keys(t)) if (/\.decl\.json$/.test(f) && /"shipped(Diff)?"/.test(t[f])) out.push(`${f}: shipped/shippedDiff`);
   const ledger = JSON.parse(t['tools/param-contract-versions.json']).plugins;
-  for (const [stem, fps] of Object.entries(ledger)) if (fps.length !== 1) out.push(`tools/param-contract-versions.json: ${stem} lists ${fps.length} fingerprints`);
+  for (const [stem, fp] of Object.entries(ledger)) if (typeof fp !== 'string') out.push(`tools/param-contract-versions.json: ${stem} lists ${fp.length} fingerprints, not the one current one`);
   cm('tools/gen.mjs', /append-only/i, 'the append-only comment');
   cm('tools/test/face-ids-test.mjs', /oldLv2Ports|function moved|--self-test/, 'face-ids parts 2-3 or their self-test');
   cm('tools/test/comp-release-mode-test.mjs', /appended after the last control|APPENDED/, 'comp-release-mode part 2');
@@ -72,7 +72,7 @@ if (selfTest) {
     'two fingerprints': (t) => {
       const j = JSON.parse(t['tools/param-contract-versions.json']);
       const k = Object.keys(j.plugins)[0];
-      j.plugins[k].push('0'.repeat(64));
+      j.plugins[k] = [j.plugins[k], '0'.repeat(64)];
       t['tools/param-contract-versions.json'] = JSON.stringify(j);
     },
     'append-only comment': (t) => { t['tools/gen.mjs'] += '\n// Order is append-only.\n'; },

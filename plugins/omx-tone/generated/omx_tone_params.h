@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-tone/omx-tone.decl.json.
- * Regenerate: `make -C plugins/omx-tone gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-tone gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_tone_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -70,7 +70,7 @@ static const char *const OMX_TONE_PARAM_MODULES[OMX_TONE_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_TONE_PARAM_CONTRACT_VERSION 2u
+#define OMX_TONE_PARAM_CONTRACT_VERSION 1u
 #define OMX_TONE_PARAM_CONTRACT_FINGERPRINT "ad227027919a7608f40e2d366c7b5acfbc2cfa3ab76bbb0f4cc236cbcd6e06aa"
 static const struct omx_param_contract_row OMX_TONE_PARAM_CONTRACT[OMX_TONE_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* tiltDb db */
