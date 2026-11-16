@@ -62,10 +62,10 @@ function (event, funcs) {
             draw(this);
         });
     };
-    var vuSet = function (symbol, value, jump) {
+    var vuSet = function (symbol, value) {
         event.icon.find('[data-vu]').each(function () {
             if (this.getAttribute('data-vu-symbol') !== symbol) return;
-            if (!this.omxVu) this.omxVu = { cur: jump ? value : (this.getAttribute('data-reversed') === '1' ? parseFloat(this.getAttribute('data-max')) : parseFloat(this.getAttribute('data-min'))), target: value, t: Date.now() };
+            if (!this.omxVu) this.omxVu = { cur: (this.getAttribute('data-reversed') === '1' ? parseFloat(this.getAttribute('data-max')) : parseFloat(this.getAttribute('data-min'))), target: value, t: Date.now() };
             this.omxVu.target = value;
             this.omxVu.t = this.omxVu.t || Date.now();
             draw(this);
@@ -76,7 +76,8 @@ function (event, funcs) {
         }
     };
     var show = function (symbol, value) {
-        vuSet(symbol, value, event.type === 'start');
+        // a start event carries each port's initial value (mod-ui's minimum), not a reading: a needle meter keeps its rest until a change
+        if (event.type !== 'start') vuSet(symbol, value);
         onoff(symbol, value);
         var v = Math.round(value);
         event.icon.find('[data-visible-port="' + symbol + '"]').each(function () {
