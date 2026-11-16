@@ -250,9 +250,9 @@ async function main() {
   // a listed plugin whose rows are not its listed fingerprint is refused, never registered again
   sabotageGen('a contract fingerprint the file does not list', VERSIONS, (t) => {
     const j = JSON.parse(t);
-    j.plugins['omx-wobble'] = ['f'.repeat(64)];
+    j.plugins['omx-wobble'] = 'f'.repeat(64);
     return `${JSON.stringify(j, null, 2)}\n`;
-  }, `plugins/omx-wobble: param-contract fingerprint ${first[0]} is not in ${VERSIONS}: append it, the next version (2)`);
+  }, `plugins/omx-wobble: param-contract fingerprint ${first} is not the one in ${VERSIONS}`);
   sabotageGen('a hand edit to a shared file', 'docs/catalogue.md', (t) => t.replace('| **omx wobble** |', '| **omx wobble (beta)** |'), 'STALE docs/catalogue.md');
   {
     const was = readFileSync(join(tree, P_, 'omx_wobble_core.h'), 'utf8');
