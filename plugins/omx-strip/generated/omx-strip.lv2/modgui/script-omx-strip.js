@@ -4,7 +4,14 @@
 // plugins/omx-strip/omx-strip.decl.json (its panel block) and tools/look.json
 // Regenerate: `node tools/modgui-gen.mjs`, then commit the result.
 function (event, funcs) {
+    // a toggled port reads ON or OFF: mod-ui writes the number, the script writes the word after it
+    var onoff = function (symbol, value) {
+        event.icon.find('[data-onoff][mod-port-symbol="' + symbol + '"]').each(function () {
+            this.textContent = value >= 0.5 ? 'ON' : 'OFF';
+        });
+    };
     var show = function (symbol, value) {
+        onoff(symbol, value);
         var v = Math.round(value);
         event.icon.find('[data-visible-port="' + symbol + '"]').each(function () {
             // the mask is 64 bits of hex: the half that holds bit v, read as a plain number
@@ -24,6 +31,7 @@ function (event, funcs) {
         var n = function (name) { return parseFloat(root.getAttribute(name)); };
         var y = n('data-section-top');
         var sections = root.querySelectorAll('.omx-section');
+        var wide = n('data-base-w');
         for (var s = 0; s < sections.length; s++) {
             var sec = sections[s];
             if (sec.className.indexOf('omx-meters') >= 0) {
@@ -32,10 +40,12 @@ function (event, funcs) {
                 continue;
             }
             var curves = parseFloat(sec.getAttribute('data-curves')) || 0;
-            var col = 0, row = 0, prev = null, any = false;
+            var matrix = sec.getAttribute('data-matrix') === '1';
+            var col = 0, row = 0, prev = null, any = false, cells = [];
             for (var c = 0; c < sec.children.length; c++) {
                 var k = sec.children[c];
                 if (k.className.indexOf('omx-control') < 0 || k.style.display === 'none') continue;
+                if (matrix && k.getAttribute('data-mx-col')) { cells.push(k); continue; }
                 var band = k.getAttribute('data-band') || '';
                 if (any && (col === n('data-row-controls') || band !== prev)) { col = 0; row++; }
                 prev = band; any = true;
@@ -43,11 +53,39 @@ function (event, funcs) {
                 k.style.top = (n('data-title-h') + curves + row * n('data-cell-h')) + 'px';
                 col++;
             }
-            var h = n('data-title-h') + curves + (any ? row + 1 : 0) * n('data-cell-h') + n('data-section-pad') / 2;
+            var top = n('data-title-h') + curves + (any ? row + 1 : 0) * n('data-cell-h');
+            var h = top + n('data-section-pad') / 2;
+            if (matrix) {
+                // an aligned matrix: a column per band that has a shown control, in the order the template lists them (HPF, the bands, LPF),
+                // each parameter on its row, the same y in every column
+                var order = [], at = {};
+                for (var m = 0; m < cells.length; m++) {
+                    var key = cells[m].getAttribute('data-mx-col');
+                    if (!(key in at)) { at[key] = order.length; order.push(key); }
+                    cells[m].style.left = (n('data-section-pad') + at[key] * n('data-cell-w')) + 'px';
+                    cells[m].style.top = (top + n('data-head-h') + parseFloat(cells[m].getAttribute('data-mx-ri')) * n('data-cell-h')) + 'px';
+                }
+                for (var c2 = 0; c2 < sec.children.length; c2++) {
+                    var head = sec.children[c2];
+                    if (head.className.indexOf('omx-colhead') < 0) continue;
+                    var hk = head.getAttribute('data-mx-col');
+                    head.style.display = hk in at ? '' : 'none';
+                    if (hk in at) { head.style.left = (n('data-section-pad') + at[hk] * n('data-cell-w')) + 'px'; head.style.top = top + 'px'; }
+                }
+                if (order.length) h += n('data-head-h') + parseFloat(sec.getAttribute('data-mx-rows')) * n('data-cell-h');
+                wide = Math.max(wide, order.length * n('data-cell-w') + 2 * n('data-section-pad'));
+            }
             sec.style.top = y + 'px';
             sec.style.height = h + 'px';
             y += h + n('data-section-gap');
         }
+        // the face is as wide as its widest section needs: a matrix of more bands widens every section, its curve and the pedal
+        for (var w = 0; w < sections.length; w++) {
+            sections[w].style.width = wide + 'px';
+            var curve = sections[w].querySelectorAll('.omx-curve');
+            for (var q = 0; q < curve.length; q++) curve[q].style.width = (wide - 2 * n('data-section-pad')) + 'px';
+        }
+        root.style.width = (wide + 2 * n('data-pad')) + 'px';
         root.style.height = (y - n('data-section-gap') + n('data-pad')) + 'px';
     };
     if (event.type === 'start') {

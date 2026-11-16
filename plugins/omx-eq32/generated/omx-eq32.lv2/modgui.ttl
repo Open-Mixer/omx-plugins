@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-eq32.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx eq32" ;
+        modgui:javascript <modgui/script-omx-eq32.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "b1_on" ;

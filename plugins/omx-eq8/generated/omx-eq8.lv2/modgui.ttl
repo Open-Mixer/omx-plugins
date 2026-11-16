@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-eq8.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx eq8" ;
+        modgui:javascript <modgui/script-omx-eq8.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "b1_on" ;

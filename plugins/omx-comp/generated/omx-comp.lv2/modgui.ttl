@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-comp.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx comp" ;
+        modgui:javascript <modgui/script-omx-comp.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "thresholdDb" ;

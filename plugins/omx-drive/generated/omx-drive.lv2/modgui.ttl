@@ -15,6 +15,7 @@
         modgui:thumbnail <modgui/thumbnail-omx-drive.png> ;
         modgui:brand "openmixer" ;
         modgui:label "omx drive" ;
+        modgui:javascript <modgui/script-omx-drive.js> ;
         modgui:port [
             lv2:index 0 ;
             lv2:symbol "curve" ;
