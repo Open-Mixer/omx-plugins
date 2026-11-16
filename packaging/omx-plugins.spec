@@ -66,7 +66,7 @@ Take the sound of the OpenMixer console into your DAW or onto your own rig:
 delay, drive, the channel EQ as an 8-band EQ, a 16-band EQ or a 32-band EQ, a
 31-band graphic EQ, the full channel strip and the keyed gate with its sidechain
 input, and the console's effects: chorus, flanger, phaser, tremolo, rotary
-speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, doubler, tone control, ducker, limiter, compressor
+speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, doubler, tone control, ducker, input trim, limiter, compressor
 with its sidechain key, multiband compressor and dynamic EQ. They come
 as CLAP plugins for Bitwig, REAPER and Carla, and as LV2 plugins for Ardour,
 Carla, MOD and Zynthian. Each one runs the same DSP as the console, so a track sounds the same
@@ -85,7 +85,7 @@ Conflicts: omx-clap-host < 0.23.0
 %description clap
 The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
 EQ, channel strip, keyed gate and effects (chorus, flanger, phaser, tremolo,
-rotary speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, limiter, compressor) as
+rotary speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, input trim, limiter, compressor) as
 CLAP plugins, installed in /usr/lib/clap where Bitwig, REAPER,
 Carla and other CLAP hosts find them. They run the console's own DSP, so they
 sound like the desk.
@@ -98,7 +98,7 @@ Requires: lv2
 %description lv2
 The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
 EQ, channel strip, keyed gate and effects (chorus, flanger, phaser, tremolo,
-rotary speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, limiter, compressor) as
+rotary speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, input trim, limiter, compressor) as
 LV2 plugins, installed in %{_libdir}/lv2 where Ardour, Carla, MOD
 and Zynthian find them, with a MOD GUI where the plugin has one. They run the
 console's own DSP, so they sound like the desk.
@@ -215,6 +215,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 /usr/lib/clap/omx-tone.clap
 /usr/lib/clap/omx-transient.clap
 /usr/lib/clap/omx-tremolo.clap
+/usr/lib/clap/omx-trim.clap
 /usr/lib/clap/omx-upward.clap
 # END GENERATED clap-files
 
@@ -278,6 +279,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 %{_libdir}/lv2/omx-tone.lv2/
 %{_libdir}/lv2/omx-transient.lv2/
 %{_libdir}/lv2/omx-tremolo.lv2/
+%{_libdir}/lv2/omx-trim.lv2/
 %{_libdir}/lv2/omx-upward.lv2/
 # END GENERATED lv2-files
 
