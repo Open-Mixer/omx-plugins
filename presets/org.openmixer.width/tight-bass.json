@@ -1,0 +1,40 @@
+{
+  "format": "org.openmixer.preset/1",
+  "plugin": {
+    "id": "org.openmixer.width"
+  },
+  "id": "tight-bass",
+  "name": "Tight Bass",
+  "carries": "params",
+  "params": [
+    {
+      "symbol": "widthPct",
+      "unit": "%",
+      "value": 130
+    },
+    {
+      "symbol": "pseudo",
+      "unit": "",
+      "value": 0,
+      "label": "Off"
+    },
+    {
+      "symbol": "pseudoMs",
+      "unit": "ms",
+      "value": 12
+    },
+    {
+      "symbol": "bassMono",
+      "unit": "",
+      "value": 1
+    },
+    {
+      "symbol": "bassMonoHz",
+      "unit": "Hz",
+      "value": 120
+    }
+  ],
+  "createdAt": "2026-10-17T00:00:00Z",
+  "modifiedAt": "2026-10-17T00:00:00Z",
+  "copyOf": null
+}
