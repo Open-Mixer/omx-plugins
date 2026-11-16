@@ -24,17 +24,22 @@
  * host's structure, whose sizes are CLAP's (CLAP_NAME_SIZE is 256, clap_id a uint32_t,
  * CLAP_INVALID_ID UINT32_MAX).
  *
- * The words of the enumerations below are declared elsewhere and only spelled here as C: the families
- * and the widgets in omx-contract (PANEL_FAMILIES and PANEL_WIDGETS, data/panel.json), the display
- * kinds, the display sources and the placements in omx-panel (tools/panel-description.mjs); and
- * omx-clap-core's <omx-clap-host/omx_clap_ext.h> lists each with its code and enumerator for the
- * host. tools/test/panel-words-check.mjs holds every enum to them, order and count.
+ * The words of the enumerations below are declared elsewhere. The families, the widgets and the display
+ * kinds are omx-contract's (PANEL_FAMILIES, PANEL_WIDGETS and PANEL_DISPLAY_KINDS, data/panel.json), and
+ * their enums are built from its X-macros in <omxcontract/omx_vocabulary.h>, never spelled here: a word
+ * the contract adds is an enumerator here with no edit (omx-clap-core#104;
+ * tools/test/panel-enums-follow-contract.c). The display sources and the placements are omx-panel's
+ * (tools/panel-description.mjs), spelled here as C. omx-clap-core's <omx-clap-host/omx_clap_ext.h> lists
+ * each with its code and enumerator for the host; tools/test/panel-words-check.mjs holds every enum to
+ * them, order and count.
  */
 #ifndef OMX_PANEL_DESCRIPTION_H
 #define OMX_PANEL_DESCRIPTION_H
 
 #include <stdbool.h>
 #include <stdint.h>
+
+#include <omxcontract/omx_vocabulary.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,38 +56,17 @@ extern "C" {
 /** No parameter, CLAP_INVALID_ID. */
 #define OMX_CLAP_PANEL_INVALID_ID UINT32_MAX
 
-/** The family: which house view can draw the plugin and which roles it may bind. Append-only. */
-enum omx_clap_panel_family {
-  OMX_CLAP_FAMILY_NONE = 0,
-  OMX_CLAP_FAMILY_GATE = 1,
-  OMX_CLAP_FAMILY_DYNAMICS = 2,
-  OMX_CLAP_FAMILY_LIMITER = 3,
-  OMX_CLAP_FAMILY_DEESSER = 4,
-  OMX_CLAP_FAMILY_EQ = 5,
-  OMX_CLAP_FAMILY_FILTER = 6,
-  OMX_CLAP_FAMILY_DRIVE = 7,
-  OMX_CLAP_FAMILY_MODULATION = 8,
-  OMX_CLAP_FAMILY_DELAY = 9,
-  OMX_CLAP_FAMILY_REVERB = 10,
-  OMX_CLAP_FAMILY_PITCH = 11,
-};
+/** The family: which house view can draw the plugin and which roles it may bind; omx-contract's PANEL_FAMILIES. */
+#define OMX_CLAP_PANEL_FAMILIES_ENUMERATOR(code, word, id) OMX_CLAP_FAMILY_##id = (code),
+enum omx_clap_panel_family { OMX_PANEL_FAMILIES(OMX_CLAP_PANEL_FAMILIES_ENUMERATOR) };
 
-/** The widget a control asks for; AUTO leaves it to the host, from the parameter. */
-enum omx_clap_panel_widget {
-  OMX_CLAP_WIDGET_AUTO = 0,
-  OMX_CLAP_WIDGET_KNOB = 1,
-  OMX_CLAP_WIDGET_FADER = 2,
-  OMX_CLAP_WIDGET_SWITCH = 3,
-  OMX_CLAP_WIDGET_SELECTOR = 4,
-};
+/** The widget a control asks for; AUTO leaves it to the host, from the parameter. omx-contract's PANEL_WIDGETS. */
+#define OMX_CLAP_PANEL_WIDGETS_ENUMERATOR(code, word, id) OMX_CLAP_WIDGET_##id = (code),
+enum omx_clap_panel_widget { OMX_PANEL_WIDGETS(OMX_CLAP_PANEL_WIDGETS_ENUMERATOR) };
 
-/** The named displays. Append-only. */
-enum omx_clap_panel_display_kind {
-  OMX_CLAP_DISPLAY_GAIN_REDUCTION_BAR = 0,
-  OMX_CLAP_DISPLAY_TRANSFER_CURVE = 1,
-  OMX_CLAP_DISPLAY_EQ_RESPONSE = 2,
-  OMX_CLAP_DISPLAY_METER = 3,
-};
+/** The named displays; omx-contract's PANEL_DISPLAY_KINDS. */
+#define OMX_CLAP_PANEL_DISPLAY_KINDS_ENUMERATOR(code, word, id) OMX_CLAP_DISPLAY_##id = (code),
+enum omx_clap_panel_display_kind { OMX_PANEL_DISPLAY_KINDS(OMX_CLAP_PANEL_DISPLAY_KINDS_ENUMERATOR) };
 
 /** Where a display's data comes from. */
 enum omx_clap_panel_display_source {

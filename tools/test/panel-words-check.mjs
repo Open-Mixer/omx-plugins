@@ -3,19 +3,29 @@
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
  * panel-words-check.mjs — the enumerations of include/omx_panel_description.h are the panel vocabulary's, spelled
- * once elsewhere: the families and the widgets are omx-contract's PANEL_FAMILIES and PANEL_WIDGETS sheets
- * (data/panel.json), the display kinds, the display sources and the placements are omx-panel's lists
- * (tools/panel-description.mjs, which tools/gen.mjs already writes the rows with), and every one of them is the
- * X-list omx-clap-core's <omx-clap-host/omx_clap_ext.h> carries for the host, code and enumerator. Each enumerator
- * is the word in upper case after the enum's prefix, its code the word's position, and the count the list's:
- * the header is held to them here, so a word added, moved or renamed anywhere is red until the three agree.
+ * once elsewhere: the families, the widgets and the display kinds are omx-contract's PANEL_FAMILIES, PANEL_WIDGETS
+ * and PANEL_DISPLAY_KINDS (data/panel.json), whose X-macros in <omxcontract/omx_vocabulary.h> the header builds those
+ * three enums from (omx-clap-core#104); the display sources and the placements are omx-panel's lists
+ * (tools/panel-description.mjs, which tools/gen.mjs already writes the rows with), spelled in the header as C; and
+ * every one of them is the X-list omx-clap-core's <omx-clap-host/omx_clap_ext.h> carries for the host, code and
+ * enumerator. Each enumerator is the word in upper case after the enum's prefix, its code the word's position, and
+ * the count the list's: the header is held to them here, so a word added, moved or renamed anywhere is red until
+ * they agree.
+ *
+ * An enum the contract owns is built from its X-macro, never spelled by hand: a hand enum is red even when it agrees
+ * today. An owner list that still spells such a list row by row (an omx-clap-core from before it aliased the
+ * contract's) may lag the contract, since the lists are append-only: its rows are the contract's first ones, or it is
+ * red. The two packages then follow a contract release one after the other, neither waiting on the other's.
  * `make panel-words`, part of `make test`.
  *
  *   node tools/test/panel-words-check.mjs               the check
- *   node tools/test/panel-words-check.mjs --self-test   the check, then copies of the header with a family
- *                                                       renumbered, one dropped, one appended, two widgets
- *                                                       swapped and a placement renamed, and a copy of the
- *                                                       owner's header with a code moved: each red
+ *   node tools/test/panel-words-check.mjs --self-test   the check, then sabotaged copies, each red: a hand family enum
+ *                                                       (the contract's list, and one family short), a contract with
+ *                                                       a family moved, a placement renamed, an owner list with a code
+ *                                                       moved and with a word changed; and an owner list one family
+ *                                                       short of the contract, which stays green
+ *
+ * OMX_PANEL_WORDS_CONTRACT_INCLUDE names a directory holding omxcontract/omx_vocabulary.h ahead of pkg-config's.
  */
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
@@ -27,135 +37,188 @@ import { DISPLAY_KINDS, DISPLAY_SOURCES, PLACEMENTS } from '../omx-panel.mjs';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const HEADER = 'include/omx_panel_description.h';
 const OWNER = 'omx-clap-host/omx_clap_ext.h';
+const CONTRACT_HEADER = 'omxcontract/omx_vocabulary.h';
 
-/** The header's enums held: the C enum, its prefix, and the owner's X-list. */
+/** The header's enums held: the C enum, its prefix, the owner's X-list, and the contract's X-macro it is built from. */
 const ENUMS = {
-  family: { c: 'omx_clap_panel_family', prefix: 'OMX_CLAP_FAMILY_', owner: 'OMX_CLAP_PANEL_FAMILIES' },
-  widget: { c: 'omx_clap_panel_widget', prefix: 'OMX_CLAP_WIDGET_', owner: 'OMX_CLAP_PANEL_WIDGETS' },
-  display_kind: { c: 'omx_clap_panel_display_kind', prefix: 'OMX_CLAP_DISPLAY_', owner: 'OMX_CLAP_PANEL_DISPLAY_KINDS' },
+  family: { c: 'omx_clap_panel_family', prefix: 'OMX_CLAP_FAMILY_', owner: 'OMX_CLAP_PANEL_FAMILIES', contract: 'OMX_PANEL_FAMILIES' },
+  widget: { c: 'omx_clap_panel_widget', prefix: 'OMX_CLAP_WIDGET_', owner: 'OMX_CLAP_PANEL_WIDGETS', contract: 'OMX_PANEL_WIDGETS' },
+  display_kind: { c: 'omx_clap_panel_display_kind', prefix: 'OMX_CLAP_DISPLAY_', owner: 'OMX_CLAP_PANEL_DISPLAY_KINDS', contract: 'OMX_PANEL_DISPLAY_KINDS' },
   display_source: { c: 'omx_clap_panel_display_source', prefix: 'OMX_CLAP_DISPLAY_FROM_', owner: 'OMX_CLAP_PANEL_DISPLAY_SOURCES' },
   placement: { c: 'omx_clap_panel_placement', prefix: 'OMX_CLAP_PLACEMENT_', owner: 'OMX_CLAP_PANEL_PLACEMENTS' },
   table: { c: 'omx_clap_panel_table', prefix: 'OMX_CLAP_PANEL_', owner: 'OMX_CLAP_PANEL_TABLES' },
 };
 
-/** The header's enums: `{ family: [[enumerator, code], ...], ... }`, each in source order. */
-export function enumsOf(text) {
+const ROW = /X\((\d+)[uU]?,\s*"([^"]*)",\s*(\w+)\)/g;
+
+/** Every `#define <NAME>(X)` list of a header: `{ NAME: [[code, word, enumerator], ...] }`. */
+export function xListsOf(text) {
   const out = {};
+  for (const m of text.matchAll(/^#define (\w+)\(X\)((?:[^\n]*\\\n)*[^\n]*)/gm)) {
+    out[m[1]] = [...m[2].matchAll(ROW)].map((x) => [Number(x[1]), x[2], x[3]]);
+  }
+  return out;
+}
+
+/** The header's enums: `{ family: [[enumerator, code], ...], ... }`, each in source order, an enum built from a
+ * contract X-macro read through `contract` (xListsOf of the contract's header); and `derived`, the enums so built. */
+export function enumsOf(text, contract = {}) {
+  const out = { derived: {} };
   for (const [key, { c, prefix }] of Object.entries(ENUMS)) {
     const block = text.match(new RegExp(`enum ${c} \\{([^}]*)\\}`))?.[1];
+    const via = block?.match(/^\s*(OMX_PANEL_\w+)\(\w+\)\s*$/)?.[1];
+    if (via) {
+      out.derived[key] = via;
+      out[key] = contract[via]?.map(([code, , id]) => [id, code]);
+      continue;
+    }
     out[key] = block ? [...block.matchAll(/^\s*(\w+)\s*=\s*(\d+)\s*,/gm)].map((m) => [m[1].startsWith(prefix) ? m[1].slice(prefix.length) : m[1], Number(m[2])]) : undefined;
   }
   return out;
 }
 
-/** The owner's X-lists: `{ family: [[code, word, enumerator], ...], ... }`. */
-export function ownerListsOf(text) {
-  const out = {};
+/** The owner's X-lists: `{ family: [[code, word, enumerator], ...], ... }`, an alias of a contract X-macro read through
+ * `contract`; and `aliased`, the lists that alias one. */
+export function ownerListsOf(text, contract = {}) {
+  const out = { aliased: {} };
+  const lists = xListsOf(text);
   for (const [key, { owner }] of Object.entries(ENUMS)) {
-    const m = text.match(new RegExp(`#define ${owner}\\(X\\)((?:[^\\n]*\\\\\\n)*[^\\n]*)`));
-    out[key] = m ? [...m[1].matchAll(/X\((\d+),\s*"([^"]*)",\s*(\w+)\)/g)].map((x) => [Number(x[1]), x[2], x[3]]) : undefined;
+    const alias = text.match(new RegExp(`^#define ${owner}\\(X\\)\\s+(OMX_PANEL_\\w+)\\(X\\)\\s*$`, 'm'))?.[1];
+    if (alias) {
+      out.aliased[key] = alias;
+      out[key] = contract[alias];
+    } else out[key] = lists[owner];
   }
   return out;
 }
 
-/** The refusals: each enum of `enums` (enumsOf) against the words `declared` (`{ family: [...], ... }`, a list
- * per enum that has one) and the owner's lists (ownerListsOf). */
+const listed = (rows) => rows.map(([n, v]) => `${n}=${v}`).join(', ');
+
+/** The refusals: each enum of `enums` (enumsOf) against the words `declared` (`{ family: [...], ... }`, a list per
+ * enum that has one) and the owner's lists (ownerListsOf). */
 export function drift(enums, declared, owner) {
   const errors = [];
-  for (const [key, { c }] of Object.entries(ENUMS)) {
+  for (const [key, { c, contract }] of Object.entries(ENUMS)) {
     const got = enums[key];
+    if (contract && !enums.derived?.[key]) errors.push(`${HEADER}: enum ${c} is spelled by hand; build it from omx-contract's ${contract}(X) (${CONTRACT_HEADER})`);
     if (!got) {
-      errors.push(`${HEADER}: no enum ${c}`);
+      errors.push(enums.derived?.[key] ? `${CONTRACT_HEADER}: no ${enums.derived[key]}(X) list (omx-contract >= 3.20.0)` : `${HEADER}: no enum ${c}`);
       continue;
     }
     const words = declared[key];
     if (words) {
       const want = words.map((w, i) => [w.toUpperCase(), i]);
-      if (JSON.stringify(got) !== JSON.stringify(want)) errors.push(`${HEADER}: enum ${c} is ${got.map(([n, v]) => `${n}=${v}`).join(', ')}; the declaration says ${want.map(([n, v]) => `${n}=${v}`).join(', ')}`);
+      if (JSON.stringify(got) !== JSON.stringify(want)) errors.push(`${HEADER}: enum ${c} is ${listed(got)}; the declaration says ${listed(want)}`);
     }
     const x = owner[key];
     if (!x) {
-      errors.push(`${OWNER}: no ${ENUMS[key].owner}(X) list`);
+      errors.push(owner.aliased?.[key] ? `${OWNER}: ${ENUMS[key].owner} aliases ${owner.aliased[key]}, which ${CONTRACT_HEADER} does not carry` : `${OWNER}: no ${ENUMS[key].owner}(X) list`);
       continue;
     }
-    const want = x.map(([code, , enumerator]) => [enumerator, code]);
-    if (JSON.stringify(got) !== JSON.stringify(want)) errors.push(`${HEADER}: enum ${c} is ${got.map(([n, v]) => `${n}=${v}`).join(', ')}; ${OWNER} says ${want.map(([n, v]) => `${n}=${v}`).join(', ')}`);
-    if (words && JSON.stringify(x.map(([, w]) => w)) !== JSON.stringify(words)) errors.push(`${OWNER}: ${ENUMS[key].owner} words ${x.map(([, w]) => w).join(', ')}; the declaration says ${words.join(', ')}`);
+    // an owner that spells a contract's list by hand may lag it (append-only): its rows are the first ones
+    const lags = contract && !owner.aliased?.[key] && x.length < got.length;
+    const theirs = x.map(([code, , enumerator]) => [enumerator, code]);
+    const ours = lags ? got.slice(0, x.length) : got;
+    if (JSON.stringify(ours) !== JSON.stringify(theirs)) errors.push(`${HEADER}: enum ${c} is ${listed(got)}; ${OWNER} says ${listed(theirs)}`);
+    const ownerWords = x.map(([, w]) => w);
+    if (words && JSON.stringify(ownerWords) !== JSON.stringify(lags ? words.slice(0, x.length) : words)) errors.push(`${OWNER}: ${ENUMS[key].owner} words ${ownerWords.join(', ')}; the declaration says ${words.join(', ')}`);
   }
   return errors;
 }
 
-/** The words of an omx-contract sheet of kind `words`, in its order. */
+/** The words of an omx-contract sheet of kind `words`, in its order, or undefined when the contract holds none. */
 function sheetWords(dir, name) {
   const item = items(dir)[name];
-  if (item?.kind !== 'words' || typeof item.value !== 'object') throw new Error(`${dir}: the resolved contract holds no ${name} words (omx-contract >= 3.7.0)`);
+  if (item?.kind !== 'words' || typeof item.value !== 'object') return undefined;
   return Object.values(item.value).map((w) => w.word);
 }
 
-/** The owner's header, where pkg-config says omx-clap-core's headers are, else the system's. */
-function ownerHeader() {
+/** A header where pkg-config says `pkg`'s headers are, else the system's; `first` is looked in before them. */
+function headerOf(pkg, rel, first) {
   let dirs = [];
   try {
-    dirs = execFileSync(process.env.PKG_CONFIG || 'pkg-config', ['--cflags-only-I', 'omx-clap-core'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\s+/).filter((f) => f.startsWith('-I')).map((f) => f.slice(2));
+    dirs = execFileSync(process.env.PKG_CONFIG || 'pkg-config', ['--cflags-only-I', pkg], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\s+/).filter((f) => f.startsWith('-I')).map((f) => f.slice(2));
   } catch { /* not installed through pkg-config: the system include directory below */ }
-  return [...dirs, '/usr/include', '/usr/local/include'].map((d) => join(d, OWNER)).find((f) => existsSync(f));
+  return [...(first ? [first] : []), ...dirs, '/usr/include', '/usr/local/include'].map((d) => join(d, rel)).find((f) => existsSync(f));
 }
 
-const contract = locateContract(root);
-if (!contract.dir) {
-  console.error(`panel-words: ${contract.why}`);
+const contractDir = locateContract(root);
+if (!contractDir.dir) {
+  console.error(`panel-words: ${contractDir.why}`);
   process.exit(1);
 }
 const declared = {
-  family: sheetWords(contract.dir, 'PANEL_FAMILIES'),
-  widget: sheetWords(contract.dir, 'PANEL_WIDGETS'),
-  display_kind: DISPLAY_KINDS,
+  family: sheetWords(contractDir.dir, 'PANEL_FAMILIES'),
+  widget: sheetWords(contractDir.dir, 'PANEL_WIDGETS'),
+  display_kind: sheetWords(contractDir.dir, 'PANEL_DISPLAY_KINDS'),
   display_source: DISPLAY_SOURCES,
   placement: PLACEMENTS,
 };
+for (const [key, name] of [['family', 'PANEL_FAMILIES'], ['widget', 'PANEL_WIDGETS'], ['display_kind', 'PANEL_DISPLAY_KINDS']]) {
+  if (!declared[key]) {
+    console.error(`panel-words: ${contractDir.dir}: the resolved contract holds no ${name} words (omx-contract >= 3.20.0)`);
+    process.exit(1);
+  }
+}
+if (JSON.stringify(DISPLAY_KINDS) !== JSON.stringify(declared.display_kind)) {
+  console.error(`panel-words: omx-panel's DISPLAY_KINDS ${DISPLAY_KINDS.join(', ')}; omx-contract's PANEL_DISPLAY_KINDS ${declared.display_kind.join(', ')}`);
+  process.exit(1);
+}
+const contractFile = headerOf('omx-contract', CONTRACT_HEADER, process.env.OMX_PANEL_WORDS_CONTRACT_INCLUDE);
+if (!contractFile) {
+  console.error(`panel-words: ${CONTRACT_HEADER} not found: install omx-contract-devel (BUILDING.md)`);
+  process.exit(1);
+}
+const contract = xListsOf(readFileSync(contractFile, 'utf8'));
 const headerText = readFileSync(join(root, HEADER), 'utf8');
-const ownerFile = ownerHeader();
+const ownerFile = headerOf('omx-clap-core', OWNER);
 if (!ownerFile) {
   console.error(`panel-words: ${OWNER} not found: install omx-clap-core-devel (BUILDING.md)`);
   process.exit(1);
 }
 const ownerText = readFileSync(ownerFile, 'utf8');
-const errors = drift(enumsOf(headerText), declared, ownerListsOf(ownerText));
+const errors = drift(enumsOf(headerText, contract), declared, ownerListsOf(ownerText, contract));
 if (errors.length) {
   for (const e of errors) console.error(`panel-words: ${e}`);
   process.exit(1);
 }
-console.log(`panel-words: ${Object.keys(ENUMS).length} enums of ${HEADER} are the declared words (${Object.values(declared).flat().length}) and ${OWNER}'s lists`);
+console.log(`panel-words: ${Object.keys(ENUMS).length} enums of ${HEADER} are the declared words (${Object.values(declared).flat().length}), ${CONTRACT_HEADER}'s lists and ${OWNER}'s`);
 
 if (process.argv.includes('--self-test')) {
+  const families = contract.OMX_PANEL_FAMILIES;
+  const handEnum = (rows) => `enum omx_clap_panel_family {\n${rows.map(([code, , id]) => `  OMX_CLAP_FAMILY_${id} = ${code},\n`).join('')}}`;
+  const familyEnum = /enum omx_clap_panel_family \{[^}]*\}/;
+  const ownerFamilies = (rows) => `#define OMX_CLAP_PANEL_FAMILIES(X) ${rows.map(([code, w, id]) => `X(${code}, "${w}", ${id})`).join(' ')}`;
+  const ownerFamilyList = /^#define OMX_CLAP_PANEL_FAMILIES\(X\)(?:[^\n]*\\\n)*[^\n]*/m;
+  const moved = families.map(([code, w, id]) => [id === 'GATE' ? 2 : code, w, id]);
   const arms = {
-    'family-renumbered': headerText.replace('OMX_CLAP_FAMILY_GATE = 1,', 'OMX_CLAP_FAMILY_GATE = 2,'),
-    'family-dropped': headerText.replace(/^\s*OMX_CLAP_FAMILY_PITCH = 11,\n/m, ''),
-    'family-appended': headerText.replace('OMX_CLAP_FAMILY_PITCH = 11,', 'OMX_CLAP_FAMILY_PITCH = 11,\n  OMX_CLAP_FAMILY_OTHER = 12,'),
-    'widgets-swapped': headerText.replace('OMX_CLAP_WIDGET_KNOB = 1,', 'OMX_CLAP_WIDGET_KNOB = 2,').replace('OMX_CLAP_WIDGET_FADER = 2,', 'OMX_CLAP_WIDGET_FADER = 1,'),
-    'placement-renamed': headerText.replace('OMX_CLAP_PLACEMENT_BUS = 2,', 'OMX_CLAP_PLACEMENT_BUSS = 2,'),
+    'family-hand-copy': [headerText.replace(familyEnum, handEnum(families)), contract, ownerText],
+    'family-hand-copy-short': [headerText.replace(familyEnum, handEnum(families.slice(0, -1))), contract, ownerText],
+    'contract-family-moved': [headerText, { ...contract, OMX_PANEL_FAMILIES: moved }, ownerText],
+    'placement-renamed': [headerText.replace('OMX_CLAP_PLACEMENT_BUS = 2,', 'OMX_CLAP_PLACEMENT_BUSS = 2,'), contract, ownerText],
+    'owner-code-moved': [headerText, contract, ownerText.replace(ownerFamilyList, ownerFamilies(moved))],
+    'owner-word-changed': [headerText, contract, ownerText.replace(ownerFamilyList, ownerFamilies(families.map(([c, w, id]) => [c, id === 'GATE' ? 'gates' : w, id])))],
   };
   let fail = 0;
-  for (const [arm, text] of Object.entries(arms)) {
-    if (text === headerText) {
+  for (const [arm, [h, k, o]] of Object.entries(arms)) {
+    if (h === headerText && k === contract && o === ownerText) {
       console.error(`SABOTAGE ${arm}: the sabotage did not land`);
       fail++;
       continue;
     }
-    const out = drift(enumsOf(text), declared, ownerListsOf(ownerText));
+    const out = drift(enumsOf(h, k), declared, ownerListsOf(o, k));
     if (out.length) console.log(`SABOTAGE ${arm}: red (${out[0]})`);
     else {
       console.error(`SABOTAGE ${arm}: STAYED GREEN`);
       fail++;
     }
   }
-  const movedOwner = ownerText.replace('X(1, "gate", GATE)', 'X(2, "gate", GATE)');
-  const out = movedOwner === ownerText ? [] : drift(enumsOf(headerText), declared, ownerListsOf(movedOwner));
-  if (out.length) console.log(`SABOTAGE owner-code-moved: red (${out[0]})`);
-  else {
-    console.error(`SABOTAGE owner-code-moved: ${movedOwner === ownerText ? 'the sabotage did not land' : 'STAYED GREEN'}`);
+  // an owner that spells the families by hand, one short of the contract, lags it and stays green
+  const lagging = drift(enumsOf(headerText, contract), declared, ownerListsOf(ownerText.replace(ownerFamilyList, ownerFamilies(families.slice(0, -1))), contract));
+  if (lagging.length) {
+    console.error(`CONTROL owner-lagging: red (${lagging[0]}); an owner one family short of the contract lags it and stays green`);
     fail++;
-  }
+  } else console.log('CONTROL owner-lagging: green');
   if (fail) process.exit(1);
-  console.log('panel-words self-test: every sabotage red');
+  console.log('panel-words self-test: every sabotage red, the lagging owner green');
 }
