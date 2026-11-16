@@ -37,7 +37,7 @@
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -61,7 +61,7 @@
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_RATIO_RANGE",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_RANGE_DB_RANGE",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -109,7 +109,7 @@
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_ATTACK_MS_RANGE",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -133,7 +133,7 @@
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_RELEASE_MS_RANGE",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     }

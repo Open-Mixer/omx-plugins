@@ -38,7 +38,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_AMOUNT_RANGE",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -63,7 +63,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_CHARACTER_RANGE",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -87,7 +87,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_BAND_FREQ_RANGE",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -112,7 +112,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_MIX_RANGE",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -137,7 +137,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_TRIM_RANGE",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -173,7 +173,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_CURVES",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -208,7 +208,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_BANDS",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -225,7 +225,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_AUTO_GAINS",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -242,7 +242,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_STEREO_LINKS",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -274,7 +274,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_HF_ROLLOFFS",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     },
@@ -306,7 +306,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_OVERSAMPLES",
-          "at": "omx-dsp@0.32.2"
+          "at": "omx-dsp@0.32.4"
         }
       }
     }

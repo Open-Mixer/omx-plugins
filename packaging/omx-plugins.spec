@@ -15,7 +15,7 @@ BuildRequires: pkgconf-pkg-config
 # The releases this tree builds against: a floor and a ceiling each (the next minor of the release it is
 # proven on; from 1.0 the next major), once here and in debian/control
 # the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
-BuildRequires: (omx-dsp-devel >= 0.32.2 with omx-dsp-devel < 0.33)
+BuildRequires: (omx-dsp-devel >= 0.32.4 with omx-dsp-devel < 0.33)
 BuildRequires: (omx-contract-devel >= 3.19.0 with omx-contract-devel < 4)
 BuildRequires: (omx-clap-core-devel >= 0.33.0 with omx-clap-core-devel < 0.34)
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
@@ -118,7 +118,7 @@ Its documentation is on openmixer.org.
 
 %package devel
 Summary: Headers and static library of the OpenMixer plugins, for projects that build on them
-Requires: (omx-dsp-devel >= 0.32.2 with omx-dsp-devel < 0.33)
+Requires: (omx-dsp-devel >= 0.32.4 with omx-dsp-devel < 0.33)
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
 Requires: (omx-contract-devel >= 3.19.0 with omx-contract-devel < 4)
 Requires: %{name}-contract = %{version}-%{release}
@@ -285,10 +285,10 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 * Sun Nov 15 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.5-1
 - built and tested on the 3.19.0 pass's releases, each with a floor and a
   ceiling: omx-contract >= 3.19.0 and < 4, omx-clap-core and omx-clap-host >=
-  0.33.0 and < 0.34 (the wave's one omx-clap-core minor), omx-dsp >= 0.32.2
+  0.33.0 and < 0.34 (the wave's one omx-clap-core minor), omx-dsp >= 0.32.4
   and < 0.33, plugin-hostd >= 0.20.8 and < 0.21 (D30)
 - the generated headers, descriptors and LV2 plugin files carry 0.19.5, and
-  every descriptor's link is read at omx-dsp 0.32.2, the floor the packaging
+  every descriptor's link is read at omx-dsp 0.32.4, the floor the packaging
   builds against
 - selftest: pkg-config asked once per environment, the ratchet checks the tree
   once, each checker arm its entry (#43)

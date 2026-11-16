@@ -22,7 +22,7 @@
 NAME       := omx-tone
 URI        := urn:openmixer:tone
 CLAP_ID    := org.openmixer.tone
-OMXDSP_MIN ?= 0.32.2
+OMXDSP_MIN ?= 0.32.4
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

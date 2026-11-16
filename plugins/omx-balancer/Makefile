@@ -22,7 +22,7 @@
 NAME       := omx-balancer
 URI        := urn:openmixer:balancer
 CLAP_ID    := org.openmixer.balancer
-OMXDSP_MIN ?= 0.32.2
+OMXDSP_MIN ?= 0.32.4
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build
