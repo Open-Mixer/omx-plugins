@@ -81,7 +81,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: The version agrees everywhere it is written
         id: handback-version
@@ -183,7 +182,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: make test-heavy, and nothing skipped
         id: handback-test-heavy
@@ -223,7 +221,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: The recipe machinery, sabotaged arm by arm
         id: handback-selftest
@@ -436,10 +433,8 @@ jobs:
       - name: The packages install and their plugins load
         run: |
           set -euo pipefail
-          # the metapackage, with both formats beside it as the repository would offer them. The build host holds the
-          # channel's omx-plugins-contract when an older omx-panel requires it; a release not yet bumped builds the same
-          # version, so the package under test replaces it, and such an omx-panel goes with it
-          apt-get install -y --no-install-recommends --allow-downgrades ./debs/omx-plugins_*.deb ./debs/omx-plugins-clap_*.deb ./debs/omx-plugins-lv2_*.deb \
+          # the metapackage, with both formats beside it as the repository would offer them
+          apt-get install -y --no-install-recommends ./debs/omx-plugins_*.deb ./debs/omx-plugins-clap_*.deb ./debs/omx-plugins-lv2_*.deb \
             ./debs/omx-plugins-contract_*_all.deb
           dev=$(dpkg -c debs/omx-plugins-dev_*.deb); grep -q './usr/include/omx-plugins/omx_delay_core.h' <<<"$dev"
           grep -q './usr/include/omx-plugins/omx_clap_static.h' <<<"$dev"
@@ -528,7 +523,6 @@ jobs:
         run: |
           set -euo pipefail
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
           dnf copr enable -y ycollet/audinux
           dnf install -y --setopt=install_weak_deps=False clap-validator nodejs
 
