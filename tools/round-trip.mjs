@@ -23,8 +23,7 @@
  * The bags (`extensions.<format>`) are equal: every source field the authored bag holds, the scanned one holds with the
  * same value (an LV2 field's values a set, as RDF states them).
  *
- * Pass: no `differs`, every bag equal, and the lost words the ones LOSSES names, by count (a new loss is red until it
- * is named there). LOSSES is counted against the versions LOSSES_COUNTED names, in a clean build environment (the
+ * Pass: no `differs`, every bag equal, and the lost words the ones LOSSES names, by count (a new loss is red until the ledger is regenerated). LOSSES is counted against the versions LOSSES_COUNTED names, in a clean build environment (the
  * channel's BuildRequires only): a run where one of them is another version, or a package absent from the count is
  * installed, and losses moved, says so once, `ledger for <package> <counted>, installed <found>`, and the ledger is
  * counted again there.
@@ -34,7 +33,7 @@
  * sabotage arm's). Exit 1 when it does not pass.
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { descriptorFile } from './descriptor.mjs';
 import { lookupValues, tableRows, tableWords } from './format-tables.mjs';
@@ -93,60 +92,47 @@ export const LOSSES_COUNTED = Object.freeze({
   'omx-plugins-contract': null,
 });
 
-export const LOSSES = {
-  // OR2: a meaning has a CLAP word only for the bypass, an LV2 term only for some (lv2:designation); LV2 has no unit
-  // for "" (a plain number)
-  'clap controls[].meaning': 10,
-  'lv2 controls[].meaning': 116,
-  'lv2 controls[].travel.unit ""': 123,
-  // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt (dB/oct, omx-contract 3.1.0)
-  'lv2 controls[].travel.unit "dB/oct"': 2,
-  // CLAP: plugin-hostd 0.20.3 reads a control's scale and, through the parameter contract, most units and steps; no
-  // row reads the rest of the units and steps, a choice (our faces set no CLAP_PARAM_IS_ENUM), the session symbol, the
-  // LV2 URI, a side-chain's role or what an LV2 host may lend
-  'clap controls[].travel.unit': 125,
-  'clap controls[].travel.step': 381,
-  'clap controls[].kind': 270,
-  'clap controls[].ids': 139,
-  'clap controls[].values': 139,
-  'clap controls[].labels': 139,
-  'clap controls[].default': 270,
-  'clap controls[].symbol': 841,
-  'clap plugin.uri': 34,
-  'clap ports[].role': 3,
-  'clap needs.extensions.optional': 34,
-  // LV2: no row reads a step, automation, the plugin's version or vendor (our .ttl writes no doap:maintainer); a
-  // control's id is its symbol and a point's id its label, so the CLAP id and our point ids are no LV2 word; the
-  // audio ports are one per channel, with the generator's symbols and names
-  'lv2 controls[].travel.step': 571,
-  'lv2 controls[].automatable': 841,
-  'lv2 controls[].id': 841,
-  'lv2 controls[].ids': 139,
-  'lv2 plugin.version': 34,
-  'lv2 plugin.vendor': 34,
-  'lv2 ports[].id': 71,
-  'lv2 ports[].name': 71,
-  // LV2 port groups are flat: a control in a section's subgroup (an EQ's band, #257) carries the group, not the
-  // section above it (omx-eq8, omx-eq16 and omx-eq32: five controls a band, 8 + 16 + 32 bands)
-  'lv2 controls[].group (panel section)': 280,
-  // the toggles UPSTREAM names, scanned as travels, carry no toggle's default
-  'lv2 controls[].default': 131,
-  // neither face carries a control's prose (omx-delay's sync), nor states that it reads the tempo: CLAP has no static
-  // word for it, and the LV2 face's control port supports time:Position, which a scan reads as no tempo word
-  'clap controls[].doc': 10,
-  'lv2 controls[].doc': 10,
-  'clap needs.tempo': 1,
-  'lv2 needs.tempo': 1,
-  // a meter: plugin-hostd's CLAP table has no row for clap.meters/1 (one word a meter: 20 meters); an LV2 output
-  // control port carries its symbol, range, unit and scale, and no word for its CLAP id, kind, channel count or
-  // readout doc; a two-channel level is two ports, each named for its channel (4 meters, 8 ports)
-  'clap meters[]': 20,
-  'lv2 meters[].id': 20,
-  'lv2 meters[].kind': 20,
-  'lv2 meters[].channels': 20,
-  'lv2 meters[].doc': 16,
-  'lv2 meters[].name': 8,
-};
+/** The ledger: how many words each face of each described plugin loses, `{ <stem>: { '<format> <word>': n } }`. GENERATED
+ * from the round-trip run into LEDGER_FILE (`tools/round-trip.sh --write-losses`), never raised by hand: a new plugin adds
+ * its own entry, and `node tools/round-trip.mjs --check` (make completeness) names a plugin the file lacks or holds
+ * beside none in the tree (omx-plugins#77). The losses are the words a format's table has no row for, or one its face
+ * states otherwise, named in the header above; what a count means is the run's lost lines. */
+export const LEDGER_FILE = join(ROOT, 'tools/round-trip-losses.generated.json');
+
+/** The ledger's per-plugin counts, read from a ledger file. */
+export function readLedger(file = LEDGER_FILE) {
+  return JSON.parse(readFileSync(file, 'utf8')).plugins;
+}
+
+/** The ledger's counts summed over its plugins, `<format> <word>` -> how many words. */
+export function sumLosses(plugins) {
+  const total = {};
+  for (const counts of Object.values(plugins)) for (const [k, n] of Object.entries(counts)) total[k] = (total[k] ?? 0) + n;
+  return Object.fromEntries(Object.entries(total).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
+}
+
+export const LOSSES = sumLosses(readLedger());
+
+/** The ledger file's text for per-plugin counts: plugins and words sorted, one line a count, so two lanes that each add a
+ * plugin touch different lines. */
+export function ledgerText(plugins) {
+  const sort = (o) => Object.fromEntries(Object.entries(o).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
+  const body = Object.entries(sort(plugins))
+    .map(([stem, counts]) => `    ${JSON.stringify(stem)}: {\n${Object.entries(sort(counts)).map(([k, n]) => `      ${JSON.stringify(k)}: ${n}`).join(',\n')}\n    }`)
+    .join(',\n');
+  return `{\n  "generated": "GENERATED by tools/round-trip.sh --write-losses from the round-trip run: do not edit; regenerate and commit (node tools/round-trip.mjs --check names the drift)",\n  "plugins": {\n${body}\n  }\n}\n`;
+}
+
+/** The plugins the ledger and the tree disagree on, as lines: a described plugin with no ledger entry, an entry for
+ * none. No run is needed: which plugins are in the round trip is the tree's, and the counts are the run's (roundTrip). */
+export function ledgerDrift(plugins, inside) {
+  const lines = [];
+  for (const s of inside) if (!(s in plugins)) lines.push(`ledger lacks ${s}: a described plugin with no entry in ${LEDGER_NAME}`);
+  for (const s of Object.keys(plugins)) if (!inside.includes(s)) lines.push(`ledger holds ${s}: no described plugin of that name in the tree`);
+  return lines;
+}
+const LEDGER_NAME = 'tools/round-trip-losses.generated.json';
+
 
 /**
  * The ledger's lines and failures for the losses a run counted, against the `installed` versions of the packages
@@ -317,7 +303,7 @@ export function compareFace(format, authored, scanned) {
 /** The lines of a whole run: `{ lines, losses, fails }`. */
 export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
   const { inside, outside } = described(root);
-  const lines = [], losses = {}, upstream = {};
+  const lines = [], losses = {}, upstream = {}, perPlugin = {};
   let fails = 0;
   for (const stem of inside) {
     const authored = JSON.parse(readFileSync(authoredFiles[stem] ?? join(root, 'plugins', stem, descriptorFile(stem)), 'utf8'));
@@ -335,6 +321,8 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
           lines.push(`lost ${format} ${stem} ${r.where} ${r.word} ${show(r.authored)}`);
           const k = r.word === 'controls[].travel.unit' && format === 'lv2' ? `${format} ${r.word} ${show(r.authored)}` : `${format} ${r.word}`;
           losses[k] = (losses[k] ?? 0) + 1;
+          perPlugin[stem] = perPlugin[stem] ?? {};
+          perPlugin[stem][k] = (perPlugin[stem][k] ?? 0) + 1;
         } else if (excused(UPSTREAM[`${format} ${r.word} ${show(r.authored)} ${show(r.scanned)}`], stem, r.where)) {
           const k = `${format} ${r.word} ${show(r.authored)} ${show(r.scanned)}`;
           lines.push(`differs ${format} ${stem} ${r.where} ${r.word}: authored ${show(r.authored)}, scanned ${show(r.scanned)} (upstream: ${UPSTREAM[k].why})`);
@@ -347,9 +335,16 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
     }
   }
   for (const stem of outside) lines.push(`outside ${stem}: no descriptor, outside the round trip`);
+  for (const stem of inside) perPlugin[stem] = perPlugin[stem] ?? {};
   const ledger = ledgerLines(losses, installedVersions());
   lines.push(...ledger.lines);
   fails += ledger.fails;
+  // which plugin moved: the totals above fail once; a count that moved BETWEEN plugins leaves the totals equal
+  const had = readLedger();
+  const drift = ledgerDrift(had, inside);
+  for (const s of inside) for (const k of new Set([...Object.keys(had[s] ?? {}), ...Object.keys(perPlugin[s]), ])) if ((had[s]?.[k] ?? 0) !== (perPlugin[s][k] ?? 0)) drift.push(`ledger for ${s} ${k}: ${had[s]?.[k] ?? 0}, run ${perPlugin[s][k] ?? 0}`);
+  lines.push(...drift.map((l) => `drift ${l}`));
+  if (ledger.fails === 0 && drift.length > 0) fails++;
   for (const [k, { count: named, at, through }] of Object.entries(UPSTREAM)) {
     const count = at?.length ?? named;
     if (through !== undefined) {
@@ -364,14 +359,31 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
     lines.push(`${ok ? 'upstream' : 'unnamed upstream'} ${k}: ${upstream[k] ?? 0} word(s)${ok ? '' : `, UPSTREAM names ${count} (fixed upstream? remove the entry)`}`);
     if (!ok) fails++;
   }
-  return { lines, losses, fails, inside, outside };
+  return { lines, losses, perPlugin, fails, inside, outside };
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
   const args = process.argv.slice(2);
+  // --check: the ledger names exactly the tree's described plugins (no run, no scans); --write-losses <scans>: the
+  // ledger written from a run (tools/round-trip.sh --write-losses)
+  if (args[0] === '--check') {
+    const root = args[1] === '--root' ? resolve(args[2]) : ROOT;
+    const drift = ledgerDrift(readLedger(), described(root).inside);
+    for (const l of drift) console.log(`drift ${l}`);
+    console.log(drift.length ? `FAIL round-trip ledger: ${drift.length} drift(s); regenerate with tools/round-trip.sh --write-losses` : 'round-trip ledger: names every described plugin');
+    process.exit(drift.length ? 1 : 0);
+  }
+  const write = args.includes('--write-losses');
+  const rest = args.filter((a) => a !== '--write-losses');
   const authoredFiles = {};
-  for (let i = 1; i < args.length; i += 2) if (args[i] === '--authored') { const [s, f] = args[i + 1].split('='); authoredFiles[s] = f; }
-  const { lines, fails, inside, outside } = roundTrip(args[0], { authoredFiles });
+  for (let i = 1; i < rest.length; i += 2) if (rest[i] === '--authored') { const [s, f] = rest[i + 1].split('='); authoredFiles[s] = f; }
+  const run = roundTrip(rest[0], { authoredFiles });
+  if (write) {
+    writeFileSync(LEDGER_FILE, ledgerText(run.perPlugin));
+    console.log(`round-trip: wrote ${LEDGER_NAME} for ${run.inside.length} plugins`);
+    process.exit(0);
+  }
+  const { lines, fails, inside, outside } = run;
   for (const l of lines) console.log(l);
   const count = (v) => lines.filter((l) => l.startsWith(`${v} `)).length;
   const up = lines.filter((l) => l.startsWith('differs ') && l.includes(' (upstream: ')).length;

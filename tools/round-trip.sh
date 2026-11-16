@@ -2,12 +2,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 #
-# round-trip.sh [--self-test] — author, generate both faces, scan them back through plugin-hostd, compare
+# round-trip.sh [--self-test|--write-losses] — author, generate both faces, scan them back through plugin-hostd, compare
 # (docs/declaration-as-descriptor.md, "The round trip"; FreeMixer/omx-plugins#210, decision B). For every plugin with a
 # descriptor: `node tools/gen.mjs`, build both faces, `plugin-hostd-probe describe` each built face, and
 # tools/round-trip.mjs compares the scanned descriptors with the authored ones word by word (equal, lost <format>
 # <word>, differs). --self-test breaks the first described plugin twice and wants each red: one range changed in a
-# copy of its authored descriptor, and one lv2:maximum changed in a copy of its built .ttl. Scratch lives under
+# copy of its authored descriptor, and one lv2:maximum changed in a copy of its built .ttl. --write-losses writes the ledger from the run. Scratch lives under
 # build/tmp. Exit 1 when it does not pass, or an arm stays green.
 set -u
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
@@ -34,6 +34,11 @@ for stem in $stems; do
   LV2_PATH=$P/build "$PROBE" describe "lv2:$(field "$D" uri)" >"$TMP/scans/$stem.lv2.json" || { echo "FAIL round-trip $stem: describe lv2"; exit 1; }
 done
 
+if [ "${1:-}" = "--write-losses" ]; then
+  # the ledger (tools/round-trip-losses.generated.json) is the run's counts, never raised by hand (omx-plugins#77)
+  node "$ROOT/tools/round-trip.mjs" "$TMP/scans" --write-losses
+  exit $?
+fi
 if [ "${1:-}" != "--self-test" ]; then
   node "$ROOT/tools/round-trip.mjs" "$TMP/scans"
   exit $?
