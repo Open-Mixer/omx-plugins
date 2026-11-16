@@ -711,6 +711,10 @@
         "graph": {
           "$ref": "#/$defs/graph"
         },
+        "edges": {
+          "$ref": "https://github.com/FreeMixer/omx-panel/schema/panel.schema.json#/$defs/sectionEdges",
+          "description": "The section's first and last band, borrowed from another section's controls (an EQ draws the plugin's HPF first and its LPF last, [HPF] [Band 1..N] [LPF]). Only the drawing moves, never the audio order. The rule is omx-panel's (schema/panel.schema.json)."
+        },
         "subgroups": {
           "enum": [
             "band"
@@ -771,6 +775,10 @@
         "visibleWhen": {
           "$ref": "https://github.com/FreeMixer/omx-panel/schema/panel.schema.json#/$defs/visibleWhen",
           "description": "Each control shown only while another control holds certain values, by symbol: `{ param, values }`, or for a count `{ param, atLeast: n }` (a band's controls follow a band count). The rule is omx-panel's (schema/panel.schema.json), which carries it into the description's visible and mask."
+        },
+        "tiers": {
+          "$ref": "https://github.com/FreeMixer/omx-panel/schema/panel.schema.json#/$defs/tiers",
+          "description": "Each control's tier, by parameter symbol: `easy` or `advanced`. A control left out is advanced, so nothing disappears until a plugin says so. The MOD GUI is generated for one tier (omx-panel modgui --tier, the modgui-tier setting); the rule is omx-panel's (schema/panel.schema.json)."
         },
         "widgets": {
           "type": "object",
