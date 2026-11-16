@@ -178,7 +178,7 @@ lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_chec
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib units panel-words face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order test-split
+test: lib units panel-words panel-enums face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order test-split
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s presets-figures
@@ -221,6 +221,13 @@ test-faces: all lib contract-union eq-probe-race
 	@$(MAKE) -s package-lists
 units:
 	node tools/test/param-units-check.mjs --self-test
+# the families, widgets and display kinds of include/omx_panel_description.h are omx-contract's (omx-clap-core#104):
+# built against a contract fixture that declares one more of each, the header declares it with no edit here
+.PHONY: panel-enums
+panel-enums:
+	@mkdir -p build
+	$(CC) -std=gnu11 -Wall -Wextra -Werror -Itools/test/fixtures/contract-one-more-family -Iinclude -o build/panel-enums-follow-contract tools/test/panel-enums-follow-contract.c
+	./build/panel-enums-follow-contract
 panel-words:
 	node tools/test/panel-words-check.mjs --self-test
 # include/omx_plugin_face_ids.h is contract/plugin-face.json's render (tools/test/face-header-check.mjs, with its sabotage arms)
