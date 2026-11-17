@@ -25,6 +25,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 
 USAGE = 'usage: published-comp-scan.py [--self-test | -h | --help] <omx-clap-scan> <omx-comp.clap>'
 PLUGIN_ID = 'org.openmixer.comp'
@@ -58,6 +59,29 @@ def scan(prog, path, *args):
     if out.returncode != 0:
         die(f'published-comp-scan: {prog} {" ".join(args)} {path} exited {out.returncode}: {out.stderr.strip()[:300]}')
     return out.stdout
+
+
+def exit_statuses(plugin):
+    """This script run as a command: a scanner that cannot run and a plugin file that is missing end 2 (a setup
+    problem), a scanner that reads a plugin whose values differ ends 1 (a check that failed)."""
+    me = os.path.abspath(__file__)
+    with tempfile.TemporaryDirectory() as tmp:
+        fake = os.path.join(tmp, 'scanner')
+        with open(fake, 'w') as f:
+            f.write('#!/bin/sh\necho \'{"files":[{"plugins":[{"id":"%s"}]}]}\'\n' % PLUGIN_ID)
+        os.chmod(fake, 0o755)
+        cases = [('a scanner that cannot run', [os.path.join(tmp, 'absent'), plugin], 2),
+                 ('a plugin file that is missing', [fake, os.path.join(tmp, 'absent.clap')], 2),
+                 ('a plugin whose values differ', [fake, plugin], 1)]
+        bad = 0
+        for what, args, want in cases:
+            got = subprocess.run([sys.executable, '-I', me, *args], capture_output=True, text=True).returncode
+            if got == want:
+                print(f'ok   {what} exits {want}')
+            else:
+                print(f'FAIL {what} exits {got}, expected {want}')
+                bad = 1
+        return bad
 
 
 def held(prog, path, METERS, CONTRACT):
@@ -170,7 +194,7 @@ def main(argv):
             else:
                 print(f'FAIL {what} changed: found by {", ".join(sorted(named)) or "no reading"}, expected {", ".join(sorted(readings))}')
                 bad = 1
-        return bad
+        return bad | exit_statuses(path)
     found = held(prog, path, METERS, CONTRACT)
     for f in found:
         print(f'FAIL {f}')
