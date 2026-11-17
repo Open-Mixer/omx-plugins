@@ -153,7 +153,7 @@ if (process.argv.includes('--self-test')) {
   const arms = {
     'round-trip dropped from make test-heavy': { ...t, makefile: swap(t.makefile, '$(MAKE) -s round-trip;', 'true;') },
     'hints dropped from make test': { ...t, makefile: swap(t.makefile, '\t@$(MAKE) -s hints\n', '') },
-    'a fast prerequisite dropped from make test': { ...t, makefile: swap(t.makefile, ' face-dirty-order test-split\n', ' test-split\n') },
+    'a fast prerequisite dropped from make test': { ...t, makefile: swap(t.makefile, ' debt-base test-split\n', ' test-split\n') },
     'host-check.sh dropped from a plugin\'s test-heavy': { ...t, template: t.template.split('\n').filter((l) => !l.includes('host-check.sh')).join('\n') },
     'a plugin Makefile with no test-heavy': { ...t, plugins: { ...t.plugins, 'omx-x': 'all:\n\ttrue\ntest: all\n\ttrue\n' } },
     'a shard left out of the CI matrix': { ...t, ci: swap(t.ci, '          - 4/4\n', '') },
