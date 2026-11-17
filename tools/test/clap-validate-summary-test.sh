@@ -13,10 +13,12 @@ d=$(mktemp -d); trap 'rm -rf "$d"' EXIT
 report() { # <file> <test> <details>
   printf '{"results":[{"test":{"plugin-instance":{"test":"ok-test"}},"status":{"code":"success"}},{"test":{"plugin-instance":{"test":"%s"}},"status":{"code":"failed","details":"%s"}}]}\n' "$2" "$3" > "$1"
 }
-ACT="Error while processing with %s sample rate 'clap_plugin::activate()' returned false."
-report "$d/off-grid.json" process-varying-sample-rates "$(printf "$ACT" 8000.00hz)"
-report "$d/on-grid.json" process-varying-sample-rates "$(printf "$ACT" 48000.00hz)"
-report "$d/other-test.json" process-audio-out-of-place-basic "$(printf "$ACT" 8000.00hz)"
+act() { # <rate>: clap-validator's line for an activate() refused at that rate
+  printf "Error while processing with %s sample rate 'clap_plugin::activate()' returned false." "$1"
+}
+report "$d/off-grid.json" process-varying-sample-rates "$(act 8000.00hz)"
+report "$d/on-grid.json" process-varying-sample-rates "$(act 48000.00hz)"
+report "$d/other-test.json" process-audio-out-of-place-basic "$(act 8000.00hz)"
 report "$d/other-failure.json" process-varying-sample-rates "Error while processing with 8000.00hz sample rate: the output holds NaN"
 bad=0
 want() { # <expected rc class: pass|red> <description> <report>
