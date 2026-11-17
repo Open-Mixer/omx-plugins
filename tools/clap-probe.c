@@ -141,8 +141,22 @@ static int params_dump(const char *path) {
   for (uint32_t i = 0; i < n; i++) {
     clap_param_info_t info;
     if (!c.params->get_info(c.plugin, i, &info)) return fprintf(stderr, "get_info %u\n", i), 1;
-    printf("%u\t%s\t%.17g\t%.17g\t%.17g\t%u\n", info.id, info.name, info.min_value, info.max_value,
-           info.default_value, (unsigned)info.flags);
+    /* the value texts of a stepped parameter's whole steps (at most 16), `|`-joined: a choice's labels, as a host reads
+     * them through value_to_text (omx-clap-scan's scale points); a travel's texts are its numbers */
+    char texts[4096] = "";
+    const double span = info.max_value - info.min_value;
+    if ((info.flags & (CLAP_PARAM_IS_STEPPED | CLAP_PARAM_IS_ENUM)) && span == (double)(long)span && span <= 15.0) {
+      size_t at = 0;
+      for (double v = info.min_value; v <= info.max_value && at + 2 < sizeof texts; v += 1.0) {
+        char t[128];
+        if (!c.params->value_to_text(c.plugin, info.id, v, t, sizeof t)) t[0] = 0;
+        const int w = snprintf(texts + at, sizeof texts - at, "%s%s", v == info.min_value ? "" : "|", t);
+        if (w < 0 || (size_t)w >= sizeof texts - at) break;
+        at += (size_t)w;
+      }
+    }
+    printf("%u\t%s\t%.17g\t%.17g\t%.17g\t%u\t%s\n", info.id, info.name, info.min_value, info.max_value,
+           info.default_value, (unsigned)info.flags, texts);
   }
   clap_close(&c);
   return 0;
