@@ -19,7 +19,7 @@
  *
  * $OMX_CONTRACT_DIR, a directory holding an omx-contract.json, stands in for the installed data
  * directory: the perturbation proofs point it at a moved copy. Either way the release's version (the
- * render's own `version`) must lie in the packaging's range, or nothing is read.
+ * render's own `version`) must be at the packaging's floor or above, or nothing is read.
  */
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -42,21 +42,21 @@ export function compareVersions(a, b) {
 }
 
 /**
- * The range packaging/omx-plugins.spec requires of the build dependency `pkg` (`omx-dsp-devel`,
- * `omx-contract-devel`): `{ floor, ceiling }`, from its BuildRequires line `(pkg >= floor with pkg < ceiling)`.
- * Throws when it is missing, written twice, or has no ceiling.
+ * The floor packaging/omx-plugins.spec requires of the build dependency `pkg` (`omx-dsp-devel`, `omx-contract-devel`),
+ * from its BuildRequires line `pkg >= floor` (generated from packaging/deps.txt; no ceiling is declared or read).
+ * Throws when the line is missing or written twice.
  */
-export function packagingRange(pkg, root = ROOT) {
+export function packagingFloor(pkg, root = ROOT) {
   const file = join(root, SPEC_FILE);
   if (!existsSync(file)) throw new Error(`${SPEC_FILE} is missing: the packaging is where the releases this tree builds against are declared`);
   const spec = readFileSync(file, 'utf8');
   const name = pkg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const found = [...spec.matchAll(new RegExp(`^BuildRequires: \\(${name} >= ([0-9][0-9.]*) with ${name} < ([0-9][0-9.]*)\\)$`, 'gm'))];
-  if (found.length !== 1) throw new Error(`${SPEC_FILE}: ${found.length ? 'more than one' : 'no'} "BuildRequires: (${pkg} >= <floor> with ${pkg} < <ceiling>)" line`);
-  return { floor: found[0][1], ceiling: found[0][2] };
+  const found = [...spec.matchAll(new RegExp(`^BuildRequires: ${name} >= ([0-9][0-9.]*)$`, 'gm'))];
+  if (found.length !== 1) throw new Error(`${SPEC_FILE}: ${found.length ? 'more than one' : 'no'} "BuildRequires: ${pkg} >= <floor>" line`);
+  return found[0][1];
 }
 
-const inRange = (v, r) => compareVersions(v, r.floor) >= 0 && compareVersions(v, r.ceiling) < 0;
+const atLeast = (v, floor) => compareVersions(v, floor) >= 0;
 
 const versionOf = (dir) => {
   try {
@@ -175,32 +175,32 @@ export function ownersOf(contractdir = installedContractDir()) {
 }
 
 /**
- * The directory omx-contract's resolved render is read from: `{ dir, version, range, at, contractdir? }`, or
- * `{ dir: undefined, range, why }` when no omx-contract in the packaging's range is installed (nor given by
+ * The directory omx-contract's resolved render is read from: `{ dir, version, floor, at, contractdir? }`, or
+ * `{ dir: undefined, floor, why }` when no omx-contract at the packaging's floor or above is installed (nor given by
  * OMX_CONTRACT_DIR). From 2.15.0 on, the render is the union of the contract directory (unionRender).
  */
 export function locateContract(root = ROOT) {
-  let range;
+  let floor;
   try {
-    range = packagingRange('omx-contract-devel', root);
+    floor = packagingFloor('omx-contract-devel', root);
   } catch (e) {
     return { dir: undefined, why: e.message };
   }
-  const want = `omx-contract >= ${range.floor} and < ${range.ceiling} (${SPEC_FILE})`;
+  const want = `omx-contract >= ${floor} (${SPEC_FILE})`;
   const env = process.env.OMX_CONTRACT_DIR;
   const dir = env || installedDataDir();
   const at = env ? `OMX_CONTRACT_DIR=${env}` : dir;
-  if (!dir) return { dir: undefined, range, why: `no omx-contract is installed (\`${PKG_CONFIG()} --variable=datadir omx-contract\` finds none); this tree needs ${want}: install omx-contract-devel or libomx-contract-dev (BUILDING.md)` };
+  if (!dir) return { dir: undefined, floor, why: `no omx-contract is installed (\`${PKG_CONFIG()} --variable=datadir omx-contract\` finds none); this tree needs ${want}: install omx-contract-devel or libomx-contract-dev (BUILDING.md)` };
   const version = versionOf(dir);
-  if (!version) return { dir: undefined, range, why: `${at} holds no readable ${RESOLVED}` };
-  if (!inRange(version, range)) return { dir: undefined, range, why: `${at} is omx-contract ${version}; this tree needs ${want}` };
+  if (!version) return { dir: undefined, floor, why: `${at} holds no readable ${RESOLVED}` };
+  if (!atLeast(version, floor)) return { dir: undefined, floor, why: `${at} is omx-contract ${version}; this tree needs ${want}` };
   const contractdir = env ? undefined : installedContractDir();
   if (contractdir && !Object.keys(JSON.parse(readFileSync(join(dir, RESOLVED), 'utf8')).kernels ?? {}).length) {
     const union = unionRender(root, contractdir);
-    if (!union.dir) return { dir: undefined, range, why: union.why };
-    return { dir: union.dir, version, range, at: `${contractdir} (omx-contract ${version} and its owners)`, contractdir };
+    if (!union.dir) return { dir: undefined, floor, why: union.why };
+    return { dir: union.dir, version, floor, at: `${contractdir} (omx-contract ${version} and its owners)`, contractdir };
   }
-  return { dir, version, range, at: `${at} (omx-contract ${version})` };
+  return { dir, version, floor, at: `${at} (omx-contract ${version})` };
 }
 
 const resolvedCache = new Map();

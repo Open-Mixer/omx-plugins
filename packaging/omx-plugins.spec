@@ -57,7 +57,7 @@ Requires: %{name}-clap%{?_isa} = %{version}-%{release}
 Requires: %{name}-lv2%{?_isa} = %{version}-%{release}
 # each plugin's descriptor, which a host and the console read at run time
 Requires: %{name}-contract = %{version}-%{release}
-# the first plugin-hostd release that reads pins.d (plugin-hostd issue #42)
+# plugin-hostd reads pins.d (plugin-hostd issue #42); no floor is written here, deps-render renders no weak dependency
 Recommends: plugin-hostd
 
 %description

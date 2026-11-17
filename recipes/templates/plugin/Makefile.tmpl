@@ -21,7 +21,8 @@
 NAME       := {{stem}}
 URI        := {{uri}}
 CLAP_ID    := {{clapId}}
-OMXDSP_MIN ?= {{omxdspMin}}
+include ../../tools/spec-floors.mk
+OMXDSP_MIN ?= $(call spec_floor,omx-dsp-devel)
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

@@ -78,10 +78,9 @@ jobs:
       # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
       - uses: Open-Mixer/.github/.github/actions/wave-deps@openmixer-v1
 
-      - name: Install the build dependencies and the prober
+      - name: Install the build dependencies, the prober (plugin-qualify, omx-clap-host) among them
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          dnf install -y --setopt=install_weak_deps=False 'plugin-qualify >= 0.11.0' omx-clap-host
 
       - name: Qualify every plugin; refuse the release unless each is suitable
         run: tools/qualify-release.sh qualification

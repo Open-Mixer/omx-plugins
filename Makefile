@@ -160,7 +160,7 @@ LIB_OBJS   := $(LIB_B)/omx_clap_static.o $(LIB_B)/omx_clap_face.o $(patsubst %.c
 # no ceiling. Building the archive stops first, naming the dependency, the floor and what is installed, when
 # pkg-config finds an older release.
 SPEC       := packaging/omx-plugins.spec
-spec_floor = $(shell sed -n 's/^BuildRequires: $(1) >= \([0-9.]*\)$$/\1/p' $(SPEC))
+include tools/spec-floors.mk
 OMXDSP_MIN        := $(call spec_floor,omx-dsp-devel)
 CONTRACT_MIN      := $(call spec_floor,omx-contract-devel)
 # $(call dep_check,<pkg-config name>,<floor>): nothing, or a stop naming what is installed

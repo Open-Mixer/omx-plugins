@@ -12,7 +12,7 @@
     }
   },
   "contract": {
-    "range": "packaging/omx-plugins.spec: BuildRequires (omx-contract-devel >= floor with omx-contract-devel < ceiling)",
+    "floor": "packaging/omx-plugins.spec: BuildRequires omx-contract-devel >= floor (generated from packaging/deps.txt)",
     "byReferenceSince": "1.1.0"
   },
   "derived": {
@@ -214,9 +214,7 @@
       "paths": [
         "plugins/{stem}/Makefile"
       ],
-      "questions": [
-        "#/questions/omxdspMin"
-      ],
+      "questions": [],
       "template": "Makefile.tmpl",
       "when": "always",
       "checker": {

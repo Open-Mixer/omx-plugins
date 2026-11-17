@@ -17,7 +17,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { choicesOf, metersOf, scaleOf } from './gen.mjs';
 import { clapFeatureField, clapFeatureValue } from './format-tables.mjs';
-import { installedContractDir, installedDataDir, locateContract, ownersOf, packagingRange } from './omx-contract.mjs';
+import { installedContractDir, installedDataDir, locateContract, ownersOf, packagingFloor } from './omx-contract.mjs';
 import { meaningOfRole, panelLayout } from './omx-panel.mjs';
 
 /** The descriptor file of a plugin folder. */
@@ -162,7 +162,7 @@ export function descriptorOf(d) {
     }
     const owner = owners.get(rel.split('#')[0]) ?? { package: 'omx-contract' };
     try {
-      return `${owner.package}@${packagingRange(`${owner.package}-devel`, d.tree).floor}`;
+      return `${owner.package}@${packagingFloor(`${owner.package}-devel`, d.tree)}`;
     } catch {
       return owner.version ? `${owner.package}@${owner.version}` : null;
     }

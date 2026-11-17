@@ -22,7 +22,8 @@
 NAME       := omx-phaser
 URI        := urn:openmixer:phaser
 CLAP_ID    := org.openmixer.phaser
-OMXDSP_MIN ?= $(shell sed -n 's/^BuildRequires: omx-dsp-devel >= \([0-9.]*\)$$/\1/p' ../../packaging/omx-plugins.spec)
+include ../../tools/spec-floors.mk
+OMXDSP_MIN ?= $(call spec_floor,omx-dsp-devel)
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build
