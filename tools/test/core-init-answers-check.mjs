@@ -8,13 +8,15 @@
  * changes no run. This reads the source instead: in every omx_<kernel>_core_init (each plugins/*\/omx_*_core.h
  * and the templates they are generated from) every call of an `omx_*_instance_init` is returned, or folded
  * into the answer with `ok &= ... != 0`; none is discarded, and a chain's init returns `ok`. Each form is matched
- * as the whole line (an answer or-ed with a constant, or a statement after the fold, is refused), `ok` is assigned
- * nowhere but `int ok = 1;` and its folds, and a chain's init ends with `return ok;`.
+ * as the whole line (an answer or-ed with a constant, or a statement after the fold, is refused). Every line that
+ * names `ok` must be one of three held forms: `int ok = 1;`, a fold, or the final `return ok;`; any other line naming
+ * it is refused, so other correct forms (a fold wrapped over lines, `ok = ok && ...`, an early return) are refused
+ * too and the template is the one way to write a chain init.
  *
  *   node tools/test/core-init-answers-check.mjs [--self-test]
  * --self-test plants a discarded answer in each element of omx-strip's init, a discarded single-kernel answer,
- * a chain init that returns 1, `ok = 1;` before the return and after a fold, and a single answer or-ed with a
- * constant: each must go red. `make core-init-answers`, part of `make test`.
+ * a chain init that returns 1, `ok = 1;` before the return and after a fold, `ok++;` and `*(&ok) = 1;` before
+ * the return, and a single answer or-ed with a constant: each must go red. `make core-init-answers`, part of `make test`.
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -35,12 +37,15 @@ export function initErrors(src, file) {
   for (const line of calls)
     if (!(chain ? folded.test(line) : single.test(line) || folded.test(line)))
       errors.push(`${file}: an instance init answer is discarded, altered or not folded: ${line}`);
-  for (const [line] of body.matchAll(/^[^\n]*\bok\s*(?:[-+*/%|&^]|<<|>>)?=(?!=)[^\n]*$/gm)) {
-    const t = line.trim();
-    if (t !== 'int ok = 1;' && !folded.test(t)) errors.push(`${file}: the answer \`ok\` is assigned outside its folds: ${t}`);
-  }
-  const last = body.trim().split('\n').pop().trim();
-  if (chain && !/^(?:\{\{\/elements\}\})?\s*return ok;$/.test(last)) errors.push(`${file}: a chain's init does not end by returning the folded answer`);
+  const lines = body.trim().split('\n').map((l) => l.trim());
+  const last = lines[lines.length - 1];
+  const finalReturn = /^(?:\{\{\/elements\}\})?\s*return ok;$/;
+  lines.forEach((t, i) => {
+    if (!/\bok\b/.test(t)) return;
+    const held = t === 'int ok = 1;' || folded.test(t) || (i === lines.length - 1 && finalReturn.test(t));
+    if (!held) errors.push(`${file}: a line names the answer \`ok\` outside its three held forms: ${t}`);
+  });
+  if (chain && !finalReturn.test(last)) errors.push(`${file}: a chain's init does not end by returning the folded answer`);
   return errors;
 }
 
