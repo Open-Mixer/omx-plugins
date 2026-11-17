@@ -23,11 +23,15 @@
  *
  *   5. the TTL is Turtle a host's parser reads (serdi, strict: the parser lilv reads a bundle with);
  *   6. every node a port names by pg:group is a pg:Group stating one lv2:symbol (an LV2 symbol, unique among the
- *      plugin's groups), one lv2:name and one rdfs:label.
+ *      plugin's groups), one lv2:name and one rdfs:label;
+ *   7. every group states one lv2:displayPriority, no two the same, and in that order (higher first, as Zynthian
+ *      sorts a plugin's screens) the groups of one panel section come together: a section's own group and its bands
+ *      are never split by another section's group (omx-strip's EQ 1 ... EQ 32 all come before Comp).
  *
  * `--self-test` adds the sabotage arms, each on a scratch copy of omx-eq8's TTL with one thing changed, each of which
  * must go red on its own law: two bands sharing a group, a band port with no group, a band port moved out of its
- * band's group, a group with no lv2:symbol, two groups with one symbol, and a TTL that is not Turtle. And the
+ * band's group, a group with no lv2:symbol, two groups with one symbol, a TTL that is not Turtle, and a section's bands
+ * split by another section's group (two priorities exchanged). And the
  * generator's arms, on a scratch copy of omx-strip's declaration (a chain: its EQ section says `"subgroups": "band"`,
  * tools/gen.mjs chainSubgroups): as declared it writes the committed TTL; without the word its TTL is red on law 3;
  * and the word on a section that lists no per-band control (the gate's) is refused.
@@ -85,6 +89,7 @@ export function readGroups(d, ttlText) {
         symbols: of(g, `${LV2}symbol`).map((o) => o.lex),
         names: of(g, `${LV2}name`).map((o) => o.lex),
         labels: of(g, RDFS_LABEL).map((o) => o.lex),
+        priorities: of(g, `${LV2}displayPriority`).map((o) => Number(o.lex)),
       });
     }
   }
@@ -139,7 +144,22 @@ export function bandGroupErrors(d, ttlText) {
     else bySymbol.set(node.symbols[0], g);
     if (node.names.length !== 1 || !node.names[0]) errors.push(`${what}: law 6: it states ${node.names.length} lv2:name`);
     if (node.labels.length !== 1 || !node.labels[0]) errors.push(`${what}: law 6: it states ${node.labels.length} rdfs:label`);
+    if (node.priorities.length !== 1 || !Number.isInteger(node.priorities[0])) errors.push(`${what}: law 7: it states ${node.priorities.length} lv2:displayPriority`);
   }
+  // law 7: the section of each group, from the model (a section's key, or the key of one of its subgroups)
+  const sectionOf = new Map();
+  for (const s of d.panel?.sections ?? []) for (const key of [s.key, ...(d.subgroups?.[s.key] ?? []).map((g) => g.key)]) sectionOf.set(key, s.key);
+  const ranked = [...groups.values()].filter((node) => node.symbols.length === 1 && node.priorities.length === 1).sort((a, b) => b.priorities[0] - a.priorities[0]);
+  const closed = new Set(), split = new Set();
+  ranked.forEach((node, k) => {
+    const what = `${d.stem}: group '${node.symbols[0]}'`;
+    const section = sectionOf.get(node.symbols[0]);
+    const before = ranked[k - 1];
+    if (before && before.priorities[0] === node.priorities[0]) errors.push(`${what}: law 7: its lv2:displayPriority ${node.priorities[0]} is also '${before.symbols[0]}'s`);
+    if (section === undefined) errors.push(`${what}: law 7: it is no section or band of the declared panel`);
+    else if (closed.has(section) && !split.has(section) && split.add(section)) errors.push(`${what}: law 7: section '${section}' is split: '${before.symbols[0]}' (section '${sectionOf.get(before.symbols[0])}') comes between its groups`);
+    if (before && sectionOf.get(before.symbols[0]) !== section) closed.add(sectionOf.get(before.symbols[0]));
+  });
   return errors;
 }
 
@@ -157,6 +177,8 @@ const ARMS = [
     (t) => t.replace('    lv2:symbol "band4" ;\n', '')],
   ['two groups state one lv2:symbol', /law 6: its lv2:symbol 'band5' is also <urn:openmixer:eq8#band5>'s/,
     (t) => t.replace('    lv2:symbol "band6" ;\n', '    lv2:symbol "band5" ;\n')],
+  ['a section\'s bands are split by another section\'s group (LPF and Band 1 exchange priorities)', /group 'band2': law 7: section 'bands' is split: 'lpf' \(section 'lpf'\) comes between its groups/,
+    (t) => t.replace(/(lv2:symbol "lpf" ;\n {4}lv2:name "LPF" ;\n {4}lv2:displayPriority )9 ;/, '$18 ;').replace(/(lv2:symbol "band1" ;\n {4}lv2:name "Band 1" ;\n {4}lv2:displayPriority )8 ;/, '$19 ;')],
   ['the TTL is not Turtle (a statement left open)', /law 5: its TTL is not Turtle serdi reads/,
     (t) => t.replace('    a pg:Group ;\n', '    a pg:Group ;;;\n    ] \n')],
 ];
