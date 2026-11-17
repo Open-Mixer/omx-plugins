@@ -133,19 +133,22 @@ def main(argv):
         if held(prog, path, METERS, CONTRACT):
             print('FAIL the control: the declared values do not hold')
             return 1
-        arms = [('a meter id', [(9,) + METERS[0][1:]] + METERS[1:], CONTRACT),
-                ('a meter name', [METERS[0][:1] + ('compX',) + METERS[0][2:]] + METERS[1:], CONTRACT),
-                ('a meter kind', [METERS[0][:2] + ('level',) + METERS[0][3:]] + METERS[1:], CONTRACT),
-                ('a meter channel count', METERS[:3] + [METERS[3][:3] + (2,)], CONTRACT),
-                ('a contract symbol', METERS, [CONTRACT[0][:1] + ('threshold',) + CONTRACT[0][2:]] + CONTRACT[1:]),
-                ('a contract unit', METERS, CONTRACT[:1] + [CONTRACT[1][:2] + ('none',) + CONTRACT[1][3:]] + CONTRACT[2:]),
-                ('a contract scale', METERS, CONTRACT[:3] + [CONTRACT[3][:3] + ('linear',)])]
+        # each change, with the readings that must name it: JSON, the field dump and the text each state every value
+        every = {'json', 'fields', 'text'}
+        arms = [('a meter id', [(9,) + METERS[0][1:]] + METERS[1:], CONTRACT, every),
+                ('a meter name', [METERS[0][:1] + ('compX',) + METERS[0][2:]] + METERS[1:], CONTRACT, every),
+                ('a meter kind', [METERS[0][:2] + ('level',) + METERS[0][3:]] + METERS[1:], CONTRACT, every),
+                ('a meter channel count', METERS[:3] + [METERS[3][:3] + (2,)], CONTRACT, every),
+                ('a contract symbol', METERS, [CONTRACT[0][:1] + ('threshold',) + CONTRACT[0][2:]] + CONTRACT[1:], every),
+                ('a contract unit', METERS, CONTRACT[:1] + [CONTRACT[1][:2] + ('none',) + CONTRACT[1][3:]] + CONTRACT[2:], every),
+                ('a contract scale', METERS, CONTRACT[:3] + [CONTRACT[3][:3] + ('linear',)], {'json'})]
         bad = 0
-        for what, meters, contract in arms:
-            if held(prog, path, meters, contract):
-                print(f'ok   {what} changed is found')
+        for what, meters, contract, readings in arms:
+            named = {f.split(':', 1)[0] for f in held(prog, path, meters, contract)}
+            if named == readings:
+                print(f'ok   {what} changed is found by {", ".join(sorted(named))}')
             else:
-                print(f'FAIL {what} changed is not found')
+                print(f'FAIL {what} changed: found by {", ".join(sorted(named)) or "no reading"}, expected {", ".join(sorted(readings))}')
                 bad = 1
         return bad
     found = held(prog, path, METERS, CONTRACT)
