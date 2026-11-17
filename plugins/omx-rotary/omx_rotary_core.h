@@ -29,11 +29,12 @@ typedef struct {
   OmxRotaryInstance inst;
 } OmxRotaryCore;
 
-/** A fresh instance at `rate`: every state word zero. A rate the kernel does not declare leaves it a wire. */
-static inline void omx_rotary_core_init(OmxRotaryCore *c, uint32_t rate) {
+/** A fresh instance at `rate`: every state word zero. 1 when the kernel takes the rate, 0 when it refuses
+ * it (the instance is then the identity: the caller must not run it). */
+static inline int omx_rotary_core_init(OmxRotaryCore *c, uint32_t rate) {
   memset(c, 0, sizeof *c);
   c->rate = rate;
-  (void)omx_rotary_instance_init(&c->inst, (float)rate);
+  return omx_rotary_instance_init(&c->inst, (float)rate);
 }
 
 /** The block's parameters (declaration order) and the host's bypass, each to its resolve() argument. */
@@ -62,7 +63,7 @@ static inline void omx_rotary_core_run(OmxRotaryCore *c, const float *in_l, cons
 }
 
 /* The core behind the vtable the shared faces call (include/omx_plugin_face.h): the same functions, untyped. */
-static inline void omx_rotary_core_init_v(void *c, uint32_t rate) { omx_rotary_core_init((OmxRotaryCore *)c, rate); }
+static inline int omx_rotary_core_init_v(void *c, uint32_t rate) { return omx_rotary_core_init((OmxRotaryCore *)c, rate); }
 static inline void omx_rotary_core_resolve_v(void *c, const float *values, int bypass) {
   omx_rotary_core_resolve((OmxRotaryCore *)c, values, bypass);
 }

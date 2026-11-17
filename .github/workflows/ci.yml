@@ -81,7 +81,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: The version agrees everywhere it is written
         id: handback-version
@@ -183,7 +182,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: make test-heavy, and nothing skipped
         id: handback-test-heavy
@@ -223,7 +221,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: The recipe machinery, sabotaged arm by arm
         id: handback-selftest
@@ -504,7 +501,8 @@ jobs:
   clap-validator:
     # clap-validator is the CLAP project's own conformance tester (state round trips, parameter fuzzing,
     # thread rules). It runs on every built .clap, the test plugins included, and keeps one JSON report each.
-    # A failed test fails the job. The factory presets are installed first, where the plugins declare them, because
+    # A failed test fails the job, except the one accepted failure (activate refusing a rate outside the nine oracle
+    # rates, tools/clap-validate-summary.mjs), which is printed as an `accepted` line. The factory presets are installed first, where the plugins declare them, because
     # the preset-discovery tests crawl that location.
     name: clap-validator (fedora:44, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
@@ -528,7 +526,6 @@ jobs:
         run: |
           set -euo pipefail
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
           dnf copr enable -y ycollet/audinux
           dnf install -y --setopt=install_weak_deps=False clap-validator nodejs
 
@@ -545,13 +542,13 @@ jobs:
           tools/clap-validate.sh build/clap-validator 2>&1 | tee build/clap-validator.log
         shell: bash
 
-      - name: Show the failures on the run page
+      - name: Show the failures and the accepted lines on the run page
         if: always()
         run: |
           {
             echo '### clap-validator'
             echo '```'
-            grep -E '^(omx-|  FAIL|FAIL)' build/clap-validator.log || echo 'no failed test'
+            grep -E '^(omx-|  accepted|  FAIL|FAIL)' build/clap-validator.log || echo 'no failed test'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 

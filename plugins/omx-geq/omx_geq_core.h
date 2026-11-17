@@ -31,11 +31,12 @@ typedef struct {
   OmxGeqInstance inst;
 } OmxGeqCore;
 
-/** A fresh instance at `rate`: every state word zero. A rate the kernel does not declare leaves it a wire. */
-static inline void omx_geq_core_init(OmxGeqCore *c, uint32_t rate) {
+/** A fresh instance at `rate`: every state word zero. 1 when the kernel takes the rate, 0 when it refuses
+ * it (the instance is then the identity: the caller must not run it). */
+static inline int omx_geq_core_init(OmxGeqCore *c, uint32_t rate) {
   memset(c, 0, sizeof *c);
   c->rate = rate;
-  (void)omx_geq_instance_init(&c->inst, (double)rate);
+  return omx_geq_instance_init(&c->inst, (double)rate);
 }
 
 /** The block's parameters (declaration order) and the host's bypass, each to its resolve() argument. */
@@ -57,7 +58,7 @@ static inline void omx_geq_core_run(OmxGeqCore *c, const float *in_l, const floa
 }
 
 /* The core behind the vtable the shared faces call (include/omx_plugin_face.h): the same functions, untyped. */
-static inline void omx_geq_core_init_v(void *c, uint32_t rate) { omx_geq_core_init((OmxGeqCore *)c, rate); }
+static inline int omx_geq_core_init_v(void *c, uint32_t rate) { return omx_geq_core_init((OmxGeqCore *)c, rate); }
 static inline void omx_geq_core_resolve_v(void *c, const float *values, int bypass) {
   omx_geq_core_resolve((OmxGeqCore *)c, values, bypass);
 }
