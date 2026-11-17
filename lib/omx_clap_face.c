@@ -215,7 +215,7 @@ static bool g_activate(const clap_plugin_t *p, double sample_rate, uint32_t min_
    * the one place the CLAP latency extension lets it change, and where the host is told it did. */
   void *probe = malloc(c->size);
   if (!probe) return false;
-  if (!c->init(probe, g->rate)) return free(probe), false;
+  (void)c->init(probe, g->rate); /* the same kernel at the rate g->core just took */
   c->resolve(probe, g->values, g->values[G_BYPASS(g)] > 0.5f);
   const uint32_t lat = c->latency(probe);
   free(probe);

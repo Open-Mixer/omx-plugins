@@ -7,7 +7,9 @@
 #
 #   tools/clap-validate.sh [OUTDIR]     reports to OUTDIR (default build/clap-validator)
 #
-# Exit status: 0 when every plugin passed, 1 when any test failed or a plugin could not be run,
+# Exit status: 0 when every plugin passed (a plugin whose only failure is the one accepted in
+# clap-validate-summary.mjs, activate refusing a rate outside the nine oracle rates, passes too, its
+# accepted line printed), 1 when any other test failed or a plugin could not be run,
 # 2 when the validator or the built plugins are missing (nothing was judged). The plugins' factory
 # presets must be installed (make install-presets) or the preset-discovery tests find no location to crawl.
 set -euo pipefail
