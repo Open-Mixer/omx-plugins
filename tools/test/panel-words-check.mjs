@@ -93,7 +93,7 @@ export function drift(enums, declared, owner) {
     const got = enums[key];
     if (contract && !enums.derived?.[key]) errors.push(`${HEADER}: enum ${c} is spelled by hand; build it from omx-contract's ${contract}(X) (${CONTRACT_HEADER})`);
     if (!got) {
-      errors.push(enums.derived?.[key] ? `${CONTRACT_HEADER}: no ${enums.derived[key]}(X) list (omx-contract >= 3.20.0)` : `${HEADER}: no enum ${c}`);
+      errors.push(enums.derived?.[key] ? `${CONTRACT_HEADER}: no ${enums.derived[key]}(X) list (omx-contract >= 3.19.0)` : `${HEADER}: no enum ${c}`);
       continue;
     }
     const words = declared[key];
@@ -146,7 +146,7 @@ const declared = {
 };
 for (const [key, name] of [['family', 'PANEL_FAMILIES'], ['widget', 'PANEL_WIDGETS'], ['display_kind', 'PANEL_DISPLAY_KINDS']]) {
   if (!declared[key]) {
-    console.error(`panel-words: ${contractDir.dir}: the resolved contract holds no ${name} words (omx-contract >= 3.20.0)`);
+    console.error(`panel-words: ${contractDir.dir}: the resolved contract holds no ${name} words (omx-contract >= 3.19.0)`);
     process.exit(1);
   }
 }
