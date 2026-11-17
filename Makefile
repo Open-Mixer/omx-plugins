@@ -43,6 +43,9 @@
 #                   extension from the built face, the host told by changed() (tools/test/strip-pages-follow-test.mjs; part of `make test`)
 #   make band-groups  omx-eq8's generated descriptor and TTL hold one LV2 port group per band, Band 1 ... Band 8 in band
 #                   order, each its five controls (tools/test/eq8-band-groups-test.mjs; part of `make test`)
+#                   and every plugin whose model repeats a band of several controls holds one port group per band in
+#                   its generated TTL, read by serdi, each group its lv2:symbol, lv2:name and rdfs:label
+#                   (tools/test/band-port-groups-check.mjs, with its sabotage arms)
 #   make geq-widgets  omx-geq declares the fader for its 31 bands, and its panel description and generated header serve them
 #                   (tools/test/geq-widgets-test.mjs; part of `make test`)
 #   make hints      no LV2 face lost a port hint: tools/port-hints.mjs against each declaration's `portHints` pin
@@ -304,6 +307,7 @@ phaser-depth:
 
 band-groups:
 	node tools/test/eq8-band-groups-test.mjs
+	node tools/test/band-port-groups-check.mjs --self-test
 strip-visible-when:
 	node tools/test/strip-visible-when-test.mjs
 # the strip's CLAP remote-control pages follow Bands: the built face and a host that offers clap.remote-controls,
