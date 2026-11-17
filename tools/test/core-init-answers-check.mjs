@@ -79,6 +79,14 @@ function selfTest() {
   arms.push(['omx-strip: ok overwritten after a fold on the same line', strip.replace(/(ok &= omx_comp_instance_init\([^;]*\) != 0;)/, '$1 ok = 1;')]);
   arms.push(['omx-strip: ok incremented before the return', strip.replace('  return ok;', '  ok++;\n  return ok;')]);
   arms.push(['omx-strip: ok written through a pointer before the return', strip.replace('  return ok;', '  *(&ok) = 1;\n  return ok;')]);
+  arms.push(['omx-strip: an early `if (rate) return 1;` before the folds', strip.replace('  int ok = 1;', '  if (rate) return 1;\n  int ok = 1;')]);
+  arms.push(['omx-trim: an early `if (rate) return 1;` before its answer', trim.replace('  c->rate = rate;', '  c->rate = rate;\n  if (rate) return 1;')]);
+  arms.push(['omx-strip: a goto past the folds', strip.replace('  int ok = 1;', '  int ok = 1;\n  goto done;').replace('  return ok;', 'done:\n  return ok;')]);
+  arms.push(['omx-strip: the comp fold inside `if (0)`', strip.replace(/(  ok &= omx_comp_instance_init\([^;]*\) != 0;)/, '  if (0)\n$1')]);
+  arms.push(['omx-strip: the comp fold inside `#if 0`', strip.replace(/(  ok &= omx_comp_instance_init\([^;]*\) != 0;)/, '#if 0\n$1\n#endif')]);
+  arms.push(['omx-strip: the comp fold inside a block comment', strip.replace(/(  ok &= omx_comp_instance_init\([^;]*\) != 0;)/, '/*\n$1\n*/')]);
+  arms.push(['omx-strip: an inner block re-declaring ok', strip.replace(/(  ok &= omx_comp_instance_init\([^;]*\) != 0;)/, '  {\n  int ok = 1;\n$1\n  }')]);
+  arms.push(['omx-strip: the comp fold deleted', strip.replace(/  ok &= omx_comp_instance_init\([^;]*\) != 0;\n/, '')]);
   arms.push(['omx-trim: its answer or-ed with a constant', trim.replace(/return (omx_trim_instance_init\([^;]*\));/, 'return $1 || sizeof(*c);')]);
   let bad = 0;
   if (initErrors(strip, 'omx-strip').length || initErrors(trim, 'omx-trim').length) { console.log('FAIL the unplanted sources are not clean'); bad = 1; }
