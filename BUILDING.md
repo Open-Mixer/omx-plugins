@@ -103,7 +103,12 @@ Makefiles and CI to it, so a step cannot fall out of both. Together they run, in
    `lv2:name` and `rdfs:label` the section's label), and each parameter a section lists carries
    `pg:group` naming it; no other port is grouped. A section a declaration with variants marks
    `"subgroups": "band"` is a group per band instead (`band<n>`, `Band <n>`: omx-eq8's Band 1 ... Band 8),
-   the panel section drawn as declared. Every group states an `lv2:displayPriority`, counted down in the
+   the panel section drawn as declared; a chain's section so marked is a group per band of the element it
+   lists (`<element id><n>`, `<element name> <n>`: omx-strip's EQ 1 ... EQ 32), and what it lists beside the
+   bands (the element's switch, its band count) stays in the section's group. `make band-groups`
+   (`tools/test/band-port-groups-check.mjs`) holds every plugin's generated TTL, read by `serdi`, to its model:
+   a band of several controls has a group of its own, shared with no other band and holding nothing else.
+   A control repeated alone (omx-geq's faders, omx-multiband's crossovers) stays in its section's group. Every group states an `lv2:displayPriority`, counted down in the
    order its first port comes, so a host showing the higher first (Zynthian) shows them in port order;
 8. **panel description** (`tools/panel-probe.c`, `tools/panel-check.mjs`): each built face is opened
    as a host opens it (the `.clap` through `clap_entry`, the LV2 bundle through lilv) and its

@@ -27,13 +27,17 @@
  *
  * `--self-test` adds the sabotage arms, each on a scratch copy of omx-eq8's TTL with one thing changed, each of which
  * must go red on its own law: two bands sharing a group, a band port with no group, a band port moved out of its
- * band's group, a group with no lv2:symbol, two groups with one symbol, and a TTL that is not Turtle.
+ * band's group, a group with no lv2:symbol, two groups with one symbol, and a TTL that is not Turtle. And the
+ * generator's arms, on a scratch copy of omx-strip's declaration (a chain: its EQ section says `"subgroups": "band"`,
+ * tools/gen.mjs chainSubgroups): as declared it writes the committed TTL; without the word its TTL is red on law 3;
+ * and the word on a section that lists no per-band control (the gate's) is refused.
  *
  * `make band-groups`, part of `make test`. It reads files only: a stale or hand-edited file is gen.mjs --check's.
  */
-import { readFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { loadDecl, pluginDirs } from '../gen.mjs';
+import { emitPluginTtl, loadDecl, pluginDirs, ROOT } from '../gen.mjs';
 import { triplesOf } from './resource-hints-check.mjs';
 
 const LV2 = 'http://lv2plug.in/ns/lv2core#';
@@ -185,6 +189,36 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
       const changed = change(text);
       const errors = changed === text ? ['the arm changed nothing'] : bandGroupErrors(d, changed);
       check(errors.some((e) => want.test(e)), `sabotage goes red: ${what}`, errors.length ? errors.slice(0, 3) : ['the check passed it']);
+    }
+    // the generator: a scratch omx-strip under the temporary directory, its declaration changed one thing at a time
+    const TMP = mkdtempSync(join(tmpdir(), 'band-port-groups-'));
+    const scratch = join(TMP, 'plugins', 'omx-strip');
+    try {
+      cpSync(join(ROOT, 'plugins', 'omx-strip'), scratch, { recursive: true, filter: (src) => !src.includes('/build') });
+      const file = join(scratch, 'omx-strip.decl.json');
+      const raw = readFileSync(file, 'utf8');
+      const strip = plugins.find((p) => p.stem === 'omx-strip');
+      const withDecl = (change) => {
+        const decl = JSON.parse(raw);
+        change(decl);
+        writeFileSync(file, JSON.stringify(decl, null, 2));
+        return loadDecl(scratch);
+      };
+      const section = (decl, key) => decl.panel.sections.find((s) => s.key === key);
+      check(emitPluginTtl(withDecl(() => {})) === ttlOf(strip), 'generator: the scratch omx-strip, as declared, writes the committed TTL (each arm below changes one thing)');
+      const unmarked = bandGroupErrors(strip, emitPluginTtl(withDecl((decl) => { delete section(decl, 'eq').subgroups; })));
+      check(unmarked.some((e) => /band 2: law 3: it shares <urn:openmixer:strip#eq> with band 1/.test(e)),
+        'generator sabotage goes red: omx-strip\'s EQ section without "subgroups": "band" writes a TTL whose bands share a group', unmarked.length ? unmarked.slice(0, 3) : ['the check passed it']);
+      let err;
+      try {
+        withDecl((decl) => { section(decl, 'gate').subgroups = 'band'; });
+      } catch (e) {
+        err = e;
+      }
+      check(err !== undefined && /section 'gate' says "subgroups": "band" and lists no per-band control of a chain element/.test(err.message),
+        'generator refuses "subgroups": "band" on a chain section that lists no per-band control', [err ? err.message.slice(0, 300) : 'loadDecl accepted it']);
+    } finally {
+      rmSync(TMP, { recursive: true, force: true });
     }
   }
   console.log(bad ? `band-port-groups: ${bad} of ${n} FAILED` : `band-port-groups: all ${n} pass`);

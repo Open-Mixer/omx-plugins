@@ -44,7 +44,8 @@
 #   make band-groups  omx-eq8's generated descriptor and TTL hold one LV2 port group per band, Band 1 ... Band 8 in band
 #                   order, each its five controls (tools/test/eq8-band-groups-test.mjs; part of `make test`)
 #                   and every plugin whose model repeats a band of several controls holds one port group per band in
-#                   its generated TTL, read by serdi, each group its lv2:symbol, lv2:name and rdfs:label
+#                   its generated TTL, read by serdi, each group its lv2:symbol, lv2:name and rdfs:label: omx-eq8, 16
+#                   and 32, omx-dyneq, omx-multiband, and omx-strip's EQ 1 ... EQ 32
 #                   (tools/test/band-port-groups-check.mjs, with its sabotage arms)
 #   make geq-widgets  omx-geq declares the fader for its 31 bands, and its panel description and generated header serve them
 #                   (tools/test/geq-widgets-test.mjs; part of `make test`)
@@ -288,7 +289,6 @@ comp-release-mode:
 # the EQ default probe is run whole while other processes build it (make -j): a fake compiler, readers a little apart
 eq-probe-race:
 	node tools/test/eq-probe-race-test.mjs
-# omx-eq8's generated descriptor and TTL hold a port group per band, HPF and LPF as before (#257)
 param-tie:
 	node tools/test/param-tie-test.mjs
 # the CLAP face reads its dirty flag acquire and publishes it release, so the audio thread never sees the flag
@@ -305,6 +305,8 @@ phaser-depth:
 	node tools/test/phaser-depth-role-test.mjs
 	node tools/test/phaser-depth-role-test.mjs --self-test
 
+# omx-eq8's generated descriptor and TTL hold a port group per band, HPF and LPF as before (#257); and every plugin
+# with a band of several controls holds a port group per band in its generated TTL
 band-groups:
 	node tools/test/eq8-band-groups-test.mjs
 	node tools/test/band-port-groups-check.mjs --self-test

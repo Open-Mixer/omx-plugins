@@ -109,7 +109,8 @@ export const CONTROL_EXTRAS = ['forKind', 'defaultRef', 'defaultId', 'defaultBan
 
 /**
  * The LV2 port groups of declaration `d` (as tools/gen.mjs loads it), in panel section order: one per section, or,
- * for a section the declaration splits (`subgroups`, tools/variants.mjs), one per subgroup and one for the section's
+ * for a section the declaration splits (`subgroups`: tools/variants.mjs for a variant, tools/gen.mjs chainSubgroups
+ * for a chain), one per subgroup and one for the section's
  * controls no subgroup holds, if any. Each is `{ key, label, path, controls, priority }`: `key` its lv2:symbol, `label`
  * its lv2:name and rdfs:label, `path` its controls' descriptor `group` (the panel section's label first, the group's
  * last; a section's own group has a one-element path), `priority` its lv2:displayPriority, the groups counted down

@@ -62,7 +62,7 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | `meters` | `meters[]`: `id` its index, `symbol` its id, `name` from it, `kind` (`gain-reduction`, `level`), `channels`, the range, unit and scale (the kernel readout's, linked in `source.from` as `data/kernels/<kernel>.json#readouts[<name>]`; a level's as declared, `dBFS`), the readout's `doc` | kept: where the face reads it (`field`, `read`, `linear`, `source`) |
 | `oracles`, `portHints` | | kept: tests, the LV2 hint pin |
 | `panel.sections[].label` | each listed control's `group` | `panel` (family, roles, section keys, order, widgets, graphs): the panel's hints |
-| `panel.sections[].subgroups` (`band`, a declaration with variants) | each band's controls' `group`, the path `[<section label>, "Band <n>"]`: the panel section first, the LV2 port group last (#257) | the panel is handed to omx-panel without it: the section is drawn as declared |
+| `panel.sections[].subgroups` (`band`, a declaration with variants or a chain) | each band's controls' `group`, the path `[<section label>, "Band <n>"]` (a chain's: `[<section label>, "<element name> <n>"]`, omx-strip's `["EQ", "EQ 1"]`): the panel section first, the LV2 port group last (#257) | the panel is handed to omx-panel without it: the section is drawn as declared |
 | `panel.roles` | each bound control's `meaning`, where the role has a meaning word (omx-panel docs/panel-layout.md) | kept: the roles themselves |
 | `console` | | kept: the console's placement, card and chip |
 | `params[i]` | `controls[i]`, `id: i` | |
