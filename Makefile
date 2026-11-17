@@ -65,6 +65,9 @@
 #   make panel-abi   include/omx_panel_description.h's structures, codes and omx_panel_get read-back are the layout
 #                    omx-clap-core's installed omx_clap_ext.h declares (tools/test/panel-abi-test.c, compile and run;
 #                    part of `make test`)
+#   make comp-published-scan  omx-comp.clap as built, read by omx-clap-scan: its four meters and four contract rows by
+#                    value, each expected value changed once and found (tools/test/published-comp-scan.py; part of
+#                    `make test` and `make test-faces`; OMX_CLAP_SCAN names the scanner)
 #   make host-contract  every shipped face opened by libomx-clap-core, whose own fingerprint of what get_info and the
 #                    contract serve must match the face's: omx_clap_host_param_contract() trusts it
 #                    (tools/test/host-contract-accept.c; part of `make test` and `make test-faces`)

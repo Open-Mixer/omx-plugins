@@ -44,13 +44,19 @@ def expect(ok, what):
         failures.append(what)
 
 
+def die(message):
+    """A setup problem, not a value that differs: the one line, exit status 2."""
+    print(message, file=sys.stderr)
+    sys.exit(2)
+
+
 def scan(prog, path, *args):
     try:
         out = subprocess.run([prog, *args, path], capture_output=True, text=True)
     except OSError as e:
-        sys.exit(f'published-comp-scan: cannot run the scanner {prog}: {e.strerror} (install omx-clap-host or pass its path)')
+        die(f'published-comp-scan: cannot run the scanner {prog}: {e.strerror} (install omx-clap-host or pass its path)')
     if out.returncode != 0:
-        sys.exit(f'published-comp-scan: {prog} {" ".join(args)} {path} exited {out.returncode}: {out.stderr.strip()[:300]}')
+        die(f'published-comp-scan: {prog} {" ".join(args)} {path} exited {out.returncode}: {out.stderr.strip()[:300]}')
     return out.stdout
 
 
@@ -60,7 +66,7 @@ def held(prog, path, METERS, CONTRACT):
     doc = json.loads(scan(prog, path, '--json'))
     plugins = [p for f in doc.get('files', []) for p in f.get('plugins', []) if p.get('id') == PLUGIN_ID]
     if len(plugins) != 1:
-        sys.exit(f'published-comp-scan: {path} holds no single {PLUGIN_ID}')
+        die(f'published-comp-scan: {path} holds no single {PLUGIN_ID}')
     p = plugins[0]
 
     # JSON: the meters, by value
@@ -137,7 +143,7 @@ def main(argv):
         print(USAGE, file=sys.stderr)
         return 2
     if not os.path.exists(args[1]):
-        sys.exit(f'published-comp-scan: {args[1]} does not exist (make -C plugins/omx-comp all builds it)')
+        die(f'published-comp-scan: {args[1]} does not exist (make -C plugins/omx-comp all builds it)')
     prog, path = args
     if selftest:
         # the control: the declared values hold, then each one changed on its own is found
