@@ -65,6 +65,9 @@
 #   make panel-abi   include/omx_panel_description.h's structures, codes and omx_panel_get read-back are the layout
 #                    omx-clap-core's installed omx_clap_ext.h declares (tools/test/panel-abi-test.c, compile and run;
 #                    part of `make test`)
+#   make comp-published-scan  omx-comp.clap as built, read by omx-clap-scan: its four meters and four contract rows by
+#                    value, each expected value changed once and found (tools/test/published-comp-scan.py; part of
+#                    `make test` and `make test-faces`; OMX_CLAP_SCAN names the scanner)
 #   make host-contract  every shipped face opened by libomx-clap-core, whose own fingerprint of what get_info and the
 #                    contract serve must match the face's: omx_clap_host_param_contract() trusts it
 #                    (tools/test/host-contract-accept.c; part of `make test` and `make test-faces`)
@@ -178,7 +181,7 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy
+.PHONY: comp-published-scan face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
@@ -197,6 +200,7 @@ test: lib units panel-words face-header role-meanings meter-binding panel-layout
 	@$(MAKE) -s panel-abi
 	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
+	@$(MAKE) -s comp-published-scan
 	@$(MAKE) -s strip-bands
 	@$(MAKE) -s test-role
 	@$(MAKE) -s package-lists
@@ -225,6 +229,7 @@ test-faces: all lib contract-union eq-probe-race
 	@$(MAKE) -s panel-abi
 	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
+	@$(MAKE) -s comp-published-scan
 	@$(MAKE) -s test-role
 	@$(MAKE) -s package-lists
 units:
@@ -415,6 +420,14 @@ meter-level:
 	  build/meter-level-digest plugins/$$f/build/$$f.clap --others build/$$f.meter-others.txt >/dev/null || exit 1; \
 	  node tools/test/meter-values-check.mjs build/$$f.meter-others.txt tools/test/$$f.meter-others.txt || exit 1; \
 	done
+# omx-comp as this tree builds it, read by omx-clap-scan (omx-clap-host's): the scan states its clap.meters/1 meters and its
+# org.openmixer.param-contract/1 entries by value, as text, JSON and field dump (tools/test/published-comp-scan.py), and
+# each expected value changed once is found. The scanner is a build dependency of the package, not built here
+OMX_CLAP_SCAN ?= omx-clap-scan
+comp-published-scan:
+	@$(MAKE) -s -C plugins/omx-comp all
+	python3 -I tools/test/published-comp-scan.py --self-test $(OMX_CLAP_SCAN) plugins/omx-comp/build/omx-comp.clap
+	python3 -I tools/test/published-comp-scan.py $(OMX_CLAP_SCAN) plugins/omx-comp/build/omx-comp.clap
 # no source, hand-written or generated, carries a copy of a function omx-dsp exports (omx-dsp-copy-check --enforce)
 dsp-copies:
 	tools/dsp-copies-check.sh
