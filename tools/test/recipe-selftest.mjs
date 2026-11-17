@@ -63,7 +63,7 @@ import { defaultPanel, emitPluginTtl, generateInstance, loadDecl, meterRows } fr
 import { hintErrors } from '../port-hints.mjs';
 import { expandVariant, variantBands } from '../variants.mjs';
 import { registerFirstContract } from '../param-contract.mjs';
-import { checkPlugin, debtGrowth, debtVerdict, gapLines, loadDebt, loadRecipe, pluginStems, recipeErrors } from '../plugin-recipe.mjs';
+import { checkPlugin, debtGrowth, debtVerdict, gapLines, growthVerdict, loadDebt, loadRecipe, pluginStems, recipeErrors } from '../plugin-recipe.mjs';
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
 const WORK = join(ROOT, 'build', 'selftest');
@@ -441,7 +441,7 @@ async function main() {
     expect(!fewer.grown, 'a debt that shrank passes the growth check');
     git(repo, 'update-ref', '-d', 'refs/remotes/origin/main');
     const none = debtGrowth(repo, loadDebt(repo));
-    expect(none.base === undefined && /no merge-base/.test(none.why), `no main to compare to is reported, never a silent pass (${none.why?.slice(0, 60)})`);
+    expect(none.base === undefined && /origin\/main/.test(none.why) && growthVerdict(none).bad === 1, `no main to compare to is refused by name, never a silent pass (${none.why?.slice(0, 60)})`);
   }
 
   // ---- 4. the recipe itself ----------------------------------------------------------------
