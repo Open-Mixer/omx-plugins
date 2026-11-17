@@ -7,11 +7,14 @@
  * rate told one element's answer from the others': a dropped element answer (`(void)omx_comp_instance_init`)
  * changes no run. This reads the source instead: in every omx_<kernel>_core_init (each plugins/*\/omx_*_core.h
  * and the templates they are generated from) every call of an `omx_*_instance_init` is returned, or folded
- * into the answer with `ok &= ... != 0`; none is discarded, and a chain's init returns `ok`.
+ * into the answer with `ok &= ... != 0`; none is discarded, and a chain's init returns `ok`. Each form is matched
+ * as the whole line (an answer or-ed with a constant, or a statement after the fold, is refused), `ok` is assigned
+ * nowhere but `int ok = 1;` and its folds, and a chain's init ends with `return ok;`.
  *
  *   node tools/test/core-init-answers-check.mjs [--self-test]
  * --self-test plants a discarded answer in each element of omx-strip's init, a discarded single-kernel answer,
- * and a chain init that returns 1: each must go red. `make core-init-answers`, part of `make test`.
+ * a chain init that returns 1, `ok = 1;` before the return and after a fold, and a single answer or-ed with a
+ * constant: each must go red. `make core-init-answers`, part of `make test`.
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -26,12 +29,18 @@ export function initErrors(src, file) {
   const calls = [...body.matchAll(/^[^\n]*omx_[\w{}]+_instance_init\([^\n]*$/gm)].map((x) => x[0].trim());
   if (!calls.length) errors.push(`${file}: its init calls no kernel instance init`);
   const chain = calls.length > 1 || /\{\{#elements\}\}/.test(body);
-  for (const line of calls) {
-    const single = /^return omx_[\w{}]+_instance_init\(.*\);$/.test(line);
-    const folded = /^(\{\{#elements\}\})?\s*ok &= omx_[\w{}]+_instance_init\(.*\) != 0;/.test(line);
-    if (!(chain ? folded : single || folded)) errors.push(`${file}: an instance init answer is discarded or not folded: ${line}`);
+  const init = String.raw`omx_[\w{}]+_instance_init\(&c->[\w{}]+, \((?:float|double|\{\{srType\}\})\)rate\)`;
+  const single = new RegExp(`^return ${init};$`);
+  const folded = new RegExp(`^(?:\\{\\{#elements\\}\\})?\\s*ok &= ${init} != 0;$`);
+  for (const line of calls)
+    if (!(chain ? folded.test(line) : single.test(line) || folded.test(line)))
+      errors.push(`${file}: an instance init answer is discarded, altered or not folded: ${line}`);
+  for (const [line] of body.matchAll(/^[^\n]*\bok\s*(?:[-+*/%|&^]|<<|>>)?=(?!=)[^\n]*$/gm)) {
+    const t = line.trim();
+    if (t !== 'int ok = 1;' && !folded.test(t)) errors.push(`${file}: the answer \`ok\` is assigned outside its folds: ${t}`);
   }
-  if (chain && !/\breturn ok;/.test(body) && !/\{\{\/elements\}\}\s*return ok;/.test(body)) errors.push(`${file}: a chain's init does not return the folded answer`);
+  const last = body.trim().split('\n').pop().trim();
+  if (chain && !/^(?:\{\{\/elements\}\})?\s*return ok;$/.test(last)) errors.push(`${file}: a chain's init does not end by returning the folded answer`);
   return errors;
 }
 
