@@ -8,15 +8,19 @@
  * changes no run. This reads the source instead: in every omx_<kernel>_core_init (each plugins/*\/omx_*_core.h
  * and the templates they are generated from) every call of an `omx_*_instance_init` is returned, or folded
  * into the answer with `ok &= ... != 0`; none is discarded, and a chain's init returns `ok`. Each form is matched
- * as the whole line (an answer or-ed with a constant, or a statement after the fold, is refused). Every line that
- * names `ok` must be one of three held forms: `int ok = 1;`, a fold, or the final `return ok;`; any other line naming
- * it is refused, so other correct forms (a fold wrapped over lines, `ok = ok && ...`, an early return) are refused
- * too and the template is the one way to write a chain init.
+ * as the whole line. EVERY line of the init body is held to the template forms, in order: `memset(c, 0, sizeof *c);`,
+ * `c->rate = rate;`, then either `return <instance init>;` or `int ok = 1;`, one fold per element, `return ok;`
+ * (blank lines aside). Any other line is refused: control flow (if, goto, an early return), a block, a
+ * preprocessor line, a comment, a second `ok`. Other correct forms are refused too: the templates are the one way to
+ * write an init. In a shipped header the answers must be exactly the core's kernel instances, in struct order (a
+ * deleted fold is refused).
  *
  *   node tools/test/core-init-answers-check.mjs [--self-test]
  * --self-test plants a discarded answer in each element of omx-strip's init, a discarded single-kernel answer,
  * a chain init that returns 1, `ok = 1;` before the return and after a fold, `ok++;` and `*(&ok) = 1;` before
- * the return, and a single answer or-ed with a constant: each must go red. `make core-init-answers`, part of `make test`.
+ * the return, a single answer or-ed with a constant, an early `if (rate) return 1;` (chain and single), a goto
+ * past the folds, a fold inside `if (0)`, `#if 0` or a block comment, an inner block re-declaring ok, and a deleted
+ * fold: each must go red. `make core-init-answers`, part of `make test`.
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -26,26 +30,33 @@ import { ROOT } from '../gen.mjs';
 export function initErrors(src, file) {
   const m = /static inline int omx_[\w{}]+_core_init\([^)]*\)\s*\{([\s\S]*?)\n\}/.exec(src);
   if (!m) return [`${file}: no \`static inline int ..._core_init\` (an init that answers nothing)`];
-  const body = m[1];
   const errors = [];
-  const calls = [...body.matchAll(/^[^\n]*omx_[\w{}]+_instance_init\([^\n]*$/gm)].map((x) => x[0].trim());
-  if (!calls.length) errors.push(`${file}: its init calls no kernel instance init`);
-  const chain = calls.length > 1 || /\{\{#elements\}\}/.test(body);
-  const init = String.raw`omx_[\w{}]+_instance_init\(&c->[\w{}]+, \((?:float|double|\{\{srType\}\})\)rate\)`;
+  const init = String.raw`omx_[\w{}]+_instance_init\(&c->([\w{}]+), \((?:float|double|\{\{srType\}\})\)rate\)`;
   const single = new RegExp(`^return ${init};$`);
   const folded = new RegExp(`^(?:\\{\\{#elements\\}\\})?\\s*ok &= ${init} != 0;$`);
-  for (const line of calls)
-    if (!(chain ? folded.test(line) : single.test(line) || folded.test(line)))
-      errors.push(`${file}: an instance init answer is discarded, altered or not folded: ${line}`);
-  const lines = body.trim().split('\n').map((l) => l.trim());
-  const last = lines[lines.length - 1];
   const finalReturn = /^(?:\{\{\/elements\}\})?\s*return ok;$/;
-  lines.forEach((t, i) => {
-    if (!/\bok\b/.test(t)) return;
-    const held = t === 'int ok = 1;' || folded.test(t) || (i === lines.length - 1 && finalReturn.test(t));
-    if (!held) errors.push(`${file}: a line names the answer \`ok\` outside its three held forms: ${t}`);
-  });
-  if (chain && !finalReturn.test(last)) errors.push(`${file}: a chain's init does not end by returning the folded answer`);
+  const lines = m[1].split('\n').map((l) => l.trim()).filter((l) => l !== '');
+  const head = ['memset(c, 0, sizeof *c);', 'c->rate = rate;'];
+  const bad = (t) => errors.push(`${file}: a line outside the template forms: ${t}`);
+  head.forEach((h, i) => { if (lines[i] !== h) bad(lines[i] ?? '(missing)'); });
+  const rest = lines.slice(head.length);
+  let answered = [];
+  if (rest.length === 1 && single.test(rest[0])) answered = [single.exec(rest[0])[1]];
+  else if (rest[0] === 'int ok = 1;' && rest.length >= 3 && finalReturn.test(rest[rest.length - 1])) {
+    for (const t of rest.slice(1, -1)) {
+      const f = folded.exec(t);
+      if (f) answered.push(f[1]);
+      else bad(t);
+    }
+  } else rest.forEach((t) => { if (!single.test(t) && !folded.test(t) && !finalReturn.test(t) && t !== 'int ok = 1;') bad(t); });
+  if (!answered.length) errors.push(`${file}: its init is not \`return <instance init>;\` nor \`int ok = 1;\`, folds, \`return ok;\``);
+  // A shipped header (not a template): its answers are exactly the core's kernel instances, in order.
+  const struct = /typedef struct \{([^}]*)\} Omx\w+Core;/.exec(src);
+  if (struct && !/\{\{/.test(m[1])) {
+    const members = [...struct[1].matchAll(/^\s*Omx\w+Instance (\w+);/gm)].map((x) => x[1]);
+    if (members.join(',') !== answered.join(','))
+      errors.push(`${file}: the answers (${answered.join(', ') || 'none'}) are not the core's kernel instances (${members.join(', ')})`);
+  }
   return errors;
 }
 
