@@ -7,7 +7,8 @@
 # omx-clap-host's, the lower layer's.
 #
 #   published-comp-scan.py <omx-clap-scan> <omx-comp.clap>
-#   published-comp-scan.py --self-test <omx-clap-scan> <omx-comp.clap>   each expected value changed once must go red
+#   published-comp-scan.py --self-test <omx-clap-scan> <omx-comp.clap>   each expected value changed once must go red, and by which readings
+#   published-comp-scan.py --help
 #
 # The field dump (--fields, docs/formats.md of plugin-hostd reads it) carries the same values under the structures'
 # own member names: meter:<n> clap_meter_info.{id,name,kind,flags,channel_count,min_value,max_value}, the kind by its enum
@@ -20,10 +21,12 @@
 # that reads neither (every omx-clap-scan up to 0.31.1) fails here, on the first missing word.
 # Exit 0 held; 1 a value missing or different (self test: a changed value was not found); 2 usage or the scan failed.
 import json
+import os
 import re
 import subprocess
 import sys
 
+USAGE = 'usage: published-comp-scan.py [--self-test | -h | --help] <omx-clap-scan> <omx-comp.clap>'
 PLUGIN_ID = 'org.openmixer.comp'
 # id, name, kind, channels: the meters as omx-comp declares them
 METERS = [(0, 'compGr', 'gain-reduction', 1), (1, 'compIn', 'level', 2), (2, 'compOut', 'level', 2),
@@ -42,7 +45,10 @@ def expect(ok, what):
 
 
 def scan(prog, path, *args):
-    out = subprocess.run([prog, *args, path], capture_output=True, text=True)
+    try:
+        out = subprocess.run([prog, *args, path], capture_output=True, text=True)
+    except OSError as e:
+        sys.exit(f'published-comp-scan: cannot run the scanner {prog}: {e.strerror} (install omx-clap-host or pass its path)')
     if out.returncode != 0:
         sys.exit(f'published-comp-scan: {prog} {" ".join(args)} {path} exited {out.returncode}: {out.stderr.strip()[:300]}')
     return out.stdout
@@ -124,14 +130,22 @@ def held(prog, path, METERS, CONTRACT):
 def main(argv):
     selftest = argv[1:2] == ['--self-test']
     args = argv[2:] if selftest else argv[1:]
+    if argv[1:2] in (['-h'], ['--help']):
+        print(USAGE)
+        return 0
     if len(args) != 2:
-        print('usage: published-comp-scan.py [--self-test] <omx-clap-scan> <omx-comp.clap>', file=sys.stderr)
+        print(USAGE, file=sys.stderr)
         return 2
+    if not os.path.exists(args[1]):
+        sys.exit(f'published-comp-scan: {args[1]} does not exist (make -C plugins/omx-comp all builds it)')
     prog, path = args
     if selftest:
         # the control: the declared values hold, then each one changed on its own is found
-        if held(prog, path, METERS, CONTRACT):
-            print('FAIL the control: the declared values do not hold')
+        control = held(prog, path, METERS, CONTRACT)
+        if control:
+            print(f'FAIL the control: the declared values do not hold on {path}:')
+            for f in control:
+                print(f'  {f}')
             return 1
         # each change, with the readings that must name it: JSON, the field dump and the text each state every value
         every = {'json', 'fields', 'text'}
@@ -141,7 +155,7 @@ def main(argv):
                 ('a meter channel count', METERS[:3] + [METERS[3][:3] + (2,)], CONTRACT, every),
                 ('a contract symbol', METERS, [CONTRACT[0][:1] + ('threshold',) + CONTRACT[0][2:]] + CONTRACT[1:], every),
                 ('a contract unit', METERS, CONTRACT[:1] + [CONTRACT[1][:2] + ('none',) + CONTRACT[1][3:]] + CONTRACT[2:], every),
-                ('a contract scale', METERS, CONTRACT[:3] + [CONTRACT[3][:3] + ('linear',)], {'json'})]
+                ('a contract scale', METERS, CONTRACT[:3] + [CONTRACT[3][:3] + ('linear',)], every)]
         bad = 0
         for what, meters, contract, readings in arms:
             named = {f.split(':', 1)[0] for f in held(prog, path, meters, contract)}
