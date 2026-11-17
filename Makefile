@@ -66,7 +66,8 @@
 #                    omx-clap-core's installed omx_clap_ext.h declares (tools/test/panel-abi-test.c, compile and run;
 #                    part of `make test`)
 #   make panel-abi-refuses  panel-abi refuses by name when omx-clap-core's omx_clap_ext.h is absent, never a compiler
-#                    error (tools/test/panel-abi-refuses-check.sh, against an include directory without it)
+#                    error (tools/test/panel-abi-refuses-check.sh, against an include directory without it; part
+#                    of `make test` and `make test-faces`)
 #   make host-contract  every shipped face opened by libomx-clap-core, whose own fingerprint of what get_info and the
 #                    contract serve must match the face's: omx_clap_host_param_contract() trusts it
 #                    (tools/test/host-contract-accept.c; part of `make test` and `make test-faces`)
