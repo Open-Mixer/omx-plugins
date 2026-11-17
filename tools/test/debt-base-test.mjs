@@ -8,6 +8,7 @@
  *
  * Each arm builds a throwaway repository holding only recipes/completeness-debt.json:
  *  - main's debt lives on a bare origin whose main is NOT in the topic checkout's refs: the check fetches it;
+ *  - a STALE origin/main (already holding the grown row) and a fetch that fails: refused, never compared;
  *  - origin/main absent and no remote to fetch from, CI unset: refused, naming origin/main;
  *  - OMX_DEBT_BASE_REF naming a ref that does not exist: refused, naming that ref;
  *  - a single-branch, depth-1 clone (the shape of a CI checkout) with its remote gone: refused.
@@ -63,6 +64,27 @@ function withRef(ref, fn) {
   git(topic, 'update-ref', '-d', 'refs/remotes/origin/main');
   const g = withRef(undefined, () => recipe.debtGrowth(topic, DEBT));
   expect(g.base === DEBT.length, `the base is fetched before it is resolved: origin/main missing from the checkout, read from the remote (${g.base ?? g.why})`);
+}
+
+// 1b. a STALE origin/main and a fetch that fails: refused, never compared with the stale base
+{
+  const src = join(WORK, 'src1b');
+  repoWithDebt(src);
+  const origin = join(WORK, 'origin1b.git');
+  execFileSync('git', ['clone', '-q', '--bare', src, origin]);
+  const topic = join(WORK, 'topic1b');
+  execFileSync('git', ['clone', '-q', origin, topic]);
+  git(topic, 'checkout', '-q', '-b', 'topic');
+  // the checkout's origin/main now points at a commit whose debt already holds a grown row ...
+  const grown = [...DEBT, { plugin: 'omx-comp', entry: 'manual-section', owedBy: 'stale' }];
+  writeFileSync(join(topic, recipe.DEBT_PATH), JSON.stringify({ debt: grown }));
+  git(topic, ...ID, 'commit', '-q', '-am', 'grown');
+  git(topic, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+  // ... and the remote cannot be reached
+  rmSync(origin, { recursive: true, force: true });
+  const g = withRef(undefined, () => recipe.debtGrowth(topic, grown));
+  const v = verdictWithoutCI(g);
+  expect(v !== null && v.bad === 1 && /origin\/main/.test(v.line) && /fetch/.test(v.line), `a stale origin/main with a failed fetch is refused by name, not compared (${v ? (v.line || 'passed: base ' + g.base).slice(0, 90) : 'no growthVerdict'})`);
 }
 
 // 2. no base and nothing to fetch it from, CI unset: refused by name
