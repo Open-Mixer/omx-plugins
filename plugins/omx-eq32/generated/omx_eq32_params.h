@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-eq32/omx-eq32.decl.json.
- * Regenerate: `make -C plugins/omx-eq32 gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-eq32 gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_eq32_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -1045,7 +1045,7 @@ static const char *const OMX_EQ32_PARAM_MODULES[OMX_EQ32_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_EQ32_PARAM_CONTRACT_VERSION 2u
+#define OMX_EQ32_PARAM_CONTRACT_VERSION 1u
 #define OMX_EQ32_PARAM_CONTRACT_FINGERPRINT "3829d7f527628dde379a6992187ca03d9c956366b98340df8f1d649056dfbe70"
 static const struct omx_param_contract_row OMX_EQ32_PARAM_CONTRACT[OMX_EQ32_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_on none */

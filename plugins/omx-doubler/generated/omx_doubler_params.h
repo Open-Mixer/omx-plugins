@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-doubler/omx-doubler.decl.json.
- * Regenerate: `make -C plugins/omx-doubler gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-doubler gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_doubler_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -88,7 +88,7 @@ static const char *const OMX_DOUBLER_PARAM_MODULES[OMX_DOUBLER_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DOUBLER_PARAM_CONTRACT_VERSION 2u
+#define OMX_DOUBLER_PARAM_CONTRACT_VERSION 1u
 #define OMX_DOUBLER_PARAM_CONTRACT_FINGERPRINT "2fe9ebb30602c04c0efc688379faa74d6743ac48dc3aa95f7f184840477c1631"
 static const struct omx_param_contract_row OMX_DOUBLER_PARAM_CONTRACT[OMX_DOUBLER_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* voices none */

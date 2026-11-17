@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-clipper/omx-clipper.decl.json.
- * Regenerate: `make -C plugins/omx-clipper gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-clipper gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_clipper_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -64,7 +64,7 @@ static const char *const OMX_CLIPPER_PARAM_MODULES[OMX_CLIPPER_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_CLIPPER_PARAM_CONTRACT_VERSION 2u
+#define OMX_CLIPPER_PARAM_CONTRACT_VERSION 1u
 #define OMX_CLIPPER_PARAM_CONTRACT_FINGERPRINT "2ca379ddafa020c0e207a19f14c068e2fc66d63ca27faad5da176cbd84ccf43a"
 static const struct omx_param_contract_row OMX_CLIPPER_PARAM_CONTRACT[OMX_CLIPPER_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* driveDb db */

@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-multiband/omx-multiband.decl.json.
- * Regenerate: `make -C plugins/omx-multiband gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-multiband gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_mbcomp_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -298,7 +298,7 @@ static const char *const OMX_MBCOMP_PARAM_MODULES[OMX_MBCOMP_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_MBCOMP_PARAM_CONTRACT_VERSION 3u
+#define OMX_MBCOMP_PARAM_CONTRACT_VERSION 1u
 #define OMX_MBCOMP_PARAM_CONTRACT_FINGERPRINT "5f536368c7d13f57ab9e11c675ff26d31c7b2e6e75ed4094e6740fde16dbfbf4"
 static const struct omx_param_contract_row OMX_MBCOMP_PARAM_CONTRACT[OMX_MBCOMP_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bands none */

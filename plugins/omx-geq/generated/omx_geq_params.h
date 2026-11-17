@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-geq/omx-geq.decl.json.
- * Regenerate: `make -C plugins/omx-geq gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-geq gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_geq_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -232,7 +232,7 @@ static const char *const OMX_GEQ_PARAM_MODULES[OMX_GEQ_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_GEQ_PARAM_CONTRACT_VERSION 2u
+#define OMX_GEQ_PARAM_CONTRACT_VERSION 1u
 #define OMX_GEQ_PARAM_CONTRACT_FINGERPRINT "ceff1b2ff48a000abfc1b36aa9bae9d3ebf21f7b192230848fc84f398b9b1317"
 static const struct omx_param_contract_row OMX_GEQ_PARAM_CONTRACT[OMX_GEQ_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* band01 db */

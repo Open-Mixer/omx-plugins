@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-plosive/omx-plosive.decl.json.
- * Regenerate: `make -C plugins/omx-plosive gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-plosive gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_plosive_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -100,7 +100,7 @@ static const char *const OMX_PLOSIVE_PARAM_MODULES[OMX_PLOSIVE_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_PLOSIVE_PARAM_CONTRACT_VERSION 2u
+#define OMX_PLOSIVE_PARAM_CONTRACT_VERSION 1u
 #define OMX_PLOSIVE_PARAM_CONTRACT_FINGERPRINT "2a41eecfe15389d0caf8ba2240c4b18cef9ddbb34a843f86783be0ea67fe9ea3"
 static const struct omx_param_contract_row OMX_PLOSIVE_PARAM_CONTRACT[OMX_PLOSIVE_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* consonantDb db */

@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-trim/omx-trim.decl.json.
- * Regenerate: `make -C plugins/omx-trim gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-trim gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_trim_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */

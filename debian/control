@@ -58,7 +58,6 @@ Description: OpenMixer delay, drive, EQ, strip, gate and effects (CLAP, LV2)
 Package: omx-plugins-clap
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Breaks: omx-clap-host (<< 0.23.0~)
 Description: OpenMixer delay, drive, EQ, strip, gate and effects as CLAP plugins
  The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
  EQ, channel strip, keyed gate and effects (chorus, flanger, phaser, tremolo,
@@ -100,8 +99,6 @@ Package: omx-plugins-contract
 Architecture: all
 Multi-Arch: foreign
 Depends: omx-contract-data (>= 3.13.0~), omx-contract-data (<< 4~), ${misc:Depends}
-Breaks: omx-plugins-dev (<< ${source:Version})
-Replaces: omx-plugins-dev (<< ${source:Version})
 Description: OpenMixer plugins' descriptors in omx-contract's contract directory
  Each OpenMixer plugin's descriptor, its parameters in omx-contract's words, and
  the manifest naming this release, as files in omx-contract's contract

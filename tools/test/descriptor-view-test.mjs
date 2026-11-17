@@ -21,10 +21,10 @@
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { DESCRIPTOR_SCHEMA_FLOOR, descriptorFile, descriptorOf, descriptorText, parseLink } from '../descriptor.mjs';
+import { descriptorFile, descriptorOf, descriptorText, parseLink } from '../descriptor.mjs';
 import { clapFeatureValue } from '../format-tables.mjs';
 import { ROOT, loadDecl, pluginDirs } from '../gen.mjs';
-import { OWNERS, compareVersions, findName, installedDataDir, items, locateContract } from '../omx-contract.mjs';
+import { OWNERS, findName, installedDataDir, items, locateContract } from '../omx-contract.mjs';
 import { validate } from '../schema-validate.mjs';
 
 let bad = 0, n = 0;
@@ -83,8 +83,7 @@ const where = locateContract();
 // beside the render read, else in the installed data directory (a union render carries no schema)
 const schemaFile = [where.dir, installedDataDir()].filter(Boolean).map((d) => join(d, 'omx-contract.schema.json')).find((f) => existsSync(f));
 const schema = schemaFile && existsSync(schemaFile) ? JSON.parse(readFileSync(schemaFile, 'utf8')) : undefined;
-// from the release that added them on, the descriptor words are always checked: a schema not found is red
-const carriesWords = Boolean(where.version) && compareVersions(where.version, DESCRIPTOR_SCHEMA_FLOOR) >= 0;
+// the descriptor words are always checked: a schema not found is red
 if (schema?.$defs?.descriptor) {
   for (const dir of described) {
     const stem = dir.split('/').pop();
@@ -93,13 +92,12 @@ if (schema?.$defs?.descriptor) {
   const broken = JSON.parse(readFileSync(join(described[0], descriptorFile(described[0].split('/').pop())), 'utf8'));
   broken.controls[0].ids = ['a'];
   check('arm: a travel carrying choice ids breaks the descriptor words', validate(schema, schema.$defs.descriptor, broken).length > 0, true);
-} else if (carriesWords) check(`omx-contract ${where.version} carries the descriptor words: its schema is found and holds $defs.descriptor`, schemaFile ? 'no $defs.descriptor' : 'no omx-contract.schema.json', 'found');
-else console.log(`NOTE descriptor-view: omx-contract ${where.version ?? '(none)'} predates the descriptor words (${DESCRIPTOR_SCHEMA_FLOOR}); its schema holds no descriptor`);
+} else check(`omx-contract ${where.version ?? '(none)'} carries the descriptor words: its schema is found and holds $defs.descriptor`, schemaFile ? 'no $defs.descriptor' : 'no omx-contract.schema.json', 'found');
 
 // the owners a descriptor's links name come with the render: read through OMX_CONTRACT_DIR alone, with no
 // installed omx-contract, a copy of the render with its owners.json gives the same descriptors, and one
 // without gives others
-if (carriesWords) {
+{
   const first = described[0], firstStem = first.split('/').pop();
   const lone = (dir) => {
     const r = spawnSync(process.execPath, ['--input-type=module', '-e', `

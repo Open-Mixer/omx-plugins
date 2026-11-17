@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-dyneq/omx-dyneq.decl.json.
- * Regenerate: `make -C plugins/omx-dyneq gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-dyneq gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_dyneq_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -484,7 +484,7 @@ static const char *const OMX_DYNEQ_PARAM_MODULES[OMX_DYNEQ_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DYNEQ_PARAM_CONTRACT_VERSION 3u
+#define OMX_DYNEQ_PARAM_CONTRACT_VERSION 1u
 #define OMX_DYNEQ_PARAM_CONTRACT_FINGERPRINT "ae87b93cf0445f027d461a70139753d7fd71282bda7375d7a0c9863e443fb424"
 static const struct omx_param_contract_row OMX_DYNEQ_PARAM_CONTRACT[OMX_DYNEQ_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bandOn1 none */

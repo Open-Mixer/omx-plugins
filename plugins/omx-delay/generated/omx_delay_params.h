@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-delay/omx-delay.decl.json.
- * Regenerate: `make -C plugins/omx-delay gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-delay gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_delay_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -184,7 +184,7 @@ static const char *const OMX_DELAY_PARAM_MODULES[OMX_DELAY_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DELAY_PARAM_CONTRACT_VERSION 2u
+#define OMX_DELAY_PARAM_CONTRACT_VERSION 1u
 #define OMX_DELAY_PARAM_CONTRACT_FINGERPRINT "5d68c368c9182981147b3872a22fa1e47097e14a683897a35f7e806e1be2d4e8"
 static const struct omx_param_contract_row OMX_DELAY_PARAM_CONTRACT[OMX_DELAY_PARAM_COUNT] = {
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* fxDelayTime ms */

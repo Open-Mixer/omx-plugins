@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-comp/omx-comp.decl.json.
- * Regenerate: `make -C plugins/omx-comp gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-comp gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_comp_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -166,7 +166,7 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_COMP_PARAM_CONTRACT_VERSION 4u
+#define OMX_COMP_PARAM_CONTRACT_VERSION 1u
 #define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "406476383bdf2dc44974fcecfa00d20f98fa03c0930b474b4a7443b39c5eaa05"
 static const struct omx_param_contract_row OMX_COMP_PARAM_CONTRACT[OMX_COMP_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* thresholdDb db */

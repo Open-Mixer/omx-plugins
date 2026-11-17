@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-keyed-gate/omx-keyed-gate.decl.json.
- * Regenerate: `make -C plugins/omx-keyed-gate gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-keyed-gate gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_gate_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -118,7 +118,7 @@ static const char *const OMX_GATE_PARAM_MODULES[OMX_GATE_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_GATE_PARAM_CONTRACT_VERSION 3u
+#define OMX_GATE_PARAM_CONTRACT_VERSION 1u
 #define OMX_GATE_PARAM_CONTRACT_FINGERPRINT "5b1c1de696eb5a9be6973c2ca62cc1de55f797d360193e760b5f6923b4f64db4"
 static const struct omx_param_contract_row OMX_GATE_PARAM_CONTRACT[OMX_GATE_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* key_external none */

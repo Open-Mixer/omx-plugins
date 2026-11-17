@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-reverb/omx-reverb.decl.json.
- * Regenerate: `make -C plugins/omx-reverb gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-reverb gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_reverb_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -178,7 +178,7 @@ static const char *const OMX_REVERB_PARAM_MODULES[OMX_REVERB_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_REVERB_PARAM_CONTRACT_VERSION 3u
+#define OMX_REVERB_PARAM_CONTRACT_VERSION 1u
 #define OMX_REVERB_PARAM_CONTRACT_FINGERPRINT "4ba02d00b3f036e5c1ef5382391c23bfdc4d4d4263923d9a05f5493f40a1eaf8"
 static const struct omx_param_contract_row OMX_REVERB_PARAM_CONTRACT[OMX_REVERB_PARAM_COUNT] = {
   { 14u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* plateModDepth pc */

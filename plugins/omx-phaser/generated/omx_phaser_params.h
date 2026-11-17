@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-phaser/omx-phaser.decl.json.
- * Regenerate: `make -C plugins/omx-phaser gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-phaser gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_phaser_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -82,7 +82,7 @@ static const char *const OMX_PHASER_PARAM_MODULES[OMX_PHASER_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_PHASER_PARAM_CONTRACT_VERSION 2u
+#define OMX_PHASER_PARAM_CONTRACT_VERSION 1u
 #define OMX_PHASER_PARAM_CONTRACT_FINGERPRINT "1513b4b4271dbe16d78fec1f7b0b3c47902ad8743df5b64bb96c65021889d513"
 static const struct omx_param_contract_row OMX_PHASER_PARAM_CONTRACT[OMX_PHASER_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* rateHz hz */
