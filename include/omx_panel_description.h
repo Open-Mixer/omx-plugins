@@ -68,21 +68,13 @@ enum omx_clap_panel_widget { OMX_PANEL_WIDGETS(OMX_CLAP_PANEL_WIDGETS_ENUMERATOR
 #define OMX_CLAP_PANEL_DISPLAY_KINDS_ENUMERATOR(code, word, id) OMX_CLAP_DISPLAY_##id = (code),
 enum omx_clap_panel_display_kind { OMX_PANEL_DISPLAY_KINDS(OMX_CLAP_PANEL_DISPLAY_KINDS_ENUMERATOR) };
 
-/** Where a display's data comes from. */
-enum omx_clap_panel_display_source {
-  OMX_CLAP_DISPLAY_FROM_FAMILY = 0,
-  OMX_CLAP_DISPLAY_FROM_METERS = 1,
-  OMX_CLAP_DISPLAY_FROM_GAIN_ADJUSTMENT = 2,
-  OMX_CLAP_DISPLAY_FROM_CURVE = 3,
-};
+/** Where a display's data comes from; omx-contract's PANEL_DISPLAY_SOURCES. */
+#define OMX_CLAP_PANEL_DISPLAY_SOURCES_ENUMERATOR(code, word, id) OMX_CLAP_DISPLAY_FROM_##id = (code),
+enum omx_clap_panel_display_source { OMX_PANEL_DISPLAY_SOURCES(OMX_CLAP_PANEL_DISPLAY_SOURCES_ENUMERATOR) };
 
-/** Where an instance sits: the clap.track-info/1 flags, read as one value. */
-enum omx_clap_panel_placement {
-  OMX_CLAP_PLACEMENT_INSERT = 0,
-  OMX_CLAP_PLACEMENT_RETURN = 1,
-  OMX_CLAP_PLACEMENT_BUS = 2,
-  OMX_CLAP_PLACEMENT_MASTER = 3,
-};
+/** Where an instance sits: the clap.track-info/1 flags, read as one value; omx-contract's PANEL_PLACEMENTS. */
+#define OMX_CLAP_PANEL_PLACEMENTS_ENUMERATOR(code, word, id) OMX_CLAP_PLACEMENT_##id = (code),
+enum omx_clap_panel_placement { OMX_PANEL_PLACEMENTS(OMX_CLAP_PANEL_PLACEMENTS_ENUMERATOR) };
 
 typedef struct omx_clap_panel_section {
   char key[OMX_CLAP_PANEL_KEY_SIZE];
