@@ -62,6 +62,9 @@
 #                    plugins are built for (tools/test/meters-abi-test.c, compile and run; part of `make test`)
 #   make param-contract-abi  include/omx_param_contract.h's extension table and entry are the layout omx-clap-core's
 #                    omx_clap_ext.h reads (tools/test/param-contract-abi-test.c, compile and run; part of `make test`)
+#   make panel-abi   include/omx_panel_description.h's structures, codes and omx_panel_get read-back are the layout
+#                    omx-clap-core's installed omx_clap_ext.h declares (tools/test/panel-abi-test.c, compile and run;
+#                    part of `make test`)
 #   make host-contract  every shipped face opened by libomx-clap-core, whose own fingerprint of what get_info and the
 #                    contract serve must match the face's: omx_clap_host_param_contract() trusts it
 #                    (tools/test/host-contract-accept.c; part of `make test` and `make test-faces`)
@@ -174,7 +177,7 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode backcompat-removed eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi host-contract test-split test-heavy
+.PHONY: face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode backcompat-removed eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi host-contract test-split test-heavy
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
@@ -189,6 +192,7 @@ test: lib units panel-words face-header role-meanings meter-binding panel-layout
 	@$(MAKE) -s presets-figures
 	@$(MAKE) -s meters-abi
 	@$(MAKE) -s param-contract-abi
+	@$(MAKE) -s panel-abi
 	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
 	@$(MAKE) -s strip-bands
@@ -215,6 +219,7 @@ test-faces: all lib contract-union eq-probe-race
 	@$(MAKE) -s lib-test
 	@$(MAKE) -s meters-abi
 	@$(MAKE) -s param-contract-abi
+	@$(MAKE) -s panel-abi
 	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
 	@$(MAKE) -s test-role
@@ -366,6 +371,11 @@ param-contract-abi:
 	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-contract omx-clap-core clap) -o build/param-contract-abi-test tools/test/param-contract-abi-test.c
 	build/param-contract-abi-test
 	@echo "ok   org.openmixer.param-contract/1 as omx-clap-core reads it: id, sizeof and offsetof"
+panel-abi:
+	@mkdir -p build
+	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/panel-abi-test tools/test/panel-abi-test.c
+	build/panel-abi-test
+	@echo "ok   org.openmixer.panel-description/1 as omx-clap-core declares it: id, codes, sizeof, offsetof and the omx_panel_get read-back"
 host-contract: all
 	@mkdir -p build
 	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/host-contract-accept tools/test/host-contract-accept.c $(shell $(PKG_CONFIG) --libs omx-clap-core)

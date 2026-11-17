@@ -9,7 +9,7 @@
       "param-tie", "face-ids", "comp-release-mode", "backcompat-removed", "strip-visible-when", "face-dirty-order", "test-split"
     ],
     "steps": [
-      "per-plugin test", "presets-figures", "lib-test", "hints", "manual", "presets", "meters-abi", "param-contract-abi",
+      "per-plugin test", "presets-figures", "lib-test", "hints", "manual", "presets", "meters-abi", "param-contract-abi", "panel-abi",
       "host-contract", "meter-level", "strip-bands", "test-role", "package-lists"
     ]
   },
