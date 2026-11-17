@@ -427,10 +427,13 @@ async function main() {
     // the debt against its merge-base: a throwaway repository whose origin/main holds today's debt
     const repo = join(WORK, 'growth');
     copyTree(repo);
-    git(repo, 'init', '-q');
+    git(repo, 'init', '-q', '-b', 'main');
     git(repo, 'add', '-A');
     git(repo, 'commit', '-q', '-m', 'main');
-    git(repo, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+    // a real origin: the growth check fetches its base and refuses one it cannot refresh
+    execFileSync('git', ['clone', '-q', '--bare', repo, join(WORK, 'growth-origin.git')]);
+    git(repo, 'remote', 'add', 'origin', join(WORK, 'growth-origin.git'));
+    git(repo, 'fetch', '-q', 'origin');
     git(repo, 'checkout', '-q', '-b', 'topic');
     const level = debtGrowth(repo, loadDebt(repo));
     expect(level.base === loadDebt(repo).length && !level.grown, `the debt as main holds it has not grown (${level.base} entries at the merge-base)`);
@@ -439,7 +442,7 @@ async function main() {
     expect(grew.grown && grew.added.join() === 'omx-drive manual-section', `sabotage: a debt entry added since main fails the growth check (${grew.added.join()})`);
     const fewer = debtGrowth(repo, loadDebt(repo).slice(1));
     expect(!fewer.grown, 'a debt that shrank passes the growth check');
-    git(repo, 'update-ref', '-d', 'refs/remotes/origin/main');
+    git(repo, 'remote', 'remove', 'origin');
     const none = debtGrowth(repo, loadDebt(repo));
     expect(none.base === undefined && /origin\/main/.test(none.why) && growthVerdict(none).bad === 1, `no main to compare to is refused by name, never a silent pass (${none.why?.slice(0, 60)})`);
   }
