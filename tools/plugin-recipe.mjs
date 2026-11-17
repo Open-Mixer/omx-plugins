@@ -635,7 +635,8 @@ export function debtVerdict(reports, debt, known = reports.map((r) => r.stem)) {
 /**
  * The debt only shrinks: the entries it holds now against the ones at the merge-base with
  * `origin/main` (OMX_DEBT_BASE_REF overrides the ref). The base is fetched first (a remote ref,
- * `<remote>/<branch>`), then resolved with `git rev-parse -q --verify`. `added` lists the entries
+ * `<remote>/<branch>`; a fetch that fails is refused, since the ref left behind may be stale), then
+ * resolved with `git rev-parse -q --verify`. `added` lists the entries
  * the base did not hold; `grown` is set when the debt has MORE entries than the base, which fails
  * (a gap paid and another added in the same change keeps the count and is caught as a new gap by
  * debtVerdict). `base` is undefined, with `why` naming the ref, when the base does not resolve,
@@ -654,7 +655,8 @@ export function debtGrowth(root, debt) {
       git('fetch', '-q', remote[1], `+refs/heads/${remote[2]}:refs/remotes/${remote[1]}/${remote[2]}`);
       fetched = `fetched from ${remote[1]}`;
     } catch (e) {
-      fetched = `could not be fetched: ${firstLine(e)}`;
+      // a remote ref the fetch could not refresh may be stale: comparing with it could pass a grown debt
+      return refused(`could not be fetched from ${remote[1]} (${firstLine(e)}): a stale remote-tracking ref is not a base`);
     }
   }
   let tip = '';
