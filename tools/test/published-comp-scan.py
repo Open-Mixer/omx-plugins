@@ -30,7 +30,7 @@ METERS = [(0, 'compGr', 'gain-reduction', 1), (1, 'compIn', 'level', 2), (2, 'co
           (3, 'compKey', 'level', 1)]
 # parameter name, contract symbol, unit, scale: the parameters the panel's dynamics roles read (Ratio's unit is ratio,
 # 258, from omx-plugins 0.19.3: before it the unit was none and the dynamics role withheld)
-CONTRACT = [('Threshold', 'thresholdDb', 'db', 'stepped'), ('Ratio', 'ratio', 'none', 'linear'),
+CONTRACT = [('Threshold', 'thresholdDb', 'db', 'stepped'), ('Ratio', 'ratio', 'ratio', 'linear'),
             ('Attack', 'attackMs', 'ms', 'linear'), ('Release', 'releaseMs', 'ms', 'stepped')]
 
 failures = []
