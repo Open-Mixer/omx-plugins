@@ -107,7 +107,8 @@
 #   make install-devel   the public headers other projects include: $(INCLUDEDIR)/omx-plugins/*.h,
 #                   and $(LIBDIR)/libomxplugins.a with $(LIBDIR)/pkgconfig/omxplugins.pc
 #   make clap-validate  clap-validator on every built .clap (tools/clap-validate.sh): one JSON report each in build/clap-validator;
-#                   the factory presets must be installed (make install-presets); in CI a failed test fails the job
+#                   the factory presets must be installed (make install-presets); in CI a failed test fails the job, except the one
+#                   accepted failure (activate refusing a rate outside the nine oracle rates; tools/clap-validate-summary.mjs), which is printed as `accepted`
 #   make release-version  every generated header, descriptor and LV2 plugin file carries VERSION, with its sabotage arms
 #                   (tools/test/release-version-check.mjs; part of `make test`)
 #   make version    the release version, the one packaging/omx-plugins.spec and debian/changelog carry
@@ -180,11 +181,11 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: comp-published-scan face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order param-contract-abi host-contract test-split test-heavy
+.PHONY: comp-published-scan face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib units panel-words face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order test-split
+test: lib units panel-words face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers test-split
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s presets-figures
@@ -194,6 +195,7 @@ test: lib units panel-words face-header role-meanings meter-binding panel-layout
 	@$(MAKE) -s presets
 	@$(MAKE) -s presets-figures
 	@$(MAKE) -s meters-abi
+	@$(MAKE) -s lv2-refuse-rate
 	@$(MAKE) -s param-contract-abi
 	@$(MAKE) -s panel-abi
 	@$(MAKE) -s host-contract
@@ -222,6 +224,7 @@ test-heavy: lib
 test-faces: all lib contract-union eq-probe-race
 	@$(MAKE) -s lib-test
 	@$(MAKE) -s meters-abi
+	@$(MAKE) -s lv2-refuse-rate
 	@$(MAKE) -s param-contract-abi
 	@$(MAKE) -s panel-abi
 	@$(MAKE) -s host-contract
@@ -297,6 +300,15 @@ param-tie:
 # before the values (weak-memory targets), with its sabotage arms
 face-dirty-order:
 	node tools/test/face-dirty-order-check.mjs --self-test
+# every core's init answers 1 only when every kernel instance it holds took the rate: a chain's elements accept almost
+# the same rates, so no rate shows a dropped element answer and the source is read instead, with its sabotage arms
+core-init-answers:
+	node tools/test/core-init-answers-check.mjs --self-test
+# the shared LV2 face refuses a rate outside the 32-bit rate every core holds, and a rate the core's own answer refuses
+lv2-refuse-rate:
+	@mkdir -p build
+	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags lv2 omx-clap-core) -o build/lv2-refuse-rate-test tools/test/lv2-refuse-rate-test.c lib/omx_lv2_face.c -lm
+	build/lv2-refuse-rate-test
 # make test and make test-heavy together run every check tools/test/test-split.json lists, each in its own target,
 # and CI runs the heavy set on every pull request, every shard (tools/test/test-split-check.mjs, its sabotage arms)
 test-split:
