@@ -38,6 +38,15 @@ static const char *const OMX_LIMITER_PARAM_MODULES[OMX_LIMITER_PARAM_COUNT] = {
   "Limiter",
 };
 
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+
+static const char *const *const OMX_LIMITER_PARAM_LABELS[OMX_LIMITER_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+};
+
 /* One macro per declared bound: what a C face reads where a constant is needed. */
 #define OMX_LIMITER_PARAM_CEILING_DB_MIN -12.0f
 #define OMX_LIMITER_PARAM_CEILING_DB_MAX 0.0f

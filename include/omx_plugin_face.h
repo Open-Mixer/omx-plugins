@@ -69,6 +69,9 @@ struct omx_face {
   uint32_t param_count;
   const omx_plugin_param *params;
   const char *const *modules;
+  /** Each parameter's value texts, one per whole step from its min (a choice's labels, OMX_PLUGIN_PARAM_CHOICE); NULL
+   * for a travel and a toggle. The CLAP face answers them to value_to_text and reads them in text_to_value. */
+  const char *const *const *labels;
   /* org.openmixer.panel-description/1 and clap.remote-controls */
   const struct omx_panel_rows *panel;
   const struct omx_panel_page_row *pages;
@@ -100,7 +103,8 @@ struct omx_face {
   .clap_id = OMX_##K##_CLAP_ID, .name = OMX_##K##_NAME, .vendor = OMX_##K##_VENDOR, .url = OMX_##K##_URL,          \
   .version = OMX_##K##_VERSION, .description = OMX_##K##_DESCRIPTION, .lv2_uri = OMX_##K##_LV2_URI,                \
   .decl_source = OMX_##K##_DECL_SOURCE, .decl_digest = OMX_##K##_DECL_DIGEST, .param_count = OMX_##K##_PARAM_COUNT, \
-  .params = OMX_##K##_PARAMS, .modules = OMX_##K##_PARAM_MODULES, .panel = &OMX_##K##_PANEL,                        \
+  .params = OMX_##K##_PARAMS, .modules = OMX_##K##_PARAM_MODULES, .labels = OMX_##K##_PARAM_LABELS,                 \
+  .panel = &OMX_##K##_PANEL,                                                                                        \
   .pages = OMX_##K##_PANEL_PAGES, .page_count = OMX_##K##_PANEL_PAGE_COUNT,                                         \
   .contract_version = OMX_##K##_PARAM_CONTRACT_VERSION, .contract_fingerprint = OMX_##K##_PARAM_CONTRACT_FINGERPRINT, \
   .contract = OMX_##K##_PARAM_CONTRACT, .hints = &OMX_##K##_RESOURCE_HINTS

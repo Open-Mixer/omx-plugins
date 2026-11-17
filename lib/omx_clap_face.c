@@ -308,6 +308,9 @@ static bool g_params_info(const clap_plugin_t *p, uint32_t i, clap_param_info_t 
     snprintf(info->name, sizeof info->name, "%s", "Bypass");
   } else {
     if (g->face->params[i].flags & (OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_TOGGLE)) info->flags |= CLAP_PARAM_IS_STEPPED;
+    /* a choice is CLAP's enumeration: a text per whole step (value_to_text), so a host reads a choice, never a stepped
+     * travel or, over 0..1, a toggle (omx-contract docs/descriptors.md, "A scanned CLAP parameter's kind") */
+    if (g->face->params[i].flags & OMX_PLUGIN_PARAM_CHOICE) info->flags |= CLAP_PARAM_IS_ENUM | CLAP_PARAM_IS_STEPPED;
     snprintf(info->name, sizeof info->name, "%s", g->face->params[i].name);
     snprintf(info->module, sizeof info->module, "%s", g->face->modules[i]);
   }
@@ -326,18 +329,38 @@ static bool g_params_value(const clap_plugin_t *p, clap_id id, double *out) {
   return true;
 }
 
+/** A choice's labels (the face's table), or NULL for a travel, a toggle and the host's bypass. */
+static const char *const *g_labels(const G *g, uint32_t i) {
+  return i < G_DECLARED(g) && g->face->labels ? g->face->labels[i] : NULL;
+}
+
 static bool g_params_to_text(const clap_plugin_t *p, clap_id id, double v, char *out, uint32_t size) {
   const G *g = G_OF(p);
   const uint32_t i = g_slot(g, id);
   if (i == G_NO_SLOT) return false;
+  const char *const *labels = g_labels(g, i);
+  if (labels) {
+    const double at = (double)(long)(v >= 0.0 ? v + 0.5 : v - 0.5) - (double)g->face->params[i].min;
+    if (at < 0.0 || at > (double)(g->face->params[i].max - g->face->params[i].min)) return false;
+    snprintf(out, size, "%s", labels[(size_t)at]);
+    return true;
+  }
   const char *unit = i < G_DECLARED(g) ? g->face->params[i].unit : "";
   snprintf(out, size, unit[0] ? "%g %s" : "%g", v, unit);
   return true;
 }
 
 static bool g_params_from_text(const clap_plugin_t *p, clap_id id, const char *text, double *out) {
+  const G *g = G_OF(p);
+  const uint32_t i = g_slot(g, id);
   char *end = NULL;
-  if (g_slot(G_OF(p), id) == G_NO_SLOT || !text) return false;
+  if (i == G_NO_SLOT || !text) return false;
+  const char *const *labels = g_labels(g, i);
+  if (labels) {
+    const uint32_t steps = (uint32_t)(g->face->params[i].max - g->face->params[i].min) + 1u;
+    for (uint32_t k = 0; k < steps; k++)
+      if (strcmp(labels[k], text) == 0) return *out = (double)g->face->params[i].min + (double)k, true;
+  }
   *out = strtod(text, &end);
   return end != text;
 }
