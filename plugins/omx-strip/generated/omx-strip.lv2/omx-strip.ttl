@@ -2532,210 +2532,210 @@ lv2:displayPriority
     a pg:Group ;
     lv2:symbol "eq5" ;
     lv2:name "EQ 5" ;
-    lv2:displayPriority 28 ;
+    lv2:displayPriority 30 ;
     rdfs:label "EQ 5" .
 
 <urn:openmixer:strip#eq6>
     a pg:Group ;
     lv2:symbol "eq6" ;
     lv2:name "EQ 6" ;
-    lv2:displayPriority 27 ;
+    lv2:displayPriority 29 ;
     rdfs:label "EQ 6" .
 
 <urn:openmixer:strip#eq7>
     a pg:Group ;
     lv2:symbol "eq7" ;
     lv2:name "EQ 7" ;
-    lv2:displayPriority 26 ;
+    lv2:displayPriority 28 ;
     rdfs:label "EQ 7" .
 
 <urn:openmixer:strip#eq8>
     a pg:Group ;
     lv2:symbol "eq8" ;
     lv2:name "EQ 8" ;
-    lv2:displayPriority 25 ;
+    lv2:displayPriority 27 ;
     rdfs:label "EQ 8" .
 
 <urn:openmixer:strip#eq9>
     a pg:Group ;
     lv2:symbol "eq9" ;
     lv2:name "EQ 9" ;
-    lv2:displayPriority 24 ;
+    lv2:displayPriority 26 ;
     rdfs:label "EQ 9" .
 
 <urn:openmixer:strip#eq10>
     a pg:Group ;
     lv2:symbol "eq10" ;
     lv2:name "EQ 10" ;
-    lv2:displayPriority 23 ;
+    lv2:displayPriority 25 ;
     rdfs:label "EQ 10" .
 
 <urn:openmixer:strip#eq11>
     a pg:Group ;
     lv2:symbol "eq11" ;
     lv2:name "EQ 11" ;
-    lv2:displayPriority 22 ;
+    lv2:displayPriority 24 ;
     rdfs:label "EQ 11" .
 
 <urn:openmixer:strip#eq12>
     a pg:Group ;
     lv2:symbol "eq12" ;
     lv2:name "EQ 12" ;
-    lv2:displayPriority 21 ;
+    lv2:displayPriority 23 ;
     rdfs:label "EQ 12" .
 
 <urn:openmixer:strip#eq13>
     a pg:Group ;
     lv2:symbol "eq13" ;
     lv2:name "EQ 13" ;
-    lv2:displayPriority 20 ;
+    lv2:displayPriority 22 ;
     rdfs:label "EQ 13" .
 
 <urn:openmixer:strip#eq14>
     a pg:Group ;
     lv2:symbol "eq14" ;
     lv2:name "EQ 14" ;
-    lv2:displayPriority 19 ;
+    lv2:displayPriority 21 ;
     rdfs:label "EQ 14" .
 
 <urn:openmixer:strip#eq15>
     a pg:Group ;
     lv2:symbol "eq15" ;
     lv2:name "EQ 15" ;
-    lv2:displayPriority 18 ;
+    lv2:displayPriority 20 ;
     rdfs:label "EQ 15" .
 
 <urn:openmixer:strip#eq16>
     a pg:Group ;
     lv2:symbol "eq16" ;
     lv2:name "EQ 16" ;
-    lv2:displayPriority 17 ;
+    lv2:displayPriority 19 ;
     rdfs:label "EQ 16" .
 
 <urn:openmixer:strip#eq17>
     a pg:Group ;
     lv2:symbol "eq17" ;
     lv2:name "EQ 17" ;
-    lv2:displayPriority 16 ;
+    lv2:displayPriority 18 ;
     rdfs:label "EQ 17" .
 
 <urn:openmixer:strip#eq18>
     a pg:Group ;
     lv2:symbol "eq18" ;
     lv2:name "EQ 18" ;
-    lv2:displayPriority 15 ;
+    lv2:displayPriority 17 ;
     rdfs:label "EQ 18" .
 
 <urn:openmixer:strip#eq19>
     a pg:Group ;
     lv2:symbol "eq19" ;
     lv2:name "EQ 19" ;
-    lv2:displayPriority 14 ;
+    lv2:displayPriority 16 ;
     rdfs:label "EQ 19" .
 
 <urn:openmixer:strip#eq20>
     a pg:Group ;
     lv2:symbol "eq20" ;
     lv2:name "EQ 20" ;
-    lv2:displayPriority 13 ;
+    lv2:displayPriority 15 ;
     rdfs:label "EQ 20" .
 
 <urn:openmixer:strip#eq21>
     a pg:Group ;
     lv2:symbol "eq21" ;
     lv2:name "EQ 21" ;
-    lv2:displayPriority 12 ;
+    lv2:displayPriority 14 ;
     rdfs:label "EQ 21" .
 
 <urn:openmixer:strip#eq22>
     a pg:Group ;
     lv2:symbol "eq22" ;
     lv2:name "EQ 22" ;
-    lv2:displayPriority 11 ;
+    lv2:displayPriority 13 ;
     rdfs:label "EQ 22" .
 
 <urn:openmixer:strip#eq23>
     a pg:Group ;
     lv2:symbol "eq23" ;
     lv2:name "EQ 23" ;
-    lv2:displayPriority 10 ;
+    lv2:displayPriority 12 ;
     rdfs:label "EQ 23" .
 
 <urn:openmixer:strip#eq24>
     a pg:Group ;
     lv2:symbol "eq24" ;
     lv2:name "EQ 24" ;
-    lv2:displayPriority 9 ;
+    lv2:displayPriority 11 ;
     rdfs:label "EQ 24" .
 
 <urn:openmixer:strip#eq25>
     a pg:Group ;
     lv2:symbol "eq25" ;
     lv2:name "EQ 25" ;
-    lv2:displayPriority 8 ;
+    lv2:displayPriority 10 ;
     rdfs:label "EQ 25" .
 
 <urn:openmixer:strip#eq26>
     a pg:Group ;
     lv2:symbol "eq26" ;
     lv2:name "EQ 26" ;
-    lv2:displayPriority 7 ;
+    lv2:displayPriority 9 ;
     rdfs:label "EQ 26" .
 
 <urn:openmixer:strip#eq27>
     a pg:Group ;
     lv2:symbol "eq27" ;
     lv2:name "EQ 27" ;
-    lv2:displayPriority 6 ;
+    lv2:displayPriority 8 ;
     rdfs:label "EQ 27" .
 
 <urn:openmixer:strip#eq28>
     a pg:Group ;
     lv2:symbol "eq28" ;
     lv2:name "EQ 28" ;
-    lv2:displayPriority 5 ;
+    lv2:displayPriority 7 ;
     rdfs:label "EQ 28" .
 
 <urn:openmixer:strip#eq29>
     a pg:Group ;
     lv2:symbol "eq29" ;
     lv2:name "EQ 29" ;
-    lv2:displayPriority 4 ;
+    lv2:displayPriority 6 ;
     rdfs:label "EQ 29" .
 
 <urn:openmixer:strip#eq30>
     a pg:Group ;
     lv2:symbol "eq30" ;
     lv2:name "EQ 30" ;
-    lv2:displayPriority 3 ;
+    lv2:displayPriority 5 ;
     rdfs:label "EQ 30" .
 
 <urn:openmixer:strip#eq31>
     a pg:Group ;
     lv2:symbol "eq31" ;
     lv2:name "EQ 31" ;
-    lv2:displayPriority 2 ;
+    lv2:displayPriority 4 ;
     rdfs:label "EQ 31" .
 
 <urn:openmixer:strip#eq32>
     a pg:Group ;
     lv2:symbol "eq32" ;
     lv2:name "EQ 32" ;
-    lv2:displayPriority 1 ;
+    lv2:displayPriority 3 ;
     rdfs:label "EQ 32" .
 
 <urn:openmixer:strip#comp>
     a pg:Group ;
     lv2:symbol "comp" ;
     lv2:name "Comp" ;
-    lv2:displayPriority 30 ;
+    lv2:displayPriority 2 ;
     rdfs:label "Comp" .
 
 <urn:openmixer:strip#order>
     a pg:Group ;
     lv2:symbol "order" ;
     lv2:name "Order" ;
-    lv2:displayPriority 29 ;
+    lv2:displayPriority 1 ;
     rdfs:label "Order" .
 
 <urn:openmixer:unit#dBoct>

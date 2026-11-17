@@ -113,22 +113,27 @@ export const CONTROL_EXTRAS = ['forKind', 'defaultRef', 'defaultId', 'defaultBan
  * for a chain), one per subgroup and one for the section's
  * controls no subgroup holds, if any. Each is `{ key, label, path, controls, priority }`: `key` its lv2:symbol, `label`
  * its lv2:name and rdfs:label, `path` its controls' descriptor `group` (the panel section's label first, the group's
- * last; a section's own group has a one-element path), `priority` its lv2:displayPriority, the groups counted down
- * in the order their first port comes (a host that shows the higher first, as Zynthian does, shows them in port
- * order). A section with no controls left makes no group.
+ * last; a section's own group has a one-element path), `priority` its lv2:displayPriority, counted down section by
+ * section in the order each section's first port comes, a section's groups together and, within it, in the order
+ * their first port comes (a host that shows the higher first, as Zynthian does, shows a section's bands together,
+ * never split by a later section whose ports come before a band's). A section with no controls left makes no group.
  */
 export function portGroupsOf(d) {
-  const groups = [];
+  const groups = [], sectionOf = new Map();
   for (const s of d.panel?.sections ?? []) {
     const subs = d.subgroups?.[s.key] ?? [];
     const held = new Set(subs.flatMap((g) => g.controls));
     const own = s.controls.filter((sym) => !held.has(sym));
-    if (own.length) groups.push({ key: s.key, label: s.label, path: [s.label], controls: own });
-    for (const g of subs) groups.push({ key: g.key, label: g.label, path: [s.label, g.label], controls: g.controls });
+    const mine = [...(own.length ? [{ key: s.key, label: s.label, path: [s.label], controls: own }] : []),
+      ...subs.map((g) => ({ key: g.key, label: g.label, path: [s.label, g.label], controls: g.controls }))];
+    for (const g of mine) sectionOf.set(g, s);
+    groups.push(...mine);
   }
   const indexOf = new Map(d.params.map((p, i) => [p.symbol, i]));
-  const first = (g) => Math.min(...g.controls.map((sym) => indexOf.get(sym) ?? Infinity));
-  const order = [...groups].sort((a, b) => first(a) - first(b));
+  const first = (controls) => Math.min(...controls.map((sym) => indexOf.get(sym) ?? Infinity));
+  // a section's groups stay together, placed where the section's first port comes (omx-strip's EQ bands 5 to 32 are
+  // ports appended after Comp and Order, and still come with the EQ); within a section, by each group's first port
+  const order = [...groups].sort((a, b) => first(sectionOf.get(a).controls) - first(sectionOf.get(b).controls) || first(a.controls) - first(b.controls));
   for (const g of groups) g.priority = groups.length - order.indexOf(g);
   return groups;
 }

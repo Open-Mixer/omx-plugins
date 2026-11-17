@@ -108,8 +108,10 @@ Makefiles and CI to it, so a step cannot fall out of both. Together they run, in
    bands (the element's switch, its band count) stays in the section's group. `make band-groups`
    (`tools/test/band-port-groups-check.mjs`) holds every plugin's generated TTL, read by `serdi`, to its model:
    a band of several controls has a group of its own, shared with no other band and holding nothing else.
-   A control repeated alone (omx-geq's faders, omx-multiband's crossovers) stays in its section's group. Every group states an `lv2:displayPriority`, counted down in the
-   order its first port comes, so a host showing the higher first (Zynthian) shows them in port order;
+   A control repeated alone (omx-geq's faders, omx-multiband's crossovers) stays in its section's group. Every group states an `lv2:displayPriority`, counted down section
+   by section in the order each section's first port comes, and within a section in the order each group's
+   first port comes, so a host showing the higher first (Zynthian) shows a section's groups together
+   (omx-strip's EQ 1 ... EQ 32 before Comp, though the ports of bands 5 to 32 come after it);
 8. **panel description** (`tools/panel-probe.c`, `tools/panel-check.mjs`): each built face is opened
    as a host opens it (the `.clap` through `clap_entry`, the LV2 bundle through lilv) and its
    `org.openmixer.panel-description/1` read back: the family, the sections, every listed parameter as
