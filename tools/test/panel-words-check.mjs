@@ -3,14 +3,14 @@
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
  * panel-words-check.mjs — the enumerations of include/omx_panel_description.h are the panel vocabulary's, spelled
- * once elsewhere: the families, the widgets and the display kinds are omx-contract's PANEL_FAMILIES, PANEL_WIDGETS
- * and PANEL_DISPLAY_KINDS (data/panel.json), whose X-macros in <omxcontract/omx_vocabulary.h> the header builds those
- * three enums from (omx-clap-core#104); the display sources and the placements are omx-panel's lists
- * (tools/panel-description.mjs, which tools/gen.mjs already writes the rows with), spelled in the header as C, and
- * each of those is the X-list omx-clap-core's <omx-clap-host/omx_clap_ext.h> carries for the host, code and
- * enumerator. Each enumerator is the word in upper case after the enum's prefix, its code the word's position, and
- * the count the list's: the header is held to them here, so a word added, moved or renamed anywhere is red until
- * they agree.
+ * once elsewhere: the families, the widgets, the display kinds, the display sources and the placements are
+ * omx-contract's PANEL_FAMILIES, PANEL_WIDGETS, PANEL_DISPLAY_KINDS, PANEL_DISPLAY_SOURCES and PANEL_PLACEMENTS
+ * (data/panel.json), whose X-macros in <omxcontract/omx_vocabulary.h> the header builds those five enums from
+ * (omx-clap-core#104); omx-panel's lists (tools/panel-description.mjs, which tools/gen.mjs writes the rows with) are
+ * held to the contract's. The table codes are omx-clap-core's alone: the header spells them as C, held to the X-list
+ * <omx-clap-host/omx_clap_ext.h> carries for the host, code and enumerator. Each enumerator is the word in upper case
+ * after the enum's prefix, its code the word's position, and the count the list's: the header is held to them here,
+ * so a word added, moved or renamed anywhere is red until they agree.
  *
  * An enum the contract owns is built from its X-macro, never spelled by hand: a hand enum is red even when it agrees
  * today. It is held to the contract only, not to omx-clap-core's list: both are the contract's by construction, each
@@ -19,9 +19,9 @@
  *
  *   node tools/test/panel-words-check.mjs               the check
  *   node tools/test/panel-words-check.mjs --self-test   the check, then sabotaged copies, each red: a hand family enum
- *                                                       (the contract's list, and one family short), a contract with
- *                                                       a family moved, a placement renamed, and the owner's
- *                                                       placements with a code moved and with a word changed
+ *                                                       (the contract's list, and one family short), a hand
+ *                                                       placement enum, a contract with a family moved and with a
+ *                                                       placement renamed, and the owner's tables with a code moved
  *
  * OMX_PANEL_WORDS_CONTRACT_INCLUDE names a directory holding omxcontract/omx_vocabulary.h ahead of pkg-config's.
  */
@@ -42,8 +42,8 @@ const ENUMS = {
   family: { c: 'omx_clap_panel_family', prefix: 'OMX_CLAP_FAMILY_', owner: 'OMX_CLAP_PANEL_FAMILIES', contract: 'OMX_PANEL_FAMILIES' },
   widget: { c: 'omx_clap_panel_widget', prefix: 'OMX_CLAP_WIDGET_', owner: 'OMX_CLAP_PANEL_WIDGETS', contract: 'OMX_PANEL_WIDGETS' },
   display_kind: { c: 'omx_clap_panel_display_kind', prefix: 'OMX_CLAP_DISPLAY_', owner: 'OMX_CLAP_PANEL_DISPLAY_KINDS', contract: 'OMX_PANEL_DISPLAY_KINDS' },
-  display_source: { c: 'omx_clap_panel_display_source', prefix: 'OMX_CLAP_DISPLAY_FROM_', owner: 'OMX_CLAP_PANEL_DISPLAY_SOURCES' },
-  placement: { c: 'omx_clap_panel_placement', prefix: 'OMX_CLAP_PLACEMENT_', owner: 'OMX_CLAP_PANEL_PLACEMENTS' },
+  display_source: { c: 'omx_clap_panel_display_source', prefix: 'OMX_CLAP_DISPLAY_FROM_', owner: 'OMX_CLAP_PANEL_DISPLAY_SOURCES', contract: 'OMX_PANEL_DISPLAY_SOURCES' },
+  placement: { c: 'omx_clap_panel_placement', prefix: 'OMX_CLAP_PLACEMENT_', owner: 'OMX_CLAP_PANEL_PLACEMENTS', contract: 'OMX_PANEL_PLACEMENTS' },
   table: { c: 'omx_clap_panel_table', prefix: 'OMX_CLAP_PANEL_', owner: 'OMX_CLAP_PANEL_TABLES' },
 };
 
@@ -75,7 +75,7 @@ export function enumsOf(text, contract = {}) {
   return out;
 }
 
-/** The owner's X-lists: `{ display_source: [[code, word, enumerator], ...], ... }`, of the lists not the contract's. */
+/** The owner's X-lists: `{ table: [[code, word, enumerator], ...] }`, of the lists not the contract's. */
 export function ownerListsOf(text) {
   const out = {};
   const lists = xListsOf(text);
@@ -141,18 +141,21 @@ const declared = {
   family: sheetWords(contractDir.dir, 'PANEL_FAMILIES'),
   widget: sheetWords(contractDir.dir, 'PANEL_WIDGETS'),
   display_kind: sheetWords(contractDir.dir, 'PANEL_DISPLAY_KINDS'),
-  display_source: DISPLAY_SOURCES,
-  placement: PLACEMENTS,
+  display_source: sheetWords(contractDir.dir, 'PANEL_DISPLAY_SOURCES'),
+  placement: sheetWords(contractDir.dir, 'PANEL_PLACEMENTS'),
 };
-for (const [key, name] of [['family', 'PANEL_FAMILIES'], ['widget', 'PANEL_WIDGETS'], ['display_kind', 'PANEL_DISPLAY_KINDS']]) {
+const NAMES = [['family', 'PANEL_FAMILIES'], ['widget', 'PANEL_WIDGETS'], ['display_kind', 'PANEL_DISPLAY_KINDS'], ['display_source', 'PANEL_DISPLAY_SOURCES'], ['placement', 'PANEL_PLACEMENTS']];
+for (const [key, name] of NAMES) {
   if (!declared[key]) {
     console.error(`panel-words: ${contractDir.dir}: the resolved contract holds no ${name} words (omx-contract >= 3.20.0)`);
     process.exit(1);
   }
 }
-if (JSON.stringify(DISPLAY_KINDS) !== JSON.stringify(declared.display_kind)) {
-  console.error(`panel-words: omx-panel's DISPLAY_KINDS ${DISPLAY_KINDS.join(', ')}; omx-contract's PANEL_DISPLAY_KINDS ${declared.display_kind.join(', ')}`);
-  process.exit(1);
+for (const [panel, key, name] of [[DISPLAY_KINDS, 'display_kind', 'DISPLAY_KINDS'], [DISPLAY_SOURCES, 'display_source', 'DISPLAY_SOURCES'], [PLACEMENTS, 'placement', 'PLACEMENTS']]) {
+  if (JSON.stringify(panel) !== JSON.stringify(declared[key])) {
+    console.error(`panel-words: omx-panel's ${name} ${panel.join(', ')}; omx-contract's PANEL_${name} ${declared[key].join(', ')}`);
+    process.exit(1);
+  }
 }
 const contractFile = headerOf('omx-contract', CONTRACT_HEADER, process.env.OMX_PANEL_WORDS_CONTRACT_INCLUDE);
 if (!contractFile) {
@@ -172,20 +175,21 @@ if (errors.length) {
   for (const e of errors) console.error(`panel-words: ${e}`);
   process.exit(1);
 }
-console.log(`panel-words: ${Object.keys(ENUMS).length} enums of ${HEADER} are the declared words (${Object.values(declared).flat().length}): the contract's from ${CONTRACT_HEADER}, the others ${OWNER}'s lists too`);
+console.log(`panel-words: ${Object.keys(ENUMS).length} enums of ${HEADER} are the declared words (${Object.values(declared).flat().length}): the contract's from ${CONTRACT_HEADER}, the tables ${OWNER}'s list`);
 
 if (process.argv.includes('--self-test')) {
   const families = contract.OMX_PANEL_FAMILIES;
-  const handEnum = (rows) => `enum omx_clap_panel_family {\n${rows.map(([code, , id]) => `  OMX_CLAP_FAMILY_${id} = ${code},\n`).join('')}}`;
-  const familyEnum = /enum omx_clap_panel_family \{[^}]*\}/;
+  const handEnum = (c, prefix, rows) => `enum ${c} {\n${rows.map(([code, , id]) => `  ${prefix}${id} = ${code},\n`).join('')}}`;
+  const enumOf = (c) => new RegExp(`enum ${c} \\{[^}]*\\}`);
   const moved = families.map(([code, w, id]) => [id === 'GATE' ? 2 : code, w, id]);
+  const renamed = contract.OMX_PANEL_PLACEMENTS.map(([code, w, id]) => [code, w, id === 'BUS' ? 'BUSS' : id]);
   const arms = {
-    'family-hand-copy': [headerText.replace(familyEnum, handEnum(families)), contract, ownerText],
-    'family-hand-copy-short': [headerText.replace(familyEnum, handEnum(families.slice(0, -1))), contract, ownerText],
+    'family-hand-copy': [headerText.replace(enumOf('omx_clap_panel_family'), handEnum('omx_clap_panel_family', 'OMX_CLAP_FAMILY_', families)), contract, ownerText],
+    'family-hand-copy-short': [headerText.replace(enumOf('omx_clap_panel_family'), handEnum('omx_clap_panel_family', 'OMX_CLAP_FAMILY_', families.slice(0, -1))), contract, ownerText],
+    'placement-hand-copy': [headerText.replace(enumOf('omx_clap_panel_placement'), handEnum('omx_clap_panel_placement', 'OMX_CLAP_PLACEMENT_', contract.OMX_PANEL_PLACEMENTS)), contract, ownerText],
     'contract-family-moved': [headerText, { ...contract, OMX_PANEL_FAMILIES: moved }, ownerText],
-    'placement-renamed': [headerText.replace('OMX_CLAP_PLACEMENT_BUS = 2,', 'OMX_CLAP_PLACEMENT_BUSS = 2,'), contract, ownerText],
-    'owner-placement-code-moved': [headerText, contract, ownerText.replace(/X\(2, "bus", BUS\)/, 'X(3, "bus", BUS)')],
-    'owner-placement-word-changed': [headerText, contract, ownerText.replace(/X\(2, "bus", BUS\)/, 'X(2, "buss", BUS)')],
+    'contract-placement-renamed': [headerText, { ...contract, OMX_PANEL_PLACEMENTS: renamed }, ownerText],
+    'owner-table-code-moved': [headerText, contract, ownerText.replace(/X\(2, "roles", ROLES\)/, 'X(5, "roles", ROLES)')],
   };
   let fail = 0;
   for (const [arm, [h, k, o]] of Object.entries(arms)) {

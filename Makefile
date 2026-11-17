@@ -225,7 +225,6 @@ units:
 # built against a contract fixture that declares one more of each, the header declares it with no edit here
 .PHONY: panel-enums
 panel-enums:
-	sh tools/test/panel-enums-hand-check.sh
 	@mkdir -p build
 	$(CC) -std=gnu11 -Wall -Wextra -Werror -Itools/test/fixtures/contract-one-more-family -Iinclude -o build/panel-enums-follow-contract tools/test/panel-enums-follow-contract.c
 	./build/panel-enums-follow-contract

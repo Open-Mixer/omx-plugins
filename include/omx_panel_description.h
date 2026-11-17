@@ -24,14 +24,13 @@
  * host's structure, whose sizes are CLAP's (CLAP_NAME_SIZE is 256, clap_id a uint32_t,
  * CLAP_INVALID_ID UINT32_MAX).
  *
- * The words of the enumerations below are declared elsewhere. The families, the widgets and the display
- * kinds are omx-contract's (PANEL_FAMILIES, PANEL_WIDGETS and PANEL_DISPLAY_KINDS, data/panel.json), and
- * their enums are built from its X-macros in <omxcontract/omx_vocabulary.h>, never spelled here: a word
- * the contract adds is an enumerator here with no edit (omx-clap-core#104;
- * tools/test/panel-enums-follow-contract.c). The display sources and the placements are omx-panel's
- * (tools/panel-description.mjs), spelled here as C. omx-clap-core's <omx-clap-host/omx_clap_ext.h> lists
- * each with its code and enumerator for the host; tools/test/panel-words-check.mjs holds every enum to
- * them, order and count.
+ * The words of the enumerations below are declared elsewhere. The families, the widgets, the display
+ * kinds, the display sources and the placements are omx-contract's (PANEL_FAMILIES, PANEL_WIDGETS,
+ * PANEL_DISPLAY_KINDS, PANEL_DISPLAY_SOURCES and PANEL_PLACEMENTS, data/panel.json), and their enums are
+ * built from its X-macros in <omxcontract/omx_vocabulary.h>, never spelled here: a word the contract adds
+ * is an enumerator here with no edit (omx-clap-core#104; tools/test/panel-enums-follow-contract.c). The
+ * table codes are omx-clap-core's, spelled here as C and held to the list <omx-clap-host/omx_clap_ext.h>
+ * carries for the host; tools/test/panel-words-check.mjs holds every enum to its owner, order and count.
  */
 #ifndef OMX_PANEL_DESCRIPTION_H
 #define OMX_PANEL_DESCRIPTION_H
