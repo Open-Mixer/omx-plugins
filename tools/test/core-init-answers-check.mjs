@@ -72,6 +72,8 @@ function selfTest() {
   arms.push(['omx-strip: the chain returns 1', strip.replace('return ok;', 'return 1;')]);
   arms.push(['omx-strip: ok overwritten just before `return ok;`', strip.replace('  return ok;', '  ok = 1;\n  return ok;')]);
   arms.push(['omx-strip: ok overwritten after a fold on the same line', strip.replace(/(ok &= omx_comp_instance_init\([^;]*\) != 0;)/, '$1 ok = 1;')]);
+  arms.push(['omx-strip: ok incremented before the return', strip.replace('  return ok;', '  ok++;\n  return ok;')]);
+  arms.push(['omx-strip: ok written through a pointer before the return', strip.replace('  return ok;', '  *(&ok) = 1;\n  return ok;')]);
   arms.push(['omx-trim: its answer or-ed with a constant', trim.replace(/return (omx_trim_instance_init\([^;]*\));/, 'return $1 || sizeof(*c);')]);
   let bad = 0;
   if (initErrors(strip, 'omx-strip').length || initErrors(trim, 'omx-trim').length) { console.log('FAIL the unplanted sources are not clean'); bad = 1; }
