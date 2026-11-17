@@ -769,7 +769,7 @@
           }
         },
         "visibleWhen": {
-          "$ref": "https://github.com/FreeMixer/omx-panel/schema/panel.schema.json#/$defs/visibleWhen",
+          "$ref": "https://github.com/Open-Mixer/omx-panel/schema/panel.schema.json#/$defs/visibleWhen",
           "description": "Each control shown only while another control holds certain values, by symbol: `{ param, values }`, or for a count `{ param, atLeast: n }` (a band's controls follow a band count). The rule is omx-panel's (schema/panel.schema.json), which carries it into the description's visible and mask."
         },
         "widgets": {
@@ -948,11 +948,11 @@
       }
     },
     "indexedRole": {
-      "$ref": "https://github.com/FreeMixer/omx-panel/schema/panel.schema.json#/$defs/indexedRole",
+      "$ref": "https://github.com/Open-Mixer/omx-panel/schema/panel.schema.json#/$defs/indexedRole",
       "description": "The roles that repeat by index, one parameter per band: the only roles that may name a list of symbols. The list is omx-panel's (schema/panel.schema.json), the one place it is written."
     },
     "widget": {
-      "$ref": "https://github.com/FreeMixer/omx-panel/schema/panel.schema.json#/$defs/widget",
+      "$ref": "https://github.com/Open-Mixer/omx-panel/schema/panel.schema.json#/$defs/widget",
       "description": "The shared widgets a control is drawn with, by the names the console reads (its `auto` is a control left out of `widgets`). The list is omx-panel's (schema/panel.schema.json), the one place it is written, and every renderer reads it."
     },
     "graph": {
