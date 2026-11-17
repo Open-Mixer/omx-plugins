@@ -2,7 +2,8 @@
 // Copyright (C) 2026 Pau Aliagas
 /*
  * THE PANEL ENUMS FOLLOW THE CONTRACT (Open-Mixer/omx-clap-core#104). include/omx_panel_description.h's families,
- * widgets and display kinds are omx-contract's PANEL_FAMILIES, PANEL_WIDGETS and PANEL_DISPLAY_KINDS, never a copy
+ * widgets, display kinds, display sources and placements are omx-contract's PANEL_FAMILIES, PANEL_WIDGETS,
+ * PANEL_DISPLAY_KINDS, PANEL_DISPLAY_SOURCES and PANEL_PLACEMENTS, never a copy
  * spelled here. Built with tools/test/fixtures/contract-one-more-family first on the include path, a contract that
  * declares one more of each: every enumerator the fixture lists is declared with the fixture's code, with no edit in
  * this tree. A hand enum stays at the words it was written with, and the build stops at the first enumerator it lacks.
@@ -24,11 +25,15 @@ static int g_failures;
 #define FAMILY(code, name, id) CHECK(OMX_CLAP_FAMILY_, code, id)
 #define WIDGET(code, name, id) CHECK(OMX_CLAP_WIDGET_, code, id)
 #define DISPLAY_KIND(code, name, id) CHECK(OMX_CLAP_DISPLAY_, code, id)
+#define DISPLAY_SOURCE(code, name, id) CHECK(OMX_CLAP_DISPLAY_FROM_, code, id)
+#define PLACEMENT(code, name, id) CHECK(OMX_CLAP_PLACEMENT_, code, id)
 
 int main(void)
 {
     OMX_PANEL_FAMILIES(FAMILY)
     OMX_PANEL_WIDGETS(WIDGET)
     OMX_PANEL_DISPLAY_KINDS(DISPLAY_KIND)
+    OMX_PANEL_DISPLAY_SOURCES(DISPLAY_SOURCE)
+    OMX_PANEL_PLACEMENTS(PLACEMENT)
     return g_failures ? 1 : 0;
 }

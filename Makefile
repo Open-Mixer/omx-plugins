@@ -221,10 +221,11 @@ test-faces: all lib contract-union eq-probe-race
 	@$(MAKE) -s package-lists
 units:
 	node tools/test/param-units-check.mjs --self-test
-# the families, widgets and display kinds of include/omx_panel_description.h are omx-contract's (omx-clap-core#104):
+# the families, widgets, display kinds, display sources and placements of include/omx_panel_description.h are omx-contract's (omx-clap-core#104):
 # built against a contract fixture that declares one more of each, the header declares it with no edit here
 .PHONY: panel-enums
 panel-enums:
+	sh tools/test/panel-enums-hand-check.sh
 	@mkdir -p build
 	$(CC) -std=gnu11 -Wall -Wextra -Werror -Itools/test/fixtures/contract-one-more-family -Iinclude -o build/panel-enums-follow-contract tools/test/panel-enums-follow-contract.c
 	./build/panel-enums-follow-contract
