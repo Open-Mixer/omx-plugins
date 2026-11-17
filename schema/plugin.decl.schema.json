@@ -413,7 +413,7 @@
         "subgroups": {
           "type": "object",
           "title": "Subgroups",
-          "description": "Written by tools/variants.mjs for a variant: by section key, the LV2 port groups a section marked `\"subgroups\": \"band\"` is split into, one per band (`band<n>`, `Band <n>`), each with that band's controls of the section in the section's order. tools/gen.mjs refuses it in a declaration without variants.",
+          "description": "Written by tools/variants.mjs for a variant: by section key, the LV2 port groups a section marked `\"subgroups\": \"band\"` is split into, one per band (`band<n>`, `Band <n>`), each with that band's controls of the section in the section's order. tools/gen.mjs refuses it in a declaration without variants (a chain's are worked out as it is loaded, never written).",
           "propertyNames": {
             "pattern": "^[a-z][a-zA-Z0-9]*$"
           },
@@ -716,7 +716,7 @@
             "band"
           ],
           "title": "Subgroups",
-          "description": "LV2 port groups finer than the section, in a declaration with variants: `band` makes each band's controls of the section a port group of its own, `Band <n>` (symbol `band<n>`), in band order; the section stays as drawn. A control's descriptor `group` is then the path [section label, band label]: the panel section first, the LV2 group last (FreeMixer/omx-plugins#257)."
+          "description": "LV2 port groups finer than the section, in a declaration with variants or a chain: `band` makes each band's controls of the section a port group of its own, `Band <n>` (symbol `band<n>`; in a chain `<element name> <n>`, symbol `<element id><n>`), in band order; the section stays as drawn. A control's descriptor `group` is then the path [section label, band label]: the panel section first, the LV2 group last (FreeMixer/omx-plugins#257)."
         }
       },
       "title": "Section",
