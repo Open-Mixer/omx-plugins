@@ -97,6 +97,10 @@ jobs:
           tools/deps-check.sh
           tools/deps-check.sh --self-test
 
+      - name: The spec and debian/control state the floors packaging/deps.txt declares, and no ceiling
+        id: handback-floors
+        uses: Open-Mixer/.github/.github/actions/deps-render@openmixer-v1
+
       - name: Every file a comment can be written in opens with its licence
         id: handback-spdx
         uses: Open-Mixer/.github/.github/actions/spdx-check@main

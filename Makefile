@@ -531,3 +531,15 @@ release-version:
 
 clap-validate: all
 	tools/clap-validate.sh build/clap-validator
+
+# The dependency floors are written once, in packaging/deps.txt; the spec and debian/control are generated from it with
+# Open-Mixer/.github's deps-render. make deps writes them, make deps-check refuses drift (name a checkout of that
+# repository: make deps-check DOTGITHUB=<dir>).
+DOTGITHUB ?=
+.PHONY: deps deps-check
+deps:
+	@test -n "$(DOTGITHUB)" || { echo "$@: name a checkout of Open-Mixer/.github: make $@ DOTGITHUB=<dir>" >&2; exit 2; }
+	$(DOTGITHUB)/.github/actions/deps-render/render.sh --write .
+deps-check:
+	@test -n "$(DOTGITHUB)" || { echo "$@: name a checkout of Open-Mixer/.github: make $@ DOTGITHUB=<dir>" >&2; exit 2; }
+	$(DOTGITHUB)/.github/actions/deps-render/render.sh --check .
