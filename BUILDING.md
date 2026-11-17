@@ -6,16 +6,16 @@
 
 | What | Fedora | Debian | Used for |
 |---|---|---|---|
-| omx-dsp ≥ 0.32.0 (`pkg-config omxdsp`) | `omx-dsp-devel` (channel) | `libomxdsp-dev` (channel) | the DSP: every kernel lives there, none here (since 0.26.0: the dynamic EQ, the multiband's controls and readouts, the compressor's key) |
-| omx-contract ≥ 3.12.0 (`pkg-config omx-contract`) | `omx-contract-devel` (channel) | `libomx-contract-dev` (channel) | the declarations: every parameter's travel, read from its installed `omx-contract.json`, and the EQ default rule (its C render; the generators build a small probe, so they need the C compiler too) |
+| omx-dsp (`pkg-config omxdsp`) | `omx-dsp-devel` (channel) | `libomxdsp-dev` (channel) | the DSP: every kernel lives there, none here (since 0.26.0: the dynamic EQ, the multiband's controls and readouts, the compressor's key) |
+| omx-contract (`pkg-config omx-contract`) | `omx-contract-devel` (channel) | `libomx-contract-dev` (channel) | the declarations: every parameter's travel, read from its installed `omx-contract.json`, and the EQ default rule (its C render; the generators build a small probe, so they need the C compiler too) |
 | openmixer CLAP extensions | `omx-clap-core-devel` (channel) | `libomx-clap-core-dev` (channel) | `<omx-clap-host/omx_clap_ext.h>` |
-| the omx-contract command ≥ 3.12.0 | `omx-contract` (channel) | `omx-contract` (channel) | the generators: the union of the contract directory, read through `omx-contract render --installed` |
+| the omx-contract command | `omx-contract` (channel) | `omx-contract` (channel) | the generators: the union of the contract directory, read through `omx-contract render --installed` |
 | CLAP 1.2 headers | `clap-devel` | `clap-headers` (built from the pinned CLAP, see FreeMixer/.github) | the CLAP face |
 | LV2 headers | `lv2-devel` | `lv2-dev` | the LV2 face |
 | C compiler, make, pkg-config | `gcc make pkgconf-pkg-config` | `build-essential pkgconf` | |
 | lilv | `lilv lilv-devel` | `lilv-utils liblilv-dev` | tests: the oracles' LV2 host, `lv2ls`, `lv2info` |
 | Node.js ≥ 18 | `nodejs` | `nodejs` | tests and `make gen`: the generators |
-| omx-panel ≥ 0.13.0 (the `omx-panel` command, `/usr/share/omx-panel`; `$OMX_PANEL_DIR` names another tree, `$OMX_PANEL` another command) | `omx-panel` (channel) | `omx-panel` (channel) | the panels: the layout every face serves and the MOD GUI of each plugin, from its descriptor and its declared panel |
+| omx-panel (the `omx-panel` command, `/usr/share/omx-panel`; `$OMX_PANEL_DIR` names another tree, `$OMX_PANEL` another command) | `omx-panel` (channel) | `omx-panel` (channel) | the panels: the layout every face serves and the MOD GUI of each plugin, from its descriptor and its declared panel |
 | sord | `sord` | `sordi` | tests: `sord_validate` on the LV2 bundle |
 | omx-clap-host | `omx-clap-host` (channel) | `omx-clap-host` (channel) | tests: `omx-clap-scan` (the check says SKIP when it is absent; CI and the package builds install it) |
 
@@ -28,18 +28,19 @@ RPM installs. A descriptor's links name the
 package that owns each definition, from the directory's manifests.
 
 A Debian build host gets the omx-contract command from the `omx-contract` package (a Build-Depends), so
-`debian/rules` runs `make test` whole, as the RPM build does; `tools/deps-check.sh` holds both.
+`debian/rules` runs `make test` whole, as the RPM build does; `tools/rules-check.sh` holds that.
 
 The channel is the OpenMixer package repository, added by installing the openmixer-release package
 (`https://www.openmixer.org/rpm/openmixer-release.noarch.rpm` for dnf,
 `https://www.openmixer.org/deb/openmixer-release.deb` for apt). With it installed, `dnf builddep packaging/omx-plugins.spec` or `apt-get build-dep ./` installs
 everything above.
 
-The ranges are written once, in the packaging: `packaging/omx-plugins.spec` (`BuildRequires`, a floor and a
-ceiling: `(omx-dsp-devel >= 0.30.0 with omx-dsp-devel < 0.31)`) and `debian/control` (the same: `(>= 0.30.0~)` and
-`(<< 0.31~)`); `tools/deps-check.sh` holds the two equal. Nothing else names a version: the Makefile reads the
-floors and ceilings from the spec, and building the archive stops, naming the dependency, the range
-and what `pkg-config` finds installed, when an installed release is outside it.
+The floors are written once, in `packaging/deps.txt` (floors only: no ceiling on any package). `packaging/omx-plugins.spec`
+(`BuildRequires`, `Requires`) and `debian/control` are generated from it by Open-Mixer/.github's deps-render
+(`make deps DOTGITHUB=<checkout of Open-Mixer/.github>` writes them, `make deps-check DOTGITHUB=<checkout>` and CI refuse
+a copy that differs). Nothing else names a version, this table included: the Makefiles read the floors from the spec, and
+building the archive stops, naming the dependency, the floor and what `pkg-config` finds installed, when an installed
+release is older.
 
 ## Build, test, install
 

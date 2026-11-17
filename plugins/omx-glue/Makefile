@@ -22,7 +22,7 @@
 NAME       := omx-glue
 URI        := urn:openmixer:glue
 CLAP_ID    := org.openmixer.glue
-OMXDSP_MIN ?= 0.32.0
+OMXDSP_MIN ?= $(shell sed -n 's/^BuildRequires: omx-dsp-devel >= \([0-9.]*\)$$/\1/p' ../../packaging/omx-plugins.spec)
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

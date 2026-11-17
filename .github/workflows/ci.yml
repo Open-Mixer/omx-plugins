@@ -90,12 +90,12 @@ jobs:
           grep -q "^Version: $v\$" packaging/omx-plugins.spec
           head -1 debian/changelog | grep -q "^omx-plugins ($v) "
 
-      - name: The packaging declares each dependency's range once, the same for RPM and DEB
-        id: handback-deps
+      - name: debian/rules runs make test, skipping nothing
+        id: handback-rules
         run: |
           set -euo pipefail
-          tools/deps-check.sh
-          tools/deps-check.sh --self-test
+          tools/rules-check.sh
+          tools/rules-check.sh --self-test
 
       - name: The spec and debian/control state the floors packaging/deps.txt declares, and no ceiling
         id: handback-floors
