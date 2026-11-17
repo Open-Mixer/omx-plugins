@@ -141,11 +141,11 @@ static int params_dump(const char *path) {
   for (uint32_t i = 0; i < n; i++) {
     clap_param_info_t info;
     if (!c.params->get_info(c.plugin, i, &info)) return fprintf(stderr, "get_info %u\n", i), 1;
-    /* the value texts of a stepped parameter's whole steps (at most 16), `|`-joined: a choice's labels, as a host reads
+    /* the value texts of a stepped parameter's whole steps (at most 64), `|`-joined: a choice's labels, as a host reads
      * them through value_to_text (omx-clap-scan's scale points); a travel's texts are its numbers */
     char texts[4096] = "";
     const double span = info.max_value - info.min_value;
-    if ((info.flags & (CLAP_PARAM_IS_STEPPED | CLAP_PARAM_IS_ENUM)) && span == (double)(long)span && span <= 15.0) {
+    if ((info.flags & (CLAP_PARAM_IS_STEPPED | CLAP_PARAM_IS_ENUM)) && span == (double)(long)span && span <= 63.0) {
       size_t at = 0;
       for (double v = info.min_value; v <= info.max_value && at + 2 < sizeof texts; v += 1.0) {
         char t[128];
