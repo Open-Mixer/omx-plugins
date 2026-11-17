@@ -373,9 +373,13 @@ param-contract-abi:
 	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-contract omx-clap-core clap) -o build/param-contract-abi-test tools/test/param-contract-abi-test.c
 	build/param-contract-abi-test
 	@echo "ok   org.openmixer.param-contract/1 as omx-clap-core reads it: id, sizeof and offsetof"
+# omx-clap-core's include directory, where its -devel package installs omx-clap-host/omx_clap_ext.h (pkg-config's
+# includedir); tools/test/panel-abi-refuses-check.sh points it at one without the header
+CLAP_CORE_INCLUDEDIR ?= $(shell $(PKG_CONFIG) --variable=includedir omx-clap-core 2>/dev/null)
 panel-abi:
 	@mkdir -p build
-	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/panel-abi-test tools/test/panel-abi-test.c
+	@test -f "$(CLAP_CORE_INCLUDEDIR)/omx-clap-host/omx_clap_ext.h" || { echo "FAIL panel-abi: no omx-clap-host/omx_clap_ext.h under $(or $(CLAP_CORE_INCLUDEDIR),<no omx-clap-core known to pkg-config>): install omx-clap-core-devel, whose header is the layout include/omx_panel_description.h is held to"; exit 1; }
+	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude -I$(CLAP_CORE_INCLUDEDIR) $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/panel-abi-test tools/test/panel-abi-test.c
 	build/panel-abi-test
 	@echo "ok   org.openmixer.panel-description/1 as omx-clap-core declares it: id, codes, sizeof, offsetof and the omx_panel_get read-back"
 panel-abi-refuses:
