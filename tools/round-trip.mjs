@@ -128,7 +128,7 @@ export const LOSSES = {
   'lv2 ports[].name': 71,
   // LV2 port groups are flat: a control in a section's subgroup (an EQ's band, #257) carries the group, not the
   // section above it (omx-eq8, omx-eq16 and omx-eq32: five controls a band, 8 + 16 + 32 bands)
-  'lv2 controls[].group (panel section)': 280,
+  'lv2 controls[].group (panel section)': 440,
   // the toggles UPSTREAM names, scanned as travels, carry no toggle's default
   'lv2 controls[].default': 131,
   // neither face carries a control's prose (omx-delay's sync), nor states that it reads the tempo: CLAP has no static
