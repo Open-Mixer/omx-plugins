@@ -19,7 +19,7 @@ count() { { grep -oF -- "$1" "$2" || true; } | wc -l; }
 check() {
   local root="$1" fail=0 spec="$1/packaging/omx-plugins.spec" control="$1/debian/control"
   # rpm name, deb name, how many times debian/control must carry the deb pair, does -devel require it
-  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-core-devel libomx-clap-core-dev 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 1 no" "plugin-qualify plugin-qualify 1 no"; do
+  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-core-devel libomx-clap-core-dev 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 1 no" "plugin-qualify plugin-qualify 1 no" "clap-devel clap-headers 2 yes"; do
     read -r rpm deb times devel <<<"$row"
     local range floor ceil
     range="$(sed -n "s/^BuildRequires: ($rpm >= \([0-9.]*\) with $rpm < \([0-9.]*\))\$/\1 \2/p" "$spec")"
@@ -60,7 +60,7 @@ check() {
 if [ "${1:-}" = --self-test ]; then
   scratch="$(mktemp -d)"; trap 'rm -rf "$scratch"' EXIT
   fail=0
-  for s in dsp-floor dsp-no-ceiling-spec devel-no-ceiling control-dsp control-no-ceiling control-ceiling-differs pc-no-ceiling contract-missing control-no-command rules-skip qualify-no-ceiling hostd-recommends-no-ceiling; do
+  for s in dsp-floor dsp-no-ceiling-spec devel-no-ceiling clap-floor control-dsp control-no-ceiling control-ceiling-differs pc-no-ceiling contract-missing control-no-command rules-skip qualify-no-ceiling hostd-recommends-no-ceiling; do
     rm -rf "$scratch/t"; mkdir -p "$scratch/t/packaging" "$scratch/t/debian"
     mkdir -p "$scratch/t/lib"; cp "$HERE/lib/omxplugins.pc.in" "$scratch/t/lib/"; cp "$HERE/debian/rules" "$scratch/t/debian/"
     cp "$HERE/packaging/omx-plugins.spec" "$scratch/t/packaging/"; cp "$HERE/debian/control" "$scratch/t/debian/"
@@ -68,6 +68,7 @@ if [ "${1:-}" = --self-test ]; then
       dsp-floor) sed -i 's/^BuildRequires: (omx-dsp-devel >= [0-9.]* /BuildRequires: (omx-dsp-devel >= 0.0.1 /' "$scratch/t/packaging/omx-plugins.spec" ;;
       dsp-no-ceiling-spec) sed -i 's/^BuildRequires: (omx-dsp-devel >= \([0-9.]*\) with .*/BuildRequires: omx-dsp-devel >= \1/' "$scratch/t/packaging/omx-plugins.spec" ;;
       devel-no-ceiling) sed -i 's/^Requires: (omx-dsp-devel >= \([0-9.]*\) with .*/Requires: omx-dsp-devel >= \1/' "$scratch/t/packaging/omx-plugins.spec" ;;
+      clap-floor) sed -i '0,/^BuildRequires: (clap-devel >= [0-9.]* /s//BuildRequires: (clap-devel >= 1.2.7 /' "$scratch/t/packaging/omx-plugins.spec" ;;
       qualify-no-ceiling) sed -i 's/^BuildRequires: (plugin-qualify >= \([0-9.]*\) with .*/BuildRequires: plugin-qualify >= \1/' "$scratch/t/packaging/omx-plugins.spec" ;;
       hostd-recommends-no-ceiling) sed -i 's/^Recommends: (plugin-hostd >= \([0-9.]*\) with .*/Recommends: plugin-hostd >= \1/' "$scratch/t/packaging/omx-plugins.spec" ;;
       control-dsp) sed -i '0,/libomxdsp-dev (>= [0-9.]*~)/s//libomxdsp-dev (>= 0.0.1~)/' "$scratch/t/debian/control" ;;
