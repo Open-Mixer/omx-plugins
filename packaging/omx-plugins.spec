@@ -32,6 +32,7 @@ BuildRequires: (clap-devel >= 1.2.7 with clap-devel < 2)
 BuildRequires: lv2-devel
 # %%check: the generators and checks are Node scripts; the hosts that load the built plugins
 BuildRequires: nodejs
+BuildRequires: python3
 # make selftest copies the tree with tar
 BuildRequires: tar
 BuildRequires: diffutils
