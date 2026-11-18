@@ -386,7 +386,7 @@ async function main() {
   const ratchet = (reports, debt, known) => debtVerdict(reports, debt, known);
   const whole = ratchet(wholeReports, loadDebt(t));
   expect(!whole.fresh.length && !whole.stale.length && whole.held.length === loadDebt(t).length,
-    `the debt holds today's gaps exactly (${whole.held.length} held, ${whole.fresh.length} new, ${whole.stale.length} stale)`);
+    `the debt holds today's gaps exactly (${whole.held.length} held, ${whole.fresh.length} new, ${whole.stale.length} stale)${whole.fresh.length ? `; new: ${whole.fresh.join(', ')}` : ''}${whole.stale.length ? `; stale: ${whole.stale.join(', ')}` : ''}`);
   const reading = (file) => ({ ...recipe, artifacts: recipe.artifacts.filter((e) => e.checker?.file === file || (e.paths ?? []).includes(file)),
     laws: recipe.laws.filter((e) => e.checker?.file === file) });
   const recheck = async (file) => {
