@@ -1,4 +1,4 @@
-<div class="omx-pedal{{{cns}}} omx-family-delay" style="width:624px;height:566px">
+<div class="omx-pedal{{{cns}}} omx-family-delay" style="width:624px;height:656px">
     <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
     <!-- Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com> -->
     <!-- GENERATED — DO NOT EDIT BY HAND. Produced by tools/modgui-gen.mjs from -->
@@ -13,29 +13,30 @@
         <span class="omx-label">{{label}}</span>
         <div class="omx-bypass" mod-role="bypass"><div class="omx-bypass-light" mod-role="bypass-light"></div></div>
     </div>
-        <div class="omx-section" data-section="delay" style="left:16px;top:52px;width:592px;height:98px">
+        <div class="omx-section" data-section="delay" style="left:16px;top:52px;width:592px;height:188px">
             <h2 class="omx-section-title">Delay</h2>
-            <div class="omx-control omx-switch" style="left:8px;top:18px" title="Pingpong" data-symbol="pingpong" data-min="0" data-max="1" data-default="0">
+            <div class="omx-curve" data-kind="time_response" data-basis="modelled" style="left:8px;top:18px;width:576px;height:84px"><span class="omx-curve-caption">modelled</span></div>
+            <div class="omx-control omx-switch" style="left:8px;top:108px" title="Pingpong" data-symbol="pingpong" data-min="0" data-max="1" data-default="0">
                 <div class="omx-switch-image" mod-role="input-control-port" mod-port-symbol="pingpong" mod-widget="switch"></div>
                 <span class="omx-control-title">Pingpong</span>
             </div>
-            <div class="omx-control omx-knob" style="left:80px;top:18px" title="Time" data-symbol="fxDelayTime" data-min="0" data-max="2000" data-default="300">
+            <div class="omx-control omx-knob" style="left:80px;top:108px" title="Time" data-symbol="fxDelayTime" data-min="0" data-max="2000" data-default="300">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="fxDelayTime"></div>
                 <span class="omx-control-title">Time</span>
             </div>
-            <div class="omx-control omx-knob" style="left:152px;top:18px" title="Feedback" data-symbol="fxDelayFeedback" data-min="0" data-max="0.99" data-default="0.3">
+            <div class="omx-control omx-knob" style="left:152px;top:108px" title="Feedback" data-symbol="fxDelayFeedback" data-min="0" data-max="0.99" data-default="0.3">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="fxDelayFeedback"></div>
                 <span class="omx-control-title">Feedback</span>
             </div>
-            <div class="omx-control omx-knob" style="left:224px;top:18px" title="Mix" data-symbol="mix" data-min="0" data-max="1" data-default="0.3">
+            <div class="omx-control omx-knob" style="left:224px;top:108px" title="Mix" data-symbol="mix" data-min="0" data-max="1" data-default="0.3">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="mix"></div>
                 <span class="omx-control-title">Mix</span>
             </div>
-            <div class="omx-control omx-knob" style="left:296px;top:18px" title="Tone" data-symbol="tone" data-min="0" data-max="1" data-default="0.3">
+            <div class="omx-control omx-knob" style="left:296px;top:108px" title="Tone" data-symbol="tone" data-min="0" data-max="1" data-default="0.3">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="tone"></div>
                 <span class="omx-control-title">Tone</span>
             </div>
-            <div class="omx-control omx-selector" style="left:368px;top:18px" title="Mode" data-symbol="mode" data-min="0" data-max="2" data-default="0">
+            <div class="omx-control omx-selector" style="left:368px;top:108px" title="Mode" data-symbol="mode" data-min="0" data-max="2" data-default="0">
                 <div class="omx-selector-image" mod-role="input-control-port" mod-port-symbol="mode" mod-widget="custom-select">
                     <div class="omx-selector-value" mod-role="input-control-value" mod-port-symbol="mode"></div>
                     <div class="omx-selector-list">
@@ -47,7 +48,7 @@
                 <span class="omx-control-title">Mode</span>
             </div>
         </div>
-        <div class="omx-section" data-section="tempo" style="left:16px;top:160px;width:592px;height:98px">
+        <div class="omx-section" data-section="tempo" style="left:16px;top:250px;width:592px;height:98px">
             <h2 class="omx-section-title">Tempo</h2>
             <div class="omx-control omx-selector" style="left:8px;top:18px" title="Sync" data-symbol="sync" data-min="0" data-max="1" data-default="0">
                 <div class="omx-selector-image" mod-role="input-control-port" mod-port-symbol="sync" mod-widget="custom-select">
@@ -86,7 +87,7 @@
                 <span class="omx-control-title">Division</span>
             </div>
         </div>
-        <div class="omx-section" data-section="taps" style="left:16px;top:268px;width:592px;height:174px">
+        <div class="omx-section" data-section="taps" style="left:16px;top:358px;width:592px;height:174px">
             <h2 class="omx-section-title">Taps</h2>
             <div class="omx-control omx-selector" style="left:8px;top:18px" title="Taps" data-symbol="fxDelayTaps" data-min="1" data-max="4" data-default="1">
                 <div class="omx-selector-image" mod-role="input-control-port" mod-port-symbol="fxDelayTaps" mod-widget="custom-select">
@@ -190,7 +191,7 @@
                 <span class="omx-control-title">Tap 4 Pan</span>
             </div>
         </div>
-        <div class="omx-section" data-section="duck" style="left:16px;top:452px;width:592px;height:98px">
+        <div class="omx-section" data-section="duck" style="left:16px;top:542px;width:592px;height:98px">
             <h2 class="omx-section-title">Duck</h2>
             <div class="omx-control omx-knob" style="left:8px;top:18px" title="Duck" data-symbol="duckDb" data-min="-24" data-max="0" data-default="0">
                 <div class="omx-knob-image" mod-role="input-control-port" mod-port-symbol="duckDb"></div>
