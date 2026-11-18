@@ -3,7 +3,8 @@
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 #
 # round-trip-contract-dir.sh <dir> — compose the contract directory the round trip hands plugin-hostd-probe
-# (tools/round-trip.sh): every installed package of omx-contract's contract directory BUT omx-plugins, linked, and
+# (tools/round-trip.sh): every installed package of omx-contract's contract directory BUT omx-plugins, copied (a
+# reader that lists the packages as directory entries skips a link), and
 # this tree's omx-plugins package (its descriptors and its definition files, contract/role-meanings.json among them),
 # installed by this tree's own `make install-contract`. The probe writes a control's meaning from the role meanings it
 # reads there, so what the round trip counts never depends on which omx-plugins-contract is installed (none on a clean
@@ -25,7 +26,7 @@ for major in "$installed"/*/; do
     [ -d "$pkg" ] || continue
     name=$(basename "$pkg")
     [ "$name" = omx-plugins ] && continue
-    ln -s "${pkg%/}" "$out/$m/$name"
+    cp -RL "${pkg%/}" "$out/$m/$name"
   done
 done
 make -s -C "$here" install-contract DESTDIR= CONTRACTDIR="$out" >/dev/null
