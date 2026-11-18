@@ -24,9 +24,6 @@ BuildRequires: plugin-hostd-devel >= 0.20.5
 BuildRequires: omx-contract >= 3.13.0
 # the panel layout and the MOD GUI are omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
 BuildRequires: omx-panel >= 0.13.5
-# omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
-# package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
-BuildConflicts: omx-plugins-devel < %{version}
 BuildRequires: clap-devel >= 1.2.7
 BuildRequires: lv2-devel
 # %%check: the generators and checks are Node scripts; the hosts that load the built plugins
@@ -80,7 +77,6 @@ files in %{_datadir}/omx/presets.
 
 %package clap
 Summary: OpenMixer delay, drive, EQ, strip, gate and effects as CLAP plugins
-Conflicts: omx-clap-host < 0.23.0
 
 %description clap
 The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
@@ -139,8 +135,6 @@ BuildArch: noarch
 # the contract directory, its schema and its reader's own package
 # 3.13.0: the reader that knows the roleMeanings kind contract/role-meanings.json is
 Requires: omx-contract-data >= 3.13.0
-# the files lived in omx-plugins-devel before this package
-Conflicts: %{name}-devel < %{version}-%{release}
 
 %description contract
 Each OpenMixer plugin's descriptor, its parameters in omx-contract's words,

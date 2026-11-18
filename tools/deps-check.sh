@@ -35,11 +35,17 @@ check() {
     [ "$(count "$deb (" "$control")" = "$times" ] || { echo "deps-check: debian/control names $deb with another range too" >&2; fail=1; }
     [ "$fail" = 1 ] || echo "deps-check: $rpm / $deb >= $floor, in the spec and debian/control"
   done
-  # no ceiling on any dependency: the spec before its %changelog (the history is not read), and debian/control
-  # outside the Breaks, Replaces and Conflicts lines (an own-package conflict is not a dependency). A ceiling is any
-  # '<' on a dependency line in the spec, bare or inside 'with' (rpm), and any '(<' clause in debian/control (dpkg: << or <)
+  # no relation between our packages (owner ruling 11-16: floors only, nothing that breaks, conflicts with, replaces,
+  # obsoletes or provides a name of ours). Each such line is refused by name, file and line, in the spec before its
+  # %changelog (the history is not read) and in debian/control. BuildConflicts is one: a conflict is a conflict
+  local rel='^[[:space:]]*(Build-?)?(Breaks|Conflicts|Replaces|Obsoletes|Provides)[[:space:]]*:' hit
+  while IFS= read -r hit; do
+    echo "deps-check: refuses a relation between our packages (no Breaks, Conflicts, Replaces, Obsoletes or Provides): $hit" >&2; fail=1
+  done < <({ sed '/^%changelog/q' "$spec" | grep -nE "$rel" | sed 's|^|packaging/omx-plugins.spec:|'; grep -nE "$rel" "$control" | sed 's|^|debian/control:|'; } || true)
+  # no ceiling on any dependency: the spec before its %changelog (the history is not read), and debian/control. A ceiling
+  # is any '<' on a dependency line in the spec, bare or inside 'with' (rpm), and any '(<' clause in debian/control (dpkg: << or <)
   if sed '/^%changelog/q' "$spec" | grep -qE '^(BuildRequires|Requires|Recommends|Suggests)[(:].*<'; then echo "deps-check: the spec states a ceiling (<) on a dependency" >&2; fail=1; fi
-  if grep -vE '^(Breaks|Replaces|Conflicts):' "$control" | grep -q '(<'; then echo "deps-check: debian/control states a ceiling (<< or <) on a dependency" >&2; fail=1; fi
+  if grep -q '(<' "$control"; then echo "deps-check: debian/control states a ceiling (<< or <) on a dependency" >&2; fail=1; fi
   # plugin-hostd at run time (Recommends) and at build time: a floor, no ceiling
   grep -qE '^BuildRequires: plugin-hostd >= [0-9.]+$' "$spec" || { echo "deps-check: the spec needs one 'BuildRequires: plugin-hostd >= <floor>' line" >&2; fail=1; }
   grep -qE '^Recommends: plugin-hostd >= [0-9.]+$' "$spec" || { echo "deps-check: the spec's Recommends on plugin-hostd is not a floor" >&2; fail=1; }
@@ -57,7 +63,7 @@ check() {
 if [ "${1:-}" = --self-test ]; then
   scratch="$(mktemp -d)"; trap 'rm -rf "$scratch"' EXIT
   fail=0
-  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added contract-missing control-no-command rules-skip; do
+  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added contract-missing control-no-command rules-skip plant-breaks-control plant-replaces-control plant-provides-control plant-conflicts-spec plant-build-conflicts-spec plant-obsoletes-spec; do
     rm -rf "$scratch/t"; mkdir -p "$scratch/t/packaging" "$scratch/t/debian"
     mkdir -p "$scratch/t/lib"; cp "$HERE/lib/omxplugins.pc.in" "$scratch/t/lib/"; cp "$HERE/debian/rules" "$scratch/t/debian/"
     cp "$HERE/packaging/omx-plugins.spec" "$scratch/t/packaging/"; cp "$HERE/debian/control" "$scratch/t/debian/"
@@ -81,6 +87,12 @@ if [ "${1:-}" = --self-test ]; then
       control-no-command) sed -i '/^ *omx-contract (>=/d' "$scratch/t/debian/control" ;;
       rules-skip) sed -i 's/^override_dh_auto_test:/&\n\t@echo NO-CONTRACT-COMMAND; $(MAKE) test-faces; exit 0/' "$scratch/t/debian/rules" ;;
       contract-missing) sed -i '/^BuildRequires: omx-contract-devel /d' "$scratch/t/packaging/omx-plugins.spec" ;;
+      plant-breaks-control) sed -i '/^Package: omx-plugins-clap$/a Breaks: omx-clap-host (<< 0.23.0~)' "$scratch/t/debian/control" ;;
+      plant-replaces-control) sed -i '/^Package: omx-plugins-test$/a Replaces: omx-plugins-dev (<< 0.1)' "$scratch/t/debian/control" ;;
+      plant-provides-control) sed -i '/^Package: omx-plugins-test$/a Provides: omx-plugins-dev' "$scratch/t/debian/control" ;;
+      plant-conflicts-spec) sed -i '/^%changelog/i Conflicts: omx-plugins-devel < 0.1' "$scratch/t/packaging/omx-plugins.spec" ;;
+      plant-build-conflicts-spec) sed -i '/^BuildRequires: lv2-devel$/a BuildConflicts: omx-plugins-devel < 0.1' "$scratch/t/packaging/omx-plugins.spec" ;;
+      plant-obsoletes-spec) sed -i '/^%changelog/i Obsoletes: omx-plugins-old < 1' "$scratch/t/packaging/omx-plugins.spec" ;;
     esac
     if check "$scratch/t" >/dev/null 2>&1; then echo "SABOTAGE $s: STAYED GREEN"; fail=1; else echo "SABOTAGE $s: red"; fi
   done
