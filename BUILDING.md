@@ -15,7 +15,7 @@
 | C compiler, make, pkg-config | `gcc make pkgconf-pkg-config` | `build-essential pkgconf` | |
 | lilv | `lilv lilv-devel` | `lilv-utils liblilv-dev` | tests: the oracles' LV2 host, `lv2ls`, `lv2info` |
 | Node.js ≥ 18 | `nodejs` | `nodejs` | tests and `make gen`: the generators |
-| omx-panel ≥ 0.13.0 (the `omx-panel` command, `/usr/share/omx-panel`; `$OMX_PANEL_DIR` names another tree, `$OMX_PANEL` another command) | `omx-panel` (channel) | `omx-panel` (channel) | the panels: the layout every face serves and the MOD GUI of each plugin, from its descriptor and its declared panel |
+| omx-panel ≥ 0.14.0 (the `omx-panel` command, `/usr/share/omx-panel`; `$OMX_PANEL_DIR` names another tree, `$OMX_PANEL` another command) | `omx-panel` (channel) | `omx-panel` (channel) | the panels: the layout every face serves and the MOD GUI of each plugin, from its descriptor and its declared panel |
 | sord | `sord` | `sordi` | tests: `sord_validate` on the LV2 bundle |
 | omx-clap-host | `omx-clap-host` (channel) | `omx-clap-host` (channel) | tests: `omx-clap-scan` (the check says SKIP when it is absent; CI and the package builds install it) |
 
@@ -95,8 +95,8 @@ Makefiles and CI to it, so a step cannot fall out of both. Together they run, in
    directly, at every declared rate, engaged, bypassed and re-activated;
 4. **delay oracle** (`test/delay-oracle.c`): at 44.1, 48, 96 and 192 kHz, on both builds, the
    echoes, ping-pong, mix and bypass computed from the definition of a delay, not from omx-dsp;
-5. **MOD GUI** (`omx-panel modgui --check`, `omx-panel`'s `modgui-test.sh`): fresh, carrying every declared control
-   with its travel and default, valid under `sord_validate`, and stale when the declaration moves;
+5. **MOD GUI** (`make modgui`, `omx-panel`'s `modgui-test.sh`): written into each built bundle by `omx-panel modgui` at package build, never committed;
+   the build produces it for every plugin that declares a panel, each declared control with its travel and default, valid under `sord_validate`;
 6. **host check**: `omx-clap-scan` loads the CLAP file, `lv2ls`/`lv2info` read the LV2 bundle;
 7. **port groups** (`tools/port-groups-probe.c`, `tools/port-groups-check.mjs`): the LV2 bundle,
    read through lilv, holds one `pg:Group` per panel section (its `lv2:symbol` the section's key, its

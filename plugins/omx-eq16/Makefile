@@ -33,7 +33,6 @@ OMX_PANEL     ?= omx-panel
 OMX_PANEL_DIR ?= /usr/share/omx-panel
 PANEL_FILE    := $(B)/$(NAME).panel.json
 MODGUI_SOURCE := plugins/$(NAME)/$(NAME).decl.json (its panel block) and tools/look.json
-MODGUI        := --descriptor $(NAME).descriptor.json --panel $(PANEL_FILE) --out $(GEN)/$(NAME).lv2 --source '$(MODGUI_SOURCE)'
 
 
 PKG_CONFIG ?= pkg-config
@@ -82,7 +81,7 @@ $(BUNDLE)/manifest.ttl: $(TTL_SRCS) | $(B)
 	@mkdir -p $(BUNDLE)
 	cp -r $(TTL)/. $(BUNDLE)/
 	node $(ROOT)/tools/panel-file.mjs $(CURDIR) $(PANEL_FILE)
-	$(OMX_PANEL) modgui --films-only --descriptor $(NAME).descriptor.json --panel $(PANEL_FILE) --out $(BUNDLE)
+	$(OMX_PANEL) modgui --descriptor $(NAME).descriptor.json --panel $(PANEL_FILE) --out $(BUNDLE) --source '$(MODGUI_SOURCE)'
 
 $(B):
 	@mkdir -p $@
@@ -107,14 +106,8 @@ $(B)/eq16-oracle: test/eq16-oracle.c $(CORE) | $(B)
 
 gen:
 	node $(ROOT)/tools/gen.mjs $(CURDIR)
-	node $(ROOT)/tools/panel-file.mjs $(CURDIR) $(PANEL_FILE)
-	$(OMX_PANEL) modgui --no-films $(MODGUI)
-
 check:
 	node $(ROOT)/tools/gen.mjs --check $(CURDIR)
-	node $(ROOT)/tools/panel-file.mjs $(CURDIR) $(PANEL_FILE)
-	$(OMX_PANEL) modgui --check --no-films $(MODGUI)
-
 # The parameter test: the built CLAP face's parameters are the declaration's, and every one of them
 # reaches the kernel. The state test: a saved state, loaded into a fresh instance, gives back every
 # value, the same state and the same output. The kernel-identity test: both faces, sample for

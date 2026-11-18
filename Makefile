@@ -50,8 +50,8 @@
 #   make geq-widgets  omx-geq declares the fader for its 31 bands, and its panel description and generated header serve them
 #                   (tools/test/geq-widgets-test.mjs; part of `make test`)
 #   make hints      no LV2 face lost a port hint: tools/port-hints.mjs against each declaration's `portHints` pin
-#   make modgui     every plugin's MOD GUI is what omx-panel writes from its descriptor and its declared panel: each plugin's
-#                   `make check` (the generated-fresh step of CI runs it beside `node tools/gen.mjs --check`)
+#   make modgui     every plugin's MOD GUI BUILDS: omx-panel writes it into the plugin's bundle from its descriptor and its declared
+#                   panel, for each plugin that declares one (eq8, eq16 and eq32 included); nothing of it is committed
 #   make manual     each declaration's manual follows omx-contract: a travel moved in a copy of the release moves
 #                   the catalogue section's range and default (tools/test/manual-perturb.mjs)
 #   make params-doc  write docs/plugins/: one page of every parameter for each plugin and the index (tools/params-doc.mjs, from the declarations)
@@ -360,7 +360,7 @@ hints:
 	node tools/port-hints.mjs
 # the plugins that have a panel say so in their Makefile (PANEL_FILE); `make check` holds gen.mjs's files and the MOD GUI fresh
 modgui:
-	@for p in $(PLUGINS); do if grep -q '^PANEL_FILE' $$p/Makefile; then $(MAKE) -s -C $$p check || exit 1; fi; done
+	@for p in $(PLUGINS); do if grep -q '^PANEL_FILE' $$p/Makefile; then $(MAKE) -s -C $$p build/$$(basename $$p).lv2/manifest.ttl || exit 1; test -s $$p/build/$$(basename $$p).lv2/modgui.ttl && test -d $$p/build/$$(basename $$p).lv2/modgui || { echo "modgui: $$p wrote no MOD GUI into its bundle"; exit 1; }; fi; done
 manual:
 	node tools/test/manual-perturb.mjs
 # the factory presets: fresh against tools/gen-presets.mjs, every value inside its declared travel
