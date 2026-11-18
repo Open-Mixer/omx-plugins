@@ -57,7 +57,7 @@ import { fileURLToPath } from 'node:url';
 import { checkCommits, rangeCommits } from '../commit-plan-check.mjs';
 import { chainSources, commitPlan, draftChain, draftDeclaration, kernelSources, planChain, planPlugin, reviewMarks, writePlugin } from '../omx-new-plugin.mjs';
 import { bindFace, parseFace } from '../instance-face.mjs';
-import { eqDefaultBands, kernelControls, locateContract, resolveParam } from '../omx-contract.mjs';
+import { OWNERS, eqDefaultBands, kernelControls, locateContract, resolveParam } from '../omx-contract.mjs';
 import { omxdspInclude } from '../template.mjs';
 import { defaultPanel, emitPluginTtl, generateInstance, loadDecl, meterRows } from '../gen.mjs';
 import { hintErrors } from '../port-hints.mjs';
@@ -98,6 +98,9 @@ function fakeContract(dst, kernels, listed) {
   }
   if (listed) render.kernels = { ...(render.kernels ?? {}), ...listed };
   writeFileSync(join(dst, 'omx-contract.json'), JSON.stringify(render, null, 2));
+  // the owners beside the render: a build reads the owners of the render it is handed (descriptor.mjs), so the stand-in carries the
+  // installed render's, as every copy of a union render does
+  if (existsSync(join(real.dir, OWNERS))) cpSync(join(real.dir, OWNERS), join(dst, OWNERS));
 }
 
 const travel = (min, max, step, unit, def) => ({ kind: 'travels', shape: 'travel', value: { min, max, step, unit, default: def, defaultFrom: 'desk' } });
