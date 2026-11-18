@@ -65,6 +65,7 @@ enum omx_clap_panel_family {
   OMX_CLAP_FAMILY_DELAY = 9,
   OMX_CLAP_FAMILY_REVERB = 10,
   OMX_CLAP_FAMILY_PITCH = 11,
+  OMX_CLAP_FAMILY_UTILITY = 12,
 };
 
 /** The widget a control asks for; AUTO leaves it to the host, from the parameter. */
@@ -82,6 +83,7 @@ enum omx_clap_panel_display_kind {
   OMX_CLAP_DISPLAY_TRANSFER_CURVE = 1,
   OMX_CLAP_DISPLAY_EQ_RESPONSE = 2,
   OMX_CLAP_DISPLAY_METER = 3,
+  OMX_CLAP_DISPLAY_TIME_RESPONSE = 4,
 };
 
 /** Where a display's data comes from. */
