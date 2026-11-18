@@ -461,6 +461,7 @@ no-ci-bridge:
 contract-dir:
 	tools/test/contract-dir-check.sh
 	tools/test/contract-dir-check.sh --self-test
+	tools/test/tree-contract-check.sh
 install-devel: lib install-contract
 	install -d $(DESTDIR)$(INCLUDEDIR)/omx-plugins $(DESTDIR)$(LIBDIR)/pkgconfig
 	install -m644 $(HEADERS) $(DESTDIR)$(INCLUDEDIR)/omx-plugins/
