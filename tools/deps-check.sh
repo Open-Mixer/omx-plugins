@@ -45,7 +45,7 @@ check() {
     local value item name
     value="${1#*:}"
     while IFS= read -r item; do
-      name="$(sed -E 's/^[[:space:]]*//; s/[[:space:]()].*$//' <<<"$item")"
+      name="$(sed -E 's/^[[:space:]]*\(*[[:space:]]*//; s/[[:space:]()].*$//' <<<"$item")"
       case "$name" in omx-*|plugin-*|libomx*) return 0 ;; esac
     done < <(tr ',' '\n' <<<"$value")
     return 1
@@ -78,7 +78,7 @@ check() {
 if [ "${1:-}" = --self-test ]; then
   scratch="$(mktemp -d)"; trap 'rm -rf "$scratch"' EXIT
   fail=0
-  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added contract-missing control-no-command rules-skip plant-breaks-control plant-replaces-control plant-provides-control plant-conflicts-spec plant-build-conflicts-spec plant-obsoletes-spec green-foreign-breaks-control green-foreign-provides-spec green-foreign-provides-control plant-breaks-mixed-list; do
+  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added contract-missing control-no-command rules-skip plant-breaks-control plant-replaces-control plant-provides-control plant-conflicts-spec plant-build-conflicts-spec plant-obsoletes-spec green-foreign-breaks-control green-foreign-provides-spec green-foreign-provides-control plant-breaks-mixed-list plant-conflicts-rich-form; do
     rm -rf "$scratch/t"; mkdir -p "$scratch/t/packaging" "$scratch/t/debian"
     mkdir -p "$scratch/t/lib"; cp "$HERE/lib/omxplugins.pc.in" "$scratch/t/lib/"; cp "$HERE/debian/rules" "$scratch/t/debian/"
     cp "$HERE/packaging/omx-plugins.spec" "$scratch/t/packaging/"; cp "$HERE/debian/control" "$scratch/t/debian/"
@@ -112,6 +112,7 @@ if [ "${1:-}" = --self-test ]; then
       green-foreign-provides-spec) sed -i '/^%changelog/i Provides: bundled(libfoo) = 1.0' "$scratch/t/packaging/omx-plugins.spec" ;;
       green-foreign-provides-control) sed -i '/^Package: omx-plugins-test$/a Provides: bundled(libbar)' "$scratch/t/debian/control" ;;
       plant-breaks-mixed-list) sed -i '/^Package: omx-plugins-test$/a Breaks: libfoo-other (<< 1.0~), omx-plugins-test-old' "$scratch/t/debian/control" ;;
+      plant-conflicts-rich-form) sed -i '/^%changelog/i Conflicts: (omx-clap-host < 0.23)' "$scratch/t/packaging/omx-plugins.spec" ;;
     esac
     if [ "${s#green-}" != "$s" ]; then
       if check "$scratch/t" >/dev/null 2>&1; then echo "GREEN $s: green (a relation to a foreign name is not refused)"; else echo "GREEN $s: STAYED RED"; fail=1; fi
