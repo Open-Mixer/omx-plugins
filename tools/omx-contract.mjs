@@ -88,8 +88,10 @@ function pkgVariable(name) {
 /** The installed omx-contract's data directory (pkg-config), or undefined. */
 export const installedDataDir = () => pkgVariable('datadir');
 
-/** The installed omx-contract's contract directory (pkg-config's contractdir, from 2.15.0 on), or undefined. */
-export const installedContractDir = () => pkgVariable('contractdir');
+/** The installed omx-contract's contract directory ($OMX_INSTALLED_CONTRACTDIR, else pkg-config's contractdir, from
+ * 2.15.0 on), or undefined. It holds the OTHER owners' packages: this tree's own omx-plugins package is read from the
+ * directory unionRender composes, never from here (an older released omx-plugins-contract may stand in this one). */
+export const installedContractDir = () => process.env.OMX_INSTALLED_CONTRACTDIR || pkgVariable('contractdir');
 
 /** The omx-contract CLI: $OMX_CONTRACT_CLI (its bin/omx-contract.mjs, or an executable), else `omx-contract`
  * on PATH; `[command, ...leading args]`, or undefined when there is none. */
@@ -108,7 +110,9 @@ const unionCache = new Map();
 /**
  * From omx-contract 2.15.0 on, the kernels ship with their owners (omx-dsp) into omx-contract's contract
  * directory, and the installed omx-contract.json holds only the shared facts. The union is read through the
- * omx-contract CLI, `render --target json --installed`. Every node process renders for itself, and the
+ * omx-contract CLI, `render --target json --contract-dir <composed>`: every installed package BUT omx-plugins, and this
+ * tree's own (tools/round-trip-contract-dir.sh), so an older released omx-plugins-contract that a build root pulls in
+ * is never read while this tree builds. Every node process renders for itself, and the
  * make targets run side by side (`make -j`), so no render is ever written where another process reads:
  * it goes into a private temporary directory, which is renamed to build/contract-union-<digest of its
  * files>, a name only that content has. A directory under that name is whole by construction and is never
@@ -122,14 +126,16 @@ function unionRender(root, contractdir) {
   if (!cli) out = { why: `omx-contract keeps its kernels in the contract directory ${contractdir}, read through the omx-contract CLI (\`omx-contract render --target json --installed\`), and none is installed: set OMX_CONTRACT_CLI to its bin/omx-contract.mjs or put omx-contract on PATH (BUILDING.md)` };
   else {
     const build = join(root, 'build');
-    let tmp;
+    let tmp, composed;
     try {
       mkdirSync(build, { recursive: true });
       tmp = mkdtempSync(join(build, 'contract-union.tmp-'));
-      execFileSync(cli[0], [...cli.slice(1), 'render', '--target', 'json', '--out', tmp, '--installed'], { stdio: ['ignore', 'ignore', 'pipe'] });
+      composed = mkdtempSync(join(build, 'contract-compose.tmp-'));
+      execFileSync('sh', [join(ROOT, 'tools', 'round-trip-contract-dir.sh'), join(composed, 'contract.d')], { env: { ...process.env, OMX_INSTALLED_CONTRACTDIR: contractdir }, stdio: ['ignore', 'ignore', 'pipe'] });
+      execFileSync(cli[0], [...cli.slice(1), 'render', '--target', 'json', '--out', tmp, '--contract-dir', join(composed, 'contract.d')], { stdio: ['ignore', 'ignore', 'pipe'] });
       // the render cites each definition by its path only: who owns it goes beside it, so a reader
       // pointed at this directory (OMX_CONTRACT_DIR) still knows
-      writeFileSync(join(tmp, OWNERS), `${JSON.stringify(Object.fromEntries(ownersOf(contractdir)), null, 2)}\n`);
+      writeFileSync(join(tmp, OWNERS), `${JSON.stringify(Object.fromEntries(ownersOf(join(composed, 'contract.d'))), null, 2)}\n`);
       const digest = createHash('sha256');
       for (const f of readdirSync(tmp).sort()) digest.update(f).update('\0').update(readFileSync(join(tmp, f))).update('\0');
       const dir = join(build, `contract-union-${digest.digest('hex').slice(0, 16)}`);
@@ -145,6 +151,7 @@ function unionRender(root, contractdir) {
       out = { why: `the omx-contract CLI refused the contract directory ${contractdir}: ${String(e.stderr ?? e.message).trim().split('\n')[0]}` };
     } finally {
       if (tmp) rmSync(tmp, { recursive: true, force: true });
+      if (composed) rmSync(composed, { recursive: true, force: true });
     }
   }
   unionCache.set(contractdir, out);
@@ -198,7 +205,7 @@ export function locateContract(root = ROOT) {
   if (contractdir && !Object.keys(JSON.parse(readFileSync(join(dir, RESOLVED), 'utf8')).kernels ?? {}).length) {
     const union = unionRender(root, contractdir);
     if (!union.dir) return { dir: undefined, range, why: union.why };
-    return { dir: union.dir, version, range, at: `${contractdir} (omx-contract ${version} and its owners)`, contractdir };
+    return { dir: union.dir, version, range, at: `${contractdir} (omx-contract ${version} and its owners; this tree's omx-plugins)`, contractdir: union.dir };
   }
   return { dir, version, range, at: `${at} (omx-contract ${version})` };
 }

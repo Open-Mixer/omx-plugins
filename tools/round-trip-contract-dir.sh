@@ -13,7 +13,7 @@ set -eu
 [ $# -eq 1 ] || { echo "usage: round-trip-contract-dir.sh <dir>" >&2; exit 2; }
 out=$1
 here=$(cd "$(dirname "$0")/.." && pwd)
-installed=${OMX_INSTALLED_CONTRACTDIR:-$(pkg-config --variable=contractdir omx-contract 2>/dev/null || true)}
+installed=${OMX_INSTALLED_CONTRACTDIR:-$(${PKG_CONFIG:-pkg-config} --variable=contractdir omx-contract 2>/dev/null || true)}
 [ -n "$installed" ] || installed=/usr/share/omx-contract/contract.d
 rm -rf "$out"
 mkdir -p "$out"

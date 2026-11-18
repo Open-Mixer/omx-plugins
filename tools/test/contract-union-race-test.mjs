@@ -36,6 +36,9 @@ function scratch() {
   mkdirSync(contractdir);
   // the installed render holds only the shared facts: no kernels, which is what asks for the union
   writeFileSync(join(data, 'omx-contract.json'), JSON.stringify({ version: '2.16.0', kernels: {}, items: {} }));
+  // the composed contract directory (tools/round-trip-contract-dir.sh) installs this tree's package through omx-contract's
+  // install script: a stand-in that places the staged files under <dest>/<major>/omx-plugins
+  writeFileSync(join(data, 'install-contract-dir.sh'), '#!/bin/sh\nmkdir -p "$5/$3/omx-plugins" && cp -r "$4"/. "$5/$3/omx-plugins/"\n');
   const pkg = join(root, 'pkg-config');
   writeFileSync(pkg, `#!/bin/sh\ncase "$*" in\n  *datadir*) echo ${data};;\n  *contractdir*) echo ${contractdir};;\nesac\n`);
   chmodSync(pkg, 0o755);
