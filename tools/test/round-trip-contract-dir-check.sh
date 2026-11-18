@@ -27,7 +27,7 @@ got="$out/3/omx-plugins/role-meanings.json"
 if [ -f "$got" ]; then
   sed 2d "$got" > "$tmp/installed-body"; sed 2d "$here/contract/role-meanings.json" > "$tmp/tree-body"
   cmp -s "$tmp/installed-body" "$tmp/tree-body" || { echo "round-trip-contract-dir: omx-plugins/role-meanings.json is not this tree's" >&2; bad=1; }
-  sed -n 2p "$got" | grep -Eq '^  "\$schema": "https://openmixer\.org/schema/omx-contract/v[0-9]+/omx-contract\.schema\.json",$' || { echo "round-trip-contract-dir: omx-plugins/role-meanings.json line 2 is not the major's \$schema URL: $(sed -n 2p "$got")" >&2; bad=1; }
+  sed -n 2p "$got" | grep -Eq '^  "[$]schema": "https://openmixer\.org/schema/omx-contract/v[0-9]+/omx-contract\.schema\.json",$' || { echo "round-trip-contract-dir: omx-plugins/role-meanings.json line 2 is not the major's \$schema URL: $(sed -n 2p "$got")" >&2; bad=1; }
 else
   echo "round-trip-contract-dir: omx-plugins/role-meanings.json is absent from the composed directory" >&2; bad=1
 fi
