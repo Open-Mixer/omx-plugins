@@ -9,7 +9,7 @@
 # path with the installed contract directory a FAKE one holding a stale omx-plugins package, against a fake omx-contract
 # CLI that refuses, as the real one does, any plugin-face.json in the directory it is handed whose $schema is the old
 # form. Reached through `--installed` the fake dir is refused; handed the composed directory (this tree's package) it reads.
-# Needs the omx-contract install the tree builds against (its install-contract-dir.sh and omx-contract.json).
+# Needs omx-contract's install-contract-dir.sh (omx-contract-devel).
 # Exit 0 pass, 1 refused, 2 no omx-contract installed.
 set -eu
 here=$(cd "$(dirname "$0")/../.." && pwd)
@@ -20,9 +20,9 @@ tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 mkdir -p "$tmp/data" "$tmp/installed/3/omx-plugins" "$tmp/installed/3/other-owner"
 ln -s "$realdata/install-contract-dir.sh" "$tmp/data/install-contract-dir.sh"
-# the installed render holds only the shared facts: no kernels, which is what asks for the union
-node -e 'const fs = require("fs"); const v = JSON.parse(fs.readFileSync(process.argv[1] + "/omx-contract.json", "utf8")).version;
-  fs.writeFileSync(process.argv[2], JSON.stringify({ version: v, kernels: {}, items: {} }));' "$realdata" "$tmp/data/omx-contract.json"
+# the installed render holds only the shared facts: no kernels, which is what asks for the union (a version inside the
+# packaging's range: the fake stands for the install, whichever release the host has)
+printf '{"version":"%s","kernels":{},"items":{}}\n' 3.99.0 > "$tmp/data/omx-contract.json"
 # the stale package: the old address form, as an older release installed it
 printf '{\n  "%s": "%s"\n}\n' "\$schema" 'https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json' > "$tmp/installed/3/omx-plugins/plugin-face.json"
 printf '{}\n' > "$tmp/installed/3/other-owner/x.json"
