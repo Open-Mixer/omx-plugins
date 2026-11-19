@@ -72,6 +72,8 @@ if [ "${1:-}" = "--self-test" ]; then
     runs-on: ubuntu-latest
     steps:
       - uses: Open-Mixer/.github/.github/actions/check-matrix@openmixer-v1
+        with:
+          x86-runner: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
   deb:
     needs: deb-cells
     runs-on: ${{ matrix.cell.runner }}
@@ -90,6 +92,8 @@ if [ "${1:-}" = "--self-test" ]; then
 	plant archlist 1 "${good/"$cells"/"$cells
         arch: [amd64]"}"
 	plant handmatrix 1 "${good/"$cells"/"suite: [trixie]"}"
+	guard="github.event.pull_request.head.repo.fork && 'ubuntu-latest' || "
+	plant noguard 1 "${good/"$guard"/}"
 	plant nodeb 2 'jobs:
   rpm:
     runs-on: ubuntu-latest
@@ -105,7 +109,7 @@ if [ "${1:-}" = "--self-test" ]; then
 	rc=0; "$self" "$t/nodir" >/dev/null 2>&1 || rc=$?
 	if [ "$rc" != 2 ]; then echo "self-test FAIL missing dir: rc $rc, want 2" >&2; fails=$((fails + 1)); fi
 	if [ "$fails" != 0 ]; then echo "workflow-deb-cells-check: self-test $fails red" >&2; exit 1; fi
-	echo "workflow-deb-cells-check: self-test green (7 planted trees)"
+	echo "workflow-deb-cells-check: self-test green (8 planted trees)"
 	exit 0
 fi
 
