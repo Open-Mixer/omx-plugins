@@ -20,6 +20,7 @@ import { join } from 'node:path';
 import { lv2UnitNames, loadDecl, pluginDirs, ROOT } from '../gen.mjs';
 import { contractUnits } from '../param-contract.mjs';
 import { ttlHints } from '../port-hints.mjs';
+import { isMain } from '../omx-contract.mjs';
 
 /** The part of an LV2 unit reference that names it: `units:db` -> db, `<urn:...#dBFS>` -> dBFS. */
 const nameOf = (ref) => ref?.replace(/^<|>$/g, '').split(/[:#]/).pop() ?? null;
@@ -49,7 +50,7 @@ export function load(root = ROOT) {
   });
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (isMain(import.meta.url)) {
   const plugins = load();
   const errors = unitErrors(plugins);
   for (const e of errors) console.log(`FAIL lv2-units ${e}`);
