@@ -19,6 +19,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { faceIds } from './param-contract.mjs';
 import { baseOf } from './variants.mjs';
+import { isMain } from './omx-contract.mjs';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = 'docs/plugins';
@@ -152,4 +153,4 @@ function main(argv) {
   if (check) console.log(`params-doc: ${Object.keys(files).length} pages are what the declarations say`);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main(process.argv.slice(2));
+if (isMain(import.meta.url)) main(process.argv.slice(2));

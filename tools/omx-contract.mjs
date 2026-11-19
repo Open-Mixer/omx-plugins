@@ -23,6 +23,7 @@
  */
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -90,6 +91,26 @@ export const installedDataDir = () => pkgVariable('datadir');
 
 /** The installed omx-contract's contract directory (pkg-config's contractdir, from 2.15.0 on), or undefined. */
 export const installedContractDir = () => pkgVariable('contractdir');
+
+/**
+ * omx-contract's `isMain(import.meta.url)`: whether the calling module is the script node runs, decided on real paths so
+ * a tool started through a symlink runs. Read, at the first call, from the installed command's own files,
+ * `<dir>/lib/entry.mjs`: the directory of $OMX_CONTRACT_CLI when it names bin/omx-contract.mjs, else
+ * `pkg-config --variable=clidir omx-contract` (from 3.20.2 on; the files ship in the omx-contract package, a build
+ * dependency here). A module that only imports this one never reads it.
+ * @param {string} moduleUrl the calling module's `import.meta.url`
+ * @returns {boolean} true when node was asked to run that module
+ */
+export function isMain(moduleUrl) {
+  if (!entry) {
+    const cli = process.env.OMX_CONTRACT_CLI;
+    const dir = cli?.endsWith('.mjs') ? resolve(dirname(cli), '..') : pkgVariable('clidir');
+    if (!dir) throw new Error('omx-contract: no installed command directory (pkg-config --variable=clidir omx-contract answers nothing; omx-contract >= 3.20.2 names it): isMain is read from <clidir>/lib/entry.mjs');
+    entry = createRequire(import.meta.url)(join(dir, 'lib', 'entry.mjs'));
+  }
+  return entry.isMain(moduleUrl);
+}
+let entry;
 
 /** The omx-contract CLI: $OMX_CONTRACT_CLI (its bin/omx-contract.mjs, or an executable), else `omx-contract`
  * on PATH; `[command, ...leading args]`, or undefined when there is none. */

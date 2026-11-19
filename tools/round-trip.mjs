@@ -38,7 +38,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { descriptorFile } from './descriptor.mjs';
 import { lookupValues, tableRows, tableWords } from './format-tables.mjs';
-import { compareVersions } from './omx-contract.mjs';
+import { compareVersions, isMain } from './omx-contract.mjs';
 
 /** `cmd args`' trimmed output, or undefined when it fails or says nothing. */
 function output(cmd, args) {
@@ -367,7 +367,7 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
   return { lines, losses, fails, inside, outside };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
+if (isMain(import.meta.url)) {
   const args = process.argv.slice(2);
   const authoredFiles = {};
   for (let i = 1; i < args.length; i += 2) if (args[i] === '--authored') { const [s, f] = args[i + 1].split('='); authoredFiles[s] = f; }

@@ -16,8 +16,8 @@
  */
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { ROOT, layerOfPath, loadRecipe } from './plugin-recipe.mjs';
+import { isMain } from './omx-contract.mjs';
 
 /** The commits of a range, oldest first: `{ sha, subject, files }`. */
 export function rangeCommits(repo, range) {
@@ -78,4 +78,4 @@ function main(argv) {
   process.exit(v.ok ? 0 : 1);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main(process.argv.slice(2));
+if (isMain(import.meta.url)) main(process.argv.slice(2));
