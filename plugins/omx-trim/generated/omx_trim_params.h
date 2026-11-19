@@ -32,6 +32,13 @@ static const char *const OMX_TRIM_PARAM_MODULES[OMX_TRIM_PARAM_COUNT] = {
   "Trim",
 };
 
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+
+static const char *const *const OMX_TRIM_PARAM_LABELS[OMX_TRIM_PARAM_COUNT] = {
+  NULL,
+};
+
 /* One macro per declared bound: what a C face reads where a constant is needed. */
 #define OMX_TRIM_PARAM_TRIM_DB_MIN -24.0f
 #define OMX_TRIM_PARAM_TRIM_DB_MAX 24.0f

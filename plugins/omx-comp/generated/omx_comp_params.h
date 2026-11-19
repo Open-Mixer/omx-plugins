@@ -49,19 +49,19 @@ static const omx_plugin_param OMX_COMP_PARAMS[OMX_COMP_PARAM_COUNT] = {
   { "releaseMs", "Release", "ms", 5.0f, 3000.0f, 200.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "makeupDb", "Makeup", "dB", 0.0f, 24.0f, 0.0f, 0u },
   { "mixPct", "Mix", "%", 0.0f, 100.0f, 100.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "kind", "Kind", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "detectorOversampling", "Detector Oversampling", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "detectorTopology", "Detector Topology", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "keySource", "Key Source", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "kind", "Kind", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "detectorOversampling", "Detector Oversampling", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "detectorTopology", "Detector Topology", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "keySource", "Key Source", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "keyHpHz", "Key HP", "Hz", 0.0f, 2000.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "keyLpHz", "Key LP", "Hz", 0.0f, 20000.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "keyTiltDb", "Key Tilt", "dB/oct", -6.0f, 6.0f, 0.0f, 0u },
   { "keyListen", "Key Listen", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
   { "holdMs", "Hold", "ms", 0.0f, 2000.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "detectLink", "Detect Link", "", 0.0f, 3.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "detectLink", "Detect Link", "", 0.0f, 3.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "duck", "Duck", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
   { "rangeDb", "Duck Range", "dB", -40.0f, 0.0f, -12.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "releaseMode", "Release Mode", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "releaseMode", "Release Mode", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -87,6 +87,37 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
   "Duck",
   "Duck",
   "Comp",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_COMP_PARAM_KIND_LABELS[] = { "Compressor", "Limiter" };
+static const char *const OMX_COMP_PARAM_DETECTOR_OVERSAMPLING_LABELS[] = { "Auto", "Off", "4x" };
+static const char *const OMX_COMP_PARAM_DETECTOR_TOPOLOGY_LABELS[] = { "Feedforward", "Feedback" };
+static const char *const OMX_COMP_PARAM_KEY_SOURCE_LABELS[] = { "Self", "Sidechain" };
+static const char *const OMX_COMP_PARAM_DETECT_LINK_LABELS[] = { "Linked", "Mid", "Side", "Max" };
+static const char *const OMX_COMP_PARAM_RELEASE_MODE_LABELS[] = { "Fixed", "Opto", "Auto" };
+static const char *const *const OMX_COMP_PARAM_LABELS[OMX_COMP_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_COMP_PARAM_KIND_LABELS,
+  OMX_COMP_PARAM_DETECTOR_OVERSAMPLING_LABELS,
+  OMX_COMP_PARAM_DETECTOR_TOPOLOGY_LABELS,
+  OMX_COMP_PARAM_KEY_SOURCE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_COMP_PARAM_DETECT_LINK_LABELS,
+  NULL,
+  NULL,
+  OMX_COMP_PARAM_RELEASE_MODE_LABELS,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -166,8 +197,8 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_COMP_PARAM_CONTRACT_VERSION 4u
-#define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "406476383bdf2dc44974fcecfa00d20f98fa03c0930b474b4a7443b39c5eaa05"
+#define OMX_COMP_PARAM_CONTRACT_VERSION 5u
+#define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "2213f334a74b3460db02d6cc7a0a5211a3eca0db308902bfb16efee5b45b4421"
 static const struct omx_param_contract_row OMX_COMP_PARAM_CONTRACT[OMX_COMP_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* thresholdDb db */
   { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio ratio */

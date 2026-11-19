@@ -38,11 +38,11 @@ static const omx_plugin_param OMX_DRIVE_PARAMS[OMX_DRIVE_PARAM_COUNT] = {
   { "bandFreq", "Band Frequency", "Hz", 20.0f, 20000.0f, 2000.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "mix", "Mix", "%", 0.0f, 100.0f, 100.0f, 0u },
   { "trim", "Trim", "dB", -24.0f, 12.0f, 0.0f, 0u },
-  { "curve", "Curve", "", 0.0f, 3.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "band", "Band", "", 0.0f, 3.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "curve", "Curve", "", 0.0f, 3.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "band", "Band", "", 0.0f, 3.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "autoGain", "Auto Gain", "", 0.0f, 1.0f, 1.0f, OMX_PLUGIN_PARAM_TOGGLE },
   { "stereoLink", "Stereo Link", "", 0.0f, 1.0f, 1.0f, OMX_PLUGIN_PARAM_TOGGLE },
-  { "hfRolloff", "HF Roll-off", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "hfRolloff", "HF Roll-off", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "oversample", "Oversampling", "", 1.0f, 4.0f, 4.0f, OMX_PLUGIN_PARAM_INTEGER },
 };
 
@@ -60,6 +60,25 @@ static const char *const OMX_DRIVE_PARAM_MODULES[OMX_DRIVE_PARAM_COUNT] = {
   "Drive",
   "Drive",
   "Drive",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_DRIVE_PARAM_CURVE_LABELS[] = { "Soft", "Tape", "Tube", "Exciter" };
+static const char *const OMX_DRIVE_PARAM_BAND_LABELS[] = { "Full", "Low", "High", "Tilt" };
+static const char *const OMX_DRIVE_PARAM_HF_ROLLOFF_LABELS[] = { "Off", "12 kHz", "16 kHz" };
+static const char *const *const OMX_DRIVE_PARAM_LABELS[OMX_DRIVE_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_DRIVE_PARAM_CURVE_LABELS,
+  OMX_DRIVE_PARAM_BAND_LABELS,
+  NULL,
+  NULL,
+  OMX_DRIVE_PARAM_HF_ROLLOFF_LABELS,
+  NULL,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -112,8 +131,8 @@ static const char *const OMX_DRIVE_PARAM_MODULES[OMX_DRIVE_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DRIVE_PARAM_CONTRACT_VERSION 2u
-#define OMX_DRIVE_PARAM_CONTRACT_FINGERPRINT "1a35b3fb687b7421dd51cdeb9fa4947172c628c8164a4f76a3f88bfaf9b17a8e"
+#define OMX_DRIVE_PARAM_CONTRACT_VERSION 3u
+#define OMX_DRIVE_PARAM_CONTRACT_FINGERPRINT "6e0aaed00dda0402d30c083d076ae1e6afe087e3663b8f2a5a0d5ec2119c3190"
 static const struct omx_param_contract_row OMX_DRIVE_PARAM_CONTRACT[OMX_DRIVE_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* amount db */
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* character none */

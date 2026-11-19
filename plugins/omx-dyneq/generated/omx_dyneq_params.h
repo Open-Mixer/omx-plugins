@@ -101,12 +101,12 @@ static const omx_plugin_param OMX_DYNEQ_PARAMS[OMX_DYNEQ_PARAM_COUNT] = {
   { "bandOn4", "Band 4 On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
   { "bandOn5", "Band 5 On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
   { "bandOn6", "Band 6 On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
-  { "bandType1", "Band 1 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "bandType2", "Band 2 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "bandType3", "Band 3 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "bandType4", "Band 4 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "bandType5", "Band 5 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "bandType6", "Band 6 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "bandType1", "Band 1 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "bandType2", "Band 2 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "bandType3", "Band 3 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "bandType4", "Band 4 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "bandType5", "Band 5 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "bandType6", "Band 6 Type", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "freq1", "Band 1 Freq", "Hz", 20.0f, 20000.0f, 40.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "freq2", "Band 2 Freq", "Hz", 20.0f, 20000.0f, 125.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "freq3", "Band 3 Freq", "Hz", 20.0f, 20000.0f, 400.0f, OMX_PLUGIN_PARAM_INTEGER },
@@ -125,12 +125,12 @@ static const omx_plugin_param OMX_DYNEQ_PARAMS[OMX_DYNEQ_PARAM_COUNT] = {
   { "q4", "Band 4 Q", "", 0.3f, 8.0f, 1.0f, 0u },
   { "q5", "Band 5 Q", "", 0.3f, 8.0f, 1.0f, 0u },
   { "q6", "Band 6 Q", "", 0.3f, 8.0f, 1.0f, 0u },
-  { "dynMode1", "Band 1 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "dynMode2", "Band 2 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "dynMode3", "Band 3 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "dynMode4", "Band 4 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "dynMode5", "Band 5 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "dynMode6", "Band 6 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "dynMode1", "Band 1 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "dynMode2", "Band 2 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "dynMode3", "Band 3 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "dynMode4", "Band 4 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "dynMode5", "Band 5 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "dynMode6", "Band 6 Dynamics", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "threshold1", "Band 1 Threshold", "dB", -60.0f, 0.0f, -30.0f, 0u },
   { "threshold2", "Band 2 Threshold", "dB", -60.0f, 0.0f, -30.0f, 0u },
   { "threshold3", "Band 3 Threshold", "dB", -60.0f, 0.0f, -30.0f, 0u },
@@ -246,6 +246,96 @@ static const char *const OMX_DYNEQ_PARAM_MODULES[OMX_DYNEQ_PARAM_COUNT] = {
   "Band 5",
   "Band 6",
   "Output",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_DYNEQ_PARAM_BAND_TYPE1_LABELS[] = { "Bell", "Low Shelf", "High Shelf" };
+static const char *const OMX_DYNEQ_PARAM_BAND_TYPE2_LABELS[] = { "Bell", "Low Shelf", "High Shelf" };
+static const char *const OMX_DYNEQ_PARAM_BAND_TYPE3_LABELS[] = { "Bell", "Low Shelf", "High Shelf" };
+static const char *const OMX_DYNEQ_PARAM_BAND_TYPE4_LABELS[] = { "Bell", "Low Shelf", "High Shelf" };
+static const char *const OMX_DYNEQ_PARAM_BAND_TYPE5_LABELS[] = { "Bell", "Low Shelf", "High Shelf" };
+static const char *const OMX_DYNEQ_PARAM_BAND_TYPE6_LABELS[] = { "Bell", "Low Shelf", "High Shelf" };
+static const char *const OMX_DYNEQ_PARAM_DYN_MODE1_LABELS[] = { "Off", "Down", "Up" };
+static const char *const OMX_DYNEQ_PARAM_DYN_MODE2_LABELS[] = { "Off", "Down", "Up" };
+static const char *const OMX_DYNEQ_PARAM_DYN_MODE3_LABELS[] = { "Off", "Down", "Up" };
+static const char *const OMX_DYNEQ_PARAM_DYN_MODE4_LABELS[] = { "Off", "Down", "Up" };
+static const char *const OMX_DYNEQ_PARAM_DYN_MODE5_LABELS[] = { "Off", "Down", "Up" };
+static const char *const OMX_DYNEQ_PARAM_DYN_MODE6_LABELS[] = { "Off", "Down", "Up" };
+static const char *const *const OMX_DYNEQ_PARAM_LABELS[OMX_DYNEQ_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_DYNEQ_PARAM_BAND_TYPE1_LABELS,
+  OMX_DYNEQ_PARAM_BAND_TYPE2_LABELS,
+  OMX_DYNEQ_PARAM_BAND_TYPE3_LABELS,
+  OMX_DYNEQ_PARAM_BAND_TYPE4_LABELS,
+  OMX_DYNEQ_PARAM_BAND_TYPE5_LABELS,
+  OMX_DYNEQ_PARAM_BAND_TYPE6_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_DYNEQ_PARAM_DYN_MODE1_LABELS,
+  OMX_DYNEQ_PARAM_DYN_MODE2_LABELS,
+  OMX_DYNEQ_PARAM_DYN_MODE3_LABELS,
+  OMX_DYNEQ_PARAM_DYN_MODE4_LABELS,
+  OMX_DYNEQ_PARAM_DYN_MODE5_LABELS,
+  OMX_DYNEQ_PARAM_DYN_MODE6_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -484,8 +574,8 @@ static const char *const OMX_DYNEQ_PARAM_MODULES[OMX_DYNEQ_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DYNEQ_PARAM_CONTRACT_VERSION 3u
-#define OMX_DYNEQ_PARAM_CONTRACT_FINGERPRINT "ae87b93cf0445f027d461a70139753d7fd71282bda7375d7a0c9863e443fb424"
+#define OMX_DYNEQ_PARAM_CONTRACT_VERSION 4u
+#define OMX_DYNEQ_PARAM_CONTRACT_FINGERPRINT "fdfbc5c383f190b6b288ebe759218b0f34e2c85ceae4a82178b0ce4b12dce9e6"
 static const struct omx_param_contract_row OMX_DYNEQ_PARAM_CONTRACT[OMX_DYNEQ_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bandOn1 none */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bandOn2 none */

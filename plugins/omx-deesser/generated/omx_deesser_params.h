@@ -37,7 +37,7 @@ static const omx_plugin_param OMX_DEESSER_PARAMS[OMX_DEESSER_PARAM_COUNT] = {
   { "deessRange", "Range", "dB", -24.0f, 0.0f, -12.0f, 0u },
   { "deessAttack", "Attack", "ms", 0.1f, 50.0f, 1.0f, 0u },
   { "deessRelease", "Release", "ms", 5.0f, 500.0f, 60.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "deessMode", "Mode", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "deessMode", "Mode", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -51,6 +51,20 @@ static const char *const OMX_DEESSER_PARAM_MODULES[OMX_DEESSER_PARAM_COUNT] = {
   "De-esser",
   "De-esser",
   "De-esser",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_DEESSER_PARAM_DEESS_MODE_LABELS[] = { "Split", "Wideband" };
+static const char *const *const OMX_DEESSER_PARAM_LABELS[OMX_DEESSER_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_DEESSER_PARAM_DEESS_MODE_LABELS,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -94,8 +108,8 @@ static const char *const OMX_DEESSER_PARAM_MODULES[OMX_DEESSER_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DEESSER_PARAM_CONTRACT_VERSION 3u
-#define OMX_DEESSER_PARAM_CONTRACT_FINGERPRINT "6e8f9ba1730c2a1430be5992c8744d81ee7b89a76d34a78fc63c27422df47e5c"
+#define OMX_DEESSER_PARAM_CONTRACT_VERSION 4u
+#define OMX_DEESSER_PARAM_CONTRACT_FINGERPRINT "197ae81d70435ec73db3c36ba326f7608692e5709e3a385733051d69084e55ad"
 static const struct omx_param_contract_row OMX_DEESSER_PARAM_CONTRACT[OMX_DEESSER_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* deessFreq hz */
   { 20u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* deessWidth oct */

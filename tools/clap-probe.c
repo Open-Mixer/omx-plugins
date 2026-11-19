@@ -259,13 +259,15 @@ static int render(const char *path, const clap_id *ids, const double *vals, uint
 }
 
 static double far_of(const clap_param_info_t *p) { return p->default_value == p->max_value ? p->min_value : p->max_value; }
-/** A choice: stepped, counting from 0 to at most 15 (a mode, a speed), not a toggle. A stepped travel in
- * whole units (a balance in percent) is not one. */
+/** A choice: an enumeration (CLAP_PARAM_IS_ENUM), or stepped, counting from 0 to at most 15 (a mode, a speed), not a
+ * toggle. A stepped travel in whole units (a balance in percent) is not one. */
 static int is_choice(const clap_param_info_t *p) {
+  if (p->flags & CLAP_PARAM_IS_ENUM) return 1;
   return (p->flags & CLAP_PARAM_IS_STEPPED) && p->min_value == 0.0 && p->max_value >= 2.0 && p->max_value <= 15.0;
 }
+/** A toggle: stepped from 0 to 1 and no enumeration (a two-option choice is one), as a host reads it. */
 static int is_toggle(const clap_param_info_t *p) {
-  return (p->flags & CLAP_PARAM_IS_STEPPED) && p->min_value == 0.0 && p->max_value == 1.0;
+  return (p->flags & CLAP_PARAM_IS_STEPPED) && !(p->flags & CLAP_PARAM_IS_ENUM) && p->min_value == 0.0 && p->max_value == 1.0;
 }
 
 static float *in_l, *in_r, *a_l, *a_r, *b_l, *b_r;

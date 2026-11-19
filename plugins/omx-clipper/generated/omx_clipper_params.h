@@ -38,6 +38,15 @@ static const char *const OMX_CLIPPER_PARAM_MODULES[OMX_CLIPPER_PARAM_COUNT] = {
   "Clipper",
 };
 
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+
+static const char *const *const OMX_CLIPPER_PARAM_LABELS[OMX_CLIPPER_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+};
+
 /* One macro per declared bound: what a C face reads where a constant is needed. */
 #define OMX_CLIPPER_PARAM_DRIVE_DB_MIN 0.0f
 #define OMX_CLIPPER_PARAM_DRIVE_DB_MAX 24.0f
