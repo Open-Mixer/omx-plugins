@@ -60,7 +60,7 @@ check() {
 if [ "${1:-}" = --self-test ]; then
   scratch="$(mktemp -d)"; trap 'rm -rf "$scratch"' EXIT
   fail=0
-  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added control-breaks-sibling-added spec-conflicts-sibling-added contract-missing control-no-command rules-skip; do
+  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added control-breaks-sibling-added spec-conflicts-sibling-added control-breaks-own-added control-replaces-added control-breaks-continued spec-conflicts-own-added contract-missing control-no-command rules-skip; do
     rm -rf "$scratch/t"; mkdir -p "$scratch/t/packaging" "$scratch/t/debian"
     mkdir -p "$scratch/t/lib"; cp "$HERE/lib/omxplugins.pc.in" "$scratch/t/lib/"; cp "$HERE/debian/rules" "$scratch/t/debian/"
     cp "$HERE/packaging/omx-plugins.spec" "$scratch/t/packaging/"; cp "$HERE/debian/control" "$scratch/t/debian/"
@@ -83,6 +83,10 @@ if [ "${1:-}" = --self-test ]; then
       control-bare-ceiling-added) sed -i '/^Recommends: plugin-hostd (>= /a Suggests: omx-dsp-contract (<< 0.33~)' "$scratch/t/debian/control" ;;
       control-breaks-sibling-added) sed -i '/^Breaks: omx-clap-host /d; /^Package: omx-plugins-clap$/,/^Description:/s/^Description:/Breaks: omx-clap-host (<< 0.23.0~)\nDescription:/' "$scratch/t/debian/control" ;;
       spec-conflicts-sibling-added) sed -i '/^Conflicts: omx-clap-host /d; /^%package clap$/,/^%description clap$/s/^%description clap$/Conflicts: omx-clap-host < 0.23.0\n&/' "$scratch/t/packaging/omx-plugins.spec" ;;
+      control-breaks-own-added) sed -i '/^Package: omx-plugins-clap$/,/^Description:/s/^Description:/Breaks: omx-plugins-dev (<< ${source:Version})\nDescription:/' "$scratch/t/debian/control" ;;
+      control-replaces-added) sed -i '/^Package: omx-plugins-clap$/,/^Description:/s/^Description:/Replaces: omx-plugins-dev (<< ${source:Version})\nDescription:/' "$scratch/t/debian/control" ;;
+      control-breaks-continued) sed -i '/^Package: omx-plugins-clap$/,/^Description:/s/^Description:/Breaks: omx-plugins-dev (<< ${source:Version}),\n omx-clap-host (<< 0.23.0~)\nDescription:/' "$scratch/t/debian/control" ;;
+      spec-conflicts-own-added) sed -i '/^%package clap$/,/^%description clap$/s/^%description clap$/Conflicts: %{name}-devel < %{version}-%{release}\n&/' "$scratch/t/packaging/omx-plugins.spec" ;;
       control-no-command) sed -i '/^ *omx-contract (>=/d' "$scratch/t/debian/control" ;;
       rules-skip) sed -i 's/^override_dh_auto_test:/&\n\t@echo NO-CONTRACT-COMMAND; $(MAKE) test-faces; exit 0/' "$scratch/t/debian/rules" ;;
       contract-missing) sed -i '/^BuildRequires: omx-contract-devel /d' "$scratch/t/packaging/omx-plugins.spec" ;;
