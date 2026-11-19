@@ -138,8 +138,6 @@ BuildArch: noarch
 # the contract directory, its schema and its reader's own package
 # 3.13.0: the reader that knows the roleMeanings kind contract/role-meanings.json is
 Requires: omx-contract-data >= 3.13.0
-# the files lived in omx-plugins-devel before this package
-Conflicts: %{name}-devel < %{version}-%{release}
 
 %description contract
 Each OpenMixer plugin's descriptor, its parameters in omx-contract's words,
