@@ -63,7 +63,7 @@ import { defaultPanel, emitPluginTtl, generateInstance, loadDecl, meterRows } fr
 import { hintErrors } from '../port-hints.mjs';
 import { expandVariant, variantBands } from '../variants.mjs';
 import { registerFirstContract } from '../param-contract.mjs';
-import { checkPlugin, debtGrowth, debtVerdict, gapLines, loadDebt, loadRecipe, pluginStems, recipeErrors } from '../plugin-recipe.mjs';
+import { checkPlugin, debtGrowth, debtVerdict, gapLines, growthVerdict, loadDebt, loadRecipe, pluginStems, recipeErrors } from '../plugin-recipe.mjs';
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '..', '..', '..');
 const WORK = join(ROOT, 'build', 'selftest');
@@ -430,10 +430,13 @@ async function main() {
     // the debt against its merge-base: a throwaway repository whose origin/main holds today's debt
     const repo = join(WORK, 'growth');
     copyTree(repo);
-    git(repo, 'init', '-q');
+    git(repo, 'init', '-q', '-b', 'main');
     git(repo, 'add', '-A');
     git(repo, 'commit', '-q', '-m', 'main');
-    git(repo, 'update-ref', 'refs/remotes/origin/main', 'HEAD');
+    // a real origin: the growth check fetches its base and refuses one it cannot refresh
+    execFileSync('git', ['clone', '-q', '--bare', repo, join(WORK, 'growth-origin.git')]);
+    git(repo, 'remote', 'add', 'origin', join(WORK, 'growth-origin.git'));
+    git(repo, 'fetch', '-q', 'origin');
     git(repo, 'checkout', '-q', '-b', 'topic');
     const level = debtGrowth(repo, loadDebt(repo));
     expect(level.base === loadDebt(repo).length && !level.grown, `the debt as main holds it has not grown (${level.base} entries at the merge-base)`);
@@ -442,9 +445,9 @@ async function main() {
     expect(grew.grown && grew.added.join() === 'omx-drive manual-section', `sabotage: a debt entry added since main fails the growth check (${grew.added.join()})`);
     const fewer = debtGrowth(repo, loadDebt(repo).slice(1));
     expect(!fewer.grown, 'a debt that shrank passes the growth check');
-    git(repo, 'update-ref', '-d', 'refs/remotes/origin/main');
+    git(repo, 'remote', 'remove', 'origin');
     const none = debtGrowth(repo, loadDebt(repo));
-    expect(none.base === undefined && /no merge-base/.test(none.why), `no main to compare to is reported, never a silent pass (${none.why?.slice(0, 60)})`);
+    expect(none.base === undefined && /origin\/main/.test(none.why) && growthVerdict(none).bad === 1, `no main to compare to is refused by name, never a silent pass (${none.why?.slice(0, 60)})`);
   }
 
   // ---- 4. the recipe itself ----------------------------------------------------------------
@@ -973,6 +976,16 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     delete process.env.OMX_CONTRACT_DIR;
   }
 
+}
+
+// the declaration schema names omx-panel's lists by the installed schema's own $id: a ref to any other address is
+// unresolved, and every declaration that draws a widget or a visibleWhen (omx-geq, omx-strip) lacks its `declaration`
+{
+  const { PANEL_SCHEMA } = await import('../omx-panel.mjs');
+  const text = readFileSync(join(ROOT, 'schema', 'plugin.decl.schema.json'), 'utf8');
+  const refs = [...text.matchAll(/"\$ref": "([^"#]*panel\.schema\.json)#/g)].map((m) => m[1]);
+  const strays = [...new Set(refs)].filter((r) => r !== PANEL_SCHEMA.$id);
+  expect(refs.length > 0 && strays.length === 0, `the declaration schema's refs into omx-panel name the installed schema's $id ${PANEL_SCHEMA.$id}${strays.length ? ` (found ${strays.join(', ')})` : ''}`);
 }
 
 // an arm that stops early has failed already: the verdict and the exit come after main, always

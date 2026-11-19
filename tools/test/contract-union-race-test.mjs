@@ -29,7 +29,7 @@ const STAGGER_MS = 500;
 function scratch() {
   const root = mkdtempSync(join(tmpdir(), 'union-race-'));
   mkdirSync(join(root, 'packaging'));
-  writeFileSync(join(root, 'packaging', 'omx-plugins.spec'), 'BuildRequires: (omx-contract-devel >= 2.15.0 with omx-contract-devel < 3)\n');
+  writeFileSync(join(root, 'packaging', 'omx-plugins.spec'), 'BuildRequires: omx-contract-devel >= 2.15.0\n');
   const data = join(root, 'data');
   const contractdir = join(root, 'contractdir');
   mkdirSync(data);
