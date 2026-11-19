@@ -26,7 +26,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { descriptorFile, isWhole, viewOf } from './descriptor.mjs';
-import { compareVersions, declKernels, declParams, findName, kernelExists, locateContract, packagingRange, paramKernel } from './omx-contract.mjs';
+import { compareVersions, declKernels, declParams, findName, kernelExists, locateContract, packagingRange, paramKernel, isMain } from './omx-contract.mjs';
 import { INDEXED_ROLES, ROLES } from './omx-panel.mjs';
 import { validate } from './schema-validate.mjs';
 import { omxdspInclude, render } from './template.mjs';
@@ -727,4 +727,4 @@ async function main(argv) {
   process.exit(bad ? 1 : 0);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main(process.argv.slice(2));
+if (isMain(import.meta.url)) await main(process.argv.slice(2));

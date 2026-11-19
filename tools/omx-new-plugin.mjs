@@ -34,9 +34,8 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { bindFace, instanceHeader, parseFace } from './instance-face.mjs';
-import { controlOf, items, kernelControls, kernelExists, locateContract, resolveParam } from './omx-contract.mjs';
+import { controlOf, items, kernelControls, kernelExists, locateContract, resolveParam, isMain } from './omx-contract.mjs';
 import { ROOT, checkPlugin, consoleErrors, gapLines, layerOfPath, loadRecipe, loadSchema, panelErrors, pluginFacts, pluginStems, validate } from './plugin-recipe.mjs';
 import { chainBindings, defaultPanel, instanceExtras, loadDecl, prepareDecl, scaleOf } from './gen.mjs';
 import { contractFingerprint, contractOf, registerFirstContract } from './param-contract.mjs';
@@ -646,4 +645,4 @@ async function variantsMain(raw, src, { root, recipe, declPath, argv, opt }) {
   if (red) process.exit(1);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main(process.argv.slice(2));
+if (isMain(import.meta.url)) await main(process.argv.slice(2));

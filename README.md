@@ -19,7 +19,7 @@ sudo dnf install https://www.openmixer.org/rpm/openmixer-release.noarch.rpm
 sudo dnf install omx-plugins
 ```
 
-On **Debian** bookworm or trixie, **Raspberry Pi OS** and **Zynthian**:
+On **Debian** trixie (arm64), **Raspberry Pi OS** and **Zynthian**:
 
 ```sh
 cd /tmp && curl -fsSLO https://www.openmixer.org/deb/openmixer-release.deb && sudo apt install ./openmixer-release.deb

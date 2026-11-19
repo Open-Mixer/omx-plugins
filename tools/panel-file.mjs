@@ -18,10 +18,10 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { descriptorFile, descriptorText } from './descriptor.mjs';
 import { loadDecl } from './gen.mjs';
 import { omxPanel } from './omx-panel.mjs';
+import { isMain } from './omx-contract.mjs';
 
 /** The declared panel of `d`, as the file omx-panel reads. */
 export const panelFileText = (d) => `${JSON.stringify(d.panel, null, 2)}\n`;
@@ -78,4 +78,4 @@ function main(argv) {
   writeFileSync(out, panelFileText(d));
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main(process.argv.slice(2));
+if (isMain(import.meta.url)) main(process.argv.slice(2));
