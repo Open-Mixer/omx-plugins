@@ -67,6 +67,8 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          staging: 'true'
 
       - uses: actions/checkout@v4
         with:
@@ -178,6 +180,8 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          staging: 'true'
 
       - uses: actions/checkout@v4
 
@@ -223,6 +227,8 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          staging: 'true'
 
       - uses: actions/checkout@v4
         with:
