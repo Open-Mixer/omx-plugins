@@ -164,18 +164,15 @@ LIB_PC     := $(LIB_B)/omxplugins.pc
 CLAP_FACES := $(foreach p,$(PLUGINS),$(wildcard $(p)omx_*_clap.c))
 LIB_OBJS   := $(LIB_B)/omx_clap_static.o $(LIB_B)/omx_clap_face.o $(patsubst %.c,$(LIB_B)/%.o,$(notdir $(CLAP_FACES)))
 # The releases this tree builds against are declared once, in the packaging: packaging/omx-plugins.spec's
-# BuildRequires, a floor and a ceiling per dependency (`(pkg >= F with pkg < C)`); debian/control says the same
-# (tools/deps-check.sh). Building the archive stops first, naming the dependency, the range and what is
-# installed, when pkg-config finds a release outside it.
+# BuildRequires, a floor per dependency and no ceiling (`BuildRequires: pkg >= F`); debian/control says the same
+# (tools/deps-check.sh). Building the archive stops first, naming the dependency, the floor and what is
+# installed, when pkg-config finds a release below it.
 SPEC       := packaging/omx-plugins.spec
-spec_floor   = $(shell sed -n 's/^BuildRequires: ($(1) >= \([0-9.]*\) with $(1) < [0-9.]*)$$/\1/p' $(SPEC))
-spec_ceiling = $(shell sed -n 's/^BuildRequires: ($(1) >= [0-9.]* with $(1) < \([0-9.]*\))$$/\1/p' $(SPEC))
+spec_floor   = $(shell sed -n 's/^BuildRequires: $(1) >= \([0-9.]*\)$$/\1/p' $(SPEC))
 OMXDSP_MIN        := $(call spec_floor,omx-dsp-devel)
-OMXDSP_MAX        := $(call spec_ceiling,omx-dsp-devel)
 CONTRACT_MIN      := $(call spec_floor,omx-contract-devel)
-CONTRACT_MAX      := $(call spec_ceiling,omx-contract-devel)
-# $(call dep_check,<pkg-config name>,<floor>,<ceiling>): nothing, or a stop naming what is installed
-dep_check = $(if $(shell $(PKG_CONFIG) --atleast-version=$(2) $(1) && ! $(PKG_CONFIG) --atleast-version=$(3) $(1) && echo y),,$(error $(1) >= $(2) and < $(3) is required ($(SPEC)); installed: $(or $(shell $(PKG_CONFIG) --modversion $(1) 2>/dev/null),none). Install omx-dsp-devel and omx-contract-devel (or libomxdsp-dev and libomx-contract-dev) from the channel: BUILDING.md))
+# $(call dep_check,<pkg-config name>,<floor>): nothing, or a stop naming what is installed
+dep_check = $(if $(shell $(PKG_CONFIG) --atleast-version=$(2) $(1) && echo y),,$(error $(1) >= $(2) is required ($(SPEC)); installed: $(or $(shell $(PKG_CONFIG) --modversion $(1) 2>/dev/null),none). Install omx-dsp-devel and omx-contract-devel (or libomxdsp-dev and libomx-contract-dev) from the channel: BUILDING.md))
 PKG_CONFIG ?= pkg-config
 CC         ?= cc
 AR         ?= ar
@@ -183,7 +180,7 @@ CFLAGS     ?= -O2 -g
 LIB_WARN   := -std=gnu11 -Wall -Wextra -Werror
 LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
-lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN),$(OMXDSP_MAX))$(call dep_check,omx-contract,$(CONTRACT_MIN),$(CONTRACT_MAX))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
+lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
 .PHONY: comp-published-scan face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
 all: lib
@@ -535,7 +532,7 @@ $(foreach f,$(CLAP_FACES),$(eval $(call face_rule,$(f))))
 
 # The prefix, libdir and includedir are filled at install; the version and the omx-dsp and omx-contract floors here.
 $(LIB_PC): lib/omxplugins.pc.in Makefile $(SPEC) | $(LIB_B)
-	sed -e 's,@VERSION@,$(VERSION),' -e 's,@OMXDSP_MIN@,$(OMXDSP_MIN),' -e 's,@OMXDSP_MAX@,$(OMXDSP_MAX),' -e 's,@CONTRACT_MIN@,$(CONTRACT_MIN),' -e 's,@CONTRACT_MAX@,$(CONTRACT_MAX),' $< > $@
+	sed -e 's,@VERSION@,$(VERSION),' -e 's,@OMXDSP_MIN@,$(OMXDSP_MIN),' -e 's,@CONTRACT_MIN@,$(CONTRACT_MIN),' $< > $@
 
 $(LIB_B):
 	@mkdir -p $@

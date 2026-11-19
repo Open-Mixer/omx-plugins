@@ -43,20 +43,20 @@ export function compareVersions(a, b) {
 
 /**
  * The range packaging/omx-plugins.spec requires of the build dependency `pkg` (`omx-dsp-devel`,
- * `omx-contract-devel`): `{ floor, ceiling }`, from its BuildRequires line `(pkg >= floor with pkg < ceiling)`.
- * Throws when it is missing, written twice, or has no ceiling.
+ * `omx-contract-devel`): `{ floor }`, from its BuildRequires line `BuildRequires: pkg >= floor` (floors only: no ceiling).
+ * Throws when it is missing or written twice.
  */
 export function packagingRange(pkg, root = ROOT) {
   const file = join(root, SPEC_FILE);
   if (!existsSync(file)) throw new Error(`${SPEC_FILE} is missing: the packaging is where the releases this tree builds against are declared`);
   const spec = readFileSync(file, 'utf8');
   const name = pkg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const found = [...spec.matchAll(new RegExp(`^BuildRequires: \\(${name} >= ([0-9][0-9.]*) with ${name} < ([0-9][0-9.]*)\\)$`, 'gm'))];
-  if (found.length !== 1) throw new Error(`${SPEC_FILE}: ${found.length ? 'more than one' : 'no'} "BuildRequires: (${pkg} >= <floor> with ${pkg} < <ceiling>)" line`);
-  return { floor: found[0][1], ceiling: found[0][2] };
+  const found = [...spec.matchAll(new RegExp(`^BuildRequires: ${name} >= ([0-9][0-9.]*)$`, 'gm'))];
+  if (found.length !== 1) throw new Error(`${SPEC_FILE}: ${found.length ? 'more than one' : 'no'} "BuildRequires: ${pkg} >= <floor>" line`);
+  return { floor: found[0][1] };
 }
 
-const inRange = (v, r) => compareVersions(v, r.floor) >= 0 && compareVersions(v, r.ceiling) < 0;
+const inRange = (v, r) => compareVersions(v, r.floor) >= 0;
 
 const versionOf = (dir) => {
   try {
@@ -186,7 +186,7 @@ export function locateContract(root = ROOT) {
   } catch (e) {
     return { dir: undefined, why: e.message };
   }
-  const want = `omx-contract >= ${range.floor} and < ${range.ceiling} (${SPEC_FILE})`;
+  const want = `omx-contract >= ${range.floor} (${SPEC_FILE})`;
   const env = process.env.OMX_CONTRACT_DIR;
   const dir = env || installedDataDir();
   const at = env ? `OMX_CONTRACT_DIR=${env}` : dir;
