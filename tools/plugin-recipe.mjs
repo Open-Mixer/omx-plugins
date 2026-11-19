@@ -315,22 +315,6 @@ export const CHECKERS = {
     return stale.length ? missing(`${stale.join(', ')} (make -C plugins/${facts.stem} gen)`) : ok(files.map((f) => fill(f, facts)).join(', '));
   },
 
-  /** The MOD GUI is what omx-panel writes now from the descriptor and the declared panel, and nothing more. */
-  async modguiFresh(root, _recipe, facts) {
-    const gen = await import(join(root, 'tools', 'gen.mjs'));
-    const pf = await import(join(root, 'tools', 'panel-file.mjs'));
-    let d;
-    try {
-      d = gen.loadDecl(join(root, 'plugins', facts.stem));
-    } catch (e) {
-      return missing(`cannot generate: ${e.message}`);
-    }
-    const dir = join('plugins', facts.stem, 'generated', `${facts.stem}.lv2`);
-    const r = pf.modgui(d, '--check');
-    if (r.status !== 0) return missing(`${r.stderr.trim().split('\n').map((l) => l.replace(/^modgui: /, '')).join(', ')} (make -C plugins/${facts.stem} gen)`);
-    return ok(`${dir}/modgui.ttl and modgui/`);
-  },
-
   /** The Makefile exists, its identity variables are the declaration's, and it has every target. */
   makefile(root, _recipe, facts, { path, vars, targets }) {
     const p = fill(path, facts);

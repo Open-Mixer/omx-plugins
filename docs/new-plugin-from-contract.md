@@ -70,7 +70,7 @@ Step 1 checks before it writes:
 Step 3 refuses while any `REVIEW` mark is left, naming each by its JSON pointer. When the draft is
 settled it fills the derived fields and runs `tools/gen.mjs`, which writes:
 
-- per plugin: `generated/` (parameter header, LV2 bundle, MOD GUI from the `panel`), the
+- per plugin: `generated/` (parameter header, LV2 bundle text), the
   `Makefile`, `omx_<kernel>_clap.c`, `omx_<kernel>_lv2.c`, the binding `omx_<kernel>_core.h` and
   the kernel-identity test `test/<kernel>-oracle.c`, each with a GENERATED banner;
 - across plugins, from the folders: the README's catalogue and sections, the RPM `%files` lists and

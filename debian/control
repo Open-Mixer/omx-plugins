@@ -118,7 +118,7 @@ Description: OpenMixer delay, drive, EQ, strip, gate and effects as LV2 plugins
  plosive tamer, clipper, upward compressor, bus compressor, loudness leveler,
  spectral balancer, spring reverb, input trim, limiter, compressor) as LV2
  plugins, installed in /usr/lib/lv2 where Ardour, Carla, MOD and Zynthian find
- them, with a MOD GUI where the plugin has one. They run the console's own DSP,
+ them. They run the console's own DSP,
  so they sound like the desk, sample for sample.
  .
  Its documentation is on openmixer.org.

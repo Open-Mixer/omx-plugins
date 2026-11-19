@@ -455,7 +455,7 @@ export function writePlugin(plan, { root = ROOT } = {}) {
   }
   written.push(...registerContract(root, d.stem));
   // a generated plugin always has its MOD GUI: its declared panel, or gen.mjs's one section of every parameter
-  const tools = [[join(root, 'tools', 'gen.mjs')], ...(d.panel || d.binding === 'instance' || d.binding === 'chain' ? [[join(root, 'tools', 'panel-file.mjs'), '--modgui', join(root, 'plugins', d.stem)]] : [])];
+  const tools = [[join(root, 'tools', 'gen.mjs')]];
   const generate = () => {
     for (const args of tools) {
       const r = run('node', args, { cwd: root });
@@ -614,7 +614,7 @@ async function variantsMain(raw, src, { root, recipe, declPath, argv, opt }) {
   }
   const written = [relative(root, declPath)];
   for (const p of plans) written.push(...registerContract(root, p.decl.stem));
-  const tools = [[join(root, 'tools', 'gen.mjs')], ...plans.map((p) => [join(root, 'tools', 'panel-file.mjs'), '--modgui', join(root, 'plugins', p.decl.stem)])];
+  const tools = [[join(root, 'tools', 'gen.mjs')]];
   for (const args of tools) {
     const r = run('node', args, { cwd: root });
     if (r.code !== 0) throw new Error(`${relative(root, args[0])}: ${r.out.trim()}`);

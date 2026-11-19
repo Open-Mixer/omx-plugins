@@ -9,10 +9,11 @@
  *
  * Usage:
  *   node tools/panel-file.mjs <plugin dir> <out file>
- *       writes the declared panel of the plugin as JSON, for a Makefile that calls `omx-panel modgui` itself
+ *       writes the declared panel of the plugin as JSON, for a host that calls `omx-panel modgui` itself
  *       (plugins/<stem>/Makefile, `make gen` and `make check`);
  *   node tools/panel-file.mjs --modgui [--check | --emit-stdout] <plugin dir>
- *       runs `omx-panel modgui` over the plugin, as the Makefile does (the wizard and the completeness test).
+ *       runs `omx-panel modgui` over the plugin to read what it would draw (the wizard and the completeness test); omx-plugins
+ *       ships no MOD GUI, a host generates it (omx-modgui-sync).
  */
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
