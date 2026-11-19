@@ -40,6 +40,9 @@ check() {
   # '<' on a dependency line in the spec, bare or inside 'with' (rpm), and any '(<' clause in debian/control (dpkg: << or <)
   if sed '/^%changelog/q' "$spec" | grep -qE '^(BuildRequires|Requires|Recommends|Suggests)[(:].*<'; then echo "deps-check: the spec states a ceiling (<) on a dependency" >&2; fail=1; fi
   if grep -vE '^(Breaks|Replaces|Conflicts):' "$control" | grep -q '(<'; then echo "deps-check: debian/control states a ceiling (<< or <) on a dependency" >&2; fail=1; fi
+  # no Breaks or Conflicts on a package that is not ours (omx-plugins*): a floor is the whole contract with a sibling's releases
+  if grep -E '^(Breaks|Conflicts):' "$control" | grep -qv 'omx-plugins'; then echo "deps-check: debian/control has a Breaks or Conflicts naming a sibling package" >&2; fail=1; fi
+  if sed '/^%changelog/q' "$spec" | grep -E '^(Conflicts|Obsoletes):' | grep -qvE 'omx-plugins|%\{name\}'; then echo "deps-check: the spec has a Conflicts or Obsoletes naming a sibling package" >&2; fail=1; fi
   # plugin-hostd at run time (Recommends) and at build time: a floor, no ceiling
   grep -qE '^BuildRequires: plugin-hostd >= [0-9.]+$' "$spec" || { echo "deps-check: the spec needs one 'BuildRequires: plugin-hostd >= <floor>' line" >&2; fail=1; }
   grep -qE '^Recommends: plugin-hostd >= [0-9.]+$' "$spec" || { echo "deps-check: the spec's Recommends on plugin-hostd is not a floor" >&2; fail=1; }

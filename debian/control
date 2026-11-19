@@ -56,7 +56,6 @@ Description: OpenMixer delay, drive, EQ, strip, gate and effects (CLAP, LV2)
 Package: omx-plugins-clap
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Breaks: omx-clap-host (<< 0.23.0~)
 Description: OpenMixer delay, drive, EQ, strip, gate and effects as CLAP plugins
  The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
  EQ, channel strip, keyed gate and effects (chorus, flanger, phaser, tremolo,

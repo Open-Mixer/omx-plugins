@@ -80,7 +80,6 @@ files in %{_datadir}/omx/presets.
 
 %package clap
 Summary: OpenMixer delay, drive, EQ, strip, gate and effects as CLAP plugins
-Conflicts: omx-clap-host < 0.23.0
 
 %description clap
 The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
