@@ -17,8 +17,11 @@
     "opens-sockets": false
   },
   "panel": {
-    "family": "none",
-    "roles": {},
+    "family": "reverb",
+    "roles": {
+      "decay": "decayS",
+      "mix": "mixPct"
+    },
     "sections": [
       {
         "key": "spring",

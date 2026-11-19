@@ -105,6 +105,7 @@
       "group": [
         "Loudlevel"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {

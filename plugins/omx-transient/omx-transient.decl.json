@@ -47,6 +47,7 @@
     "opens-sockets": false
   },
   "panel": {
+    "$comment": "TODO: family none: a transient designer has no threshold or ratio, so the dynamics family is not backed (omx-panel family-not-backed, #138); it waits for the utility family or a transient family, then declares it.",
     "family": "none",
     "roles": {},
     "sections": [

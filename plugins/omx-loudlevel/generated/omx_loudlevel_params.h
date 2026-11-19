@@ -96,8 +96,8 @@ static const omx_resource_hints_t OMX_LOUDLEVEL_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family none. */
-#define OMX_LOUDLEVEL_PANEL_FINGERPRINT "ad026efb5b81e04155533091f7118f6c5aa650ab148e228989562ca21c607ef0"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics. */
+#define OMX_LOUDLEVEL_PANEL_FINGERPRINT "a099034dfb382776ee67df730f9748003a64487eae9ed56fa166902eb7fce47f"
 static const struct omx_panel_section_row OMX_LOUDLEVEL_PANEL_SECTIONS[] = {
   { "loudlevel", "fx.loudlevel.section.loudlevel", "Loudlevel" },
 };
@@ -108,18 +108,21 @@ static const struct omx_panel_control_row OMX_LOUDLEVEL_PANEL_CONTROLS[] = {
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.loudlevel.gate_lufs", "Gate", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 4u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.loudlevel.window", "Window", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
+static const struct omx_panel_role_row OMX_LOUDLEVEL_PANEL_ROLES[] = {
+  { "threshold", 0u, 3u },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_LOUDLEVEL_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 3u, 0u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Loudlevel", "Loudlevel", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_LOUDLEVEL_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_LOUDLEVEL_PANEL = {
-  OMX_LOUDLEVEL_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
+  OMX_LOUDLEVEL_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DYNAMICS,
   OMX_LOUDLEVEL_PANEL_SECTIONS, 1u,
   OMX_LOUDLEVEL_PANEL_CONTROLS, 5u,
-  NULL, 0u,
+  OMX_LOUDLEVEL_PANEL_ROLES, 1u,
   NULL, 0u,
   NULL, 0u,
 };
