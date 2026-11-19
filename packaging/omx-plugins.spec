@@ -23,7 +23,7 @@ BuildRequires: plugin-hostd-devel >= 0.20.5
 # (3.3.0: the directory and its schema are omx-contract-data's, the definitions each owner's -contract package's)
 # (3.20.2: the tools decide "run, not imported" with its isMain, <clidir>/lib/entry.mjs, read through pkg-config)
 BuildRequires: omx-contract >= 3.20.2
-# the panel layout and the MOD GUI are omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
+# the panel layout is omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
 BuildRequires: omx-panel >= 0.13.5
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
@@ -73,7 +73,7 @@ with its sidechain key, multiband compressor and dynamic EQ. They come
 as CLAP plugins for Bitwig, REAPER and Carla, and as LV2 plugins for Ardour,
 Carla, MOD and Zynthian. Each one runs the same DSP as the console, so a track sounds the same
 in a session as it does on the desk, sample for sample. Every plugin comes in
-both formats with the same controls, MOD GUI included.
+both formats with the same controls.
 Its documentation is on openmixer.org.
 
 This package installs both formats; omx-plugins-clap and omx-plugins-lv2
@@ -95,13 +95,14 @@ Its documentation is on openmixer.org.
 %package lv2
 Summary: OpenMixer delay, drive, EQ, strip, gate and effects as LV2 plugins
 Requires: lv2
+Recommends: omx-panel >= 0.13.5
 
 %description lv2
 The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
 EQ, channel strip, keyed gate and effects (chorus, flanger, phaser, tremolo,
 rotary speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, input trim, limiter, compressor) as
 LV2 plugins, installed in %{_libdir}/lv2 where Ardour, Carla, MOD
-and Zynthian find them, with a MOD GUI where the plugin has one. They run the
+and Zynthian find them. They run the
 console's own DSP, so they sound like the desk.
 Its documentation is on openmixer.org.
 

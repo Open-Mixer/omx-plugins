@@ -3,7 +3,7 @@
   "test": {
     "prerequisites": [
       "lib", "entry-symlink", "units", "panel-words", "face-header", "role-meanings", "meter-binding", "panel-layout", "descriptor-view",
-      "descriptor-features", "placement-strips", "lv2-units", "lv2-deprecated", "lv2-maintainer", "lv2-manifest",
+      "descriptor-features", "placement-strips", "lv2-units", "lv2-deprecated", "lv2-maintainer", "no-modgui",
       "release-version", "resource-hints", "format-tables", "contract-union", "contract-dir", "lv2bench-ran",
       "ci-scope", "no-ci-bridge", "probe-checks", "eq-probe-race", "band-groups", "phaser-depth", "geq-widgets", "summary-numbers",
       "param-tie", "face-ids", "comp-release-mode", "strip-visible-when", "face-dirty-order", "core-init-answers", "debt-base", "test-split"
@@ -23,7 +23,7 @@
       "clap-ext-probe", "resource-hints-check.mjs --binaries", "port-groups-probe", "presets-host-check.mjs"
     ],
     "test-heavy": [
-      "{{kernel}}-oracle clap", "{{kernel}}-oracle lv2", "{{oracle}} clap", "{{oracle}} lv2", "modgui-test.sh",
+      "{{kernel}}-oracle clap", "{{kernel}}-oracle lv2", "{{oracle}} clap", "{{oracle}} lv2",
       "host-check.sh"
     ]
   }

@@ -6,7 +6,7 @@
 #
 #   make            build every plugin
 #   make test       the fast set (what the package builds run): declaration checks, in-process probes, hints, manual
-#   make test-heavy the built plugins through a host: oracles, MOD GUI test, host-check.sh, the round trip; CI runs
+#   make test-heavy the built plugins through a host: oracles, host-check.sh, the round trip; CI runs
 #                   it on every pull request in slices (OMX_HEAVY_SHARD=i/n); tools/test/test-split.json lists both
 #   make units      the declared units' contract codes (tools/param-contract.mjs) are omx-contract's header's
 #                   (OMX_PARAM_CONTRACT_UNITS, omx_param_units.h), its vendor block is dbfs, dbu, ratio, lufs, a unit
@@ -14,7 +14,8 @@
 #   make lv2-units  every unit a declaration uses has an LV2 unit, and every port states the unit it declares
 #                   (tools/test/lv2-units-check.mjs, with its sabotage arms; part of `make test`)
 #   make lv2-maintainer  every generated TTL gives its doap:maintainer a foaf:homepage (tools/test/lv2-maintainer-check.mjs; part of `make test`)
-#   make lv2-manifest  every manifest lists <modgui.ttl> where omx-panel's reader finds it (tools/test/lv2-manifest-check.mjs; part of `make test`)
+#   make no-modgui  omx-plugins ships no generated MOD GUI: no tracked MOD GUI file, no manifest pointing at one, no build step that
+#                   writes or checks one (tools/test/no-modgui-check.mjs; part of `make test`); a host generates it (omx-modgui-sync)
 #   make format-tables  the generators read plugin-hostd's installed format tables backwards (tools/format-tables.mjs):
 #                   the units, the 169 lv2:designation lines and the ratio unit, the CLAP modules from the descriptors'
 #                   groups (tools/test/format-tables-test.mjs, with its sabotage arms; part of `make test`)
@@ -50,8 +51,6 @@
 #   make geq-widgets  omx-geq declares the fader for its 31 bands, and its panel description and generated header serve them
 #                   (tools/test/geq-widgets-test.mjs; part of `make test`)
 #   make hints      no LV2 face lost a port hint: tools/port-hints.mjs against each declaration's `portHints` pin
-#   make modgui     every plugin's MOD GUI is what omx-panel writes from its descriptor and its declared panel: each plugin's
-#                   `make check` (the generated-fresh step of CI runs it beside `node tools/gen.mjs --check`)
 #   make manual     each declaration's manual follows omx-contract: a travel moved in a copy of the release moves
 #                   the catalogue section's range and default (tools/test/manual-perturb.mjs)
 #   make params-doc  write docs/plugins/: one page of every parameter for each plugin and the index (tools/params-doc.mjs, from the declarations)
@@ -182,11 +181,11 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
 
-.PHONY: comp-published-scan face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints modgui manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
+.PHONY: comp-published-scan face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib entry-symlink units panel-words face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer lv2-manifest release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
+test: lib entry-symlink units panel-words face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s presets-figures
@@ -206,7 +205,7 @@ test: lib entry-symlink units panel-words face-header role-meanings meter-bindin
 	@$(MAKE) -s test-role
 	@$(MAKE) -s package-lists
 # the set that runs the built plugins through a host: each plugin's kernel-identity and hand-written oracles on both
-# faces, its MOD GUI test and host-check.sh's external scanners, then the round trip through plugin-hostd. It runs on
+# faces, host-check.sh's external scanners, then the round trip through plugin-hostd. It runs on
 # every pull request in its own CI jobs, not in the package build. OMX_HEAVY_SHARD=i/n runs the i-th of n slices of
 # the plugins (the round trip in slice 1); unset, it runs all of them (tools/test/test-split.json lists both sets)
 OMX_HEAVY_SHARD ?=
@@ -271,9 +270,9 @@ lv2-deprecated:
 # every generated maintainer states foaf:homepage (mod-ui segfaults without it, #244), with its sabotage arm
 lv2-maintainer:
 	node tools/test/lv2-maintainer-check.mjs --self-test
-# every manifest points at its modgui.ttl in the spelling omx-panel's --check reads (CI was red on omx-panel 0.5.0), with its sabotage arm
-lv2-manifest:
-	node tools/test/lv2-manifest-check.mjs --self-test
+# omx-plugins ships no generated MOD GUI (owner decision 2026-11-19), with its sabotage arms
+no-modgui:
+	node tools/test/no-modgui-check.mjs --self-test
 # every plugin states its resource hints, and its TTL (omxres:) and CLAP header say what it states, with its sabotage arms
 resource-hints:
 	node tools/test/resource-hints-check.mjs --self-test
@@ -358,9 +357,6 @@ hints:
 	node tools/gen.mjs --check
 	node tools/gen.mjs
 	node tools/port-hints.mjs
-# the plugins that have a panel say so in their Makefile (PANEL_FILE); `make check` holds gen.mjs's files and the MOD GUI fresh
-modgui:
-	@for p in $(PLUGINS); do if grep -q '^PANEL_FILE' $$p/Makefile; then $(MAKE) -s -C $$p check || exit 1; fi; done
 manual:
 	node tools/test/manual-perturb.mjs
 # the factory presets: fresh against tools/gen-presets.mjs, every value inside its declared travel

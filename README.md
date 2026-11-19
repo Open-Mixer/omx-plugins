@@ -4,11 +4,11 @@
 
 The effects of the OpenMixer console, as plugins you can load
 in any host: **CLAP** for Bitwig, REAPER, Carla, openmixer and every other CLAP host, and **LV2** for
-Ardour, Carla, MOD and Zynthian, the MOD GUI included.
+Ardour, Carla, MOD and Zynthian (a host generates the MOD GUI from the plugin's description; none is shipped).
 
 The DSP inside each one is the console's own (the [omx-dsp](https://github.com/FreeMixer/omx-dsp)
 library), so a plugin sounds the same in your DAW as on the desk, sample for sample. Each plugin is
-drawn from one declaration: its CLAP parameters, its LV2 ports and its MOD GUI cannot disagree.
+drawn from one declaration: its CLAP parameters, and its LV2 ports cannot disagree.
 
 ## Install
 

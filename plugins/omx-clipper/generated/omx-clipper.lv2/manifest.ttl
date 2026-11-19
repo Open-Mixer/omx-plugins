@@ -8,7 +8,7 @@
 <urn:openmixer:clipper>
     a lv2:Plugin ;
     lv2:binary <omx-clipper.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-clipper.ttl> .
+    rdfs:seeAlso <omx-clipper.ttl> .
 
 <urn:openmixer:clipper#preset-hard-ceiling>
     a pset:Preset ;
