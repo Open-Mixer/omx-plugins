@@ -16,7 +16,7 @@ BuildRequires: pkgconf-pkg-config
 # in debian/control the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
 BuildRequires: omx-dsp-devel >= 0.32.0
 BuildRequires: omx-contract-devel >= 3.20.2
-BuildRequires: omx-clap-core-devel >= 0.32.3
+BuildRequires: omx-clap-core-devel >= 0.33.0
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
 BuildRequires: plugin-hostd-devel >= 0.20.5
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
@@ -24,7 +24,7 @@ BuildRequires: plugin-hostd-devel >= 0.20.5
 # (3.20.2: the tools decide "run, not imported" with its isMain, <clidir>/lib/entry.mjs, read through pkg-config)
 BuildRequires: omx-contract >= 3.20.2
 # the panel layout is omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
-BuildRequires: omx-panel >= 0.13.5
+BuildRequires: omx-panel >= 0.14.0
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}
@@ -95,7 +95,7 @@ Its documentation is on openmixer.org.
 %package lv2
 Summary: OpenMixer delay, drive, EQ, strip, gate and effects as LV2 plugins
 Requires: lv2
-Recommends: omx-panel >= 0.13.5
+Recommends: omx-panel >= 0.14.0
 
 %description lv2
 The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
