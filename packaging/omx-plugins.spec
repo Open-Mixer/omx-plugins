@@ -80,7 +80,6 @@ files in %{_datadir}/omx/presets.
 
 %package clap
 Summary: OpenMixer delay, drive, EQ, strip, gate and effects as CLAP plugins
-Conflicts: omx-clap-host < 0.23.0
 
 %description clap
 The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
@@ -139,8 +138,6 @@ BuildArch: noarch
 # the contract directory, its schema and its reader's own package
 # 3.13.0: the reader that knows the roleMeanings kind contract/role-meanings.json is
 Requires: omx-contract-data >= 3.13.0
-# the files lived in omx-plugins-devel before this package
-Conflicts: %{name}-devel < %{version}-%{release}
 
 %description contract
 Each OpenMixer plugin's descriptor, its parameters in omx-contract's words,
