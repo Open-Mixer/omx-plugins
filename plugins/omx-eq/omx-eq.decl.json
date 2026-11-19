@@ -25,7 +25,7 @@
   "name": "omx eq",
   "noun": "{bands}-band EQ",
   "vendor": "openmixer",
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "version": "0.13.0",
   "description": "The OpenMixer console's channel EQ, {bands}-band form: {bands} parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire.",
   "summary": "The console's channel EQ in its {bands}-band form: {bands} parametric bands (bell, shelves, notch, all-pass) plus high- and low-pass filters at {min:hpf_slope} or {max:hpf_slope} dB/oct. Stereo, zero latency.",

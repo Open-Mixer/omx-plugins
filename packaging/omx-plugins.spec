@@ -5,7 +5,7 @@ Version: 0.19.3
 Release: 1%{?dist}
 License: GPL-3.0-or-later
 Summary: The OpenMixer console's delay, drive, EQ, channel strip, keyed gate and effects, as plugins for your DAW
-URL: https://github.com/FreeMixer/omx-plugins
+URL: https://github.com/Open-Mixer/omx-plugins
 
 Source0: %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 
