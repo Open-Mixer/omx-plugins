@@ -8,7 +8,7 @@
 <urn:openmixer:comp>
     a lv2:Plugin ;
     lv2:binary <omx-comp.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-comp.ttl> .
+    rdfs:seeAlso <omx-comp.ttl> .
 
 <urn:openmixer:comp#preset-bass>
     a pset:Preset ;

@@ -8,7 +8,7 @@
 <urn:openmixer:loudlevel>
     a lv2:Plugin ;
     lv2:binary <omx-loudlevel.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-loudlevel.ttl> .
+    rdfs:seeAlso <omx-loudlevel.ttl> .
 
 <urn:openmixer:loudlevel#preset-fast-ride>
     a pset:Preset ;

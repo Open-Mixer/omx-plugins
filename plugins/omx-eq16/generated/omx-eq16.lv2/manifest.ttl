@@ -8,7 +8,7 @@
 <urn:openmixer:eq16>
     a lv2:Plugin ;
     lv2:binary <omx-eq16.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-eq16.ttl> .
+    rdfs:seeAlso <omx-eq16.ttl> .
 
 <urn:openmixer:eq16#preset-amp-input>
     a pset:Preset ;

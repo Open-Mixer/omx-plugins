@@ -11,8 +11,8 @@ the extras file carries only the extras, and `viewOf` (`tools/descriptor.mjs`) r
 says (the identity, the parameters, the CLAP features, the LV2 class, the description).
 
 `tools/gen.mjs`'s `loadDecl` reads the two and gives every generator the declaration it gave before, so the
-headers, both faces, the panel description, the MOD GUI and its rasters do not change by a byte when a
-plugin moves to a descriptor (`node tools/gen.mjs --check`, `omx-panel modgui --check`, `make panel-layout`).
+headers, both faces and the panel description do not change by a byte when a
+plugin moves to a descriptor (`node tools/gen.mjs --check`, `make panel-layout`).
 The panel is omx-panel's: it lays a panel out from a descriptor (its `docs/panel-layout.md`) and writes the MOD GUI
 (its `docs/modgui.md`), and reads a descriptor, never a declaration. This repository renders a declaration to its
 descriptor (`panelDescription(d)` lays that descriptor out under the declared panel) and hands omx-panel the

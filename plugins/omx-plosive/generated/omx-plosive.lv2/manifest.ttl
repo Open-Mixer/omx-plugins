@@ -8,7 +8,7 @@
 <urn:openmixer:plosive>
     a lv2:Plugin ;
     lv2:binary <omx-plosive.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-plosive.ttl> .
+    rdfs:seeAlso <omx-plosive.ttl> .
 
 <urn:openmixer:plosive#preset-close-mic>
     a pset:Preset ;
