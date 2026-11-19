@@ -29,11 +29,12 @@ typedef struct {
   OmxTrimInstance inst;
 } OmxTrimCore;
 
-/** A fresh instance at `rate`: every state word zero. A rate the kernel does not declare leaves it a wire. */
-static inline void omx_trim_core_init(OmxTrimCore *c, uint32_t rate) {
+/** A fresh instance at `rate`: every state word zero. 1 when the kernel takes the rate, 0 when it refuses
+ * it (the instance is then the identity: the caller must not run it). */
+static inline int omx_trim_core_init(OmxTrimCore *c, uint32_t rate) {
   memset(c, 0, sizeof *c);
   c->rate = rate;
-  (void)omx_trim_instance_init(&c->inst, (float)rate);
+  return omx_trim_instance_init(&c->inst, (float)rate);
 }
 
 /** The block's parameters (declaration order) and the host's bypass, each to its resolve() argument. */
@@ -55,7 +56,7 @@ static inline void omx_trim_core_run(OmxTrimCore *c, const float *in_l, const fl
 }
 
 /* The core behind the vtable the shared faces call (include/omx_plugin_face.h): the same functions, untyped. */
-static inline void omx_trim_core_init_v(void *c, uint32_t rate) { omx_trim_core_init((OmxTrimCore *)c, rate); }
+static inline int omx_trim_core_init_v(void *c, uint32_t rate) { return omx_trim_core_init((OmxTrimCore *)c, rate); }
 static inline void omx_trim_core_resolve_v(void *c, const float *values, int bypass) {
   omx_trim_core_resolve((OmxTrimCore *)c, values, bypass);
 }
