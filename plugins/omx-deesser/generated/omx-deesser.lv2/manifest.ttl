@@ -8,7 +8,7 @@
 <urn:openmixer:deesser>
     a lv2:Plugin ;
     lv2:binary <omx-deesser.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-deesser.ttl> .
+    rdfs:seeAlso <omx-deesser.ttl> .
 
 <urn:openmixer:deesser#preset-broad-s>
     a pset:Preset ;

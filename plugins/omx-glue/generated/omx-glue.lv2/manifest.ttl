@@ -8,7 +8,7 @@
 <urn:openmixer:glue>
     a lv2:Plugin ;
     lv2:binary <omx-glue.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-glue.ttl> .
+    rdfs:seeAlso <omx-glue.ttl> .
 
 <urn:openmixer:glue#preset-drum-bus>
     a pset:Preset ;

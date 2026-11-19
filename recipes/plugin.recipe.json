@@ -163,26 +163,6 @@
       }
     },
     {
-      "id": "modgui",
-      "what": "the MOD GUI of the LV2 bundle, generated from the panel block and fresh",
-      "step": "generate",
-      "layer": "generated",
-      "made": "GENERATED",
-      "target": "plugins/{stem}/generated/{stem}.lv2/modgui{.ttl,/}",
-      "paths": [
-        "plugins/{stem}/generated/{stem}.lv2/modgui.ttl",
-        "plugins/{stem}/generated/{stem}.lv2/modgui/**"
-      ],
-      "questions": [
-        "/$defs/plugin/properties/panel"
-      ],
-      "template": "tools/panel-file.mjs",
-      "when": "panel",
-      "checker": {
-        "fn": "modguiFresh"
-      }
-    },
-    {
       "id": "instance-files",
       "what": "for a binding: instance (or chain) plugin, the rest of its folder as tools/gen.mjs writes it now from the declaration and omx-dsp's instance face: the Makefile, both faces, the binding and the identity test",
       "step": "generate",

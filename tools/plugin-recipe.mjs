@@ -26,7 +26,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { descriptorFile, isWhole, viewOf } from './descriptor.mjs';
-import { compareVersions, declKernels, declParams, findName, kernelExists, locateContract, packagingRange, paramKernel } from './omx-contract.mjs';
+import { compareVersions, declKernels, declParams, findName, kernelExists, locateContract, packagingRange, paramKernel, isMain } from './omx-contract.mjs';
 import { INDEXED_ROLES, ROLES } from './omx-panel.mjs';
 import { validate } from './schema-validate.mjs';
 import { omxdspInclude, render } from './template.mjs';
@@ -313,22 +313,6 @@ export const CHECKERS = {
       else if (text(root, at) !== out[f]) stale.push(`${at} stale`);
     }
     return stale.length ? missing(`${stale.join(', ')} (make -C plugins/${facts.stem} gen)`) : ok(files.map((f) => fill(f, facts)).join(', '));
-  },
-
-  /** The MOD GUI is what omx-panel writes now from the descriptor and the declared panel, and nothing more. */
-  async modguiFresh(root, _recipe, facts) {
-    const gen = await import(join(root, 'tools', 'gen.mjs'));
-    const pf = await import(join(root, 'tools', 'panel-file.mjs'));
-    let d;
-    try {
-      d = gen.loadDecl(join(root, 'plugins', facts.stem));
-    } catch (e) {
-      return missing(`cannot generate: ${e.message}`);
-    }
-    const dir = join('plugins', facts.stem, 'generated', `${facts.stem}.lv2`);
-    const r = pf.modgui(d, '--check');
-    if (r.status !== 0) return missing(`${r.stderr.trim().split('\n').map((l) => l.replace(/^modgui: /, '')).join(', ')} (make -C plugins/${facts.stem} gen)`);
-    return ok(`${dir}/modgui.ttl and modgui/`);
   },
 
   /** The Makefile exists, its identity variables are the declaration's, and it has every target. */
@@ -743,4 +727,4 @@ async function main(argv) {
   process.exit(bad ? 1 : 0);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main(process.argv.slice(2));
+if (isMain(import.meta.url)) await main(process.argv.slice(2));
