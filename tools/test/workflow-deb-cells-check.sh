@@ -83,7 +83,7 @@ if [ "${1:-}" = "--self-test" ]; then
     steps:
       - uses: Open-Mixer/.github/.github/actions/check-matrix@openmixer-v1
         with:
-          x86-runner: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+          x86-runner: ${{ github.event.pull_request.head.repo.fork && '"'"'ubuntu-latest'"'"' || vars.OMX_RUNNER || '"'"'ubuntu-latest'"'"' }}
   deb:
     needs: deb-cells
     runs-on: ${{ matrix.cell.runner }}
