@@ -31,7 +31,8 @@ BuildConflicts: omx-plugins-devel < %{version}
 BuildRequires: clap-devel >= 1.2.7
 BuildRequires: lv2-devel
 # %%check: the generators and checks are Node scripts; the hosts that load the built plugins
-BuildRequires: nodejs
+# (20.19: tools/omx-contract.mjs require()s omx-contract's entry.mjs, an ES module, unflagged from 20.19 / 22.12)
+BuildRequires: nodejs >= 20.19
 BuildRequires: python3
 # make selftest copies the tree with tar
 BuildRequires: tar
