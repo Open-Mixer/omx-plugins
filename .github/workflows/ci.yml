@@ -55,11 +55,11 @@ jobs:
           tools/ci-scope.sh <<<"$changed" >> "$GITHUB_OUTPUT"
 
   test:
-    name: make test (fedora:44, amd64)
+    name: make test (fedora:45, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install the build dependencies
         run: |
@@ -148,7 +148,7 @@ jobs:
     # first. The package build runs make test only; every check of both sets runs on every pull request
     # (tools/test/test-split.json). The slice comes from the job's environment, so the step itself is plain
     # `make test-heavy`, which runs every slice when OMX_HEAVY_SHARD is unset.
-    name: make test-heavy ${{ matrix.shard }} (fedora:44, amd64)
+    name: make test-heavy ${{ matrix.shard }} (fedora:45, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
     strategy:
@@ -162,7 +162,7 @@ jobs:
     env:
       OMX_HEAVY_SHARD: ${{ matrix.shard }}
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install the build dependencies
         run: |
@@ -193,13 +193,13 @@ jobs:
   selftest:
     # Its own job, beside make test: the two together outgrew one job's 30 minutes once the chain and the
     # compressor landed. Same container and dependencies; nothing is dropped.
-    name: make selftest (fedora:44, amd64)
+    name: make selftest (fedora:45, amd64)
     needs: changes
     if: needs.changes.outputs.machinery == 'true'
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install the build dependencies
         run: |
@@ -227,7 +227,7 @@ jobs:
         run: make selftest
 
   rpm:
-    name: omx-plugins RPMs (fc44, ${{ matrix.arch }})
+    name: omx-plugins RPMs (fc45, ${{ matrix.arch }})
     needs: changes
     if: needs.changes.outputs.packages == 'true'
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
@@ -235,9 +235,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [x86_64]  # aarch64 builds run at release only (release.yml)
+        arch: [x86_64]  # no aarch64 RPMs: off by the owner ruling of 2026-11-19 until the full matrix returns
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install the build tools
         run: |
@@ -385,7 +385,7 @@ jobs:
       # with merge-multiple, and two builds of one NEVRA collide in one directory.
       - uses: actions/upload-artifact@v4
         with:
-          name: ci-check-omx-plugins-fc44-${{ matrix.arch }}
+          name: ci-check-omx-plugins-fc45-${{ matrix.arch }}
           path: rpms/*.rpm
           if-no-files-found: error
           retention-days: 7
@@ -504,11 +504,11 @@ jobs:
     # A failed test fails the job, except the one accepted failure (activate refusing a rate outside the nine oracle
     # rates, tools/clap-validate-summary.mjs), which is printed as an `accepted` line. The factory presets are installed first, where the plugins declare them, because
     # the preset-discovery tests crawl that location.
-    name: clap-validator (fedora:44, amd64)
+    name: clap-validator (fedora:45, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 30
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install the build dependencies
         run: |
@@ -573,4 +573,4 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       publish: false
-      arm: false  # arm64/aarch64 build at release only
+      arm: false  # the arm64 DEB and the Zynthian tarball build at release only; aarch64 RPMs are off (owner ruling 2026-11-19)
