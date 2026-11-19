@@ -8,7 +8,7 @@
 <urn:openmixer:tremolo>
     a lv2:Plugin ;
     lv2:binary <omx-tremolo.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-tremolo.ttl> .
+    rdfs:seeAlso <omx-tremolo.ttl> .
 
 <urn:openmixer:tremolo#preset-auto-pan>
     a pset:Preset ;

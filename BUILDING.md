@@ -46,7 +46,7 @@ release is below it.
 ```sh
 make                      # every plugin: plugins/<name>/build/
 make test                 # the fast set the package builds run: declaration checks, in-process probes, lib-test
-make test-heavy           # the built faces through a host: oracles, MOD GUI, host-check, round trip (CI, every PR)
+make test-heavy           # the built faces through a host: oracles, host-check, round trip (CI, every PR)
 make install DESTDIR=/tmp/stage LIBDIR=/usr/lib64   # <CLAPDIR>/*.clap (default /usr/lib/clap, any LIBDIR), <LIBDIR>/lv2/*.lv2/
 make install-devel DESTDIR=/tmp/stage LIBDIR=/usr/lib64   # headers, <LIBDIR>/libomxplugins.a, <LIBDIR>/pkgconfig/omxplugins.pc, and each plugin's descriptor
                                                          # in <DATADIR>/omx-contract/contract.d/3/omx-plugins/ (make install-contract, CONTRACTDIR=)
@@ -95,8 +95,8 @@ Makefiles and CI to it, so a step cannot fall out of both. Together they run, in
    directly, at every declared rate, engaged, bypassed and re-activated;
 4. **delay oracle** (`test/delay-oracle.c`): at 44.1, 48, 96 and 192 kHz, on both builds, the
    echoes, ping-pong, mix and bypass computed from the definition of a delay, not from omx-dsp;
-5. **MOD GUI** (`omx-panel modgui --check`, `omx-panel`'s `modgui-test.sh`): fresh, carrying every declared control
-   with its travel and default, valid under `sord_validate`, and stale when the declaration moves;
+5. **No MOD GUI is shipped**: omx-plugins carries no generated MOD GUI file (`make no-modgui`); a host generates it from the
+   plugin's description with omx-modgui-sync;
 6. **host check**: `omx-clap-scan` loads the CLAP file, `lv2ls`/`lv2info` read the LV2 bundle;
 7. **port groups** (`tools/port-groups-probe.c`, `tools/port-groups-check.mjs`): the LV2 bundle,
    read through lilv, holds one `pg:Group` per panel section (its `lv2:symbol` the section's key, its
@@ -131,7 +131,7 @@ moved from the console engine with its effect, at the nine oracle rates, reading
 For omx-strip, steps 3 and 4 are one **strip oracle** (`test/strip-oracle.c`): at 44.1, 48, 96
 and 192 kHz, on both builds, in each of the 24 stage orders and at the defaults, the output equals
 omx-dsp's strip modules called in sequence by the oracle itself; bypass is the identity. omx-strip
-has no MOD GUI yet (its declaration carries no panel).
+carries no MOD GUI (none is shipped; a host generates it).
 
 ## Layout
 
@@ -158,7 +158,7 @@ lib/                      omx_clap_static.c (the table's rows are generated), om
 tools/                    gen.mjs (header + TTL), descriptor.mjs (a declaration as its plugin
                           descriptor), omx-panel.mjs (where the installed omx-panel is found: its layout of a
                           descriptor, its lists) and param-contract.mjs (the extensions' rows),
-                          panel-file.mjs (a declaration's panel as the file `omx-panel modgui` reads),
+                          panel-file.mjs (a declaration's panel as the file `omx-panel modgui` reads; the wizard's check, nothing is shipped),
                           the test helpers,
                           omx-new-plugin.mjs (the wizard), plugin-recipe.mjs (completeness)
 recipes/                  plugin.recipe.json, the templates tools/gen.mjs writes from
