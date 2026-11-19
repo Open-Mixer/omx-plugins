@@ -29,6 +29,10 @@ on:
         description: 'Build fc44 x86_64 and trixie amd64 only and publish them to the staging channel for the next layer; publishes nothing to the real channel'
         type: boolean
         default: false
+      same_pass:
+        description: 'Packages other repositories release later in the same pass, space separated; empty reads .github/release-same-pass at the commit built'
+        type: string
+        default: ''
   workflow_call:
     inputs:
       publish:
@@ -45,6 +49,9 @@ on:
       staged:
         type: boolean
         default: false
+      same_pass:
+        type: string
+        default: ''
 
 permissions:
   contents: write
@@ -52,6 +59,40 @@ permissions:
   actions: read
 
 jobs:
+  # The packages other repositories release LATER in this same pass, for the channel-installability gate's same-pass
+  # (a breakage they cause or suffer is reported, not red): a dispatch's same_pass input, else the tracked
+  # .github/release-same-pass at the very commit this run builds (the tag on a push, source-ref when one is named), one
+  # package per line, # comments allowed. The file is reviewed like code, lives on its release branch and goes with it;
+  # never a repository variable, which is mutable, unversioned and can outlive its pass to excuse a later break.
+  samepass:
+    runs-on: ubuntu-latest
+    outputs:
+      list: ${{ steps.read.outputs.list }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/release-same-pass
+          sparse-checkout-cone-mode: false
+      - id: read
+        env:
+          NAMED_SOURCE: ${{ github.event_name == 'workflow_dispatch' && inputs.source-ref || '' }}
+        run: |
+          f=.github/release-same-pass
+          # a named source-ref is fetched and its file read from FETCH_HEAD: no checkout is pinned to a ref (make check-no-pins)
+          if [ -n "$NAMED_SOURCE" ]; then
+            git fetch --quiet --depth=1 origin "$NAMED_SOURCE" || { echo "::error::cannot fetch source-ref $NAMED_SOURCE"; exit 1; }
+            rm -f "$f"
+            git show "FETCH_HEAD:$f" >"$f" 2>/dev/null || rm -f "$f"
+          fi
+          [ -f "$f" ] || { echo "list=" >>"$GITHUB_OUTPUT"; echo "no $f at this commit: nothing released in the same pass"; exit 0; }
+          names=$(sed -e 's/#.*//' "$f" | tr -s ' \t\r\n' '\n' | sed '/^$/d')
+          for n in $names; do
+            [[ "$n" =~ ^[a-z0-9][a-z0-9.+-]*$ ]] || { echo "::error::$f: '$n' is not a package name"; exit 1; }
+          done
+          list=$(echo $names)
+          echo "list=$list" >>"$GITHUB_OUTPUT"
+          echo "same pass from $f: ${list:-none}"
+
   # The decision of 2026-10-10: plugin-qualify's real-time-safety verdict runs over every plugin, THEN omx-plugins
   # is released. The rpm job below publishes the moment it builds, so this job comes first and the release waits
   # on it: tools/qualify-release.sh builds the tree, qualifies every installed .clap and refuses unless each one's
@@ -97,9 +138,10 @@ jobs:
           retention-days: 90
 
   rpm:
-    needs: qualify
+    needs: [qualify, samepass]
     uses: Open-Mixer/.github/.github/workflows/build-rpm.yml@openmixer-v1
     with:
+      same-pass: ${{ inputs.same_pass || needs.samepass.outputs.list }}
       staged: ${{ inputs.staged == true }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
@@ -112,9 +154,10 @@ jobs:
 
   # beside the RPMs: the two publish jobs share one concurrency group, so their pushes never race
   deb:
-    needs: qualify
+    needs: [qualify, samepass]
     uses: Open-Mixer/.github/.github/workflows/build-deb.yml@openmixer-v1
     with:
+      same-pass: ${{ inputs.same_pass || needs.samepass.outputs.list }}
       staged: ${{ inputs.staged == true }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
