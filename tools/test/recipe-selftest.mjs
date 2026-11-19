@@ -314,7 +314,6 @@ async function main() {
     ['declValid', 'declaration', () => edit(`${P}/omx-drive.descriptor.json`, (s) => s.replace('"org.openmixer.drive"', '"org.openmixer.delay"'))],
     ['generatedFresh', 'params-header', () => edit(`${P}/generated/omx_drive_params.h`, (s) => `${s}\n`)],
     ['generatedFresh', 'lv2-description', () => edit(`${P}/generated/omx-drive.lv2/omx-drive.ttl`, (s) => s.replace('lv2:default 0 ;', 'lv2:default 1 ;'))],
-    ['modguiFresh', 'modgui', () => add(`${P}/generated/omx-drive.lv2/modgui/stray.css`, '')],
     ['makefile', 'makefile', () => edit(`${P}/Makefile`, (s) => s.replace('urn:openmixer:drive', 'urn:openmixer:drives'))],
     // the generated faces reach the table directly and through the binding: both includes go
     ['face', 'clap-face', () => edit(`${P}/omx_drive_clap.c`, (s) => s.replace('#include "omx_drive_params.h"', '').replace('#include "omx_drive_core.h"', ''))],
@@ -874,7 +873,7 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
       symbols[symbols.indexOf('compOn') + 1] === 'compThresholdDb' && symbols.at(-1) === 'order' && plan.resolved.at(-1).max === 5,
       `chain: the flattened list is each element's switch then its parameters, then order over 3! orders (${symbols.length} parameters)`);
     const written = writePlugin(plan, { root: ct });
-    for (const f of ['Makefile', 'omx_chainproof_core.h', 'omx_chainproof_clap.c', 'omx_chainproof_lv2.c', 'test/chainproof-oracle.c', 'generated/omx_chainproof_params.h', `generated/${stem}.lv2/modgui.ttl`])
+    for (const f of ['Makefile', 'omx_chainproof_core.h', 'omx_chainproof_clap.c', 'omx_chainproof_lv2.c', 'test/chainproof-oracle.c', 'generated/omx_chainproof_params.h'])
       expect(written.includes(`${CP}/${f}`), `chain: the wizard wrote ${CP}/${f}`);
     const header = readFileSync(join(ct, CP, 'generated/omx_chainproof_params.h'), 'utf8');
     expect(header.includes('#define OMX_EQ_INSTANCE_BANDS OMX_EQ_BAND_COUNTS_EQ8_MAX'), 'chain: the eq element\'s band count is the contract\'s, compiled into its face');

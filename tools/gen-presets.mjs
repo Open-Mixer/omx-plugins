@@ -18,6 +18,7 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { FORMAT, PRESET_DIR, ROOT, plugins, presetFiles, presetsTtl } from './preset-lib.mjs';
+import { isMain } from './omx-contract.mjs';
 
 /** The date every factory file carries: fixed, so regenerating changes nothing. */
 const WHEN = '2026-10-17T00:00:00Z';
@@ -345,7 +346,7 @@ export function build() {
   return files;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMain(import.meta.url)) {
   const check = process.argv.includes('--check');
   const want = build();
   const have = new Set(presetFiles().map((f) => f.file));

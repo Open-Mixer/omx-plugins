@@ -8,7 +8,7 @@
 <urn:openmixer:flanger>
     a lv2:Plugin ;
     lv2:binary <omx-flanger.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-flanger.ttl> .
+    rdfs:seeAlso <omx-flanger.ttl> .
 
 <urn:openmixer:flanger#preset-jet-flanger>
     a pset:Preset ;
