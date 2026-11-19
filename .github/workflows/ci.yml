@@ -409,7 +409,7 @@ jobs:
           wave: ${{ vars.OMX_RELEASE_MATRIX }}
           deb-releases: '["bookworm", "trixie"]'
           deb-arches: '["amd64", "arm64"]'
-          x86-runner: ${{ vars.OMX_RUNNER || 'ubuntu-latest' }}
+          x86-runner: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
 
   deb:
     name: omx-plugins DEBs (${{ matrix.cell.suite }}, ${{ matrix.cell.arch }})

@@ -52,6 +52,16 @@ check() {
 		echo "workflow-deb-cells-check: a DEB job not on check-matrix cells (runs-on: \${{ matrix.cell.runner }}, cell: \${{ fromJSON(needs.<job>.outputs.deb) }})" >&2
 		return 1
 	fi
+	# the x86 runner of check-matrix keeps the fork guard of the job it replaces: a fork's pull request never reaches the private runner
+	local f
+	while IFS= read -r f; do
+		grep -q 'check-matrix@' "$f" || continue
+		if ! grep -E '^[[:space:]]+x86-runner:' "$f" | grep -q 'github\.event\.pull_request\.head\.repo\.fork'; then
+			echo "$f: check-matrix's x86-runner has no fork guard (github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest')"
+			echo "workflow-deb-cells-check: the fork guard of the runner is dropped" >&2
+			return 1
+		fi
+	done < <(find "$wf" -type f \( -name '*.yml' -o -name '*.yaml' \))
 	echo "workflow-deb-cells-check: every DEB job runs on its check-matrix cell's runner ($(grep -c '^DEB ' <<<"$out") job(s))"
 }
 
