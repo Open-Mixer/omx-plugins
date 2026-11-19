@@ -26,22 +26,48 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
+/** The `$schema` an install writes: the major's URL, read off omx-contract's OWN package (the one that installs it), and only
+ * when every file of it names the same one: another package's files may still carry an older URL, so none is read. */
+export function installedSchemaOf(dirs) {
+  const urls = new Set();
+  for (const src of dirs) {
+    const pkg = join(src, 'omx-contract');
+    if (!existsSync(pkg)) continue;
+    for (const f of readdirSync(pkg).filter((n) => n.endsWith('.json') && n !== 'MANIFEST.json')) {
+      const u = JSON.parse(readFileSync(join(pkg, f), 'utf8')).$schema;
+      if (typeof u === 'string' && u.startsWith('https://')) urls.add(u);
+    }
+  }
+  if (urls.size !== 1) throw new Error(`role-meanings-source: omx-contract's own files name ${urls.size} different $schema URLs (${[...urls].join(', ') || 'none'}), exactly one is needed`);
+  return [...urls][0];
+}
+
+if (process.argv.includes('--self-test')) {
+  const t = mkdtempSync(join(tmpdir(), 'rms-self-'));
+  const put = (name, urls) => {
+    const d = join(t, name, 'omx-contract');
+    mkdirSync(d, { recursive: true });
+    urls.forEach((u, i) => writeFileSync(join(d, `f${i}.json`), JSON.stringify({ $schema: u })));
+    return join(t, name);
+  };
+  const bad = [];
+  try {
+    if (installedSchemaOf([put('one', ['https://x/v3.json', 'https://x/v3.json'])]) !== 'https://x/v3.json') bad.push('one URL is not returned');
+    for (const [arm, urls] of [['two URLs', ['https://x/v3.json', 'https://old/raw/v3.json']], ['no URL', []]]) {
+      try { installedSchemaOf([put(arm.replace(' ', '-'), urls)]); bad.push(`${arm}: not refused`); } catch (e) { if (!/exactly one is needed/.test(e.message)) bad.push(`${arm}: ${e.message}`); }
+    }
+  } finally { rmSync(t, { recursive: true, force: true }); }
+  for (const b of bad) console.error(`FAIL self-test: ${b}`);
+  if (bad.length) process.exit(1);
+  console.log('role-meanings-source self-test: one URL read, two URLs and none refused by name');
+  process.exit(0);
+}
+
 const { contractDirs } = await import('../omx-panel.mjs').then(() => import(join(process.env.OMX_PANEL_DIR || '/usr/share/omx-panel', 'tools', 'vocabulary.mjs')));
 const sources = contractDirs().map((d) => join(d, '3')).filter((d) => existsSync(d));
 if (!sources.length) { console.error('role-meanings-source: no installed contract directory to build from'); process.exit(2); }
-
-/** The `$schema` an install of a package writes (omx-contract's install-contract-dir.sh): the major's URL, read off an installed file. */
-const installedSchema = (() => {
-  for (const src of sources) for (const pkg of readdirSync(src, { withFileTypes: true })) {
-    if (!pkg.isDirectory() || pkg.name === 'omx-plugins') continue;
-    for (const f of readdirSync(join(src, pkg.name)).filter((n) => n.endsWith('.json') && n !== 'MANIFEST.json')) {
-      const doc = JSON.parse(readFileSync(join(src, pkg.name, f), 'utf8'));
-      if (typeof doc.$schema === 'string' && doc.$schema.startsWith('https://')) return doc.$schema;
-    }
-  }
-  console.error('role-meanings-source: no installed file names its $schema (the major URL an install writes)');
-  process.exit(2);
-})();
+let installedSchema;
+try { installedSchema = installedSchemaOf(sources); } catch (e) { console.error(e.message); process.exit(2); }
 
 const tmp = mkdtempSync(join(tmpdir(), 'role-meanings-source-'));
 /** A contract directory holding every installed package but omx-plugins, plus `omxPlugins` files when given. */
