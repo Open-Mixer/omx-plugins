@@ -235,7 +235,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [x86_64]  # aarch64 builds run at release only (release.yml)
+        arch: [x86_64]  # no aarch64 RPMs: off by the owner ruling of 2026-11-19 until the full matrix returns
     container:
       image: fedora:45
     steps:
@@ -573,4 +573,4 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       publish: false
-      arm: false  # arm64/aarch64 build at release only
+      arm: false  # the arm64 DEB and the Zynthian tarball build at release only; aarch64 RPMs are off (owner ruling 2026-11-19)

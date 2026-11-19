@@ -41,7 +41,7 @@ on:
       arm:
         type: boolean
         default: true
-        description: "Build the arm64/aarch64 packages too; the pull-request dry run passes false (arm builds run at release only)"
+        description: "Build the arm64 DEB and the Zynthian tarball too (aarch64 RPMs are off by the owner ruling of 2026-11-19 until the full matrix); the pull-request dry run passes false"
       staged:
         type: boolean
         default: false
