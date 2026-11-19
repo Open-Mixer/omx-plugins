@@ -57,7 +57,7 @@ check() {
 if [ "${1:-}" = --self-test ]; then
   scratch="$(mktemp -d)"; trap 'rm -rf "$scratch"' EXIT
   fail=0
-  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added contract-missing control-no-command rules-skip; do
+  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added panel-recommends-dropped-spec panel-recommends-dropped-control panel-recommends-floor-moved contract-missing control-no-command rules-skip; do
     rm -rf "$scratch/t"; mkdir -p "$scratch/t/packaging" "$scratch/t/debian"
     mkdir -p "$scratch/t/lib"; cp "$HERE/lib/omxplugins.pc.in" "$scratch/t/lib/"; cp "$HERE/debian/rules" "$scratch/t/debian/"
     cp "$HERE/packaging/omx-plugins.spec" "$scratch/t/packaging/"; cp "$HERE/debian/control" "$scratch/t/debian/"
@@ -78,6 +78,9 @@ if [ "${1:-}" = --self-test ]; then
       control-panel-ceiling-returns) sed -i '0,/omx-panel (>= \([0-9.]*\)~)/s//omx-panel (>= \1~), omx-panel (<< 0.14~)/' "$scratch/t/debian/control" ;;
       spec-bare-ceiling-added) sed -i '/^BuildRequires: omx-contract >= /a BuildRequires: omx-contract < 4' "$scratch/t/packaging/omx-plugins.spec" ;;
       control-bare-ceiling-added) sed -i '/^Recommends: plugin-hostd (>= /a Suggests: omx-dsp-contract (<< 0.33~)' "$scratch/t/debian/control" ;;
+      panel-recommends-dropped-spec) sed -i '/^Recommends: omx-panel >= /d' "$scratch/t/packaging/omx-plugins.spec" ;;
+      panel-recommends-dropped-control) sed -i '/^Recommends: omx-panel (>= /d' "$scratch/t/debian/control" ;;
+      panel-recommends-floor-moved) sed -i 's/^Recommends: omx-panel >= .*/Recommends: omx-panel >= 9.9.9/' "$scratch/t/packaging/omx-plugins.spec" ;;
       control-no-command) sed -i '/^ *omx-contract (>=/d' "$scratch/t/debian/control" ;;
       rules-skip) sed -i 's/^override_dh_auto_test:/&\n\t@echo NO-CONTRACT-COMMAND; $(MAKE) test-faces; exit 0/' "$scratch/t/debian/rules" ;;
       contract-missing) sed -i '/^BuildRequires: omx-contract-devel /d' "$scratch/t/packaging/omx-plugins.spec" ;;
