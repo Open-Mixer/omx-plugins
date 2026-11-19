@@ -30,6 +30,19 @@ const { contractDirs } = await import('../omx-panel.mjs').then(() => import(join
 const sources = contractDirs().map((d) => join(d, '3')).filter((d) => existsSync(d));
 if (!sources.length) { console.error('role-meanings-source: no installed contract directory to build from'); process.exit(2); }
 
+/** The `$schema` an install of a package writes (omx-contract's install-contract-dir.sh): the major's URL, read off an installed file. */
+const installedSchema = (() => {
+  for (const src of sources) for (const pkg of readdirSync(src, { withFileTypes: true })) {
+    if (!pkg.isDirectory() || pkg.name === 'omx-plugins') continue;
+    for (const f of readdirSync(join(src, pkg.name)).filter((n) => n.endsWith('.json') && n !== 'MANIFEST.json')) {
+      const doc = JSON.parse(readFileSync(join(src, pkg.name, f), 'utf8'));
+      if (typeof doc.$schema === 'string' && doc.$schema.startsWith('https://')) return doc.$schema;
+    }
+  }
+  console.error('role-meanings-source: no installed file names its $schema (the major URL an install writes)');
+  process.exit(2);
+})();
+
 const tmp = mkdtempSync(join(tmpdir(), 'role-meanings-source-'));
 /** A contract directory holding every installed package but omx-plugins, plus `omxPlugins` files when given. */
 function contractDir(name, omxPlugins) {
@@ -44,7 +57,8 @@ function contractDir(name, omxPlugins) {
     mkdirSync(at);
     const files = {};
     for (const [f, doc] of Object.entries(omxPlugins)) {
-      const text = `${JSON.stringify(doc, null, 2)}\n`;
+      // as an install writes it: the major's URL, which omx-contract's reader requires of every file of the directory
+      const text = `${JSON.stringify({ ...doc, $schema: installedSchema }, null, 2)}\n`;
       writeFileSync(join(at, f), text);
       files[f] = createHash('sha256').update(text).digest('hex');
     }
