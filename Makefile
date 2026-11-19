@@ -245,6 +245,7 @@ face-header:
 role-meanings:
 	node tools/test/role-meanings-check.mjs
 	node tools/test/role-meanings-check.mjs --self-test
+	node tools/test/role-meanings-source-check.mjs --self-test
 	node tools/test/role-meanings-source-check.mjs
 # every meter a shipped plugin exports is bound by a display of its panel, or listed unbound with a reason (tools/test/meter-binding-check.mjs)
 meter-binding:
