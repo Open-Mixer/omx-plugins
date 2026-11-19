@@ -111,6 +111,7 @@ Description: OpenMixer plugins' descriptors in omx-contract's contract directory
 Package: omx-plugins-lv2
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
+Recommends: omx-panel (>= 0.13.5~)
 Description: OpenMixer delay, drive, EQ, strip, gate and effects as LV2 plugins
  The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
  EQ, channel strip, keyed gate and effects (chorus, flanger, phaser, tremolo,

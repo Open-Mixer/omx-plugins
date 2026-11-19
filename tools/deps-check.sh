@@ -18,7 +18,7 @@ count() { { grep -oF -- "$1" "$2" || true; } | wc -l; }
 check() {
   local root="$1" fail=0 spec="$1/packaging/omx-plugins.spec" control="$1/debian/control"
   # rpm name, deb name, how many times debian/control must carry the deb pair, does -devel require it
-  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-core-devel libomx-clap-core-dev 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 1 no" "plugin-qualify plugin-qualify 1 no"; do
+  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-core-devel libomx-clap-core-dev 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 2 no" "plugin-qualify plugin-qualify 1 no"; do
     read -r rpm deb times devel <<<"$row"
     local floor
     floor="$(sed -n "s/^BuildRequires: $rpm >= \([0-9.]*\)\$/\1/p" "$spec")"
@@ -40,6 +40,10 @@ check() {
   # '<' on a dependency line in the spec, bare or inside 'with' (rpm), and any '(<' clause in debian/control (dpkg: << or <)
   if sed '/^%changelog/q' "$spec" | grep -qE '^(BuildRequires|Requires|Recommends|Suggests)[(:].*<'; then echo "deps-check: the spec states a ceiling (<) on a dependency" >&2; fail=1; fi
   if grep -vE '^(Breaks|Replaces|Conflicts):' "$control" | grep -q '(<'; then echo "deps-check: debian/control states a ceiling (<< or <) on a dependency" >&2; fail=1; fi
+  # the LV2 package recommends omx-panel at the BuildRequires floor, so omx-modgui-sync (the host's MOD GUI generator) is there
+  panel_floor=$(sed -n 's/^BuildRequires: omx-panel >= \([0-9.]*\)$/\1/p' "$spec")
+  sed -n '/^%package lv2$/,/^%description lv2$/p' "$spec" | grep -qx "Recommends: omx-panel >= $panel_floor" || { echo "deps-check: the spec's lv2 package needs 'Recommends: omx-panel >= $panel_floor' (omx-modgui-sync)" >&2; fail=1; }
+  sed -n '/^Package: omx-plugins-lv2$/,/^Description:/p' "$control" | grep -qx "Recommends: omx-panel (>= ${panel_floor}~)" || { echo "deps-check: debian/control's omx-plugins-lv2 needs 'Recommends: omx-panel (>= ${panel_floor}~)' (omx-modgui-sync)" >&2; fail=1; }
   # plugin-hostd at run time (Recommends) and at build time: a floor, no ceiling
   grep -qE '^BuildRequires: plugin-hostd >= [0-9.]+$' "$spec" || { echo "deps-check: the spec needs one 'BuildRequires: plugin-hostd >= <floor>' line" >&2; fail=1; }
   grep -qE '^Recommends: plugin-hostd >= [0-9.]+$' "$spec" || { echo "deps-check: the spec's Recommends on plugin-hostd is not a floor" >&2; fail=1; }
