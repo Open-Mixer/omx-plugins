@@ -287,7 +287,7 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 * Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
 - omx-plugins-contract installs role-meanings.json (the meaning each panel
   role plays) and plugin-face.json (the face ids, declared here since
-  omx-contract 3.13.0 no longer does); omx-contract-data >= 3.19.1 and < 4
+  omx-contract 3.13.0 no longer does); omx-contract-data >= 3.13.0 and < 4
 - a ratio travel's unit is ratio in the parameter contract, as in the LV2 face
 - omx-comp draws its transfer curve and gain-reduction bar; the panels are
   laid out by omx-panel >= 0.13.2 and < 0.14
