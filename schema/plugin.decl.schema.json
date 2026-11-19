@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://github.com/FreeMixer/omx-plugins/schema/plugin.decl.schema.json",
+  "$id": "https://github.com/Open-Mixer/omx-plugins/schema/plugin.decl.schema.json",
   "$comment": "The shape of one plugin's declaration, plugins/<stem>/<stem>.decl.json: the plugin folder's one hand-written file. tools/omx-new-plugin.mjs drafts it and explains its fields from the titles and descriptions here; tools/gen.mjs generates everything else from it; tools/plugin-recipe.mjs validates every declaration against it. The vocabularies a renderer reads (widgets, graph kinds) are defined once, in $defs.",
   "$ref": "#/$defs/plugin",
   "$defs": {
@@ -68,7 +68,7 @@
           "description": "The vendor every plugin publishes."
         },
         "url": {
-          "const": "https://github.com/FreeMixer/omx-plugins",
+          "const": "https://github.com/Open-Mixer/omx-plugins",
           "title": "URL",
           "description": "The project's home."
         },

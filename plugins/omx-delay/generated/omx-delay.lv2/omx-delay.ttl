@@ -15,7 +15,7 @@
 @prefix urid:  <http://lv2plug.in/ns/ext/urid#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<https://github.com/FreeMixer/omx-plugins>
+<https://github.com/Open-Mixer/omx-plugins>
     a doap:Project ;
     doap:name "omx-plugins" ;
     doap:maintainer [ a foaf:Person ; foaf:name "Pau Aliagas" ; foaf:homepage <https://github.com/linuxnow> ] .
@@ -24,7 +24,7 @@
     a lv2:Plugin , lv2:DelayPlugin ;
     doap:name "omx delay" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
-    lv2:project <https://github.com/FreeMixer/omx-plugins> ;
+    lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
     lv2:minorVersion 19 ;
     lv2:microVersion 3 ;
     rdfs:comment "The OpenMixer console's stereo delay: one time, free or synced to the host's tempo, feedback through a tone filter, ping-pong, read taps, a tape or analog colour, a wet/dry mix and a duck under the input." ;

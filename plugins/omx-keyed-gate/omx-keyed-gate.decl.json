@@ -6,7 +6,7 @@
     "gate"
   ],
   "noun": "keyed gate",
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "summary": "The console's channel gate with a sidechain key: the detector listens to the key your host routes to it, or to the signal itself. One gain for both legs, so the stereo image never shifts. Real-time safe.",
   "binding": "instance",
   "held": [

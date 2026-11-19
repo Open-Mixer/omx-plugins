@@ -58,7 +58,7 @@ static const char *const OMX_TONE_PARAM_MODULES[OMX_TONE_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_TONE_NAME "omx tone"
 #define OMX_TONE_VENDOR "openmixer"
-#define OMX_TONE_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_TONE_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_TONE_VERSION "0.19.3"
 #define OMX_TONE_DESCRIPTION "Tilts the whole tone darker or brighter about a pivot, and sweeps a resonant DJ filter from a low-pass through open to a high-pass with one knob."
 #define OMX_TONE_CLAP_ID "org.openmixer.tone"

@@ -1199,7 +1199,7 @@ static inline uint32_t omx_strip_eq_band_count(const float *values) {
 /* The identity every face publishes. */
 #define OMX_STRIP_NAME "omx strip"
 #define OMX_STRIP_VENDOR "openmixer"
-#define OMX_STRIP_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_STRIP_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_STRIP_VERSION "0.19.3"
 #define OMX_STRIP_DESCRIPTION "The OpenMixer console's channel strip in one plugin: input trim, high- and low-pass filters, gate, a parametric EQ of as many bands as its Bands control says, and compressor, in the console's order or any other. No DSP of its own: each stage is omx-dsp's instance face of the console's kernel, called in order."
 #define OMX_STRIP_CLAP_ID "org.openmixer.strip"

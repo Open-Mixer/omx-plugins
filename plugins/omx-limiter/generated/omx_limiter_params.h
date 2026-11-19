@@ -52,7 +52,7 @@ static const char *const OMX_LIMITER_PARAM_MODULES[OMX_LIMITER_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_LIMITER_NAME "omx limiter"
 #define OMX_LIMITER_VENDOR "openmixer"
-#define OMX_LIMITER_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_LIMITER_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_LIMITER_VERSION "0.19.3"
 #define OMX_LIMITER_DESCRIPTION "The precision limiter: a look-ahead, true-peak, stereo-linked brickwall."
 #define OMX_LIMITER_CLAP_ID "org.openmixer.limiter"

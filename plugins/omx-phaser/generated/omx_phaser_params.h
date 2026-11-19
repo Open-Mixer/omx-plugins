@@ -70,7 +70,7 @@ static const char *const OMX_PHASER_PARAM_MODULES[OMX_PHASER_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_PHASER_NAME "omx phaser"
 #define OMX_PHASER_VENDOR "openmixer"
-#define OMX_PHASER_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_PHASER_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_PHASER_VERSION "0.19.3"
 #define OMX_PHASER_DESCRIPTION "The console's phaser: identical all-pass sections swept in octaves by one oscillator, with feedback around the chain and a wet/dry mix."
 #define OMX_PHASER_CLAP_ID "org.openmixer.phaser"

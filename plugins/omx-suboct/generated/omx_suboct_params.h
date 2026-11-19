@@ -64,7 +64,7 @@ static const char *const OMX_SUBOCT_PARAM_MODULES[OMX_SUBOCT_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_SUBOCT_NAME "omx suboct"
 #define OMX_SUBOCT_VENDOR "openmixer"
-#define OMX_SUBOCT_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_SUBOCT_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_SUBOCT_VERSION "0.19.3"
 #define OMX_SUBOCT_DESCRIPTION "Adds a note one or two octaves below a single played line, by dividing its pitch, with a tracking range and a gate for quiet input."
 #define OMX_SUBOCT_CLAP_ID "org.openmixer.suboct"

@@ -220,7 +220,7 @@ static const char *const OMX_GEQ_PARAM_MODULES[OMX_GEQ_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_GEQ_NAME "omx geq"
 #define OMX_GEQ_VENDOR "openmixer"
-#define OMX_GEQ_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_GEQ_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_GEQ_VERSION "0.19.3"
 #define OMX_GEQ_DESCRIPTION "The console's 31-band graphic EQ: one fader per ISO third-octave band from 20 Hz to 20 kHz, each cutting or boosting by up to 15 dB."
 #define OMX_GEQ_CLAP_ID "org.openmixer.geq"
