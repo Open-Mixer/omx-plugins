@@ -119,7 +119,6 @@ jobs:
         run: |
           set -euo pipefail
           node tools/gen.mjs --check
-          make modgui
           node tools/gen-presets.mjs --check
           make check-params-doc
 
@@ -143,8 +142,7 @@ jobs:
           make meter-ring
 
   test-heavy:
-    # Beside make test: the set that runs the built plugins through a host (each plugin's oracles on both faces, its
-    # MOD GUI test, host-check.sh, the round trip), in four slices of the plugins in parallel, the round trip in the
+    # Beside make test: the set that runs the built plugins through a host (each plugin's oracles on both faces, host-check.sh, the round trip), in four slices of the plugins in parallel, the round trip in the
     # first. The package build runs make test only; every check of both sets runs on every pull request
     # (tools/test/test-split.json). The slice comes from the job's environment, so the step itself is plain
     # `make test-heavy`, which runs every slice when OMX_HEAVY_SHARD is unset.

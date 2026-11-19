@@ -22,7 +22,18 @@ printf '{}\n' > "$fake/3/other-owner/x.json"
 out="$tmp/composed"
 OMX_INSTALLED_CONTRACTDIR="$fake" sh "$here/tools/round-trip-contract-dir.sh" "$out" >/dev/null
 bad=0
-cmp -s "$out/3/omx-plugins/role-meanings.json" "$here/contract/role-meanings.json" || { echo "round-trip-contract-dir: omx-plugins/role-meanings.json is not this tree's" >&2; bad=1; }
+# The install rewrites line 2, the relative $schema, to the major's URL; every other line is this tree's, byte for byte.
+got="$out/3/omx-plugins/role-meanings.json"
+if [ -f "$got" ]; then
+  sed 2d "$got" > "$tmp/installed-body"; sed 2d "$here/contract/role-meanings.json" > "$tmp/tree-body"
+  cmp -s "$tmp/installed-body" "$tmp/tree-body" || { echo "round-trip-contract-dir: omx-plugins/role-meanings.json is not this tree's" >&2; bad=1; }
+  sed -n 2p "$got" | grep -Eq '^  "[$]schema": "https://openmixer\.org/schema/omx-contract/v[0-9]+/omx-contract\.schema\.json",$' || { echo "round-trip-contract-dir: omx-plugins/role-meanings.json line 2 is not the major's \$schema URL: $(sed -n 2p "$got")" >&2; bad=1; }
+else
+  echo "round-trip-contract-dir: omx-plugins/role-meanings.json is absent from the composed directory" >&2; bad=1
+fi
 [ -e "$out/3/other-owner/x.json" ] || { echo "round-trip-contract-dir: the other installed package is missing" >&2; bad=1; }
+# A reader that lists the packages as directory entries (omx-panel's contractFiles: readdir withFileTypes, then
+# isDirectory()) skips a symbolic link, so an installed package linked in is not there for it.
+[ -d "$out/3/other-owner" ] && [ ! -L "$out/3/other-owner" ] || { echo "round-trip-contract-dir: the other installed package is a link, which a reader listing directory entries skips" >&2; bad=1; }
 [ "$bad" -eq 0 ] && echo "round-trip-contract-dir: this tree's omx-plugins beside the installed others"
 exit "$bad"

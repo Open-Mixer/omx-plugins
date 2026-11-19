@@ -8,7 +8,7 @@
 <urn:openmixer:eq32>
     a lv2:Plugin ;
     lv2:binary <omx-eq32.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-eq32.ttl> .
+    rdfs:seeAlso <omx-eq32.ttl> .
 
 <urn:openmixer:eq32#preset-amp-input>
     a pset:Preset ;

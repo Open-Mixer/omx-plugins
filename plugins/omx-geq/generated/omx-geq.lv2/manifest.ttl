@@ -8,7 +8,7 @@
 <urn:openmixer:geq>
     a lv2:Plugin ;
     lv2:binary <omx-geq.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-geq.ttl> .
+    rdfs:seeAlso <omx-geq.ttl> .
 
 <urn:openmixer:geq#preset-air>
     a pset:Preset ;

@@ -98,7 +98,7 @@ else console.log(`NOTE descriptor-view: omx-contract ${where.version ?? '(none)'
 
 // the owners a descriptor's links name come with the render: read through OMX_CONTRACT_DIR alone, with no
 // installed omx-contract, a copy of the render with its owners.json gives the same descriptors, and one
-// without gives others
+// without is refused by name (a build never reads the installed omx-plugins' owners in their place)
 if (carriesWords) {
   const first = described[0], firstStem = first.split('/').pop();
   const lone = (dir) => {
@@ -118,7 +118,8 @@ if (carriesWords) {
   const want = readFileSync(join(first, descriptorFile(firstStem)), 'utf8');
   check(`${firstStem}: OMX_CONTRACT_DIR alone gives the committed descriptor, its links' owners included`, lone(render) === want, true);
   rmSync(join(render, OWNERS), { force: true });
-  check(`arm: the same render without ${OWNERS} names other owners`, lone(render) === want, false);
+  const without = lone(render);
+  check(`arm: the same render without ${OWNERS} is refused, naming ${OWNERS}`, without.startsWith('refused:') && without.includes(OWNERS) ? 'refused by name' : without.slice(0, 200), 'refused by name');
   rmSync(render, { recursive: true, force: true });
 }
 
