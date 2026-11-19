@@ -15,6 +15,9 @@
 #                                                  install list, one missing, one changed, one extra file, a manifest
 #                                                  hash that is not the file's and another version each refuse; the
 #                                                  right install passes
+# Each source file names the contract schema by the RELATIVE address the install script rewrites (the install of omx-contract
+# rewrites `(../)*schema/omx-contract.schema.json` on line 2 to the major's URL), and the installed file carries that URL; the
+# files are otherwise byte for byte. An absolute address in the source is never rewritten, and the reader refuses it.
 # The reader step needs the omx-contract command (OMX_CONTRACT_CLI, its bin/omx-contract.mjs or an executable, else
 # `omx-contract` on PATH); without one it says so in one line and the file checks still run.
 # Exit: 0 pass, 1 refused, 2 the check could not run.
@@ -51,6 +54,23 @@ cli() {
   fi
 }
 
+SCHEMA_SRC='^  "\$schema": "(\.\./)*schema/omx-contract\.schema\.json",$'
+SCHEMA_INSTALLED='  "$schema": "https://openmixer.org/schema/omx-contract/v3/omx-contract.schema.json",'
+
+# source_schema <file>...: one line per source file whose line 2 is not the relative $schema the install rewrites
+source_schema() {
+  local f
+  for f in "$@"; do
+    sed -n 2p "$f" | grep -Eq "$SCHEMA_SRC" || echo "contract-dir: ${f#"$HERE"/}: line 2 is not the relative \$schema the install rewrites: $(sed -n 2p "$f")"
+  done
+  return 0
+}
+
+# same_but_schema <source> <installed>: equal but for the $schema line, which is the major's URL in the installed file
+same_but_schema() {
+  [ "$(sed -n 2p "$2")" = "$SCHEMA_INSTALLED" ] && cmp -s <(sed 2d "$1") <(sed 2d "$2")
+}
+
 # check <contractdir> [reader]: one line per refusal; the count is the exit status
 check() {
   local dir=$1 reader=${2:-reader} pkg=$1/3/omx-plugins bad=0 stem f rel want got listed n=0 c sys stems
@@ -68,8 +88,9 @@ check() {
   for stem in $stems; do
     n=$((n + 1)); rel=plugins/$stem.json
     if [ ! -f "$pkg/$rel" ]; then echo "contract-dir: $stem: $rel is not installed"; bad=$((bad + 1)); continue; fi
-    cmp -s "$HERE/plugins/$stem/$stem.descriptor.json" "$pkg/$rel" \
-      || { echo "contract-dir: $stem: $rel is not plugins/$stem/$stem.descriptor.json byte for byte"; bad=$((bad + 1)); }
+    same_but_schema "$HERE/plugins/$stem/$stem.descriptor.json" "$pkg/$rel" \
+      || { echo "contract-dir: $stem: $rel is not plugins/$stem/$stem.descriptor.json byte for byte, its \$schema the major's URL"; bad=$((bad + 1)); }
+    source_schema "$HERE/plugins/$stem/$stem.descriptor.json" | grep . && bad=$((bad + 1))
     want=$(sha256sum "$pkg/$rel" | cut -d' ' -f1)
     got=$(awk -v r="$rel" '$1 == "file" && $2 == r {print $3}' <<<"$listed")
     [ "$got" = "$want" ] || { echo "contract-dir: $stem: MANIFEST.json lists $rel as ${got:-nothing}, the file is $want"; bad=$((bad + 1)); }
@@ -88,7 +109,8 @@ check() {
     [ -e "$f" ] || continue   # no definition file: the unit codes are omx-contract's since 3.6.0
     rel=$(basename "$f")
     if [ ! -f "$pkg/$rel" ]; then echo "contract-dir: contract/$rel is not installed as $rel"; bad=$((bad + 1)); continue; fi
-    cmp -s "$f" "$pkg/$rel" || { echo "contract-dir: $rel is not contract/$rel byte for byte"; bad=$((bad + 1)); }
+    same_but_schema "$f" "$pkg/$rel" || { echo "contract-dir: $rel is not contract/$rel byte for byte, its \$schema the major's URL"; bad=$((bad + 1)); }
+    source_schema "$f" | grep . && bad=$((bad + 1))
     want=$(sha256sum "$pkg/$rel" | cut -d' ' -f1)
     got=$(awk -v r="$rel" '$1 == "file" && $2 == r {print $3}' <<<"$listed")
     [ "$got" = "$want" ] || { echo "contract-dir: MANIFEST.json lists $rel as ${got:-nothing}, the file is $want"; bad=$((bad + 1)); }
@@ -140,7 +162,7 @@ if [ "${1:-}" = --self-test ]; then
     node -e 'const fs = require("fs"); const [p, r, h] = process.argv.slice(1); const m = JSON.parse(fs.readFileSync(p, "utf8"));
       m.files[r] = h; fs.writeFileSync(p, JSON.stringify(m, null, 2) + "\n");' "$m" "$2" "$h"
   }
-  for s in left-out missing changed extra hash version $(for r in $REQUIRED_DEFS; do printf 'owned-%s ' "$r"; done) $(for r in $REQUIRED; do printf 'unlisted-%s ' "$r"; done); do
+  for s in left-out missing changed extra hash version unrewritten $(for r in $REQUIRED_DEFS; do printf 'owned-%s ' "$r"; done) $(for r in $REQUIRED; do printf 'unlisted-%s ' "$r"; done); do
     t=$scratch/$s; rm -rf "$t"
     case $s in
       left-out) install_into "$t" DESCRIPTORS="$rest" ;;
@@ -152,6 +174,7 @@ if [ "${1:-}" = --self-test ]; then
       changed) sed -i '0,/"name": "/s//"name": "x/' "$p/plugins/$first.json"; rehash "$t" "plugins/$first.json" ;;
       extra) cp "$p/plugins/$first.json" "$p/plugins/omx-test-sine-voice.json"; rehash "$t" plugins/omx-test-sine-voice.json ;;
       hash) sed -i "s|\"plugins/$first.json\": \"[0-9a-f]*\"|\"plugins/$first.json\": \"$(printf '0%.0s' $(seq 64))\"|" "$p/MANIFEST.json" ;;
+      unrewritten) sed -i '2s|https://openmixer.org/schema/omx-contract/v3/omx-contract|../schema/omx-contract|' "$p/plugins/$first.json"; rehash "$t" "plugins/$first.json" ;;
       version) sed -i 's/"version": "[0-9.]*"/"version": "0.0.1"/' "$p/MANIFEST.json" ;;
       unlisted-*) node -e 'const fs = require("fs"); const [f, r] = process.argv.slice(1); const m = JSON.parse(fs.readFileSync(f, "utf8"));
           delete m.files[r]; fs.writeFileSync(f, JSON.stringify(m, null, 2) + "\n");' "$p/MANIFEST.json" "plugins/${s#unlisted-}.json" ;;
@@ -166,6 +189,12 @@ if [ "${1:-}" = --self-test ]; then
     if out=$(CONTRACT_SRC=$src check "$t" none 2>&1); then echo "SABOTAGE $s: STAYED GREEN"; fail=1
     elif [ -z "$out" ]; then echo "SABOTAGE $s: the check stopped naming nothing"; fail=1
     else echo "SABOTAGE $s: red (${out%%$'\n'*})"; fi
+  done
+  # the source side: a descriptor and a definition file naming the absolute, unversioned address
+  for s in descriptor definition; do
+    if [ "$s" = descriptor ]; then f=$HERE/plugins/$first/$first.descriptor.json; else f=$HERE/contract/role-meanings.json; fi
+    sed '2s|"[^"]*omx-contract.schema.json"|"https://openmixer.org/schema/omx-contract/omx-contract.schema.json"|' "$f" > "$scratch/abs-$s.json"
+    if [ -n "$(source_schema "$scratch/abs-$s.json")" ]; then echo "SABOTAGE absolute-$s: red"; else echo "SABOTAGE absolute-$s: STAYED GREEN"; fail=1; fi
   done
   if [ -n "$(cli)" ]; then
     t=$scratch/reader; cp -r "$scratch/good" "$t"

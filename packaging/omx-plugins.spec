@@ -139,8 +139,9 @@ Its documentation is on openmixer.org.
 Summary: The OpenMixer plugins' descriptors in omx-contract's contract directory
 BuildArch: noarch
 # the contract directory, its schema and its reader's own package
-# 3.13.0: the reader that knows the roleMeanings kind contract/role-meanings.json is
-Requires: omx-contract-data >= 3.13.0
+# 3.19.1: its install-contract-dir.sh rewrites the relative $schema of contract/*.json and the descriptors to the
+# major's URL, and its reader requires that URL (3.13.0 brought the roleMeanings kind of contract/role-meanings.json)
+Requires: omx-contract-data >= 3.19.1
 
 %description contract
 Each OpenMixer plugin's descriptor, its parameters in omx-contract's words,
