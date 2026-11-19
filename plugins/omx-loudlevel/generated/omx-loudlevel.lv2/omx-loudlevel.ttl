@@ -5,6 +5,7 @@
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix omxres: <https://www.openmixer.org/ns/resource-hints#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
 @prefix pg:    <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
@@ -116,6 +117,7 @@
         lv2:maximum -30 ;
         lv2:portProperty lv2:integer ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:loudlevel#loudlevel>
     ] ,
     [

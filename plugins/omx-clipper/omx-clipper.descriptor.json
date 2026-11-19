@@ -33,6 +33,7 @@
       "group": [
         "Clipper"
       ],
+      "meaning": "drive",
       "automatable": true,
       "source": {
         "from": {

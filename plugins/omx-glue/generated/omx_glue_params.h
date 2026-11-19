@@ -117,8 +117,8 @@ static const omx_resource_hints_t OMX_GLUE_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family none. */
-#define OMX_GLUE_PANEL_FINGERPRINT "12377e18c7b109d7e936905498378ce92d5ced468826c46133310cfef298f63e"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics. */
+#define OMX_GLUE_PANEL_FINGERPRINT "a098a41f6af316c1d8326703b9e2d1bff474c6a87e20da626d4d0c1f11f1517b"
 static const struct omx_panel_section_row OMX_GLUE_PANEL_SECTIONS[] = {
   { "glue", "fx.glue.section.glue", "Glue" },
 };
@@ -132,18 +132,23 @@ static const struct omx_panel_control_row OMX_GLUE_PANEL_CONTROLS[] = {
   { 6u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.glue.mix_pct", "Mix", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 7u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.glue.detector_topology", "Detector Topology", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
+static const struct omx_panel_role_row OMX_GLUE_PANEL_ROLES[] = {
+  { "threshold", 0u, 0u },
+  { "makeup", 0u, 4u },
+  { "mix", 0u, 6u },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_GLUE_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Glue", "Glue", { 4u, 5u, 6u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 4u, 6u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Glue", "Glue", { 2u, 3u, 5u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_GLUE_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_GLUE_PANEL = {
-  OMX_GLUE_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
+  OMX_GLUE_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DYNAMICS,
   OMX_GLUE_PANEL_SECTIONS, 1u,
   OMX_GLUE_PANEL_CONTROLS, 8u,
-  NULL, 0u,
+  OMX_GLUE_PANEL_ROLES, 3u,
   NULL, 0u,
   NULL, 0u,
 };

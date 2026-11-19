@@ -14,8 +14,14 @@
     "opens-sockets": false
   },
   "panel": {
-    "family": "none",
-    "roles": {},
+    "family": "deesser",
+    "roles": {
+      "frequency": "bandHz",
+      "threshold": "sensitivityDb",
+      "range": "consonantDb",
+      "width": "bandWidthOct",
+      "release": "recoveryMs"
+    },
     "sections": [
       {
         "key": "plosive",

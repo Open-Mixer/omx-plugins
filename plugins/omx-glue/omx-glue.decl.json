@@ -14,8 +14,12 @@
     "opens-sockets": false
   },
   "panel": {
-    "family": "none",
-    "roles": {},
+    "family": "dynamics",
+    "roles": {
+      "threshold": "thresholdDb",
+      "makeup": "makeupDb",
+      "mix": "mixPct"
+    },
     "sections": [
       {
         "key": "glue",
