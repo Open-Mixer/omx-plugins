@@ -19,8 +19,8 @@
 #include <stdint.h>
 
 /* The unit of a parameter's plain value: the OMX_CLAP_UNIT_* codes, 0..24 the LV2 units one to one, 0x100.. the vendor
- * block. Declared in omx-clap (OMX_PARAM_CONTRACT_UNITS, its domain omx-param-contract) and rendered there. */
-#include <omx-clap-host/omx_param_units.h>
+ * block. Declared in omx-contract (OMX_PARAM_CONTRACT_UNITS, data/param-contract.json) and rendered there. */
+#include <omxcontract/omx_param_units.h>
 /* How the plain value maps to a control's travel: the OMX_CLAP_SCALE_* codes, one per word of omx-contract's PARAM_SCALES.
  * Declared in omx-clap (OMX_CLAP_SCALE_CODES, its domain omx-clap-scale) and rendered there; the generator writes these
  * names into the rows (tools/test/param-units-check.mjs holds them to PARAM_SCALES). */

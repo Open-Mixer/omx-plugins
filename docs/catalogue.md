@@ -713,7 +713,7 @@ copying them: `omx-plugins-devel` on Fedora, `omx-plugins-dev` on Debian (they l
 `/usr/include/omx-plugins`). Each plugin's descriptor, its parameters in omx-contract's words, is in
 `omx-plugins-contract`, which `omx-plugins` and the devel package require: files in omx-contract's
 contract directory (`/usr/share/omx-contract/contract.d/3/omx-plugins/`) that a host reads at run time.
-The code of each unit the param-contract extension serves is omx-clap's (`omx-param-contract/omx-param-contract.json`).
+The code of each unit the param-contract extension serves is omx-contract's (`3/omx-contract/param-contract.json`).
 The devel package carries `libomxplugins.a` (`pkg-config omxplugins`):
 every plugin's CLAP face in one static library, for a host that runs them in its own process
 without loading `.clap` files. `<omx-plugins/omx_clap_static.h>` lists their entries by CLAP id:
