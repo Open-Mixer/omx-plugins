@@ -28,6 +28,8 @@ export const DESCRIPTOR_SCHEMA = '../schema/omx-contract.schema.json';
 export const DESCRIPTOR_SCHEMA_FLOOR = '3.7.0';
 /** The release that added `meters` (omx-contract docs/descriptors.md): the floor of a descriptor that states them. */
 export const DESCRIPTOR_METERS_FLOOR = '3.9.0';
+/** The release that added `latency.sweep` (omx-contract docs/descriptors.md): the floor of a descriptor that states one. */
+export const DESCRIPTOR_SWEEP_FLOOR = '3.21.0';
 /** The descriptor's word for each meter kind a declaration names. */
 const METER_KIND_WORDS = { gain_reduction: 'gain-reduction', level: 'level' };
 
@@ -212,9 +214,14 @@ export function descriptorOf(d) {
       source: link ? { from: atOf(link) ? { link, at: atOf(link) } : link } : { impl: face },
     };
   });
+  // a modulated delay's sweep (the rotary's), as its descriptor states it: each end a frame count or a ref to a kernel
+  // scalar in frames or ms; a ref names the kernel's package, at the floor the packaging builds against
+  const sweep = d.descriptor?.latency?.sweep;
+  const sweepRefs = sweep ? [sweep.min, sweep.max].some((e) => typeof e === 'object' && e !== null) : false;
+  const schemaFloor = sweep ? DESCRIPTOR_SWEEP_FLOOR : meters.length ? DESCRIPTOR_METERS_FLOOR : DESCRIPTOR_SCHEMA_FLOOR;
   const descriptor = {
     $schema: DESCRIPTOR_SCHEMA,
-    requires: { 'omx-contract-schema': `>= ${meters.length ? DESCRIPTOR_METERS_FLOOR : DESCRIPTOR_SCHEMA_FLOOR}` },
+    requires: { 'omx-contract-schema': `>= ${schemaFloor}`, ...(sweepRefs ? { 'omx-dsp': `>= ${packagingRange('omx-dsp-devel', d.tree).floor}` } : {}) },
     origin: 'authored',
     plugin: { id: d.clap.id, format: 'clap', uri: d.lv2.uri, name: d.name, vendor: d.vendor, version: d.version, doc: d.description, features: d.clap.features.filter((f) => FEATURES.includes(f)) },
     controls,
@@ -222,7 +229,7 @@ export function descriptorOf(d) {
     // what the host must hand: the tempo (a plugin that syncs to it), as its descriptor says; the RT capability always
     // a plugin that reads the tempo maps the time:Position's URIs when its LV2 host lends urid:map
     needs: d.descriptor?.needs?.tempo ? { tempo: true, extensions: { optional: ['urid:map', LV2_HARD_RT] } } : { extensions: { optional: [LV2_HARD_RT] } },
-    latency: { reports: true },
+    latency: { reports: true, ...(sweep ? { sweep } : {}) },
     ...(meters.length ? { meters } : {}),
     extensions: extensionsOf(d),
     source: { impl: face },

@@ -22,7 +22,7 @@
 NAME       := omx-width
 URI        := urn:openmixer:width
 CLAP_ID    := org.openmixer.width
-OMXDSP_MIN ?= 0.32.0
+OMXDSP_MIN ?= 0.34.0
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

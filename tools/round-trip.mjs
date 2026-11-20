@@ -138,6 +138,12 @@ export const LOSSES = {
   'lv2 controls[].doc': 10,
   'clap needs.tempo': 1,
   'lv2 needs.tempo': 1,
+  // a modulated delay's sweep (omx-rotary's, omx-contract 3.21.0): neither face states it, and a scan reads the
+  // latency the face reports, never the range its lag lies in (each end a ref to an omx-dsp scalar in ms)
+  'clap latency.sweep.min.ref': 1,
+  'clap latency.sweep.max.ref': 1,
+  'lv2 latency.sweep.min.ref': 1,
+  'lv2 latency.sweep.max.ref': 1,
   // a meter: plugin-hostd's CLAP table has no row for clap.meters/1 (one word a meter: 20 meters); an LV2 output
   // control port carries its symbol, range, unit and scale, and no word for its CLAP id, kind, channel count or
   // readout doc; a two-channel level is two ports, each named for its channel (4 meters, 8 ports)
