@@ -17,6 +17,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { isMain } from '../omx-contract.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const ABSOLUTE = /^[a-z][a-z0-9+.-]*:/i;
@@ -48,7 +49,7 @@ export function check(dir = join(root, 'schema')) {
   return bad;
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (isMain(import.meta.url)) {
   const bad = check();
   for (const [at, why] of bad) console.error(`schema-urls: schema/${at}: ${why}`);
   let status = bad.length ? 1 : 0;
