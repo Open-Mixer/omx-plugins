@@ -14,7 +14,7 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { installedContractDir, locateContract } from './omx-contract.mjs';
+import { domainDocument, installedContractDir } from './omx-contract.mjs';
 
 /** The schema major the tables are installed under, and the item each format's file holds. */
 export const TABLES_MAJOR = '3';
@@ -74,18 +74,17 @@ export function tableWords(format) {
 
 // ---- the CLAP features a face writes, as a scan reads them -----------------------------------------------------------
 
-/** omx-contract's CLAP feature terms (CLAP_PLUGIN_FEATURES_TERMS, data/formats/clap/plugin-features.json), read from
- * the resolved render (locateContract, OMX_CONTRACT_DIR included): `{ <value>: <term id> }`, delay ->
- * CLAP_PLUGIN_FEATURE_DELAY. A field dump writes a feature the headers define by its macro name (plugin-hostd
+/** omx-clap-core's CLAP feature terms (CLAP_PLUGIN_FEATURES_TERMS of its domain clap, <contractdir>/clap/clap.json,
+ * omx-clap-core-contract >= 0.34.0; sorting row V24/27): `{ <value>: <term id> }`, delay -> CLAP_PLUGIN_FEATURE_DELAY,
+ * each word's `const` and `title`. A field dump writes a feature the headers define by its macro name (plugin-hostd
  * docs/formats.md, The field dump), so the bag carries that name and a face writes its value. */
 let featureTerms;
 export function clapFeatureTerms() {
   if (featureTerms) return featureTerms;
-  const where = locateContract();
-  if (!where.dir) throw new Error(`omx-contract's CLAP feature terms: ${where.why}`);
-  const item = JSON.parse(readFileSync(join(where.dir, 'omx-contract.json'), 'utf8')).items?.CLAP_PLUGIN_FEATURES_TERMS;
-  if (item?.kind !== 'terms') throw new Error(`${where.at}: holds no CLAP_PLUGIN_FEATURES_TERMS (omx-contract >= 3.0.0 installs it)`);
-  featureTerms = Object.fromEntries(Object.values(item.value ?? item.terms).map((t) => [t.value, t.id]));
+  const { file, schemas } = domainDocument('clap', 'omx-clap-core-contract >= 0.34.0');
+  const words = schemas.CLAP_PLUGIN_FEATURES_TERMS?.oneOf;
+  if (!Array.isArray(words) || !words.length) throw new Error(`${file}: holds no CLAP_PLUGIN_FEATURES_TERMS (omx-clap-core-contract >= 0.34.0 installs it)`);
+  featureTerms = Object.fromEntries(words.map((w) => [w.const, w.title]));
   return featureTerms;
 }
 
