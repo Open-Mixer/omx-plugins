@@ -6,7 +6,7 @@
  * parameter's plain value, how the value maps to a control's travel and the quantum the plugin resolves.
  *
  * The extension itself (its id, the entry a host reads, the structure a plugin serves and the symbol size)
- * is omx-clap-core's, <omx-clap-host/omx_clap_ext.h>: lib/omx_clap_face.c includes it and fills a host's
+ * is omx-clap's, <omx-clap-host/omx_clap_ext.h>: lib/omx_clap_face.c includes it and fills a host's
  * entry from a row (the bypass, the last parameter at omx-contract's permanent CLAP id
  * OMX_PLUGIN_FACE_BYPASS_CLAP_ID, is `bypass`, no unit, stepped). The fingerprint is the lowercase hex
  * SHA-256 of the canonical serialisation that header states (tools/param-contract.mjs writes it).
@@ -26,7 +26,7 @@
 extern "C" {
 #endif
 
-/** How the plain value maps to a control's travel: the codes of omx-clap-core's OMX_CLAP_PARAM_SCALES, in the order
+/** How the plain value maps to a control's travel: the codes of omx-clap's OMX_CLAP_PARAM_SCALES, in the order
  * omx-contract's PARAM_SCALES words them (tools/test/param-units-check.mjs holds the numbers to the words,
  * lib/omx_clap_face.c the count to the owner's list). The generator writes these names into the rows. */
 enum omx_clap_param_scale {

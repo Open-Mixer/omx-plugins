@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * panel-abi-test.c — org.openmixer.panel-description/1 is omx-clap-core's <omx-clap-host/omx_clap_ext.h>,
+ * panel-abi-test.c — org.openmixer.panel-description/1 is omx-clap's <omx-clap-host/omx_clap_ext.h>,
  * which owns the layout; what this tree keeps is include/omx_panel_description.h, whose omx_clap_panel_*
  * structures a face serves and whose omx_panel_*_row structures omx_panel_get() fills them from. Held to the
  * installed header: the id, every code's value, the size and every member's offset of the five table
  * structures and of the extension, at compile time; then each table's row filled by omx_panel_get and read
- * back through omx-clap-core's structures, member by member. A change on either side stops this compiling
- * or failing (Open-Mixer/omx-clap-core#117).
+ * back through omx-clap's structures, member by member. A change on either side stops this compiling
+ * or failing (Open-Mixer/omx-clap#117).
  * Compile and run: `make panel-abi`, part of `make test`.
  */
 #include <stddef.h>
@@ -18,7 +18,7 @@
 
 #include <omx-clap-host/omx_clap_ext.h>
 
-/* mine: this tree's omx_panel_description.h; owner: omx-clap-core's omx_clap_ext.h */
+/* mine: this tree's omx_panel_description.h; owner: omx-clap's omx_clap_ext.h */
 #define SAME(mine, owner) _Static_assert(sizeof(mine) == sizeof(owner), "the size of " #mine " is " #owner "'s")
 #define AT(mine, owner, member) \
     _Static_assert(offsetof(mine, member) == offsetof(owner, member), #mine "." #member " is where " #owner " has it")

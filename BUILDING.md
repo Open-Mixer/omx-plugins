@@ -8,7 +8,7 @@
 |---|---|---|---|
 | omx-dsp ≥ 0.32.0 (`pkg-config omxdsp`) | `omx-dsp-devel` (channel) | `libomxdsp-dev` (channel) | the DSP: every kernel lives there, none here (since 0.26.0: the dynamic EQ, the multiband's controls and readouts, the compressor's key) |
 | omx-contract ≥ 3.12.0 (`pkg-config omx-contract`) | `omx-contract-devel` (channel) | `libomx-contract-dev` (channel) | the declarations: every parameter's travel, read from its installed `omx-contract.json`, and the EQ default rule (its C render; the generators build a small probe, so they need the C compiler too) |
-| openmixer CLAP extensions | `omx-clap-core-devel` (channel) | `libomx-clap-core-dev` (channel) | `<omx-clap-host/omx_clap_ext.h>` |
+| openmixer CLAP extensions | `omx-clap-devel` (channel) | `libomx-clap-dev` (channel) | `<omx-clap-host/omx_clap_ext.h>` |
 | the omx-contract command ≥ 3.12.0 | `omx-contract` (channel) | `omx-contract` (channel) | the generators: the union of the contract directory, read through `omx-contract render --installed` |
 | CLAP 1.2 headers | `clap-devel` | `clap-headers` (built from the pinned CLAP, see FreeMixer/.github) | the CLAP face |
 | LV2 headers | `lv2-devel` | `lv2-dev` | the LV2 face |
@@ -64,7 +64,7 @@ CLAP id is in the table once, and each one is created through its factory, activ
 
 Before the plugins, `make test` runs `make units` (the param-contract units are the header's), `make panel-words`
 (`tools/test/panel-words-check.mjs`: the enums of `include/omx_panel_description.h` are omx-contract's PANEL_FAMILIES and
-PANEL_WIDGETS, omx-panel's display kinds, sources and placements, and omx-clap-core's lists, code for code) and
+PANEL_WIDGETS, omx-panel's display kinds, sources and placements, and omx-clap's lists, code for code) and
 `make panel-layout` (`tools/test/panel-layout-test.mjs`: our plugins' descriptors state no unknown word, and
 omx-panel's layout of each finds the declared family and roles; the layout's own rules are omx-panel's
 [docs/panel-layout.md](https://github.com/FreeMixer/omx-panel/blob/main/docs/panel-layout.md)) and `make descriptor-view`
