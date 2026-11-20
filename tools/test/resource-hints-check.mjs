@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * resource-hints-check.mjs — every shipped plugin declares its resource hints (omx-contract RESOURCE_HINTS,
+ * resource-hints-check.mjs — every shipped plugin declares its resource hints (plugin-hostd's RESOURCE_HINTS,
  * tools/resource-hints.mjs), and both carriers say what the declaration says:
  *
  *   1. the vocabulary: the installed contract names the LV2 prefix omxres and the namespace
@@ -36,7 +36,7 @@ import { join } from 'node:path';
 import { loadDecl, pluginDirs, ROOT } from '../gen.mjs';
 import { installedDataDir, locateContract, isMain, items, OWNERS } from '../omx-contract.mjs';
 import { presetsOf } from '../preset-lib.mjs';
-import { REQUIRED_HINTS, hintVocabulary, maskOf } from '../resource-hints.mjs';
+import { HINTS_OWNER, REQUIRED_HINTS, hintVocabulary, maskOf } from '../resource-hints.mjs';
 
 /** The pin: the LV2 prefix and namespace as #216 and omx-contract#140 settled them, which this check holds the installed
  * contract to. No generator reads them; tools/gen.mjs takes both from the contract (tools/resource-hints.mjs). */
@@ -45,8 +45,7 @@ export const LV2_NAMESPACE = 'https://www.openmixer.org/ns/resource-hints#';
 const XSD = 'http://www.w3.org/2001/XMLSchema#';
 /** The hints in bit order as omx-contract 3.20.2 released them, frozen: plugin-hostd's item keeps every one at its bit. */
 export const GOLDEN_HINTS = Object.freeze(['footprint-at-rest', 'footprint-per-voice', 'shared-load', 'threads-spawned', 'streams-from-disk', 'opens-sockets', 'activate-time']);
-/** The package that owns RESOURCE_* (sorting row V28). */
-export const HINTS_OWNER = 'plugin-hostd';
+
 
 /** The imports that refute a claim, by the hint and the value whose claim they refute. */
 export const REFUTED_BY = {

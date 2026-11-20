@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * resource-hints.mjs — what a plugin declares about its own footprint, in omx-contract's RESOURCE_HINTS
- * (omx-contract >= 3.1.0, docs/resource-hints.md), from the ONE place a plugin states it: its declaration's
+ * resource-hints.mjs — what a plugin declares about its own footprint, in plugin-hostd's RESOURCE_HINTS (its domain
+ * `resource`, plugin-hostd-contract >= 0.21.0; sorting row V28: the words are a host's, KEPT at plugin-hostd), read from
+ * the render the build reads, where that package owns the item; from the ONE place a plugin states it: its declaration's
  * `resourceHints`, keyed by the hint's word. tools/gen.mjs renders both carriers from it:
  *
  *   - the CLAP face: OMX_<K>_RESOURCE_HINTS in generated/omx_<kernel>_params.h, the omx_resource_hints_t the
@@ -15,10 +16,11 @@
  * typed here; only the C type and XSD datatype per unit are spelled, as omx-contract's lib/hints.mjs spells them,
  * and tools/test/resource-hints-check.mjs holds them to the installed header and Turtle.
  */
-import { items } from './omx-contract.mjs';
+import { items, OWNERS, ownersOf } from './omx-contract.mjs';
 
-/** The contract item that declares the hints. */
+/** The contract item that declares the hints, and the package that owns it (sorting row V28). */
 export const HINTS_ITEM = 'RESOURCE_HINTS';
+export const HINTS_OWNER = 'plugin-hostd';
 
 /** The hints every shipped plugin states: what each knows about itself without a measurement (#216's first cut).
  * The figures (footprint at rest, per voice, shared load, activate time) come from measurement
@@ -39,13 +41,17 @@ const constOf = (key) => key.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toUpperCase(
  * hint in the order of the declaration (bit k is hint k). */
 export function hintVocabulary(dir) {
   const item = items(dir)[HINTS_ITEM];
-  if (!item || item.kind !== 'words' || !item.extension) throw new Error(`${dir}: holds no ${HINTS_ITEM} words item with an extension (omx-contract >= 3.1.0 declares it)`);
+  if (!item || item.kind !== 'words' || !item.extension) throw new Error(`${dir}: holds no ${HINTS_ITEM} words item with an extension (plugin-hostd-contract >= 0.21.0 declares it)`);
+  const owners = ownersOf(dir);
+  if (!owners.size) throw new Error(`${dir}: the render read carries no ${OWNERS}, so the owner of its ${HINTS_ITEM} is unknown (the words are ${HINTS_OWNER}'s)`);
+  const owner = owners.get(item.rel)?.package;
+  if (owner !== HINTS_OWNER) throw new Error(`${dir}: its ${HINTS_ITEM} is ${owner ?? 'no package'}'s (${item.rel}); the words are ${HINTS_OWNER}'s, this tree needs plugin-hostd-contract >= 0.21.0`);
   const hints = Object.entries(item.value).map(([key, w], bit) => {
     const unit = HINT_UNITS[w.figureUnit];
     if (!unit) throw new Error(`${dir}: ${HINTS_ITEM}.${key} is given in ${w.figureUnit}, a unit no carrier here has a type for (${Object.keys(HINT_UNITS).join(', ')})`);
     return { key, word: w.word, figureUnit: w.figureUnit, basis: w.basis, bit, member: w.word.replace(/-/g, '_'), macro: `OMX_RESOURCE_HINT_${constOf(key)}`, ...unit };
   });
-  return { clap: item.extension.clap, prefix: item.extension.lv2.prefix, namespace: item.extension.lv2.namespace, hints };
+  return { owner, clap: item.extension.clap, prefix: item.extension.lv2.prefix, namespace: item.extension.lv2.namespace, hints };
 }
 
 /** The hints a declaration states, in the vocabulary's order, each with its value: `[]` for a declaration
@@ -74,7 +80,7 @@ const cValue = (h) => (h.figureUnit === 'flag' ? `${h.value}` : `${h.value}u${h.
 /** The C initializer of OMX_<K>_RESOURCE_HINTS, for the generated parameter header. */
 export function emitHintsC(K, stated) {
   const declared = stated.length ? stated.map((h) => h.macro).join(' | ') : '0u';
-  return `/* org.openmixer.resource-hints.draft/0 (omx-contract ${HINTS_ITEM}, tools/resource-hints.mjs): the hints the
+  return `/* org.openmixer.resource-hints.draft/0 (plugin-hostd ${HINTS_ITEM}, tools/resource-hints.mjs): the hints the
  * declaration's "resourceHints" states. A hint it leaves out has its bit of \`declared\` clear: unknown, never zero. */
 static const omx_resource_hints_t OMX_${K}_RESOURCE_HINTS = {
   .declared = ${declared},

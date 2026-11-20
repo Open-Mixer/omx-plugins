@@ -109,7 +109,7 @@ export function prepareDecl(file, d, stem, dir = dirname(file)) {
   // the resource hints, by word, from the contract's RESOURCE_HINTS (tools/resource-hints.mjs)
   const hints = statedHints(file, d, () => {
     const where = locateContract(treeOf(file));
-    if (!where.dir) throw new Error(`${file}: its "resourceHints" are words of omx-contract's RESOURCE_HINTS and ${where.why}`);
+    if (!where.dir) throw new Error(`${file}: its "resourceHints" are words of plugin-hostd's RESOURCE_HINTS and ${where.why}`);
     return where.dir;
   });
   d.hints = hints.stated;
