@@ -5,7 +5,7 @@
 # tree-contract-check.sh — the build reads THIS tree's omx-plugins contract, never the installed omx-plugins-contract.
 # A package build root pulls in an older released omx-plugins-contract (a BuildRequires chain), and an omx-contract CLI
 # reads the whole installed contract directory and refuses that old file ($schema in the old address form). The generators
-# reach the CLI through tools/omx-contract.mjs (clapFeatureTerms, the descriptor and panel views, ...): this runs that
+# reach the CLI through tools/omx-contract.mjs (locateContract: the scale words, the descriptor and panel views, ...): this runs that
 # path with the installed contract directory a FAKE one holding a stale omx-plugins package, against a fake omx-contract
 # CLI that refuses, as the real one does, any plugin-face.json in the directory it is handed whose $schema is the old
 # form. Reached through `--installed` the fake dir is refused; handed the composed directory (this tree's package) it reads.
@@ -49,11 +49,11 @@ for (const major of readdirSync(dir)) for (const pkg of readdirSync(join(dir, ma
   if (/FreeMixer/.test(s)) { console.error(`contract.schema.major ${pkg}/plugin-face.json: $schema "${s}" is not the installed form`); process.exit(1); }
 }
 const v = JSON.parse(readFileSync(join(process.env.FAKE_DATA, 'omx-contract.json'), 'utf8')).version;
-writeFileSync(join(at('--out'), 'omx-contract.json'), JSON.stringify({ version: v, kernels: { k: {} }, items: { CLAP_PLUGIN_FEATURES_TERMS: { kind: 'terms', value: { a: { value: 'delay', id: 'CLAP_PLUGIN_FEATURE_DELAY' } } } } }));
+writeFileSync(join(at('--out'), 'omx-contract.json'), JSON.stringify({ version: v, kernels: { k: {} }, items: { PARAM_SCALES: { kind: 'words', value: ['linear', 'log', 'stepped'] } } }));
 EOF
 got=$(cd "$here" && PKG_CONFIG="$tmp/pkg-config" OMX_CONTRACT_CLI="$tmp/cli.mjs" FAKE_DATA="$tmp/data" OMX_INSTALLED_CONTRACTDIR="$tmp/installed" OMX_CONTRACT_DIR='' \
-  node --input-type=module -e "import { clapFeatureTerms } from './tools/format-tables.mjs'; console.log(JSON.stringify(clapFeatureTerms()));" 2>&1) || true
+  node --input-type=module -e "import { items, locateContract } from './tools/omx-contract.mjs'; const c = locateContract(); if (!c.dir) throw new Error(c.why); console.log(JSON.stringify(items(c.dir).PARAM_SCALES.value));" 2>&1) || true
 case $got in
-  '{"delay":"CLAP_PLUGIN_FEATURE_DELAY"}') echo "tree-contract: the build's CLI path read this tree's omx-plugins, not the installed stale one" ;;
+  '["linear","log","stepped"]') echo "tree-contract: the build's CLI path read this tree's omx-plugins, not the installed stale one" ;;
   *) echo "tree-contract: the build's CLI path did not read this tree's contract: $(printf '%s\n' "$got" | grep -m1 '^Error' || printf '%s\n' "$got" | head -1)" >&2; exit 1 ;;
 esac

@@ -14,6 +14,10 @@
  *   5. the installed contract's directories are asked of pkg-config once per pkg-config environment, not once per
  *      table row (omx-plugins#39: tableRows asked it on every call, 47 of gen.mjs --check's 60 s), and a changed
  *      PKG_CONFIG_PATH asks again and gets the new answer.
+ *   6. the CLAP features a descriptor writes are omx-clap's terms (CLAP_PLUGIN_FEATURES_TERMS of its domain clap,
+ *      <contractdir>/clap/clap.json; sorting row V24/27): every open feature the shipped descriptors name maps to its
+ *      term id and back = golden (omx-contract 3.20.2's terms), and over a copy of the contract directory whose clap
+ *      domain lost `delay`, delay is no term (the read is the domain's).
  *
  * Its arms, on a copy of the LV2 table (PLUGIN_HOSTD_TABLES): a meaning's row removed loses its designations, a unit's
  * row removed loses its unit, two rows mapping one value are refused. `make format-tables`, part of `make test`.
@@ -24,6 +28,7 @@ import { join } from 'node:path';
 import { loadDecl, pluginDirs, ROOT } from '../gen.mjs';
 import { descriptorFile } from '../descriptor.mjs';
 import { lv2Designation, lv2UnitNames, tablesDir } from '../format-tables.mjs';
+import { installedContractDir } from '../omx-contract.mjs';
 
 let n = 0, bad = 0;
 function check(what, got, want) {
@@ -139,6 +144,44 @@ rmSync(scratch, { recursive: true, force: true });
   check('pkg-config: a changed PKG_CONFIG_PATH gets the new answers', r.status === 0 ? JSON.parse(r.stdout) : r.stderr.trim(),
     ['/fake/a/contractdir/3/plugin-hostd/formats', '/fake/a/datadir', '/fake/a/contractdir', '/fake/b/contractdir/3/plugin-hostd/formats', '/fake/b/datadir']);
   rmSync(dir, { recursive: true, force: true });
+}
+
+// 6. the CLAP features: omx-clap's clap domain, golden from omx-contract 3.20.2's CLAP_PLUGIN_FEATURES_TERMS
+{
+  const GOLDEN_FEATURES = {
+    chorus: 'CLAP_PLUGIN_FEATURE_CHORUS', compressor: 'CLAP_PLUGIN_FEATURE_COMPRESSOR', 'de-esser': 'CLAP_PLUGIN_FEATURE_DEESSER',
+    delay: 'CLAP_PLUGIN_FEATURE_DELAY', distortion: 'CLAP_PLUGIN_FEATURE_DISTORTION', equalizer: 'CLAP_PLUGIN_FEATURE_EQUALIZER',
+    filter: 'CLAP_PLUGIN_FEATURE_FILTER', flanger: 'CLAP_PLUGIN_FEATURE_FLANGER', gate: 'CLAP_PLUGIN_FEATURE_GATE',
+    limiter: 'CLAP_PLUGIN_FEATURE_LIMITER', mixing: 'CLAP_PLUGIN_FEATURE_MIXING', phaser: 'CLAP_PLUGIN_FEATURE_PHASER',
+    'pitch-shifter': 'CLAP_PLUGIN_FEATURE_PITCH_SHIFTER', reverb: 'CLAP_PLUGIN_FEATURE_REVERB', stereo: 'CLAP_PLUGIN_FEATURE_STEREO',
+    'transient-shaper': 'CLAP_PLUGIN_FEATURE_TRANSIENT_SHAPER', tremolo: 'CLAP_PLUGIN_FEATURE_TREMOLO', utility: 'CLAP_PLUGIN_FEATURE_UTILITY',
+  };
+  const FTS = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
+  const call = (env) => spawnSync(process.execPath, ['--input-type=module', '-e', `
+    import { clapFeatureField, clapFeatureValue } from ${FTS};
+    const v = ${JSON.stringify(Object.keys(GOLDEN_FEATURES))};
+    console.log(JSON.stringify(Object.fromEntries(v.map((f) => [f, clapFeatureField(f)]).map(([f, id]) => [f, [id, clapFeatureValue(id)]]))));`], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
+  const golden = Object.fromEntries(Object.entries(GOLDEN_FEATURES).map(([f, id]) => [f, [id, f]]));
+  let r6 = call({});
+  check('the CLAP features the descriptors name map to their term ids and back (omx-clap clap domain = golden)', r6.status === 0 ? JSON.parse(r6.stdout) : r6.stderr.trim().split('\n').pop(), golden);
+  // (c) a copy of the contract directory whose clap domain has no delay: delay is no term there
+  const cdir = installedContractDir();
+  const tmp = join(ROOT, 'build', 'tmp', 'format-tables-clap');
+  rmSync(tmp, { recursive: true, force: true });
+  let planted = false;
+  try {
+    cpSync(cdir, tmp, { recursive: true });
+    const file = join(tmp, 'clap', 'clap.json'), doc = JSON.parse(readFileSync(file, 'utf8'));
+    const item = doc.components.schemas.CLAP_PLUGIN_FEATURES_TERMS;
+    item.oneOf = item.oneOf.filter((w) => w.const !== 'delay');
+    writeFileSync(file, JSON.stringify(doc));
+    planted = true;
+  } catch (e) {
+    console.log(`format-tables arm: the clap domain could not be copied (${e.message})`);
+  }
+  r6 = planted ? call({ OMX_INSTALLED_CONTRACTDIR: tmp }) : { status: 1, stdout: '', stderr: '' };
+  check('arm: the clap domain without delay, delay is no term (the read is omx-clap\'s)', r6.status === 0 ? JSON.parse(r6.stdout).delay : 'not planted', ['delay', 'delay']);
+  rmSync(tmp, { recursive: true, force: true });
 }
 
 console.log(bad ? `format-tables: ${bad} of ${n} failed` : `format-tables: ${n}/${n} pass`);
