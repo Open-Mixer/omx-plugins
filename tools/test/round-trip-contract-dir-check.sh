@@ -19,6 +19,11 @@ fake="$tmp/installed"
 mkdir -p "$fake/3/omx-plugins" "$fake/3/other-owner"
 printf '{"OMX_PLUGINS_ROLE_MEANINGS":{"kind":"roleMeanings","roles":{"threshold":{"role":"threshold","meaning":"unknown"}}}}\n' > "$fake/3/omx-plugins/role-meanings.json"
 printf '{}\n' > "$fake/3/other-owner/x.json"
+# a DOMAIN directory sits beside the numbered majors (plugin-hostd's machine domain, contract.d/machine/machine.json and its
+# own subdirectories): it is not a major, its subdirectories are not packages, and it is carried whole
+mkdir -p "$fake/machine/formats"
+printf '{}\n' > "$fake/machine/machine.json"
+printf '{}\n' > "$fake/machine/formats/x.json"
 out="$tmp/composed"
 OMX_INSTALLED_CONTRACTDIR="$fake" sh "$here/tools/round-trip-contract-dir.sh" "$out" >/dev/null
 bad=0
@@ -31,6 +36,8 @@ if [ -f "$got" ]; then
 else
   echo "round-trip-contract-dir: omx-plugins/role-meanings.json is absent from the composed directory" >&2; bad=1
 fi
+[ -e "$out/machine/machine.json" ] && [ -e "$out/machine/formats/x.json" ] || { echo "round-trip-contract-dir: the installed machine domain is not carried whole (omx-contract refuses a domain directory without machine.json)" >&2; bad=1; }
+[ ! -e "$out/machine/formats/formats" ] && [ ! -d "$out/formats" ] || { echo "round-trip-contract-dir: a domain's subdirectory was treated as a package" >&2; bad=1; }
 [ -e "$out/3/other-owner/x.json" ] || { echo "round-trip-contract-dir: the other installed package is missing" >&2; bad=1; }
 # A reader that lists the packages as directory entries (omx-panel's contractFiles: readdir withFileTypes, then
 # isDirectory()) skips a symbolic link, so an installed package linked in is not there for it.
