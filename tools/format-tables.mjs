@@ -2,44 +2,42 @@
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
  * format-tables.mjs — plugin-hostd's format tables, read backwards (FreeMixer/omx-plugins#210, decision B: one
- * vocabulary, two directions). plugin-hostd installs one mapping table per format into omx-contract's contract
- * directory, <contractdir>/3/plugin-hostd/formats/{clap,lv2}.json (PLUGIN_HOSTD_CLAP_MAP, PLUGIN_HOSTD_LV2_MAP, item
- * kind formatMap; plugin-hostd docs/formats.md): how each field a scan reads becomes a descriptor word. A generator
+ * vocabulary, two directions). plugin-hostd installs one mapping table per format as a domain of the contract
+ * directory, plugin-hostd/clap and plugin-hostd/lv2 (named by their items' prefix, PLUGIN_HOSTD_CLAP_MAP and
+ * PLUGIN_HOSTD_LV2_MAP; sorting row V19), <contractdir>/plugin-hostd/<format>/<format>.json, each item a sheet whose
+ * value is the map ({ format, rows }; plugin-hostd docs/formats.md): how each field a scan reads becomes a descriptor
+ * word. A generator
  * writes a face from a descriptor by reading the same rows the other way: the row whose `lookup` maps a source value
  * to the word's value names what the face writes. Only `identity` and `lookup` are read here; no transform is code
  * of ours (what is structure, a module path or a scale point, stays in the generator that writes it).
  *
- * $PLUGIN_HOSTD_TABLES, a directory holding clap.json and lv2.json (a plugin-hostd checkout's data/formats), stands in
- * for the installed tables.
+ * $OMX_INSTALLED_CONTRACTDIR, a contract directory holding the two domains, stands in for the installed one.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { domainDocument, installedContractDir } from './omx-contract.mjs';
 
-/** The schema major the tables are installed under, and the item each format's file holds. */
-export const TABLES_MAJOR = '3';
+/** The item each format's domain holds, and the domain (named by the item's prefix). */
 const ITEM = { clap: 'PLUGIN_HOSTD_CLAP_MAP', lv2: 'PLUGIN_HOSTD_LV2_MAP' };
+export const tableDomain = (format) => `plugin-hostd/${format}`;
 
-/** The directory the tables are read from, or undefined. */
-export function tablesDir() {
-  if (process.env.PLUGIN_HOSTD_TABLES) return process.env.PLUGIN_HOSTD_TABLES;
-  const cdir = installedContractDir();
-  return cdir && join(cdir, TABLES_MAJOR, 'plugin-hostd', 'formats');
-}
+/** The contract directory the tables' domains are read from, or undefined. */
+export const tablesDir = () => installedContractDir();
 
 const cache = new Map();
 /** The rows of `format`'s table (`clap`, `lv2`): `{ <source field>: { word? | extension? | dropped?, term? | from? } }`. */
 export function tableRows(format) {
   if (!ITEM[format]) throw new Error(`format-tables: no table for format '${format}'`);
   const dir = tablesDir();
-  const file = dir && join(dir, `${format}.json`);
+  const file = dir && join(dir, tableDomain(format), `${format}.json`);
   if (!cache.has(file)) {
     if (!file || !existsSync(file)) {
-      throw new Error(`plugin-hostd's ${format} table is not installed (${file ?? 'no contract directory: pkg-config --variable=contractdir omx-contract finds none'}): this tree needs plugin-hostd-devel >= 0.7.0 (packaging/omx-plugins.spec), or PLUGIN_HOSTD_TABLES naming a plugin-hostd checkout's data/formats`);
+      throw new Error(`plugin-hostd's ${format} table, the domain ${tableDomain(format)}, is not installed (${file ?? 'no contract directory: pkg-config --variable=contractdir omx-contract finds none'}): this tree needs plugin-hostd-contract >= 0.21.0 (packaging/omx-plugins.spec)`);
     }
-    const item = JSON.parse(readFileSync(file, 'utf8'))[ITEM[format]];
-    if (item?.kind !== 'formatMap' || item.format !== format || typeof item.rows !== 'object') throw new Error(`${file}: holds no ${ITEM[format]} formatMap of format ${format}`);
-    cache.set(file, item.rows);
+    const item = JSON.parse(readFileSync(file, 'utf8')).components?.schemas?.[ITEM[format]];
+    const map = item?.['x-value'];
+    if (item?.['x-kind'] !== 'sheet' || map?.format !== format || typeof map.rows !== 'object') throw new Error(`${file}: holds no ${ITEM[format]} sheet of format ${format}`);
+    cache.set(file, map.rows);
   }
   return cache.get(file);
 }

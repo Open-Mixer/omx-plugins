@@ -46,6 +46,9 @@ BuildRequires: sord
 BuildRequires: omx-clap-host >= 0.32.3
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
 BuildRequires: plugin-hostd >= 0.20.5
+# plugin-hostd's words the generators read: its domains plugin-hostd/clap and plugin-hostd/lv2, the format tables
+# (tools/format-tables.mjs), and the resource hints, RESOURCE_* (tools/resource-hints.mjs)
+BuildRequires: plugin-hostd-contract >= 0.21.0
 # %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
 # shipped pins.d file to the shipped binaries' hashes (tools/pins-check.sh)
 BuildRequires: plugin-qualify >= 0.20.4

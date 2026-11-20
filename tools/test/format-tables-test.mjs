@@ -19,8 +19,9 @@
  *      term id and back = golden (omx-contract 3.20.2's terms), and over a copy of the contract directory whose clap
  *      domain lost `delay`, delay is no term (the read is the domain's).
  *
- * Its arms, on a copy of the LV2 table (PLUGIN_HOSTD_TABLES): a meaning's row removed loses its designations, a unit's
- * row removed loses its unit, two rows mapping one value are refused. `make format-tables`, part of `make test`.
+ * Its arms, on a copy of the contract directory whose plugin-hostd/lv2 domain (PLUGIN_HOSTD_LV2_MAP, sorting row V19)
+ * is edited: a meaning's row removed loses its designations, a unit's row removed loses its unit, two rows mapping one
+ * value are refused. `make format-tables`, part of `make test`.
  */
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -97,21 +98,21 @@ for (const dir of pluginDirs()) {
   check(`${d.stem}: the CLAP modules are its descriptor's groups`, modules, d.params.map((_, i) => (d.descriptor?.controls[i]?.group ?? []).join('/')));
 }
 
-// the arms, on a copy of the LV2 table
+// the arms, on a copy of the contract directory whose plugin-hostd/lv2 domain is edited (the tables are plugin-hostd's
+// domains plugin-hostd/clap and plugin-hostd/lv2, <contractdir>/plugin-hostd/<format>/<format>.json, a sheet each)
 const scratch = join(ROOT, 'build', 'tmp', 'format-tables');
 rmSync(scratch, { recursive: true, force: true });
 mkdirSync(scratch, { recursive: true });
-cpSync(tablesDir(), scratch, { recursive: true });
 const broken = (name, edit) => {
   const dir = join(scratch, name);
   cpSync(tablesDir(), dir, { recursive: true });
-  const file = join(dir, 'lv2.json'), t = JSON.parse(readFileSync(file, 'utf8'));
-  edit(t.PLUGIN_HOSTD_LV2_MAP.rows);
+  const file = join(dir, 'plugin-hostd', 'lv2', 'lv2.json'), t = JSON.parse(readFileSync(file, 'utf8'));
+  edit(t.components.schemas.PLUGIN_HOSTD_LV2_MAP['x-value'].rows);
   writeFileSync(file, JSON.stringify(t));
   return dir;
 };
 // each arm runs in a process of its own: the tables are read once per process
-const arm = (dir, code) => spawnSync(process.execPath, ['--input-type=module', '-e', code], { cwd: ROOT, env: { ...process.env, PLUGIN_HOSTD_TABLES: dir }, encoding: 'utf8' });
+const arm = (dir, code) => spawnSync(process.execPath, ['--input-type=module', '-e', code], { cwd: ROOT, env: { ...process.env, OMX_INSTALLED_CONTRACTDIR: dir }, encoding: 'utf8' });
 const FT = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
 let r = arm(broken('no-gain', (rows) => { delete rows['param:gain']; }), `import { lv2Designation } from ${FT}; console.log(String(lv2Designation('gain')));`);
 check('arm: the param:gain row removed, gain is designated by nothing', r.stdout.trim(), 'undefined');
@@ -137,12 +138,12 @@ rmSync(scratch, { recursive: true, force: true });
     process.env.PKG_CONFIG_PATH = 'b';
     for (let i = 0; i < 50; i++) seen.push(tablesDir(), installedDataDir());
     console.log(JSON.stringify([...new Set(seen)]));`], {
-    encoding: 'utf8', env: { ...process.env, PKG_CONFIG: join(dir, 'pkg-config'), PKG_CONFIG_PATH: 'a', PLUGIN_HOSTD_TABLES: '' },
+    encoding: 'utf8', env: { ...process.env, PKG_CONFIG: join(dir, 'pkg-config'), PKG_CONFIG_PATH: 'a', OMX_INSTALLED_CONTRACTDIR: '' },
   });
   const calls = existsSync(log) ? readFileSync(log, 'utf8').trim().split('\n') : [];
   check('pkg-config: each directory asked once per environment (2 environments, 2 variables: 4 calls)', calls.length, 4);
   check('pkg-config: a changed PKG_CONFIG_PATH gets the new answers', r.status === 0 ? JSON.parse(r.stdout) : r.stderr.trim(),
-    ['/fake/a/contractdir/3/plugin-hostd/formats', '/fake/a/datadir', '/fake/a/contractdir', '/fake/b/contractdir/3/plugin-hostd/formats', '/fake/b/datadir']);
+    ['/fake/a/contractdir', '/fake/a/datadir', '/fake/b/contractdir', '/fake/b/datadir']);
   rmSync(dir, { recursive: true, force: true });
 }
 
