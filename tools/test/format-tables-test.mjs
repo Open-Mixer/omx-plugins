@@ -14,7 +14,7 @@
  *   5. the installed contract's directories are asked of pkg-config once per pkg-config environment, not once per
  *      table row (omx-plugins#39: tableRows asked it on every call, 47 of gen.mjs --check's 60 s), and a changed
  *      PKG_CONFIG_PATH asks again and gets the new answer.
- *   6. the CLAP features a descriptor writes are omx-clap-core's terms (CLAP_PLUGIN_FEATURES_TERMS of its domain clap,
+ *   6. the CLAP features a descriptor writes are omx-clap's terms (CLAP_PLUGIN_FEATURES_TERMS of its domain clap,
  *      <contractdir>/clap/clap.json; sorting row V24/27): every open feature the shipped descriptors name maps to its
  *      term id and back = golden (omx-contract 3.20.2's terms), and over a copy of the contract directory whose clap
  *      domain lost `delay`, delay is no term (the read is the domain's).
@@ -146,7 +146,7 @@ rmSync(scratch, { recursive: true, force: true });
   rmSync(dir, { recursive: true, force: true });
 }
 
-// 6. the CLAP features: omx-clap-core's clap domain, golden from omx-contract 3.20.2's CLAP_PLUGIN_FEATURES_TERMS
+// 6. the CLAP features: omx-clap's clap domain, golden from omx-contract 3.20.2's CLAP_PLUGIN_FEATURES_TERMS
 {
   const GOLDEN_FEATURES = {
     chorus: 'CLAP_PLUGIN_FEATURE_CHORUS', compressor: 'CLAP_PLUGIN_FEATURE_COMPRESSOR', 'de-esser': 'CLAP_PLUGIN_FEATURE_DEESSER',
@@ -163,7 +163,7 @@ rmSync(scratch, { recursive: true, force: true });
     console.log(JSON.stringify(Object.fromEntries(v.map((f) => [f, clapFeatureField(f)]).map(([f, id]) => [f, [id, clapFeatureValue(id)]]))));`], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
   const golden = Object.fromEntries(Object.entries(GOLDEN_FEATURES).map(([f, id]) => [f, [id, f]]));
   let r6 = call({});
-  check('the CLAP features the descriptors name map to their term ids and back (omx-clap-core clap domain = golden)', r6.status === 0 ? JSON.parse(r6.stdout) : r6.stderr.trim().split('\n').pop(), golden);
+  check('the CLAP features the descriptors name map to their term ids and back (omx-clap clap domain = golden)', r6.status === 0 ? JSON.parse(r6.stdout) : r6.stderr.trim().split('\n').pop(), golden);
   // (c) a copy of the contract directory whose clap domain has no delay: delay is no term there
   const cdir = installedContractDir();
   const tmp = join(ROOT, 'build', 'tmp', 'format-tables-clap');
@@ -180,7 +180,7 @@ rmSync(scratch, { recursive: true, force: true });
     console.log(`format-tables arm: the clap domain could not be copied (${e.message})`);
   }
   r6 = planted ? call({ OMX_INSTALLED_CONTRACTDIR: tmp }) : { status: 1, stdout: '', stderr: '' };
-  check('arm: the clap domain without delay, delay is no term (the read is omx-clap-core\'s)', r6.status === 0 ? JSON.parse(r6.stdout).delay : 'not planted', ['delay', 'delay']);
+  check('arm: the clap domain without delay, delay is no term (the read is omx-clap\'s)', r6.status === 0 ? JSON.parse(r6.stdout).delay : 'not planted', ['delay', 'delay']);
   rmSync(tmp, { recursive: true, force: true });
 }
 

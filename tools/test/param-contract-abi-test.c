@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * param-contract-abi-test.c — org.openmixer.param-contract/1 is omx-clap-core's <omx-clap-host/omx_clap_ext.h>;
+ * param-contract-abi-test.c — org.openmixer.param-contract/1 is omx-clap's <omx-clap-host/omx_clap_ext.h>;
  * what this tree keeps is struct omx_param_contract_row, the unit, scale and step a face fills a host's entry
  * from. The row's members are the entry's, member for member, and the scale codes are the owner's: a member
  * changed on either side, or a scale added on one, stops this compiling.

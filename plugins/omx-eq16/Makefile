@@ -16,7 +16,7 @@
 #   make install    DESTDIR/PREFIX/LIBDIR/CLAPDIR: $(CLAPDIR)/omx-eq16.clap, $(LIBDIR)/lv2/omx-eq16.lv2/
 #
 # Build deps: omx-dsp (pkg-config omxdsp, >= OMXDSP_MIN, the floor packaging/omx-plugins.spec declares),
-# omx-contract (its resource-hints header), omx-clap-core (the CLAP ABI's openmixer extensions), clap, lv2; for the
+# omx-contract (its resource-hints header), omx-clap (the CLAP ABI's openmixer extensions), clap, lv2; for the
 # tests lilv and node.
 
 NAME       := omx-eq16
@@ -36,7 +36,7 @@ endif
 CONTRACT_CFLAGS := $(shell $(PKG_CONFIG) --cflags omx-contract)
 DSP_CFLAGS := $(shell $(PKG_CONFIG) --cflags omxdsp) $(CONTRACT_CFLAGS)
 DSP_LIBS   := $(shell $(PKG_CONFIG) --libs omxdsp)
-ABI_CFLAGS := $(shell $(PKG_CONFIG) --cflags omx-clap-core clap 2>/dev/null)
+ABI_CFLAGS := $(shell $(PKG_CONFIG) --cflags omx-clap clap 2>/dev/null)
 LV2_CFLAGS := $(shell $(PKG_CONFIG) --cflags lv2 2>/dev/null)
 LILV       := $(shell $(PKG_CONFIG) --cflags --libs lilv-0 2>/dev/null)
 

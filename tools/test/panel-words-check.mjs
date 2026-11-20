@@ -6,7 +6,7 @@
  * once elsewhere: the families and the widgets are omx-contract's PANEL_FAMILIES and PANEL_WIDGETS sheets
  * (data/panel.json), the display kinds, the display sources and the placements are omx-panel's lists
  * (tools/panel-description.mjs, which tools/gen.mjs already writes the rows with), and every one of them is the
- * X-list omx-clap-core's <omx-clap-host/omx_clap_ext.h> carries for the host, code and enumerator. Each enumerator
+ * X-list omx-clap's <omx-clap-host/omx_clap_ext.h> carries for the host, code and enumerator. Each enumerator
  * is the word in upper case after the enum's prefix, its code the word's position, and the count the list's:
  * the header is held to them here, so a word added, moved or renamed anywhere is red until the three agree.
  * `make panel-words`, part of `make test`.
@@ -32,7 +32,7 @@ const OWNER = 'omx-clap-host/omx_clap_ext.h';
 const ENUMS = {
   family: { c: 'omx_clap_panel_family', prefix: 'OMX_CLAP_FAMILY_', owner: 'OMX_CLAP_PANEL_FAMILIES' },
   widget: { c: 'omx_clap_panel_widget', prefix: 'OMX_CLAP_WIDGET_', owner: 'OMX_CLAP_PANEL_WIDGETS' },
-  // omx-clap-core 0.33.1 no longer lists the display kinds (the table is omx-panel's, the struct field a number): no owner list,
+  // omx-clap 0.33.1 no longer lists the display kinds (the table is omx-panel's, the struct field a number): no owner list,
   // the enum is held against omx-panel's DISPLAY_KINDS alone
   display_kind: { c: 'omx_clap_panel_display_kind', prefix: 'OMX_CLAP_DISPLAY_', owner: null },
   display_source: { c: 'omx_clap_panel_display_source', prefix: 'OMX_CLAP_DISPLAY_FROM_', owner: 'OMX_CLAP_PANEL_DISPLAY_SOURCES' },
@@ -96,11 +96,11 @@ function sheetWords(dir, name) {
   return Object.values(item.value).map((w) => w.word);
 }
 
-/** The owner's header, where pkg-config says omx-clap-core's headers are, else the system's. */
+/** The owner's header, where pkg-config says omx-clap's headers are, else the system's. */
 function ownerHeader() {
   let dirs = [];
   try {
-    dirs = execFileSync(process.env.PKG_CONFIG || 'pkg-config', ['--cflags-only-I', 'omx-clap-core'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\s+/).filter((f) => f.startsWith('-I')).map((f) => f.slice(2));
+    dirs = execFileSync(process.env.PKG_CONFIG || 'pkg-config', ['--cflags-only-I', 'omx-clap'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\s+/).filter((f) => f.startsWith('-I')).map((f) => f.slice(2));
   } catch { /* not installed through pkg-config: the system include directory below */ }
   return [...dirs, '/usr/include', '/usr/local/include'].map((d) => join(d, OWNER)).find((f) => existsSync(f));
 }
@@ -120,7 +120,7 @@ const declared = {
 const headerText = readFileSync(join(root, HEADER), 'utf8');
 const ownerFile = ownerHeader();
 if (!ownerFile) {
-  console.error(`panel-words: ${OWNER} not found: install omx-clap-core-devel (BUILDING.md)`);
+  console.error(`panel-words: ${OWNER} not found: install omx-clap-devel (BUILDING.md)`);
   process.exit(1);
 }
 const ownerText = readFileSync(ownerFile, 'utf8');

@@ -16,7 +16,7 @@ BuildRequires: pkgconf-pkg-config
 # in debian/control the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
 BuildRequires: omx-dsp-devel >= 0.32.0
 BuildRequires: omx-contract-devel >= 3.20.2
-BuildRequires: omx-clap-core-devel >= 0.33.0
+BuildRequires: omx-clap-devel >= 0.34.0
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
 BuildRequires: plugin-hostd-devel >= 0.20.5
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
@@ -25,9 +25,9 @@ BuildRequires: plugin-hostd-devel >= 0.20.5
 BuildRequires: omx-contract >= 3.20.2
 # the panel layout is omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
 BuildRequires: omx-panel >= 0.14.0
-# omx-clap-core's domains the generators read (tools/omx-contract.mjs domainDocument): omx-param-contract, the unit codes
+# omx-clap's domains the generators read (tools/omx-contract.mjs domainDocument): omx-param-contract, the unit codes
 # (tools/param-contract.mjs), and clap, the CLAP feature terms (tools/format-tables.mjs)
-BuildRequires: omx-clap-core-contract >= 0.34.0
+BuildRequires: omx-clap-contract >= 0.34.0
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}

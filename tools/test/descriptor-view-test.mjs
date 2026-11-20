@@ -104,7 +104,7 @@ if (carriesWords) {
   // the render below hides the installed omx-contract from pkg-config; gen.mjs decides "run, not imported" with
   // omx-contract's isMain, which reads the command's own directory, so that one directory stays named
   const clidir = spawnSync('pkg-config', ['--variable=clidir', 'omx-contract'], { encoding: 'utf8' }).stdout.trim();
-  // the CLAP feature terms are omx-clap-core's domain clap, not in omx-contract's render (sorting row V24/27): the
+  // the CLAP feature terms are omx-clap's domain clap, not in omx-contract's render (sorting row V24/27): the
   // installed contract directory stays named for the domains, the owners still come from the render alone
   const domains = installedContractDir();
   const lone = (dir) => {

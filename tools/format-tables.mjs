@@ -74,16 +74,16 @@ export function tableWords(format) {
 
 // ---- the CLAP features a face writes, as a scan reads them -----------------------------------------------------------
 
-/** omx-clap-core's CLAP feature terms (CLAP_PLUGIN_FEATURES_TERMS of its domain clap, <contractdir>/clap/clap.json,
- * omx-clap-core-contract >= 0.34.0; sorting row V24/27): `{ <value>: <term id> }`, delay -> CLAP_PLUGIN_FEATURE_DELAY,
+/** omx-clap's CLAP feature terms (CLAP_PLUGIN_FEATURES_TERMS of its domain clap, <contractdir>/clap/clap.json,
+ * omx-clap-contract >= 0.34.0; sorting row V24/27): `{ <value>: <term id> }`, delay -> CLAP_PLUGIN_FEATURE_DELAY,
  * each word's `const` and `title`. A field dump writes a feature the headers define by its macro name (plugin-hostd
  * docs/formats.md, The field dump), so the bag carries that name and a face writes its value. */
 let featureTerms;
 export function clapFeatureTerms() {
   if (featureTerms) return featureTerms;
-  const { file, schemas } = domainDocument('clap', 'omx-clap-core-contract >= 0.34.0');
+  const { file, schemas } = domainDocument('clap', 'omx-clap-contract >= 0.34.0');
   const words = schemas.CLAP_PLUGIN_FEATURES_TERMS?.oneOf;
-  if (!Array.isArray(words) || !words.length) throw new Error(`${file}: holds no CLAP_PLUGIN_FEATURES_TERMS (omx-clap-core-contract >= 0.34.0 installs it)`);
+  if (!Array.isArray(words) || !words.length) throw new Error(`${file}: holds no CLAP_PLUGIN_FEATURES_TERMS (omx-clap-contract >= 0.34.0 installs it)`);
   featureTerms = Object.fromEntries(words.map((w) => [w.const, w.title]));
   return featureTerms;
 }
