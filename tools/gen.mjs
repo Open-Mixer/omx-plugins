@@ -42,7 +42,7 @@ import { fileURLToPath } from 'node:url';
 import { releaseVersion } from './release-version.mjs';
 import { faceBinding } from './instance-face.mjs';
 import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
-import { lv2Designation, lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
+import { lv2Designation, lv2UnitNames, lv2UnitRef, ownLv2Units, standardUnitOf } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
 import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
 import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam, isMain } from './omx-contract.mjs';
@@ -521,13 +521,14 @@ export function digestOf(params) {
   return createHash('sha256').update(JSON.stringify(rows)).digest('hex');
 }
 
-/** The plugin-defined units, by name (urn:openmixer:unit#<name>): defined (units:Unit) in the plugin's own TTL, so a
- * host that reads units:unit finds the unit and how to write it. */
+/** How a plugin's TTL defines each OpenMixer unit it uses (units:Unit), by the PARAM_UNITS word F1 maps it to; its URI is
+ * F1's (tools/format-tables.mjs ownLv2Units, plugin-db's x-uri), never spelled here. The label, render and symbol are
+ * the TTL's own presentation. */
 export const LV2_CUSTOM_UNITS = {
   dBFS: { label: 'decibels (full scale)', render: '%f dBFS', symbol: 'dBFS' },
   dBu: { label: 'decibels (unloaded)', render: '%f dBu', symbol: 'dBu' },
   LUFS: { label: 'loudness units (full scale)', render: '%f LUFS', symbol: 'LUFS' },
-  dBoct: { label: 'decibels per octave', render: '%f dB/oct', symbol: 'dB/oct' },
+  'dB-oct': { label: 'decibels per octave', render: '%f dB/oct', symbol: 'dB/oct' },
   ratio: { label: 'ratio', render: '%f:1', symbol: ':1' },
 };
 
@@ -850,21 +851,27 @@ lv2:displayPriority
     lv2:name ${ttlStr(g.label)} ;
     lv2:displayPriority ${g.priority} ;
     rdfs:label ${ttlStr(g.label)} .
-`).join('')}${customUnitsOf(d).map((name) => `
-<urn:openmixer:unit#${name}>
+`).join('')}${customUnitsOf(d).map(([word, uri]) => `
+<${uri}>
     a units:Unit ;
-    rdfs:label ${ttlStr(LV2_CUSTOM_UNITS[name].label)} ;
-    units:render ${ttlStr(LV2_CUSTOM_UNITS[name].render)} ;
-    units:symbol ${ttlStr(LV2_CUSTOM_UNITS[name].symbol)} .
+    rdfs:label ${ttlStr(LV2_CUSTOM_UNITS[word].label)} ;
+    units:render ${ttlStr(LV2_CUSTOM_UNITS[word].render)} ;
+    units:symbol ${ttlStr(LV2_CUSTOM_UNITS[word].symbol)} .
 `).join('')}`;
 }
 
 /** The @prefix lines of the stated resource hints (tools/resource-hints.mjs) that `pick` keeps, in the TTL's column. */
 const hintPrefix = (d, pick) => hintPrefixes(d.hintVocabulary, d.hints ?? []).filter(([p]) => pick(p)).map(([p, ns]) => `@prefix ${`${p}:`.padEnd(6)} <${ns}> .\n`).join('');
 
-/** The plugin-defined units this plugin's ports use, in a fixed order. */
-const customUnitsOf = (d) => Object.keys(LV2_CUSTOM_UNITS).filter((name) =>
-  [...d.params.map((q, i) => faceUnit(d, i)), ...metersOf(d).map((m) => m.unit)].some((u) => lv2UnitRef(u) === `<urn:openmixer:unit#${name}>`));
+/** The OpenMixer units this plugin's ports use, `[[<PARAM_UNITS word>, <uri>], ...]` in LV2_CUSTOM_UNITS' order, each
+ * URI F1's (ownLv2Units). */
+const customUnitsOf = (d) => {
+  const own = ownLv2Units(), uriOf = Object.fromEntries(Object.entries(own).map(([sym, uri]) => [standardUnitOf(sym), uri]));
+  return Object.keys(LV2_CUSTOM_UNITS).map((word) => {
+    if (!uriOf[word]) throw new Error(`tools/gen.mjs LV2_CUSTOM_UNITS: ${word} is no unit of F1's LV2_OPENMIXER_UNIT_IDS`);
+    return [word, uriOf[word]];
+  }).filter(([, uri]) => [...d.params.map((q, i) => faceUnit(d, i)), ...metersOf(d).map((m) => m.unit)].some((u) => lv2UnitRef(u) === `<${uri}>`));
+};
 
 /** A control's group as a CLAP module path (plugin-hostd's group-path, written: the labels joined by "/"). */
 const moduleOf = (d, i) => (d.descriptor?.controls[i]?.group ?? []).join('/');

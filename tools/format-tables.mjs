@@ -95,23 +95,51 @@ export const clapFeatureValue = (field) => Object.entries(clapFeatureTerms()).fi
 
 const UNIT_WORD = 'controls[].travel.unit', MEANING_WORD = 'controls[].meaning';
 
-/** The units a declaration writes that the LV2 table (what a scan reads back) has no row for, each a plugin-defined
- * unit (tools/gen.mjs LV2_CUSTOM_UNITS defines them in the TTL): a slope's dB/oct and dBu, which no descriptor word
- * reads, and the ratio (n:1), a descriptor unit from omx-contract 3.0.0 that plugin-hostd 0.7.0's table does not map
- * (a scan carries it in the bag; the round trip names it lost). */
-export const OWN_LV2_UNITS = Object.freeze({ dBu: 'urn:openmixer:unit#dBu', 'dB/oct': 'urn:openmixer:unit#dBoct', ratio: 'urn:openmixer:unit#ratio' });
+/** The standard units by the symbol a face publishes (omx-contract's param domain, PARAM_UNITS: each word's x-symbol,
+ * % for percent, dB/oct for dB-oct, '' for none; F4): `{ <symbol>: <PARAM_UNITS word> }`. No published unit is renamed. */
+let standardUnits;
+export function standardUnitsBySymbol() {
+  if (standardUnits) return standardUnits;
+  const { file, schemas } = domainDocument('param', 'omx-contract-data >= 3.21.0');
+  const words = schemas.PARAM_UNITS?.oneOf;
+  if (!Array.isArray(words)) throw new Error(`${file}: holds no PARAM_UNITS words`);
+  standardUnits = Object.fromEntries(words.map((w) => [w['x-symbol'] ?? w.const, w.const]));
+  return standardUnits;
+}
+/** The PARAM_UNITS word a published unit symbol is, or undefined (a plugin's own unit: N1's, not in this pass). */
+export const standardUnitOf = (symbol) => standardUnitsBySymbol()[symbol];
+
+/** The units a declaration writes that the LV2 table (what a scan reads back) has no row for, each one of the OpenMixer
+ * spellings F1 maps (plugin-db's lv2 domain, LV2_OPENMIXER_UNIT_IDS: the PARAM_UNITS word and the exact URI an LV2
+ * file writes, x-uri; sorting row M3): `{ <published symbol>: <uri> }`, dB/oct -> urn:openmixer:unit#dBoct. The plugin's
+ * TTL defines each it uses (tools/gen.mjs LV2_CUSTOM_UNITS). */
+let ownUnits;
+export function ownLv2Units() {
+  if (ownUnits) return ownUnits;
+  const { file, schemas } = domainDocument('lv2', 'plugin-db-contract >= 0.5.0');
+  const words = schemas.LV2_OPENMIXER_UNIT_IDS?.oneOf;
+  if (!Array.isArray(words)) throw new Error(`${file}: holds no LV2_OPENMIXER_UNIT_IDS words (plugin-db-contract >= 0.5.0)`);
+  const symbolOf = Object.fromEntries(Object.entries(standardUnitsBySymbol()).map(([sym, word]) => [word, sym]));
+  ownUnits = {};
+  for (const w of words) {
+    if (typeof w['x-uri'] !== 'string') throw new Error(`${file}: LV2_OPENMIXER_UNIT_IDS.${w.title} has no x-uri`);
+    if (symbolOf[w.const] === undefined) throw new Error(`${file}: LV2_OPENMIXER_UNIT_IDS.${w.title} is ${w.const}, no word of PARAM_UNITS`);
+    ownUnits[symbolOf[w.const]] = w['x-uri'];
+  }
+  return ownUnits;
+}
 
 /** The `units:unit` value of a declared unit, as a TTL writes it: the LV2 table read backwards (units:db for dB,
- * <urn:openmixer:unit#dBFS> for dBFS), else the declaration's own unit (OWN_LV2_UNITS); none for "". */
+ * <urn:openmixer:unit#dBFS> for dBFS), else the declaration's own unit (ownLv2Units, F1); none for "". */
 export function lv2UnitRef(unit) {
-  const key = unit ? outboundValue('lv2', UNIT_WORD, unit) ?? OWN_LV2_UNITS[unit] : undefined;
+  const key = unit ? outboundValue('lv2', UNIT_WORD, unit) ?? ownLv2Units()[unit] : undefined;
   if (!key) return undefined;
   return key.startsWith('units:') ? key : `<${key}>`;
 }
 
 /** The LV2 name of each unit a face can write, `{ <unit>: <name> }` (`units:db` -> db, `urn:openmixer:unit#dBFS` -> dBFS). */
 export function lv2UnitNames() {
-  const pairs = [...Object.entries(lookupValues('lv2', UNIT_WORD)).map(([k, v]) => [v, k]), ...Object.entries(OWN_LV2_UNITS)];
+  const pairs = [...Object.entries(lookupValues('lv2', UNIT_WORD)).map(([k, v]) => [v, k]), ...Object.entries(ownLv2Units())];
   return Object.fromEntries(pairs.map(([unit, key]) => [unit, key.split(/[:#]/).pop()]));
 }
 
