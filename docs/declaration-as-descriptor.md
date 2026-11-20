@@ -50,7 +50,7 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | `name`, `vendor`, `version` | `plugin.name`, `.vendor`, `.version` | |
 | `clap.id` | `plugin.id` (`format: clap`) | |
 | `lv2.uri` | `plugin.uri` | |
-| `clap.features` | `plugin.features`: the four the descriptor names (`audio-effect`, `instrument`, `note-effect`, `analyzer`); CLAP's other features (`delay`, `stereo`, ...) in the extension bag, `extensions.clap["clap_plugin_descriptor.features"]`, in the face's order, each as a scan's field dump writes it: a feature the CLAP headers define by its macro name (`CLAP_PLUGIN_FEATURE_DELAY`, omx-contract's `CLAP_PLUGIN_FEATURES_TERMS`), one feature as it is, two or more a list | |
+| `clap.features` | `plugin.features`: the four the descriptor names (`audio-effect`, `instrument`, `note-effect`, `analyzer`); CLAP's other features (`delay`, `stereo`, ...) in the extension bag, `extensions.clap["clap_plugin_descriptor.features"]`, in the face's order, each as a scan's field dump writes it: a feature the CLAP headers define by its macro name (`CLAP_PLUGIN_FEATURE_DELAY`, omx-clap's `CLAP_PLUGIN_FEATURES_TERMS`, domain `clap`), one feature as it is, two or more a list | |
 | (every LV2 face) `lv2:optionalFeature lv2:hardRTCapable` | `needs.extensions.optional: ["lv2:hardRTCapable"]` | |
 | `lv2.class` | the extension bag, `extensions.lv2["rdf:type"]`: the face's types as its `.ttl` states them, `["lv2:Plugin", <class>]` (`"lv2:Plugin"` alone when that is the class) | |
 | `description` | `plugin.doc`: the one-line description, CLAP `description` and LV2 `rdfs:comment` | |
@@ -59,6 +59,7 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | `sidechain` (`symbol`, `name`) | a `ports[]` entry: `kind: audio`, `direction: in`, `role: sidechain`, `channels: 1`, `layout: mono`, named as the CLAP face names it (the symbol) | `sidechain`, whole: the LV2 port's symbol and name |
 | the audio pair | `ports[]`: `in` and `out` (the CLAP face's names), `role: main`, `channels: 2`, `layout: stereo` | |
 | `latencyChecks` | `latency.reports: true`; `latency.frames` when every check reports one constant | kept: the checks the oracles run |
+| (no declaration word) | `latency.sweep` (`min`, `max`, omx-contract 3.21.0): the range a modulated delay's lag lies in, omx-rotary's, each end a `{ ref }` to its kernel's scalar in ms. The descriptor file states it and the generator keeps it; a ref names the kernel's package in `requires` (`omx-dsp`, at the packaging's floor), and the schema floor is 3.21.0. Neither face carries it, so the round trip names its two ends a face as losses | |
 | `meters` | `meters[]`: `id` its index, `symbol` its id, `name` from it, `kind` (`gain-reduction`, `level`), `channels`, the range, unit and scale (the kernel readout's, linked in `source.from` as `data/kernels/<kernel>.json#readouts[<name>]`; a level's as declared, `dBFS`), the readout's `doc` | kept: where the face reads it (`field`, `read`, `linear`, `source`) |
 | `oracles`, `portHints` | | kept: tests, the LV2 hint pin |
 | `panel.sections[].label` | each listed control's `group` | `panel` (family, roles, section keys, order, widgets, graphs): the panel's hints |
@@ -98,12 +99,12 @@ What the descriptor has no word for, found laying out our panels, and where each
 ## The faces, from plugin-hostd's tables read backwards
 
 One vocabulary, two directions (FreeMixer/omx-plugins#210, ruling B). plugin-hostd installs one mapping table per
-format into omx-contract's contract directory, `<contractdir>/3/plugin-hostd/formats/{clap,lv2}.json`: how each field a
+format as a domain of the contract directory, `plugin-hostd/clap` and `plugin-hostd/lv2` (named by their items' prefix,
+`PLUGIN_HOSTD_CLAP_MAP` and `PLUGIN_HOSTD_LV2_MAP`), `<contractdir>/plugin-hostd/<format>/<format>.json`: how each field a
 scan reads becomes a descriptor word. Our generators write a face from the authored descriptor by reading the same
 rows the other way (`tools/format-tables.mjs`), and only the rows whose transform is `identity` or `lookup`: the row
 whose `lookup` maps a source value to the word's value names what the face writes. No transform is code of ours.
-`$PLUGIN_HOSTD_TABLES`, a directory holding `clap.json` and `lv2.json` (a plugin-hostd checkout's `data/formats`),
-stands in for the installed tables.
+`$OMX_INSTALLED_CONTRACTDIR`, a contract directory holding the two domains, stands in for the installed one.
 
 - An LV2 port's `units:unit` is the LV2 row mapping its unit (`units:db` for `dB`, `<urn:openmixer:unit#dBFS>` for
   `dBFS`); a unit no row maps is the declaration's own, defined in the plugin's TTL: `dBu`, `dB/oct` and `ratio`

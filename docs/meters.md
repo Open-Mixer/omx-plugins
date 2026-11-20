@@ -8,20 +8,20 @@ draws a plugin's input and output levels beside it. This is how a plugin here re
 ## The interface
 
 `clap.meters/1`, the CLAP meters extension (free-audio/clap#521), and nothing else. It is the one
-omx-clap-core reads for meters since it removed `org.openmixer.meters/1` (omx-clap-core
+omx-clap reads for meters since it removed `org.openmixer.meters/1` (omx-clap
 `docs/meters.md`): every channel of every meter becomes an output symbol, read at
 the host's idle rate through `get_values()`.
 
 The LV2 face writes the same values to output control ports, one per channel, after the `latency` port: each
-port's symbol is the one omx-clap-core derives from the CLAP meter's name (the meter's `id` for one channel,
+port's symbol is the one omx-clap derives from the CLAP meter's name (the meter's `id` for one channel,
 `<id>_<channel>` from 0 for more), its range the meter's display range. So a host reads `band2Gr` by the same
 symbol from either face. The plugin's descriptor lists the meters (omx-contract's `meters` word, schema 3.9.0):
 the id, the symbol, the kind, the channels, the range, and the kernel readout each publishes, linked as
 `data/kernels/<kernel>.json#readouts[<name>]`. A console learns from the descriptor which readouts a linked
-plugin carries. A meter is never also a read-only parameter: CLAP has a word for meters, and omx-clap-core
+plugin carries. A meter is never also a read-only parameter: CLAP has a word for meters, and omx-clap
 refuses a meter symbol a parameter answers to.
 
-No released CLAP SDK ships `clap/ext/draft/meters.h` yet. omx-clap-core installs its declaration as
+No released CLAP SDK ships `clap/ext/draft/meters.h` yet. omx-clap installs its declaration as
 `<omx-clap-host/clap_meters.h>` (it includes the SDK's header instead once the SDK has it), and the
 plugins include that one. `tools/test/meters-abi-test.c`, run by `make test`, holds its id, enums,
 sizes and offsets.

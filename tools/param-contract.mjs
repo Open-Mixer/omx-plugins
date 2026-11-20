@@ -3,7 +3,7 @@
 /*
  * param-contract.mjs — org.openmixer.param-contract/1 of a plugin, from its declaration: each
  * parameter's symbol, unit, scale and step, the host's bypass last, and the canonical serialisation
- * whose SHA-256 is the fingerprint. The extension is omx-clap-core's (<omx-clap-host/omx_clap_ext.h>); tools/gen.mjs
+ * whose SHA-256 is the fingerprint. The extension is omx-clap's (<omx-clap-host/omx_clap_ext.h>); tools/gen.mjs
  * writes the rows a CLAP face serves it from (include/omx_param_contract.h); the unit codes are omx-contract's
  * (OMX_PARAM_CONTRACT_UNITS). tools/clap-ext-check.mjs reads what a built face serves back.
  *

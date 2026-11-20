@@ -79,6 +79,14 @@
     "streams-from-disk": false,
     "opens-sockets": false
   },
+  "latencyChecks": [
+    {
+      "values": {
+        "mix": 50
+      },
+      "reports": 0
+    }
+  ],
   "panel": {
     "family": "modulation",
     "roles": {
