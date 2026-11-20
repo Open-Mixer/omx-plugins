@@ -111,8 +111,10 @@ for (const [declared, [token, code]] of Object.entries(UNITS)) {
 }
 const vendor = [...enumOf].filter(([, v]) => v >= 0x100).sort((a, b) => a[1] - b[1]);
 const want = VENDOR.map((t, i) => [t.toUpperCase(), 0x100 + i]);
-if (JSON.stringify(vendor) !== JSON.stringify(want)) {
-  errors.push(`vendor block is ${vendor.map(([n, v]) => `${n}=0x${v.toString(16)}`).join(', ')}; expected ${want.map(([n, v]) => `${n}=0x${v.toString(16)}`).join(', ')}`);
+// append-only: the block starts with the four this tree shipped with; the owner appends (omx-clap 0.34.0: dB/oct, dB/s,
+// dBTP, LU at 0x104..0x107, V23d's Q15 codes)
+if (JSON.stringify(vendor.slice(0, want.length)) !== JSON.stringify(want)) {
+  errors.push(`vendor block is ${vendor.map(([n, v]) => `${n}=0x${v.toString(16)}`).join(', ')}; expected it to start ${want.map(([n, v]) => `${n}=0x${v.toString(16)}`).join(', ')}`);
 }
 // a summary names no sample-rate span: STANDARD_SAMPLE_RATES is omx-contract's, and prose retyped from it goes stale
 const SPAN = /\d+(\.\d+)?\s*(to|-|\u2013)\s*\d+(\.\d+)?\s*kHz/;
