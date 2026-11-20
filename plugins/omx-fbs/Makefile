@@ -66,6 +66,14 @@ test: all $(B)/fbs_report_matches_live_set.test $(B)/fbs_drawn_curve_oracle.test
 	./$(B)/fbs_drawn_curve_oracle.test
 	./$(B)/fbs_drawn_curve_oracle.test --self-test
 
+# the top Makefile's `test-heavy` runs every plugin's (tools/test/test-split.json). An LV2-only face has no CLAP
+# binary for host-check.sh, so its heavy set is its oracles over the built bundle: the measured-response one at 48
+# and 96 kHz with its sabotage arms, and the report/live-set one. `test` keeps running them too (the package %check).
+test-heavy: all $(B)/fbs_report_matches_live_set.test $(B)/fbs_drawn_curve_oracle.test
+	./$(B)/fbs_report_matches_live_set.test
+	./$(B)/fbs_drawn_curve_oracle.test
+	./$(B)/fbs_drawn_curve_oracle.test --self-test
+
 install: all
 	mkdir -p $(DESTDIR)$(LIBDIR)/lv2
 	cp -r $(BUNDLE) $(DESTDIR)$(LIBDIR)/lv2/
@@ -73,4 +81,4 @@ install: all
 clean:
 	rm -rf $(B)
 
-.PHONY: all test install clean
+.PHONY: all test test-heavy install clean

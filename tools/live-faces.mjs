@@ -19,7 +19,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { controlOf, kernelControls, locateContract, resolveParam, ROOT } from './omx-contract.mjs';
+import { controlOf, isMain, kernelControls, locateContract, resolveParam, ROOT } from './omx-contract.mjs';
 import { DESCRIPTOR_SCHEMA, DESCRIPTOR_SCHEMA_FLOOR } from './descriptor.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
@@ -277,4 +277,4 @@ function main(argv) {
   process.exit(stale);
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) main(process.argv.slice(2));
+if (isMain(import.meta.url)) main(process.argv.slice(2));
