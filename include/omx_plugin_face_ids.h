@@ -30,8 +30,8 @@
  * @brief The face's own controls' permanent ids, one OMX_PLUGIN_FACE_ define per field. */
 
 /** the CLAP id of the host's bypass and the LV2 indices of enabled and latency, the same in every plugin and every release */
-#define OMX_PLUGIN_FACE_BYPASS_CLAP_ID 2147418112u  ///< 0x7FFF0000: the host's bypass, clap_param_info.id; below INT32_MAX so a host storing ids signed reads it whole
-#define OMX_PLUGIN_FACE_ENABLED_LV2_INDEX 0u  ///< the input port lv2:enabled, 1 processing and 0 bypassed
-#define OMX_PLUGIN_FACE_LATENCY_LV2_INDEX 1u  ///< the output port reporting the latency in frames
+#define OMX_PLUGIN_FACE_BYPASS_CLAP_ID 2147418112u ///< 0x7FFF0000: the host's bypass, clap_param_info.id; below INT32_MAX so a host storing ids signed reads it whole
+#define OMX_PLUGIN_FACE_ENABLED_LV2_INDEX 0u ///< the input port lv2:enabled, 1 processing and 0 bypassed
+#define OMX_PLUGIN_FACE_LATENCY_LV2_INDEX 1u ///< the output port reporting the latency in frames
 
 #endif /* OMX_PLUGIN_FACE_IDS_H */
