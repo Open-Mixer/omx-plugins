@@ -37,6 +37,8 @@ BuildRequires: python3
 # make selftest copies the tree with tar
 BuildRequires: tar
 BuildRequires: diffutils
+# the curve kinds the schema's graph enum renders: omx-dsp's CURVE_KINDS (tools/graph-enum.mjs)
+BuildRequires: omx-dsp-contract >= 0.34.0
 BuildRequires: lilv
 BuildRequires: lilv-devel
 BuildRequires: sord

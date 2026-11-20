@@ -47,7 +47,7 @@ const arm = (name, edit, want) => {
   }
 };
 const rel = items(where.dir).CURVE_KINDS?.rel;
-arm('a CURVE_KINDS without interval-map', (j) => { delete j.items.CURVE_KINDS.value.intervalMap; }, /stale|interval-map/);
+arm('a CURVE_KINDS without interval-map', (j) => { delete j.items.CURVE_KINDS.value.intervalMap; }, /STALE/);
 arm('a CURVE_KINDS that is omx-contract\'s', (j, o) => { o[rel] = { package: 'omx-contract', version: '3.20.2' }; }, /omx-dsp/);
 console.log(bad ? `graph-enum: ${bad} failed` : 'graph-enum: all pass');
 process.exit(bad ? 1 : 0);

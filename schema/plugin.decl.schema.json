@@ -976,12 +976,14 @@
         "eq-curve",
         "dynamics-curve",
         "transfer-curve",
-        "lfo",
         "delay-taps",
-        "decay-envelope"
+        "decay-envelope",
+        "comb-response",
+        "modulation-shape",
+        "interval-map"
       ],
       "title": "Graph",
-      "description": "The graph kinds a panel section may draw, computed by the renderer from the section's controls: the console draws eq-curve (EqCurve), dynamics-curve (GateCurve, CompCurve), transfer-curve (drive's TransferCurve), delay-taps and decay-envelope (StageTimeCurve's delay taps and reverb decay) today. A new kind is added here once, and in each renderer."
+      "description": "The graph kinds a panel section may draw, computed by the renderer from the section's controls: omx-dsp's CURVE_KINDS (omx-dsp data/primitives/curve.json, each kind with its two axes), all of them in its order, rendered here by tools/graph-enum.mjs and held by make graph-enum. A new kind is added in omx-dsp."
     },
     "latencyCheck": {
       "type": "object",
