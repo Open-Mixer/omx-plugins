@@ -8,24 +8,31 @@
 // counts that as a pass even though the validator exited non-zero).
 //
 // The ONE accepted failure (Open-Mixer/omx-plugins#91, coordinator ruling 2026-11-16): the kernels run
-// only at omx-contract's nine ORACLE_FULL_RATES by design, so activate refuses any other rate, and
+// only at omx-dsp's nine ORACLE_FULL_RATES by design, so activate refuses any other rate, and
 // clap-validator's process-varying-sample-rates, which activates at 8 kHz among others, reports
 // "'clap_plugin::activate()' returned false". That failure is accepted when the rate it names is NOT
 // one of the nine, read from the installed contract (never a typed copy). The same refusal at one of
 // the nine, in any other test, or any other failure stays red.
 import { readFileSync } from 'node:fs';
-import { items, locateContract } from './omx-contract.mjs';
+import { items, locateContract, OWNERS, ownersOf } from './omx-contract.mjs';
 
 const ACCEPTED_TEST = 'plugin-instance/process-varying-sample-rates';
 const REFUSAL = /^Error while processing with ([0-9]+(?:\.[0-9]+)?) ?hz sample rate 'clap_plugin::activate\(\)' returned false\.?$/i;
 let oracleRates;
-/** omx-contract's ORACLE_FULL_RATES, from the installed contract this tree builds against. */
+/** The package that owns the oracle rates (sorting row V25: ORACLE_* are omx-dsp's). */
+const ORACLE_OWNER = 'omx-dsp';
+/** omx-dsp's ORACLE_FULL_RATES (data/primitives/rates.json), from the render this tree builds against, refused unless
+ * omx-dsp's package holds the item there. */
 function oracleFullRates() {
   if (!oracleRates) {
     const c = locateContract();
-    if (!c.dir) throw new Error(`no omx-contract to read ORACLE_FULL_RATES from: ${c.why}`);
-    const v = items(c.dir).ORACLE_FULL_RATES?.value;
-    if (!Array.isArray(v) || !v.length) throw new Error(`omx-contract at ${c.dir} has no ORACLE_FULL_RATES list`);
+    if (!c.dir) throw new Error(`no contract render to read omx-dsp's ORACLE_FULL_RATES from: ${c.why}`);
+    const item = items(c.dir).ORACLE_FULL_RATES;
+    const v = item?.value;
+    if (!Array.isArray(v) || !v.length) throw new Error(`the render at ${c.dir} has no ORACLE_FULL_RATES list (omx-dsp-contract >= 0.34.0 declares it)`);
+    const owners = ownersOf(c.dir);
+    const owner = owners.get(item.rel)?.package;
+    if (owner !== ORACLE_OWNER) throw new Error(`the render at ${c.dir}: ORACLE_FULL_RATES is ${owner ?? `no package (no ${OWNERS})`}'s (${item.rel}); the rates are ${ORACLE_OWNER}'s, this tree needs omx-dsp-contract >= 0.34.0`);
     oracleRates = v.map(Number);
   }
   return oracleRates;

@@ -24,7 +24,7 @@ for (const f of files) {
   if (/\.(c|h)$/.test(f) && /OMX_ORACLE_FULL_RATES/.test(t)) {
     if (/#include <omxcontract\/omx_contract_limits\.h>/.test(t)) errors.push(`${rel}: uses OMX_ORACLE_FULL_RATES and includes <omxcontract/omx_contract_limits.h>; the rates are omx-dsp's <omxdsp/omxdsp_definitions.h>`);
   }
-  if (/oracle rates, omx-contract|omx-contract's ORACLE_FULL_RATES|omx-contract at .* has no ORACLE_FULL_RATES|no omx-contract to read ORACLE_FULL_RATES/.test(t)) errors.push(`${rel}: names omx-contract as the owner of ORACLE_FULL_RATES`);
+  if (/oracle rates, omx-contract|omx-contract's (nine )?ORACLE_FULL_RATES|omx-contract at .* has no ORACLE_FULL_RATES|no omx-contract to read ORACLE_FULL_RATES/.test(t)) errors.push(`${rel}: names omx-contract as the owner of ORACLE_FULL_RATES`);
   if (/\.mjs$/.test(f) && /ORACLE_FULL_RATES/.test(t) && !/ORACLE_OWNER|'omx-dsp'/.test(t)) errors.push(`${rel}: reads ORACLE_FULL_RATES without holding it to omx-dsp's package`);
 }
 if (errors.length) {
