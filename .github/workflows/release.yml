@@ -2,7 +2,7 @@
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 name: release
 
-# A version tag builds omx-plugins-clap and omx-plugins-lv2 as RPMs (Fedora 44, x86_64 and aarch64) and
+# A version tag builds omx-plugins-clap and omx-plugins-lv2 as RPMs (Fedora 45, x86_64) and
 # DEBs (bookworm and trixie, amd64 and arm64), signs them, publishes them into the rpm/ and deb/ trees of
 # the FreeMixer Pages repository and attaches them to the GitHub release, with the trixie arm64 DEBs
 # repacked as a Zynthian tarball beside them. Anything else builds unsigned trees and publishes nothing. Everything is in Open-Mixer/.github; the secrets are the organisation's.
@@ -10,7 +10,7 @@ name: release
 # omx-clap-host) come from the FreeMixer channel, inside the build containers only.
 # Nothing is built for release before every plugin has a suitable real-time-safety verdict (the qualify job).
 
-# A manual run with staged on (never a tag) builds fc44 x86_64 and trixie amd64 only, against the staging channel, and
+# A manual run with staged on (never a tag) builds fc45 x86_64 and trixie amd64 only, against the staging channel, and
 # publishes them, signed, to the staging channel (staging/rpm and staging/deb of the channel repository), where the
 # next layer of the release chain finds them by adding the staging channel beside the real one. Nothing reaches the
 # real channel, and the real release still publishes once from the v<version> tag (Open-Mixer/.github build-rpm.yml
@@ -26,7 +26,7 @@ on:
         type: boolean
         default: false
       staged:
-        description: 'Build fc44 x86_64 and trixie amd64 only and publish them to the staging channel for the next layer; publishes nothing to the real channel'
+        description: 'Build fc45 x86_64 and trixie amd64 only and publish them to the staging channel for the next layer; publishes nothing to the real channel'
         type: boolean
         default: false
   workflow_call:
@@ -41,7 +41,7 @@ on:
       arm:
         type: boolean
         default: true
-        description: "Build the arm64/aarch64 packages too; the pull-request dry run passes false (arm builds run at release only)"
+        description: "Build the arm64 DEB and the Zynthian tarball too (aarch64 RPMs are off by the owner ruling of 2026-11-19 until the full matrix); the pull-request dry run passes false"
       staged:
         type: boolean
         default: false
@@ -63,7 +63,7 @@ jobs:
     permissions:
       contents: read
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install git and dnf plugins
         run: dnf install -y --setopt=install_weak_deps=False git dnf5-plugins nodejs
@@ -106,7 +106,7 @@ jobs:
       publish: ${{ github.event_name == 'push' || inputs.publish == true }}
       needs-mod-host: false
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
-      arch-matrix: ${{ (github.event_name != 'push' && inputs.arm == false) && '["x86_64"]' || '["x86_64", "aarch64"]' }}
+      arch-matrix: '["x86_64"]'
       channel-deps: true
     secrets: inherit
 

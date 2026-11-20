@@ -8,7 +8,7 @@
 <urn:openmixer:phaser>
     a lv2:Plugin ;
     lv2:binary <omx-phaser.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-phaser.ttl> .
+    rdfs:seeAlso <omx-phaser.ttl> .
 
 <urn:openmixer:phaser#preset-deep-jet>
     a pset:Preset ;

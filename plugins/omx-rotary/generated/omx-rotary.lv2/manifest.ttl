@@ -8,7 +8,7 @@
 <urn:openmixer:rotary>
     a lv2:Plugin ;
     lv2:binary <omx-rotary.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-rotary.ttl> .
+    rdfs:seeAlso <omx-rotary.ttl> .
 
 <urn:openmixer:rotary#preset-fast>
     a pset:Preset ;

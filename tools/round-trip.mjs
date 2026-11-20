@@ -38,7 +38,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { descriptorFile } from './descriptor.mjs';
 import { lookupValues, tableRows, tableWords } from './format-tables.mjs';
-import { compareVersions } from './omx-contract.mjs';
+import { compareVersions, isMain } from './omx-contract.mjs';
 
 /** `cmd args`' trimmed output, or undefined when it fails or says nothing. */
 function output(cmd, args) {
@@ -127,8 +127,8 @@ export const LOSSES = {
   'lv2 ports[].id': 71,
   'lv2 ports[].name': 71,
   // LV2 port groups are flat: a control in a section's subgroup (an EQ's band, #257) carries the group, not the
-  // section above it (omx-eq8, omx-eq16 and omx-eq32: five controls a band, 8 + 16 + 32 bands)
-  'lv2 controls[].group (panel section)': 280,
+  // section above it (five controls a band: omx-eq8, omx-eq16 and omx-eq32, 8 + 16 + 32 bands; omx-strip, 32 bands)
+  'lv2 controls[].group (panel section)': 440,
   // the toggles UPSTREAM names, scanned as travels, carry no toggle's default
   'lv2 controls[].default': 131,
   // neither face carries a control's prose (omx-delay's sync), nor states that it reads the tempo: CLAP has no static
@@ -367,7 +367,7 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
   return { lines, losses, fails, inside, outside };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
+if (isMain(import.meta.url)) {
   const args = process.argv.slice(2);
   const authoredFiles = {};
   for (let i = 1; i < args.length; i += 2) if (args[i] === '--authored') { const [s, f] = args[i + 1].split('='); authoredFiles[s] = f; }

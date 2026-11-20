@@ -15,9 +15,9 @@
 // Exit: 0 pass, 1 refused.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { loadDecl, metersOf, pluginDirs, ROOT } from '../gen.mjs';
 import { panelDescription } from '../descriptor.mjs';
+import { isMain } from '../omx-contract.mjs';
 
 const UNBOUND_FILE = join(ROOT, 'tools', 'test', 'meter-binding-unbound.json');
 
@@ -81,4 +81,4 @@ function main(argv) {
   return p.length ? 1 : 0;
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) process.exit(main(process.argv.slice(2)));
+if (isMain(import.meta.url)) process.exit(main(process.argv.slice(2)));

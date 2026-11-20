@@ -28,6 +28,11 @@ jobs:
         with:
           lint-workflow: lint.yml
       - uses: Open-Mixer/.github/.github/actions/commit-message-check@openmixer-v1
+      # Fedora 45 only (Fedora 44 is dropped for this pass): a workflow that names the old release is refused here.
+      - name: No Fedora 44 reference in the workflows
+        run: |
+          tools/test/workflow-fedora-check.sh --self-test
+          tools/test/workflow-fedora-check.sh .
 
   # The shared checks on what this repository publishes: a pull request's own commits carry no attribution line, no
   # tracked file points into a private repository, and no local copy of these checks is kept.

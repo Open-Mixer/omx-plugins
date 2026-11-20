@@ -8,7 +8,7 @@
 <urn:openmixer:delay>
     a lv2:Plugin ;
     lv2:binary <omx-delay.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-delay.ttl> .
+    rdfs:seeAlso <omx-delay.ttl> .
 
 <urn:openmixer:delay#preset-dub-echo>
     a pset:Preset ;
