@@ -20,6 +20,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { controlOf, kernelControls, locateContract, resolveParam, ROOT } from './omx-contract.mjs';
+import { DESCRIPTOR_SCHEMA, DESCRIPTOR_SCHEMA_FLOOR } from './descriptor.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
@@ -58,7 +59,8 @@ const WORKER = 'http://lv2plug.in/ns/ext/worker#';
 const kebab = (s) => s.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 const title = (s) => s[0].toUpperCase() + s.slice(1);
 const version = () => /^VERSION := (\S+)$/m.exec(readFileSync(join(ROOT, 'Makefile'), 'utf8'))[1];
-const dspVersion = () => /^BuildRequires: \(omx-dsp-devel >= ([0-9.]+) with/m.exec(readFileSync(join(ROOT, 'packaging/omx-plugins.spec'), 'utf8'))[1];
+// the spec states floors only (deps-check): `BuildRequires: omx-dsp-devel >= X`
+const dspVersion = () => /^BuildRequires: \(?omx-dsp-devel >= ([0-9.]+)/m.exec(readFileSync(join(ROOT, 'packaging/omx-plugins.spec'), 'utf8'))[1];
 
 /** The kernel's controls of `stem`, resolved: `{ symbol, name, kind, travel|ids,... , link }` in the face's order. */
 function kernelParams(stem, dir) {
@@ -132,8 +134,9 @@ export function descriptorOf(stem, dir) {
     return out;
   });
   return {
-    $schema: 'https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json',
-    requires: { 'omx-contract-schema': '>= 3.7.0' },
+    // the relative schema every descriptor names (omx-contract >= 3.20.2), as tools/descriptor.mjs writes it
+    $schema: DESCRIPTOR_SCHEMA,
+    requires: { 'omx-contract-schema': `>= ${DESCRIPTOR_SCHEMA_FLOOR}` },
     origin: 'authored',
     plugin: { id: f.uri, format: 'lv2', uri: f.uri, name: f.title, vendor: 'openmixer', version: version(), doc: f.doc, features: ['audio-effect'] },
     controls,
