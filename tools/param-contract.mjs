@@ -4,8 +4,8 @@
  * param-contract.mjs — org.openmixer.param-contract/1 of a plugin, from its declaration: each
  * parameter's symbol, unit, scale and step, the host's bypass last, and the canonical serialisation
  * whose SHA-256 is the fingerprint. The extension is omx-clap-core's (<omx-clap-host/omx_clap_ext.h>); tools/gen.mjs
- * writes the rows a CLAP face serves it from (include/omx_param_contract.h); the unit codes are omx-contract's
- * (OMX_PARAM_CONTRACT_UNITS). tools/clap-ext-check.mjs reads what a built face serves back.
+ * writes the rows a CLAP face serves it from (include/omx_param_contract.h); the unit codes are omx-clap-core's
+ * (OMX_PARAM_CONTRACT_UNITS of its domain omx-param-contract). tools/clap-ext-check.mjs reads what a built face serves back.
  *
  * A plugin's contract version is the 1-based position of its fingerprint in tools/param-contract-versions.json: 1 its
  * first publication, and a later change of a symbol, unit, scale, travel or stepping changes the fingerprint and appends
@@ -17,7 +17,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
-import { items, locateContract } from './omx-contract.mjs';
+import { domainDocument, items } from './omx-contract.mjs';
 import { travelUnit } from './descriptor.mjs';
 
 export const CONTRACT_ID = 'org.openmixer.param-contract/1';
@@ -47,23 +47,21 @@ export function registerFirstContract(root, stem, fingerprint) {
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** The declaration of the contract's units is omx-contract's: the sheet OMX_PARAM_CONTRACT_UNITS (data/param-contract.json,
- * omx-contract >= 3.6.0), each token's code, rendered to omxcontract/omx_param_units.h as OMX_CLAP_UNIT_* defines. */
+/** The declaration of the contract's units is omx-clap-core's (sorting row V23d): the sheet OMX_PARAM_CONTRACT_UNITS of
+ * its domain omx-param-contract (<contractdir>/omx-param-contract/omx-param-contract.json, omx-clap-core-contract >= 0.34.0),
+ * each token's code, rendered to <omx-clap-host/omx_param_units.h> as OMX_CLAP_UNIT_* defines. */
 export const PARAM_UNITS_ITEM = 'OMX_PARAM_CONTRACT_UNITS';
-/** The header the extension's C structures are in; it includes omx-contract's unit codes. */
+export const PARAM_UNITS_DOMAIN = 'omx-param-contract';
+/** The header the extension's C structures are in; it includes omx-clap-core's unit codes. */
 export const PARAM_CONTRACT_H = join(ROOT, 'include', 'omx_param_contract.h');
 
-/** The declared units, `{ <token>: <code> }` in code order, of the resolved contract at `dir` (default: the one this tree is
- * built against, tools/omx-contract.mjs locateContract). */
-export function declaredUnits(dir) {
-  if (dir === undefined) {
-    const found = locateContract(ROOT);
-    if (!found.dir) throw new Error(`${PARAM_UNITS_ITEM}: ${found.why}`);
-    dir = found.dir;
-  }
-  const item = items(dir)[PARAM_UNITS_ITEM];
-  if (item?.kind !== 'sheet' || typeof item.value !== 'object') throw new Error(`${dir}: the resolved contract holds no ${PARAM_UNITS_ITEM} sheet (omx-contract >= 3.6.0)`);
-  return Object.fromEntries(Object.entries(item.value).sort((a, b) => a[1] - b[1]));
+/** The declared units, `{ <token>: <code> }` in code order, of the domain in the contract directory `contractdir`
+ * (default: the installed one, tools/omx-contract.mjs installedContractDir). */
+export function declaredUnits(contractdir) {
+  const { file, schemas } = domainDocument(PARAM_UNITS_DOMAIN, 'omx-clap-core-contract >= 0.34.0', contractdir);
+  const item = schemas[PARAM_UNITS_ITEM];
+  if (item?.['x-kind'] !== 'sheet' || typeof item['x-value'] !== 'object') throw new Error(`${file}: holds no ${PARAM_UNITS_ITEM} sheet (omx-clap-core-contract >= 0.34.0)`);
+  return Object.fromEntries(Object.entries(item['x-value']).sort((a, b) => a[1] - b[1]));
 }
 
 /** The ids a face gives its own controls are this tree's: the sheet OMX_PLUGIN_FACE_IDS of contract/plugin-face.json
