@@ -142,6 +142,17 @@ for (const f of decls) {
   if (SPAN.test(decl.summary)) errors.push(`${f.slice(root.length + 1)}: the summary states a sample-rate span ("${decl.summary.match(SPAN)[0]}"); the rates are omx-contract's STANDARD_SAMPLE_RATES`);
 }
 if (summaries === 0) errors.push('no declaration summary was read: the span check looked at nothing');
+// the unit code sheet is omx-contract's alone (%4 ruling 2026-11-20: V23d is out of this chain): no file of this tree reads
+// omx-clap's copy, the domain omx-param-contract
+{
+  const self = fileURLToPath(import.meta.url);
+  const walk = (d) => readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
+  const named = [...['tools', 'include', 'lib'].flatMap((d) => walk(join(root, d))), join(root, 'Makefile')]
+    .filter((f) => f !== self && /\.(mjs|js|h|c|sh|json)$|Makefile$/.test(f))
+    .filter((f) => /omx-param-contract|omx-clap-host\/omx_param_units\.h/.test(readFileSync(f, 'utf8')))
+    .map((f) => f.slice(root.length + 1));
+  if (named.length) errors.push(`${named.join(', ')}: read omx-clap's omx-param-contract; the unit codes are omx-contract's sheet`);
+}
 if (errors.length) {
   for (const e of errors) console.error(`param-units: ${e}`);
   process.exit(1);
