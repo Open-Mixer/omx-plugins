@@ -16,7 +16,12 @@
  *      no other, and each stated member to the declaration's value. (What the BUILT face's get returns is
  *      tools/clap-ext-check.mjs's, in each plugin's `make test`.)
  *
- * `--self-test` adds the sabotage arms: each breaks one thing and must go red.
+ *   0. the words are plugin-hostd's (sorting row V28: RESOURCE_* KEPT at plugin-hostd, R-P: its domain `resource`): the
+ *      vocabulary is read from the item plugin-hostd's package holds in the render read, its hints in bit order =
+ *      golden (omx-contract 3.20.2's RESOURCE_HINTS).
+ *
+ * `--self-test` adds the sabotage arms: each breaks one thing and must go red; one gives the item to omx-contract in a
+ * copy of the render read (its owners.json) and wants the vocabulary refused.
  *
  * `--binaries <plugin dir> <file>...` is the other half, run by each plugin's `make test` on its built faces: a
  * claim a binary's imports can refute is held to them. threads-spawned 0 imports no thread creation, opens-sockets
@@ -25,10 +30,11 @@
  * `make resource-hints`, part of `make test`. It reads omx-contract as `make test` does.
  */
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { loadDecl, pluginDirs, ROOT } from '../gen.mjs';
-import { installedDataDir, locateContract, isMain } from '../omx-contract.mjs';
+import { installedDataDir, locateContract, isMain, items, OWNERS } from '../omx-contract.mjs';
 import { presetsOf } from '../preset-lib.mjs';
 import { REQUIRED_HINTS, hintVocabulary, maskOf } from '../resource-hints.mjs';
 
@@ -37,6 +43,10 @@ import { REQUIRED_HINTS, hintVocabulary, maskOf } from '../resource-hints.mjs';
 export const LV2_PREFIX = 'omxres';
 export const LV2_NAMESPACE = 'https://www.openmixer.org/ns/resource-hints#';
 const XSD = 'http://www.w3.org/2001/XMLSchema#';
+/** The hints in bit order as omx-contract 3.20.2 released them, frozen: plugin-hostd's item keeps every one at its bit. */
+export const GOLDEN_HINTS = Object.freeze(['footprint-at-rest', 'footprint-per-voice', 'shared-load', 'threads-spawned', 'streams-from-disk', 'opens-sockets', 'activate-time']);
+/** The package that owns RESOURCE_* (sorting row V28). */
+export const HINTS_OWNER = 'plugin-hostd';
 
 /** The imports that refute a claim, by the hint and the value whose claim they refute. */
 export const REFUTED_BY = {
@@ -137,6 +147,7 @@ function contractCarriers() {
   if (!where.dir) throw new Error(`resource-hints: ${where.why}`);
   const includedir = execFileSync(process.env.PKG_CONFIG || 'pkg-config', ['--variable=includedir', 'omx-contract'], { encoding: 'utf8' }).trim();
   return {
+    dir: where.dir,
     v: hintVocabulary(where.dir),
     header: readFileSync(join(includedir, 'omxcontract', 'omx_resource_hints.h'), 'utf8'),
     ttl: readFileSync(join(installedDataDir(), 'omx-resource-hints.ttl'), 'utf8'),
@@ -173,6 +184,10 @@ if (isMain(import.meta.url)) {
   const c = contractCarriers();
   const plugins = load();
   const errors = treeErrors(c, plugins);
+  // 0. the words are plugin-hostd's, golden in bit order
+  if (c.v.owner !== HINTS_OWNER) errors.push(`the hint vocabulary is read from ${c.v.owner ?? 'an item whose owner is not checked'}, not ${HINTS_OWNER}'s RESOURCE_HINTS`);
+  const words = c.v.hints.map((h) => h.word);
+  if (JSON.stringify(words.slice(0, GOLDEN_HINTS.length)) !== JSON.stringify(GOLDEN_HINTS)) errors.push(`the hints in bit order are ${words.join(', ')}; golden ${GOLDEN_HINTS.join(', ')}`);
   for (const e of errors) console.log(`FAIL resource-hints ${e}`);
   let bad = errors.length;
   if (args.includes('--self-test')) {
@@ -198,6 +213,22 @@ if (isMain(import.meta.url)) {
       [`${delay.stem}'s face importing open, with presets shipped`]: () => importErrors(delay, ['face.so'], () => ['open', 'fopen'], true),
       [`${delay.stem}'s face importing fread, no presets shipped`]: () => importErrors(delay, ['face.so'], () => ['fread'], false),
       [`${delay.stem}'s face importing socket`]: () => importErrors(delay, ['face.so'], () => ['socket']),
+    };
+    // (c) the item given to omx-contract in a copy of the render read: the vocabulary is refused
+    arms['a render whose RESOURCE_HINTS is omx-contract\'s, not plugin-hostd\'s'] = () => {
+      const tmp = mkdtempSync(join(tmpdir(), 'resource-hints-'));
+      try {
+        cpSync(join(c.dir, 'omx-contract.json'), join(tmp, 'omx-contract.json'));
+        const owners = JSON.parse(readFileSync(join(c.dir, OWNERS), 'utf8'));
+        owners[items(c.dir).RESOURCE_HINTS.rel] = { package: 'omx-contract', version: '3.20.2' };
+        writeFileSync(join(tmp, OWNERS), JSON.stringify(owners));
+        hintVocabulary(tmp);
+        return [];
+      } catch (e) {
+        return [e.message];
+      } finally {
+        rmSync(tmp, { recursive: true, force: true });
+      }
     };
     for (const [what, run] of Object.entries(arms)) {
       const red = run();
