@@ -9,7 +9,7 @@
  * descriptors carry no stamp (a commit cannot name itself). It names no binary: the descriptor package serves every
  * architecture.
  *
- * Refused (exit 2, nothing written): no commit, a commit that is not 40 lowercase hex digits, a descriptor whose
+ * Refused (exit 2, nothing written): no commit, an omx-contract-schema floor that is not exactly ">= x.y.z", a commit that is not 40 lowercase hex digits, a descriptor whose
  * plugin states no version. Placed where omx-contract's schema orders it, after meters and before extensions.
  *
  * integrity is a word of omx-contract's schema from 3.14.0, and a reader checks a file against the schema at the floor
@@ -36,7 +36,10 @@ const stamped = files.map((f) => {
   const d = JSON.parse(readFileSync(f, 'utf8'));
   const version = d.plugin?.version;
   if (typeof version !== 'string') fail(`${f}: the plugin states no version to stamp`);
-  const stated = /^>= (\d+\.\d+\.\d+)$/.exec(d.requires?.['omx-contract-schema'] ?? '')?.[1] ?? '0.0.0';
+  const text = d.requires?.['omx-contract-schema'];
+  const stated = /^>= (\d+\.\d+\.\d+)$/.exec(text ?? '')?.[1];
+  // never read as 0.0.0: that would overwrite, and so lower, a floor the descriptor states in words this cannot read
+  if (!stated) fail(`${f}: requires.omx-contract-schema is ${JSON.stringify(text)}, not exactly ">= x.y.z"; refusing to replace a floor it cannot read`);
   const requires = { ...d.requires, 'omx-contract-schema': `>= ${newer(stated, INTEGRITY_SCHEMA_FLOOR)}` };
   const withStamp = { ...d, requires, integrity: { version, commit } };
   const keys = [...ORDER.filter((k) => k in withStamp), ...Object.keys(withStamp).filter((k) => !ORDER.includes(k))];

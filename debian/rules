@@ -5,18 +5,23 @@
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
 include /usr/share/dpkg/architecture.mk
 
+# the commit every installed descriptor is stamped with: asked once, with the checkout trusted (a root container build over a
+# runner-owned checkout is git's dubious ownership, which answers nothing), and handed to every make that stamps (#32)
+SOURCE_COMMIT := $(shell git -c safe.directory='*' rev-parse HEAD)
+
 %:
 	dh $@
 
 # CLAP and LV2 hosts look in /usr/lib/clap and /usr/lib/lv2, not in the multiarch directory
 override_dh_auto_install:
-	dh_auto_install -- PREFIX=/usr LIBDIR=/usr/lib
+	dh_auto_install -- PREFIX=/usr LIBDIR=/usr/lib SOURCE_COMMIT=$(SOURCE_COMMIT)
 	# libomxplugins.a and omxplugins.pc are the -dev package's, in the multiarch directory
-	$(MAKE) install-devel DESTDIR=$(CURDIR)/debian/tmp PREFIX=/usr LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH)
+	$(MAKE) install-devel DESTDIR=$(CURDIR)/debian/tmp PREFIX=/usr LIBDIR=/usr/lib/$(DEB_HOST_MULTIARCH) SOURCE_COMMIT=$(SOURCE_COMMIT)
 	# the test instruments are omx-plugins-test's, outside every CLAP search path
 	$(MAKE) install-test DESTDIR=$(CURDIR)/debian/tmp PREFIX=/usr TESTCLAPDIR=/usr/libexec/omx-plugins/test
 	@# every shipped descriptor carries this release's version and the checkout's commit, the tag's (#32)
-	tools/integrity-check.sh $(CURDIR)/debian/tmp/usr/share/omx-contract/contract.d $(shell dpkg-parsechangelog -S Version | sed 's/-[^-]*$$//; s/[~+].*//') $(shell git rev-parse HEAD)
+	@test -n '$(SOURCE_COMMIT)' || { echo 'debian/rules: no source commit (git rev-parse HEAD answered nothing)' >&2; exit 1; }
+	tools/integrity-check.sh $(CURDIR)/debian/tmp/usr/share/omx-contract/contract.d $(shell dpkg-parsechangelog -S Version | sed 's/-[^-]*$$//; s/[~+].*//') $(SOURCE_COMMIT)
 
 # the shipped .clap is the stripped one, so its pin is measured again after dh_strip: a pin taken at
 # dh_auto_install names bytes the package never ships. The binaries sit in omx-plugins-clap's tree,
