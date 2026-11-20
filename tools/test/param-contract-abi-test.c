@@ -32,10 +32,10 @@ _Static_assert(offsetof(omx_clap_plugin_param_contract_ext_t, version) == 0, "of
 _Static_assert(offsetof(omx_clap_plugin_param_contract_ext_t, fingerprint) == PTR, "offsetof fingerprint");
 _Static_assert(offsetof(omx_clap_plugin_param_contract_ext_t, get) == 2 * PTR, "offsetof get");
 
-/* the scale codes this tree writes into a row are the owner's three */
+/* the scale codes this tree writes into a row are the owner's three (omx-clap's omx_param_scales.h), golden */
 #define COUNT_SCALE(code, name) +1
-_Static_assert(OMX_CLAP_SCALE_COUNT == (0 OMX_CLAP_PARAM_SCALES(COUNT_SCALE)), "the scale codes");
-_Static_assert(OMX_CLAP_SCALE_STEPPED == 2, "stepped is the owner's code 2");
+_Static_assert((0 OMX_CLAP_PARAM_SCALES(COUNT_SCALE)) == 3, "the owner's three scale codes");
+_Static_assert(OMX_CLAP_SCALE_STEPPED == 2u, "stepped is the owner's code 2");
 
 int main(void)
 {
