@@ -121,28 +121,28 @@ jobs:
       publish: ${{ github.event_name == 'push' || inputs.publish == true }}
       dependencies: 'clap-headers'
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
-      arch-matrix: ${{ (github.event_name != 'push' && inputs.arm == false) && '["amd64"]' || '["amd64", "arm64"]' }}
+      arch-matrix: '["arm64"]'
       requires: ''
       channel-deps: true
     secrets: inherit
 
   # The trixie DEBs just built, repacked as one tarball laid out for a Zynthian's plugin directories
   # (tools/zynthian-bundle.sh): no rebuild, the same files the packages carry, checked and every LV2
-  # plugin instantiated on the target architecture. arm64 at release; the pull-request dry run packs the
-  # amd64 build the same way.
+  # plugin instantiated on the target architecture. The development matrix is trixie arm64 and fc45 x86_64: the
+  # DEBs are arm64 only, in the dry run and at release.
   zynthian:
-    name: Zynthian tarball (trixie, ${{ (github.event_name != 'push' && inputs.arm == false) && 'amd64' || 'arm64' }})
+    name: Zynthian tarball (trixie, arm64)
     needs: deb
     # not on a staged run: it reads packages a staged run does not build
     if: ${{ !cancelled() && needs.deb.result == 'success' && inputs.staged != true }}
-    runs-on: ${{ (github.event_name != 'push' && inputs.arm == false) && ((inputs.runner != 'ubuntu-latest' && inputs.runner) || github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest') || 'ubuntu-24.04-arm' }}
+    runs-on: ubuntu-24.04-arm
     timeout-minutes: 15
     permissions:
       contents: read
     container:
       image: debian:trixie
     env:
-      ARCH: ${{ (github.event_name != 'push' && inputs.arm == false) && 'amd64' || 'arm64' }}
+      ARCH: arm64
     defaults:
       run:
         shell: bash

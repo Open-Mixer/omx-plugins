@@ -182,11 +182,11 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
+.PHONY: graph-enum comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib entry-symlink units panel-words schema-urls face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
+test: lib entry-symlink units panel-words schema-urls graph-enum face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s presets-figures
@@ -292,6 +292,9 @@ probe-checks:
 	node tools/test/probe-checks-selftest.mjs
 # the host's bypass (CLAP) and enabled and latency (LV2) at contract/plugin-face.json's permanent ids in every plugin, none moved by an
 # appended parameter or an added sidechain; the self-test holds the rule it replaced red
+# schema/plugin.decl.schema.json's graph kinds are omx-dsp's CURVE_KINDS rendered (tools/graph-enum.mjs; tools/test/graph-enum-check.mjs)
+graph-enum:
+	node tools/test/graph-enum-check.mjs
 face-ids:
 	node tools/test/face-ids-test.mjs
 	node tools/test/face-ids-test.mjs --self-test
