@@ -238,7 +238,7 @@
         "resourceHints": {
           "type": "object",
           "title": "Resource hints",
-          "description": "What the plugin declares about its own footprint, by the word of omx-contract's RESOURCE_HINTS (omx-contract >= 3.1.0, docs/resource-hints.md): a flag hint (streams-from-disk, opens-sockets) true or false, a figure (threads-spawned, a count; the footprints, bytes; activate-time, ms) a whole number. tools/gen.mjs renders it as the CLAP face's org.openmixer.resource-hints.draft/0 and as the LV2 face's omxres: properties, and refuses a word the installed contract does not declare. A hint left out is unknown, never zero. Every shipped plugin states threads-spawned, streams-from-disk and opens-sockets (tools/test/resource-hints-check.mjs); a figure that needs a measurement waits for one.",
+          "description": "What the plugin declares about its own footprint, by the word of plugin-hostd's RESOURCE_HINTS (its domain resource, plugin-hostd-contract >= 0.21.0): a flag hint (streams-from-disk, opens-sockets) true or false, a figure (threads-spawned, a count; the footprints, bytes; activate-time, ms) a whole number. tools/gen.mjs renders it as the CLAP face's org.openmixer.resource-hints.draft/0 and as the LV2 face's omxres: properties, and refuses a word the installed contract does not declare. A hint left out is unknown, never zero. Every shipped plugin states threads-spawned, streams-from-disk and opens-sockets (tools/test/resource-hints-check.mjs); a figure that needs a measurement waits for one.",
           "minProperties": 1,
           "propertyNames": {
             "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$"
