@@ -101,12 +101,15 @@ else console.log(`NOTE descriptor-view: omx-contract ${where.version ?? '(none)'
 // without is refused by name (a build never reads the installed omx-plugins' owners in their place)
 if (carriesWords) {
   const first = described[0], firstStem = first.split('/').pop();
+  // the render below hides the installed omx-contract from pkg-config; gen.mjs decides "run, not imported" with
+  // omx-contract's isMain, which reads the command's own directory, so that one directory stays named
+  const clidir = spawnSync('pkg-config', ['--variable=clidir', 'omx-contract'], { encoding: 'utf8' }).stdout.trim();
   const lone = (dir) => {
     const r = spawnSync(process.execPath, ['--input-type=module', '-e', `
       const { loadDecl } = await import(${JSON.stringify(join(ROOT, 'tools', 'gen.mjs'))});
       const { descriptorText } = await import(${JSON.stringify(join(ROOT, 'tools', 'descriptor.mjs'))});
       process.stdout.write(descriptorText(loadDecl(${JSON.stringify(first)})));`],
-    { encoding: 'utf8', env: { ...process.env, OMX_CONTRACT_DIR: dir, OMX_CONTRACT_SCHEMA: schemaFile, PKG_CONFIG_PATH: '/nonexistent', PKG_CONFIG_LIBDIR: '/nonexistent' } });
+    { encoding: 'utf8', env: { ...process.env, OMX_CONTRACT_DIR: dir, OMX_CONTRACT_SCHEMA: schemaFile, PKG_CONFIG_PATH: '/nonexistent', PKG_CONFIG_LIBDIR: '/nonexistent', ...(clidir ? { OMX_CONTRACT_CLI: join(clidir, 'bin', 'omx-contract.mjs') } : {}) } });
     return r.status === 0 ? r.stdout : `refused: ${r.stderr.trim().split('\n').find((l) => l.startsWith('Error')) ?? r.stderr.trim()}`;
   };
   const render = join(ROOT, 'build', 'tmp', 'descriptor-view-render');
