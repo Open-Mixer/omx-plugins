@@ -38,3 +38,10 @@ jobs:
   # tracked file points into a private repository, and no local copy of these checks is kept.
   public-sources:
     uses: Open-Mixer/.github/.github/workflows/public-sources-check.yml@openmixer-v1
+
+  pr-fixes-issue:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: read
+    uses: Open-Mixer/.github/.github/workflows/pr-fixes-issue.yml@openmixer-v1
