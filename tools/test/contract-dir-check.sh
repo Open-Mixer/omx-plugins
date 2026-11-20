@@ -12,9 +12,19 @@
 #
 #   tools/test/contract-dir-check.sh               `make install-contract` into a scratch directory, then the check
 #   tools/test/contract-dir-check.sh --self-test   the check over sabotaged installs: a descriptor left out of the
-#                                                  install list, one missing, one changed, one extra file, a manifest
+#                                                  install list, one missing, one changed, one not stamped, one
+#                                                  stamped with another commit or another version, one whose
+#                                                  schema floor is below 3.14.0, one extra file, a manifest
 #                                                  hash that is not the file's and another version each refuse; the
 #                                                  right install passes
+# The RPM's %check runs `make test` in the unpacked source tarball, which has no git tree: the spec must hand it the
+# tarball's commit (SOURCE_COMMIT=, git get-tar-commit-id), or this check cannot stamp and the package build is red.
+# The check reads the spec for it (SPEC, the self-test's copy); the self-test removes it from a copy and goes red.
+# Each installed descriptor is the plugin folder's descriptor and nothing else but its integrity, stamped at install (#32):
+# { version, the plugin's own; commit, the source commit the build was made from (SOURCE_COMMIT, else the tree's HEAD) },
+# the schema floor raised to 3.14.0 where lower (the first schema with the word), and its $schema line rewritten (below).
+# The stamp is made on the SOURCE form, before the install script rewrites line 2: it is a function of the version and the
+# commit alone, so the rewrite cannot move it, and the check holds the installed file to source + stamp + rewrite.
 # Each source file names the contract schema by the RELATIVE address the install script rewrites (the install of omx-contract
 # rewrites `(../)*schema/omx-contract.schema.json` on line 2 to the major's URL), and the installed file carries that URL; the
 # files are otherwise byte for byte. An absolute address in the source is never rewritten, and the reader refuses it.
@@ -24,6 +34,10 @@
 set -euo pipefail
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 VERSION=$(make -s --no-print-directory -C "$HERE" version)
+# the source commit the install stamps into each descriptor: the build's, else the tree's own
+COMMIT=${SOURCE_COMMIT:-$(git -C "$HERE" rev-parse HEAD 2>/dev/null || true)}
+case $COMMIT in *[!0-9a-f]*|'') echo "contract-dir: no source commit (SOURCE_COMMIT unset and $HERE no git tree)" >&2; exit 2 ;; esac
+[ "${#COMMIT}" = 40 ] || { echo "contract-dir: SOURCE_COMMIT $COMMIT is no full commit" >&2; exit 2; }
 
 # the plugins whose descriptor a host reads from the contract directory (FreeMixer/omx-plugins#219): each must ship
 # one, and the install must list it
@@ -88,8 +102,24 @@ check() {
   for stem in $stems; do
     n=$((n + 1)); rel=plugins/$stem.json
     if [ ! -f "$pkg/$rel" ]; then echo "contract-dir: $stem: $rel is not installed"; bad=$((bad + 1)); continue; fi
-    same_but_schema "$HERE/plugins/$stem/$stem.descriptor.json" "$pkg/$rel" \
-      || { echo "contract-dir: $stem: $rel is not plugins/$stem/$stem.descriptor.json byte for byte, its \$schema the major's URL"; bad=$((bad + 1)); }
+    got=$(node -e '
+      const fs = require("fs"); const [src, inst, commit] = process.argv.slice(1);
+      const want = JSON.parse(fs.readFileSync(src, "utf8")); const have = JSON.parse(fs.readFileSync(inst, "utf8"));
+      const stamp = { version: want.plugin?.version, commit };
+      if (JSON.stringify(have.integrity) !== JSON.stringify(stamp)) console.log(`its integrity is ${JSON.stringify(have.integrity)}, not ${JSON.stringify(stamp)}`);
+      // the stamp raises the schema floor to the first schema with the word (tools/stamp-integrity.mjs), never lowers it
+      const floor = have.requires?.["omx-contract-schema"];
+      const v = /^>= (\d+)\.(\d+)\.(\d+)$/.exec(floor ?? "")?.slice(1).map(Number);
+      if (!v) console.log("it states no schema floor");
+      else if (v[0] * 1e6 + v[1] * 1e3 + v[2] < 3014000) console.log(`it states ${floor}, below the first schema with integrity, 3.14.0`);
+      // the rest is the source, but for the $schema the install rewrote (line 2, held by same_but_schema below) and the floor
+      const rest = { ...have, "$schema": want["$schema"], requires: { ...have.requires, "omx-contract-schema": want.requires?.["omx-contract-schema"] } }; delete rest.integrity;
+      const canon = (v) => JSON.stringify(v, (k, x) => (x && typeof x === "object" && !Array.isArray(x) ? Object.fromEntries(Object.entries(x).sort()) : x));
+      if (canon(rest) !== canon(want)) console.log("it differs from the descriptor in more than its integrity");
+    ' "$HERE/plugins/$stem/$stem.descriptor.json" "$pkg/$rel" "$COMMIT")
+    [ -z "$got" ] || { echo "contract-dir: $stem: $rel is not plugins/$stem/$stem.descriptor.json stamped: ${got%%$'\n'*}"; bad=$((bad + 1)); }
+    [ "$(sed -n 2p "$pkg/$rel")" = "$SCHEMA_INSTALLED" ] \
+      || { echo "contract-dir: $stem: $rel's \$schema is not the major's URL: $(sed -n 2p "$pkg/$rel")"; bad=$((bad + 1)); }
     source_schema "$HERE/plugins/$stem/$stem.descriptor.json" | grep . && bad=$((bad + 1))
     want=$(sha256sum "$pkg/$rel" | cut -d' ' -f1)
     got=$(awk -v r="$rel" '$1 == "file" && $2 == r {print $3}' <<<"$listed")
@@ -144,9 +174,20 @@ check() {
   return "$bad"
 }
 
+# the spec's %check hands every `make test` the source tarball's commit: <spec>
+SPEC=${SPEC:-$HERE/packaging/omx-plugins.spec}
+spec_hands_commit() {
+  local lines
+  lines=$(awk '/^%check/{c=1; next} /^%(files|changelog|install|build|prep|pre|post|preun|postun|package|description)([[:space:]]|$)/{c=0} c && !/^[[:space:]]*#/ && /make.*[[:space:]]test([[:space:]]|$)/' "$1")
+  [ -n "$lines" ] || { echo "contract-dir: $1: %check runs no make test"; return 1; }
+  if grep -v 'SOURCE_COMMIT=' <<<"$lines" | grep -q .; then
+    echo "contract-dir: $1: %check runs make test without SOURCE_COMMIT= (the unpacked tarball has no git tree)"; return 1
+  fi
+}
+
 install_into() { # <contractdir> [make args...]
   local to=$1; shift
-  make -s -C "$HERE" install-contract DESTDIR= CONTRACTDIR="$to" "$@" >/dev/null
+  make -s -C "$HERE" install-contract DESTDIR= CONTRACTDIR="$to" SOURCE_COMMIT="$COMMIT" "$@" >/dev/null
 }
 
 scratch=$(mktemp -d); trap 'rm -rf "$scratch"' EXIT
@@ -162,7 +203,7 @@ if [ "${1:-}" = --self-test ]; then
     node -e 'const fs = require("fs"); const [p, r, h] = process.argv.slice(1); const m = JSON.parse(fs.readFileSync(p, "utf8"));
       m.files[r] = h; fs.writeFileSync(p, JSON.stringify(m, null, 2) + "\n");' "$m" "$2" "$h"
   }
-  for s in left-out missing changed extra hash version unrewritten $(for r in $REQUIRED_DEFS; do printf 'owned-%s ' "$r"; done) $(for r in $REQUIRED; do printf 'unlisted-%s ' "$r"; done); do
+  for s in left-out missing changed unstamped commit stamp-version floor extra hash version unrewritten $(for r in $REQUIRED_DEFS; do printf 'owned-%s ' "$r"; done) $(for r in $REQUIRED; do printf 'unlisted-%s ' "$r"; done); do
     t=$scratch/$s; rm -rf "$t"
     case $s in
       left-out) install_into "$t" DESCRIPTORS="$rest" ;;
@@ -172,6 +213,11 @@ if [ "${1:-}" = --self-test ]; then
     case $s in
       missing) rm "$p/plugins/$first.json" ;;
       changed) sed -i '0,/"name": "/s//"name": "x/' "$p/plugins/$first.json"; rehash "$t" "plugins/$first.json" ;;
+      unstamped|commit|stamp-version|floor) node -e 'const fs = require("fs"); const [f, s] = process.argv.slice(1); const d = JSON.parse(fs.readFileSync(f, "utf8"));
+          if (s === "unstamped") delete d.integrity; else if (s === "commit") d.integrity = { ...d.integrity, commit: "0".repeat(40) };
+          else if (s === "floor") d.requires = { ...d.requires, "omx-contract-schema": ">= 3.9.0" };
+          else d.integrity = { ...d.integrity, version: "0.0.1" };
+          fs.writeFileSync(f, JSON.stringify(d, null, 2) + "\n");' "$p/plugins/$first.json" "$s"; rehash "$t" "plugins/$first.json" ;;
       extra) cp "$p/plugins/$first.json" "$p/plugins/omx-test-sine-voice.json"; rehash "$t" plugins/omx-test-sine-voice.json ;;
       hash) sed -i "s|\"plugins/$first.json\": \"[0-9a-f]*\"|\"plugins/$first.json\": \"$(printf '0%.0s' $(seq 64))\"|" "$p/MANIFEST.json" ;;
       unrewritten) sed -i '2s|https://openmixer.org/schema/omx-contract/v3/omx-contract|../schema/omx-contract|' "$p/plugins/$first.json"; rehash "$t" "plugins/$first.json" ;;
@@ -202,15 +248,27 @@ if [ "${1:-}" = --self-test ]; then
     out=$(check "$t" reader 2>&1) || true
     if grep -q "reader refuses" <<<"$out"; then echo "SABOTAGE reader: red"; else echo "SABOTAGE reader: STAYED GREEN"; fail=1; fi
   fi
+  # the install itself refuses to ship a descriptor it cannot stamp: no commit, or one that is no full commit
+  for bad in '' abc1234 "$(printf 'G%.0s' $(seq 40))"; do
+    if make -s -C "$HERE" install-contract DESTDIR= CONTRACTDIR="$scratch/nocommit" SOURCE_COMMIT="$bad" >/dev/null 2>&1; then
+      echo "SABOTAGE install with SOURCE_COMMIT='$bad': STAYED GREEN"; fail=1
+    else echo "SABOTAGE install with SOURCE_COMMIT='$bad': refused"; fi
+  done
+  # the spec's %check without the tarball's commit on its make test
+  grep -v '^%make_build test' "$SPEC" > "$scratch/no-commit.spec"; printf '%%check\n%%make_build test\n' >> "$scratch/no-commit.spec"
+  if out=$(spec_hands_commit "$scratch/no-commit.spec"); then echo "SABOTAGE spec without SOURCE_COMMIT: STAYED GREEN"; fail=1
+  else echo "SABOTAGE spec without SOURCE_COMMIT: red (${out%%$'\n'*})"; fi
+  spec_hands_commit "$SPEC" >/dev/null || { echo "self-test: the shipped spec does not hand make test the commit" >&2; exit 1; }
   check "$scratch/good" >/dev/null || { echo "self-test: the unsabotaged install is not green" >&2; exit 1; }
   [ "$fail" = 0 ] || exit 1
   echo "contract-dir self-test: every sabotage red"
   exit 0
 fi
 
+spec_hands_commit "$SPEC" || exit 1
 install_into "$scratch/dir" || { echo "contract-dir: make install-contract failed" >&2; exit 2; }
 if out=$(check "$scratch/dir"); then
-  echo "contract-dir: $(described | wc -l) descriptors installed under 3/omx-plugins/plugins/, byte for byte, listed in MANIFEST.json, read by omx-contract's reader"
+  echo "contract-dir: $(described | wc -l) descriptors installed under 3/omx-plugins/plugins/, stamped with ${COMMIT:0:12}, listed in MANIFEST.json, read by omx-contract's reader"
 else
   printf '%s\n' "$out"; exit 1
 fi
