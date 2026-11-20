@@ -254,6 +254,17 @@ if [ "${1:-}" = --self-test ]; then
       echo "SABOTAGE install with SOURCE_COMMIT='$bad': STAYED GREEN"; fail=1
     else echo "SABOTAGE install with SOURCE_COMMIT='$bad': refused"; fi
   done
+  # the stamp refuses a stated schema floor it cannot read, by name: it never reads it as 0.0.0 and overwrites it with 3.14.0
+  # (that would lower a stated floor)
+  for floor in '3.20.0~' '>=3.20' '>= 3.20' '>= 3.20.0~' ''; do
+    node -e 'const fs = require("fs"); const [f, o, v] = process.argv.slice(1); const d = JSON.parse(fs.readFileSync(f, "utf8"));
+        d.requires = { ...d.requires, "omx-contract-schema": v }; fs.writeFileSync(o, JSON.stringify(d, null, 2) + "\n");' \
+      "$HERE/plugins/$first/$first.descriptor.json" "$scratch/floor.json" "$floor"
+    if out=$(node "$HERE/tools/stamp-integrity.mjs" --commit "$COMMIT" "$scratch/floor.json" 2>&1); then
+      echo "SABOTAGE stated floor '$floor': STAYED GREEN (stamped over it)"; fail=1
+    elif grep -q 'omx-contract-schema' <<<"$out"; then echo "SABOTAGE stated floor '$floor': refused by name"
+    else echo "SABOTAGE stated floor '$floor': refused without naming it ($out)"; fail=1; fi
+  done
   # the spec's %check without the tarball's commit on its make test
   grep -v '^%make_build test' "$SPEC" > "$scratch/no-commit.spec"; printf '%%check\n%%make_build test\n' >> "$scratch/no-commit.spec"
   if out=$(spec_hands_commit "$scratch/no-commit.spec"); then echo "SABOTAGE spec without SOURCE_COMMIT: STAYED GREEN"; fail=1
