@@ -21,6 +21,13 @@ mkdir -p "$out"
 for major in "$installed"/*/; do
   [ -d "$major" ] || continue
   m=$(basename "$major")
+  case $m in
+    *[!0-9]*)
+      # a DOMAIN directory (plugin-hostd's machine domain: <domain>/<domain>.json and its own subdirectories) is no
+      # numbered major: its subdirectories are not packages, and omx-contract refuses it without its document
+      cp -RL "${major%/}" "$out/$m"
+      continue ;;
+  esac
   mkdir -p "$out/$m"
   for pkg in "$major"*/; do
     [ -d "$pkg" ] || continue
