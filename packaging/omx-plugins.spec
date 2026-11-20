@@ -49,6 +49,10 @@ BuildRequires: diffutils
 BuildRequires: omx-dsp-contract >= 0.34.0
 BuildRequires: lilv
 BuildRequires: lilv-devel
+# the standard units a face publishes, by symbol (omx-contract's param domain, PARAM_UNITS x-symbol), and the OpenMixer
+# unit spellings an LV2 face writes (plugin-db's lv2 domain, LV2_OPENMIXER_UNIT_IDS x-uri): tools/format-tables.mjs
+BuildRequires: omx-contract-data >= 3.21.0
+BuildRequires: plugin-db-contract >= 0.5.0
 BuildRequires: sord
 BuildRequires: omx-clap-host >= 0.32.3
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe

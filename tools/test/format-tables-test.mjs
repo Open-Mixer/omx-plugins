@@ -14,6 +14,8 @@
  *   5. the installed contract's directories are asked of pkg-config once per pkg-config environment, not once per
  *      table row (omx-plugins#39: tableRows asked it on every call, 47 of gen.mjs --check's 60 s), and a changed
  *      PKG_CONFIG_PATH asks again and gets the new answer.
+ *   7. the declarations' own LV2 units are F1's (plugin-db's lv2 domain LV2_OPENMIXER_UNIT_IDS, exact x-uri; M3) and
+ *      every unit a face publishes is a standard unit by its symbol (PARAM_UNITS x-symbol; F4), golden, with an arm;
  *   6. the CLAP features a descriptor writes are omx-clap's terms (CLAP_PLUGIN_FEATURES_TERMS of its domain clap,
  *      <contractdir>/clap/clap.json; sorting row V24/27): every open feature the shipped descriptors name maps to its
  *      term id and back = golden (omx-contract 3.20.2's terms), and over a copy of the contract directory whose clap
@@ -182,6 +184,38 @@ rmSync(scratch, { recursive: true, force: true });
   }
   r6 = planted ? call({ OMX_INSTALLED_CONTRACTDIR: tmp }) : { status: 1, stdout: '', stderr: '' };
   check('arm: the clap domain without delay, delay is no term (the read is omx-clap\'s)', r6.status === 0 ? JSON.parse(r6.stdout).delay : 'not planted', ['delay', 'delay']);
+  rmSync(tmp, { recursive: true, force: true });
+}
+
+// 7. M3 + F4: the declarations' own LV2 units are the standard units F1 spells (plugin-db's lv2 domain,
+// LV2_OPENMIXER_UNIT_IDS: the PARAM_UNITS word and the exact x-uri), and every unit a face publishes is a standard unit
+// by its symbol (omx-contract's param domain, PARAM_UNITS x-symbol): golden; the lv2 domain without dBu loses its URI
+{
+  const FTS = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
+  const PUBLISHED = { '': 'none', Hz: 'Hz', dB: 'dB', ms: 'ms', s: 's', min: 'min', '%': 'percent', x: 'x', oct: 'oct', cents: 'cents', st: 'st', dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', 'dB/oct': 'dB-oct', ratio: 'ratio' };
+  const OWN = { dBFS: 'urn:openmixer:unit#dBFS', LUFS: 'urn:openmixer:unit#LUFS', ratio: 'urn:openmixer:unit#ratio', dBu: 'urn:openmixer:unit#dBu', 'dB/oct': 'urn:openmixer:unit#dBoct' };
+  const call = (env) => spawnSync(process.execPath, ['--input-type=module', '-e', `
+    import { ownLv2Units, standardUnitOf, lv2UnitRef } from ${FTS};
+    console.log(JSON.stringify({ own: ownLv2Units(), std: Object.fromEntries(${JSON.stringify(Object.keys(PUBLISHED))}.map((u) => [u, standardUnitOf(u)])), dbu: String(lv2UnitRef('dBu')) }));`], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
+  let r7 = call({});
+  const got = r7.status === 0 ? JSON.parse(r7.stdout) : { error: r7.stderr.trim().split('\n').find((l) => /Error/.test(l)) };
+  check('M3: the own LV2 units are F1\'s words and exact URIs (plugin-db lv2 domain) = golden', got.own ?? got.error, OWN);
+  check('F4: every published unit is a standard unit by its symbol (PARAM_UNITS x-symbol) = golden', got.std ?? got.error, PUBLISHED);
+  const tmp = join(ROOT, 'build', 'tmp', 'format-tables-lv2');
+  rmSync(tmp, { recursive: true, force: true });
+  let planted = false;
+  try {
+    cpSync(installedContractDir(), tmp, { recursive: true });
+    const file = join(tmp, 'lv2', 'lv2.json'), doc = JSON.parse(readFileSync(file, 'utf8'));
+    const item = doc.components.schemas.LV2_OPENMIXER_UNIT_IDS;
+    item.oneOf = item.oneOf.filter((w) => w.const !== 'dBu');
+    writeFileSync(file, JSON.stringify(doc));
+    planted = true;
+  } catch (e) {
+    console.log(`format-tables arm: the lv2 domain could not be copied (${e.message})`);
+  }
+  r7 = planted ? call({ OMX_INSTALLED_CONTRACTDIR: tmp }) : { status: 1, stdout: '' };
+  check('arm: the lv2 domain without dBu, dBu has no LV2 unit (the read is plugin-db\'s)', r7.status === 0 ? JSON.parse(r7.stdout).dbu : 'not planted', 'undefined');
   rmSync(tmp, { recursive: true, force: true });
 }
 
