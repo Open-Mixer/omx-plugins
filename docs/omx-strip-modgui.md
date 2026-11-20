@@ -89,7 +89,7 @@ Bands**; below it each column is one band, and the rows are the same for every c
 | Gain | dB | -15 to 15 (0) | Boost or cut. |
 | Q | | 0.3 to 116 (1) | Width of the band: a higher Q is narrower. |
 
-The matrix has 34 columns in all: HPF, the 32 bands, LPF.
+The matrix has at most 34 columns: HPF, the bands that run (EQ Bands, up to 32), LPF.
 
 ### 5. Comp
 
