@@ -545,7 +545,9 @@ jobs:
           set -euo pipefail
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
           dnf copr enable -y ycollet/audinux
-          dnf install -y --setopt=install_weak_deps=False clap-validator nodejs
+          # node comes with the builddep above (omx-contract requires it: nodejs22-bin); Fedora's own `nodejs` conflicts with it
+          dnf install -y --setopt=install_weak_deps=False clap-validator
+          command -v node >/dev/null || { echo "::error::no node after the builddep: the tools need it"; exit 1; }
 
       - name: Build every plugin
         run: make -j"$(nproc)" all
