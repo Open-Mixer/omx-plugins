@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * param-units-check.mjs — the units tools/param-contract.mjs writes are the ones omx-clap-core declares (the code sheet
+ * param-units-check.mjs — the units tools/param-contract.mjs writes are the ones omx-clap declares (the code sheet
  * OMX_PARAM_CONTRACT_UNITS of its domain omx-param-contract, <contractdir>/omx-param-contract/omx-param-contract.json,
  * rendered to <omx-clap-host/omx_param_units.h>; sorting row V23d): each unit's token is the LV2 unit its face writes
  * (plugin-hostd's LV2 table read backwards) and names an OMX_CLAP_UNIT_<TOKEN>; the units the declarations shipped with
  * before the table was read keep their token and value; and the vendor block is the one openmixer's CONTRACT_UNITS ends
  * with (dbfs, dbu, ratio, lufs from 0x100, append-only). `make units`, part of `make test`.
  *
- * The declaration and the header are omx-clap-core's and cannot drift there; this holds what this tree reads of them:
+ * The declaration and the header are omx-clap's and cannot drift there; this holds what this tree reads of them:
  * the declared codes equal the header's defines and the golden codes of omx-contract 3.20.2's sheet (append-only),
  * every unit a face writes has its code, and the scale words are PARAM_SCALES.
  *
@@ -39,13 +39,13 @@ const SHIPPED = {
   LUFS: ['lufs', 0x103],
 };
 /** The code sheet as omx-contract 3.20.2 released it (OMX_PARAM_CONTRACT_UNITS, 29 tokens), frozen: the owner's sheet keeps
- * every one at its code (append-only; omx-clap-core may append, never move or drop). */
+ * every one at its code (append-only; omx-clap may append, never move or drop). */
 const GOLDEN_CODES = {
   none: 0, s: 1, ms: 2, min: 3, bar: 4, beat: 5, frame: 6, m: 7, cm: 8, mm: 9, km: 10, inch: 11, mile: 12, db: 13, pc: 14,
   coef: 15, hz: 16, khz: 17, mhz: 18, bpm: 19, oct: 20, cent: 21, semitone12TET: 22, degree: 23, midiNote: 24, dbfs: 256,
   dbu: 257, ratio: 258, lufs: 259,
 };
-/** The domain and the header the codes are read from, omx-clap-core's (sorting row V23d). */
+/** The domain and the header the codes are read from, omx-clap's (sorting row V23d). */
 const DOMAIN = 'omx-param-contract';
 const OWNER_HEADER = 'omx-clap-host/omx_param_units.h';
 
@@ -59,7 +59,7 @@ export function drift(units, headerText) {
   return errors;
 }
 
-/** The unit codes a header of this tree defines itself: none, they are omx-clap-core's rendered header's alone. */
+/** The unit codes a header of this tree defines itself: none, they are omx-clap's rendered header's alone. */
 export function ownCodes(text) {
   return [...text.matchAll(/^\s*#\s*define\s+(OMX_CLAP_UNIT_\w+)|^\s*(OMX_CLAP_UNIT_\w+)\s*=/gm)].map((m) => m[1] ?? m[2]);
 }
@@ -69,25 +69,25 @@ if (!contract.dir) {
   console.error(`param-units: ${contract.why}`);
   process.exit(1);
 }
-/** The header omx-clap-core renders, where pkg-config says its headers are, else the system's. */
+/** The header omx-clap renders, where pkg-config says its headers are, else the system's. */
 function ownerHeader() {
   let dirs = [];
   try {
-    dirs = execFileSync(process.env.PKG_CONFIG || 'pkg-config', ['--cflags-only-I', 'omx-clap-core'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\s+/).filter((f) => f.startsWith('-I')).map((f) => f.slice(2));
+    dirs = execFileSync(process.env.PKG_CONFIG || 'pkg-config', ['--cflags-only-I', 'omx-clap'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\s+/).filter((f) => f.startsWith('-I')).map((f) => f.slice(2));
   } catch { /* not installed through pkg-config: the system include directory below */ }
   return [...dirs, '/usr/include', '/usr/local/include'].map((d) => join(d, OWNER_HEADER)).find((f) => existsSync(f));
 }
 const renderedHeader = ownerHeader();
 const errors = [];
 const units = declaredUnits();
-if (!renderedHeader) errors.push(`${OWNER_HEADER}: not found; install omx-clap-core-devel >= 0.34.0`);
+if (!renderedHeader) errors.push(`${OWNER_HEADER}: not found; install omx-clap-devel >= 0.34.0`);
 const headerText = renderedHeader ? readFileSync(renderedHeader, 'utf8') : '';
 errors.push(...(renderedHeader ? drift(units, headerText) : []));
 // the call-level golden: every code omx-contract 3.20.2 released is the declaration's, at the same code
 for (const [token, code] of Object.entries(GOLDEN_CODES)) if (units[token] !== code) errors.push(`unit ${token}: the declaration has ${units[token] ?? 'none'}, golden ${code}`);
 const text = readFileSync(headerFile, 'utf8');
 if (!text.includes(`#include <${OWNER_HEADER}>`)) errors.push(`${HEADER}: does not include <${OWNER_HEADER}>`);
-for (const name of ownCodes(text)) errors.push(`${HEADER}: defines ${name} itself; the codes are omx-clap-core's rendered header's`);
+for (const name of ownCodes(text)) errors.push(`${HEADER}: defines ${name} itself; the codes are omx-clap's rendered header's`);
 const enumOf = headerUnits(headerText);
 const UNITS = contractUnits();
 if (enumOf.size === 0) errors.push('omx_param_units.h: no OMX_CLAP_UNIT_ define');
@@ -130,7 +130,7 @@ if (errors.length) {
   for (const e of errors) console.error(`param-units: ${e}`);
   process.exit(1);
 }
-console.log(`param-units: ${Object.keys(UNITS).length} declared units and the vendor block (${VENDOR.join(', ')}) match omx-clap-core's header (${Object.keys(units).length} codes); the scale words are ${scales.join(', ')}`);
+console.log(`param-units: ${Object.keys(UNITS).length} declared units and the vendor block (${VENDOR.join(', ')}) match omx-clap's header (${Object.keys(units).length} codes); the scale words are ${scales.join(', ')}`);
 
 if (process.argv.includes('--self-test')) {
   const head = headerText;
@@ -170,7 +170,7 @@ if (process.argv.includes('--self-test')) {
     console.error('self-test: the unsabotaged copies are not green');
     fail++;
   }
-  // (c) the read is omx-clap-core's domain: the whole check over a copy of the contract directory whose sheet lost dbu is red
+  // (c) the read is omx-clap's domain: the whole check over a copy of the contract directory whose sheet lost dbu is red
   {
     const cdir = installedContractDir();
     const tmp = mkdtempSync(join(tmpdir(), 'param-units-'));

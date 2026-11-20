@@ -46,10 +46,10 @@ install_pinned() {
 }
 install_pinned omx-contract
 install_pinned omx-dsp
-# The CLAP ABI headers come from the installed omx-clap-core, read before the old prefix shadows omx-dsp:
+# The CLAP ABI headers come from the installed omx-clap, read before the old prefix shadows omx-dsp:
 # its .pc requires an omx-dsp newer than the pinned one, which would leave the old build with no flags.
 PKG_CONFIG=${PKG_CONFIG:-pkg-config}
-ABI_CFLAGS=$($PKG_CONFIG --cflags omx-clap-core clap)
+ABI_CFLAGS=$($PKG_CONFIG --cflags omx-clap clap)
 PKG_CONFIG_PATH=$OLD/share/pkgconfig:$OLD/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH} \
   make -s -C "$W/plugins/omx-strip" build/omx-strip.clap ABI_CFLAGS="$ABI_CFLAGS" >/dev/null || exit 2
 make -s -C "$ROOT/plugins/omx-strip" build/omx-strip.clap >/dev/null || exit 2

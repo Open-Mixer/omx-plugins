@@ -168,7 +168,7 @@ static bool face_clap_run(Inst *in, const float *v, bool bypass, const float *ke
   return in->p->process(in->p, &pr) != CLAP_PROCESS_ERROR;
 }
 
-/* A meter by the symbol a host reads it by: its name, one channel (omx-clap-core doc/reference.md). */
+/* A meter by the symbol a host reads it by: its name, one channel (omx-clap doc/reference.md). */
 static bool face_clap_meter(Inst *in, const char *symbol, double *value) {
   if (!in->mx) return false;
   for (uint32_t m = 0; m < in->mx->count(in->p); m++) {

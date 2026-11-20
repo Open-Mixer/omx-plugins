@@ -574,7 +574,7 @@ export function meterLabel(id) {
 /** Each meter of declaration `d` as the faces publish it, in order: its id, kind, channels (one for a reading
  * of the kernel's, two for a level the face measures, left and right), label, display range and unit (a
  * readout's, else the declared range in dBFS), and the output symbol of each channel: the id for one channel,
- * `<id>_<channel>` from 0 for more, the names omx-clap-core derives from clap.meters/1 (doc/reference.md). */
+ * `<id>_<channel>` from 0 for more, the names omx-clap derives from clap.meters/1 (doc/reference.md). */
 export function metersOf(d) {
   const readouts = d.meterReadouts ?? (d.meters ?? []).map(() => null);
   return (d.meters ?? []).map((m, k) => {
