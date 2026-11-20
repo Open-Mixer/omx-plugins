@@ -284,6 +284,22 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 # END GENERATED lv2-files
 
 %changelog
+* Fri Nov 20 2026 Pau Aliagas <linuxnow@gmail.com> - 0.20.0-1
+- omx-plugins ships no generated MOD GUI: hosts generate it with
+  omx-modgui-sync; omx-plugins-lv2 Recommends omx-panel >= 0.14.0; MOD and
+  Zynthian show mod-ui's generic GUI until a host runs omx-modgui-sync
+- the descriptors and contract files name the relative $schema that
+  omx-contract >= 3.20.2's install rewrites to the major's URL (fixes "NO
+  PANEL" and PLUGIN_DESCRIPTOR_REFUSED on omx-contract 3.20)
+- no Breaks, Replaces or Conflicts between our packages: the old
+  omx-clap-host < 0.23.0 guard and the omx-plugins-dev split guard are gone
+- the params headers are generated again against omx-panel 0.14.0 (delay,
+  reverb, eq8, eq16, eq32); the EQ HPF/LPF slope is published, and the utility
+  panel words 12 and time_response 4 of omx-clap-core 0.33's omx_clap_ext.h
+- the deb CI job runs on arm64 as well, one job per check-matrix cell
+- floors: omx-contract >= 3.20.2, omx-clap-core >= 0.33.1, omx-panel >= 0.14.0,
+  plugin-hostd >= 0.20.5
+
 * Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
 - omx-plugins-contract installs role-meanings.json (the meaning each panel
   role plays) and plugin-face.json (the face ids, declared here since
