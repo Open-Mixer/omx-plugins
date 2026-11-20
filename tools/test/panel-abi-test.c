@@ -69,15 +69,22 @@ _Static_assert(OMX_CLAP_PANEL_DESCRIPTION_NAME_SIZE == OMX_CLAP_PANEL_NAME_SIZE,
 
 #define CODE(prefix, code, id) _Static_assert(prefix##id == code, #prefix #id " is " #code);
 #define TABLE(code, name, id) CODE(OMX_CLAP_PANEL_, code, id)
-#define FAMILY(code, name, id) CODE(OMX_CLAP_FAMILY_, code, id)
-#define WIDGET(code, name, id) CODE(OMX_CLAP_WIDGET_, code, id)
-#define DISPLAY_SOURCE(code, name, id) CODE(OMX_CLAP_DISPLAY_FROM_, code, id)
-#define PLACEMENT(code, name, id) CODE(OMX_CLAP_PLACEMENT_, code, id)
+/* the panel words are omx-panel's lists, X(code, WORD) (omxdomain/panel_codes.h, which omx_clap_ext.h re-exports) */
+#define FAMILY(code, id) CODE(OMX_CLAP_FAMILY_, code, id)
+#define WIDGET(code, id) CODE(OMX_CLAP_WIDGET_, code, id)
+#define DISPLAY_SOURCE(code, id) CODE(OMX_CLAP_DISPLAY_FROM_, code, id)
+#define PLACEMENT(code, id) CODE(OMX_CLAP_PLACEMENT_, code, id)
 OMX_CLAP_PANEL_TABLES(TABLE)
 OMX_CLAP_PANEL_FAMILIES(FAMILY)
 OMX_CLAP_PANEL_WIDGETS(WIDGET)
 OMX_CLAP_PANEL_DISPLAY_SOURCES(DISPLAY_SOURCE)
 OMX_CLAP_PANEL_PLACEMENTS(PLACEMENT)
+/* the ids the plugins shipped with, golden (sorting row V1): each list's last word at its code */
+_Static_assert(OMX_CLAP_FAMILY_UTILITY == 12 && OMX_CLAP_FAMILY_GATE == 1, "the families' ids");
+_Static_assert(OMX_CLAP_WIDGET_SELECTOR == 4 && OMX_CLAP_WIDGET_AUTO == 0, "the widgets' ids");
+_Static_assert(OMX_CLAP_DISPLAY_TIME_RESPONSE == 4 && OMX_CLAP_DISPLAY_TRANSFER_CURVE == 1, "the display kinds' ids");
+_Static_assert(OMX_CLAP_DISPLAY_FROM_CURVE == 3, "the display sources' ids");
+_Static_assert(OMX_CLAP_PLACEMENT_MASTER == 3 && OMX_CLAP_PLACEMENT_RETURN == 1, "the placements' ids");
 
 static int g_failures;
 

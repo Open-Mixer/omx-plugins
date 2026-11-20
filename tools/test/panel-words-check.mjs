@@ -40,8 +40,7 @@ export const PANEL_ENUMS = {
   placement: { c: 'omx_clap_panel_placement', prefix: 'OMX_CLAP_PLACEMENT_', item: 'PANEL_PLACEMENTS' },
 };
 
-/** The words as the plugins shipped them (omx-contract 3.20.2's PANEL_FAMILIES and PANEL_WIDGETS, omx-panel 0.15.1's
- * display kinds, sources and placements), frozen: omx-panel's domain keeps each at its place (append only). */
+/** The words as the plugins shipped them (the 0.20.0 header's enums), frozen: omx-panel's domain keeps each at its place (append only). */
 export const GOLDEN = {
   family: ['none', 'gate', 'dynamics', 'limiter', 'deesser', 'eq', 'filter', 'drive', 'modulation', 'delay', 'reverb', 'pitch', 'utility'],
   widget: ['auto', 'knob', 'fader', 'switch', 'selector'],
