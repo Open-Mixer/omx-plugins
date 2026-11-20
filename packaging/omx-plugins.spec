@@ -36,6 +36,8 @@ BuildRequires: nodejs >= 20.19
 BuildRequires: python3
 # make selftest copies the tree with tar
 BuildRequires: tar
+# git get-tar-commit-id: the source commit the tarball was made from, stamped into each installed descriptor (#32)
+BuildRequires: git-core
 BuildRequires: diffutils
 BuildRequires: lilv
 BuildRequires: lilv-devel
@@ -159,13 +161,18 @@ Its documentation is on openmixer.org.
 
 %install
 %make_install PREFIX=%{_prefix} LIBDIR=%{_libdir} CLAPDIR=/usr/lib/clap
-%{__make} install-devel DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir}
+# each installed descriptor carries the commit the source tarball was made from (git archive records it): #32
+%{__make} install-devel DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir} SOURCE_COMMIT=$(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 %{__make} install-test DESTDIR=%{buildroot} PREFIX=%{_prefix} TESTCLAPDIR=%{_libexecdir}/omx-plugins/test
 
 %check
-%make_build test
+# make test runs in the unpacked tarball, which has no git tree: it is handed the tarball's commit to stamp (#32)
+%make_build test SOURCE_COMMIT=$(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 # the shipped pins.d file still names the shipped binaries' own hashes (sabotage: a changed binary goes red)
 tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins %{buildroot}/usr/lib/clap
+# every shipped descriptor carries this release's version and the source tarball's commit (sabotage: one unstamped,
+# another commit or another version goes red)
+tools/integrity-check.sh %{buildroot}%{_datadir}/omx-contract/contract.d %{version} $(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 
 %files
 %license LICENSE
