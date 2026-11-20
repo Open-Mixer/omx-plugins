@@ -98,12 +98,12 @@ What the descriptor has no word for, found laying out our panels, and where each
 ## The faces, from plugin-hostd's tables read backwards
 
 One vocabulary, two directions (FreeMixer/omx-plugins#210, ruling B). plugin-hostd installs one mapping table per
-format into omx-contract's contract directory, `<contractdir>/3/plugin-hostd/formats/{clap,lv2}.json`: how each field a
+format as a domain of the contract directory, `plugin-hostd/clap` and `plugin-hostd/lv2` (named by their items' prefix,
+`PLUGIN_HOSTD_CLAP_MAP` and `PLUGIN_HOSTD_LV2_MAP`), `<contractdir>/plugin-hostd/<format>/<format>.json`: how each field a
 scan reads becomes a descriptor word. Our generators write a face from the authored descriptor by reading the same
 rows the other way (`tools/format-tables.mjs`), and only the rows whose transform is `identity` or `lookup`: the row
 whose `lookup` maps a source value to the word's value names what the face writes. No transform is code of ours.
-`$PLUGIN_HOSTD_TABLES`, a directory holding `clap.json` and `lv2.json` (a plugin-hostd checkout's `data/formats`),
-stands in for the installed tables.
+`$OMX_INSTALLED_CONTRACTDIR`, a contract directory holding the two domains, stands in for the installed one.
 
 - An LV2 port's `units:unit` is the LV2 row mapping its unit (`units:db` for `dB`, `<urn:openmixer:unit#dBFS>` for
   `dBFS`); a unit no row maps is the declaration's own, defined in the plugin's TTL: `dBu`, `dB/oct` and `ratio`
