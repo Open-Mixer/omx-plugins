@@ -38,7 +38,8 @@ look without configuration: `/usr/lib/clap`, and `/usr/lib64/lv2` on Fedora or `
 <https://www.openmixer.org/projects/omx-plugins>, and the full documentation at
 <https://www.openmixer.org/docs/plugins>. In this repository: every plugin and its controls, the
 factory presets, the packages and the static library ([docs/catalogue.md](docs/catalogue.md)); a
-page of parameters per plugin ([docs/plugins/README.md](docs/plugins/README.md)); building from
+page of parameters per plugin ([docs/plugins/README.md](docs/plugins/README.md)); omx-strip's MOD GUI and its
+grouped controls, in pictures ([docs/omx-strip-modgui.md](docs/omx-strip-modgui.md)); building from
 source ([BUILDING.md](BUILDING.md)).
 
 ## Licence
