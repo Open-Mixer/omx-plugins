@@ -41,6 +41,16 @@ static const char *const OMX_TONE_PARAM_MODULES[OMX_TONE_PARAM_COUNT] = {
   "DJ Filter",
 };
 
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+
+static const char *const *const OMX_TONE_PARAM_LABELS[OMX_TONE_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+};
+
 /* One macro per declared bound: what a C face reads where a constant is needed. */
 #define OMX_TONE_PARAM_TILT_DB_MIN -6.0f
 #define OMX_TONE_PARAM_TILT_DB_MAX 6.0f

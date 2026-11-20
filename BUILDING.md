@@ -187,7 +187,9 @@ REFERENCE into the kernel's file in omx-contract (`"ref"`, `"field"`); no number
 declaration. The release read is the installed one, through its JSON render (`omx-contract.json` in
 `pkg-config --variable=datadir omx-contract`), and its version must lie in the spec's range;
 `$OMX_CONTRACT_DIR`, a directory holding an `omx-contract.json`, stands in for it (the perturbation
-proofs point it at a moved copy). The kernel must
+proofs point it at a moved copy); `$OMX_CONTRACT_KIND_VECTORS` names a checkout's `clap-kind-vectors.json` (the rule a
+describing host reads a CLAP parameter's kind by, shipped from omx-contract 3.19.0) for `tools/clap-params-check.mjs`
+when the installed one lacks it. The kernel must
 have its instance face in omx-dsp (`<omxdsp/fx/omx_<kernel>_instance.h>`): each parameter binds to
 the `resolve()` argument named after its contract control, and `"binding": "instance"` makes
 `tools/gen.mjs` write the binding, the kernel-identity test, both faces and the Makefile. A kernel

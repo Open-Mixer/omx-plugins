@@ -28,7 +28,7 @@ enum {
 
 static const omx_plugin_param OMX_WIDTH_PARAMS[OMX_WIDTH_PARAM_COUNT] = {
   { "widthPct", "Width", "%", 0.0f, 200.0f, 100.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "pseudo", "Pseudo", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "pseudo", "Pseudo", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "pseudoMs", "Pseudo Delay", "ms", 0.0f, 30.0f, 12.0f, 0u },
   { "bassMono", "Bass Mono", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
   { "bassMonoHz", "Bass Mono Frequency", "Hz", 20.0f, 300.0f, 120.0f, OMX_PLUGIN_PARAM_INTEGER },
@@ -42,6 +42,17 @@ static const char *const OMX_WIDTH_PARAM_MODULES[OMX_WIDTH_PARAM_COUNT] = {
   "Width",
   "Width",
   "Width",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_WIDTH_PARAM_PSEUDO_LABELS[] = { "Off", "Comb", "Haas" };
+static const char *const *const OMX_WIDTH_PARAM_LABELS[OMX_WIDTH_PARAM_COUNT] = {
+  NULL,
+  OMX_WIDTH_PARAM_PSEUDO_LABELS,
+  NULL,
+  NULL,
+  NULL,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -76,8 +87,8 @@ static const char *const OMX_WIDTH_PARAM_MODULES[OMX_WIDTH_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_WIDTH_PARAM_CONTRACT_VERSION 1u
-#define OMX_WIDTH_PARAM_CONTRACT_FINGERPRINT "6a77b6877ad3ddd60e4b227e2d98aa601be552ed3e9c696acb1cbc9413b5653d"
+#define OMX_WIDTH_PARAM_CONTRACT_VERSION 2u
+#define OMX_WIDTH_PARAM_CONTRACT_FINGERPRINT "95c858b52e369450cbc16d5717b7c5454584cef97695b1649a96598312f38a9c"
 static const struct omx_param_contract_row OMX_WIDTH_PARAM_CONTRACT[OMX_WIDTH_PARAM_COUNT] = {
   { 14u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* widthPct pc */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* pseudo none */

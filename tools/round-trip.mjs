@@ -87,9 +87,9 @@ export const FORMATS = ['clap', 'lv2'];
  * as in a build of omx-plugins).
  */
 export const LOSSES_COUNTED = Object.freeze({
-  'plugin-hostd': '0.20.3',
-  'omx-contract': '3.14.0',
-  'omx-clap-host': '0.31.2',
+  'plugin-hostd': '0.20.7',
+  'omx-contract': '3.18.1',
+  'omx-clap-host': '0.32.5',
   'omx-plugins-contract': null,
 });
 
@@ -101,16 +101,20 @@ export const LOSSES = {
   'lv2 controls[].travel.unit ""': 123,
   // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt (dB/oct, omx-contract 3.1.0)
   'lv2 controls[].travel.unit "dB/oct"': 2,
-  // CLAP: plugin-hostd 0.20.3 reads a control's scale and, through the parameter contract, most units and steps; no
-  // row reads the rest of the units and steps, a choice (our faces set no CLAP_PARAM_IS_ENUM), the session symbol, the
-  // LV2 URI, a side-chain's role or what an LV2 host may lend
+  // CLAP: plugin-hostd 0.20.7 reads a control's scale and, through the parameter contract, most units and steps; no
+  // row reads the rest of the units and steps, the session symbol, the LV2 URI, a side-chain's role or what an LV2
+  // host may lend. A choice whose points are every whole step is CLAP_PARAM_IS_ENUM with its labels as value texts
+  // (omx-plugins#97), so its kind, labels, values and default come back; a scan's point ids are its labels, so our ids
+  // (the values as text) are no CLAP word; the choices with gaps (the HPF/LPF slopes' 12 and 24 dB/oct of omx-eq8,
+  // omx-eq16, omx-eq32 and omx-strip) stay stepped travels, their kind, labels, values and default lost with the toggles'
+  // defaults (a scan reads no default of a toggle)
   'clap controls[].travel.unit': 125,
   'clap controls[].travel.step': 381,
-  'clap controls[].kind': 270,
+  'clap controls[].kind': 140,
   'clap controls[].ids': 139,
-  'clap controls[].values': 139,
-  'clap controls[].labels': 139,
-  'clap controls[].default': 270,
+  'clap controls[].values': 9,
+  'clap controls[].labels': 9,
+  'clap controls[].default': 140,
   'clap controls[].symbol': 841,
   'clap plugin.uri': 34,
   'clap ports[].role': 3,

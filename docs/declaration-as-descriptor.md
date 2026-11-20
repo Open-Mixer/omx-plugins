@@ -142,9 +142,12 @@ It passes with no `differs`, every bag equal, and each lost word one the tool's 
 - OR2's: `meaning` on CLAP (294) and on LV2 (108, those with no LV2 term), the `""` unit on LV2 (82);
 - the `ratio` unit on LV2 (14) and the `dB/oct` unit (1): plugin-hostd 0.7.0's LV2 table has no row for
   `urn:openmixer:unit#ratio` nor `urn:openmixer:unit#dBoct`;
-- on CLAP, words no row reads: the unit (404), a linear or log scale (276), the step (404), a choice's kind, ids,
-  values, labels and default (197, 97, 97, 97, 197), the symbol (601), the LV2 URI (21), a side-chain's role (2), what
-  an LV2 host may lend (21);
+- on CLAP, words no row reads: the unit (404), a linear or log scale (276), the step (404), a choice's ids (a scan's
+  point ids are its labels, ours its values as text), and of the choices with gaps (the HPF/LPF slopes), which are no
+  CLAP enumeration, the kind, values, labels and default; the symbol (601), the LV2 URI (21), a side-chain's role (2),
+  what an LV2 host may lend (21). A choice whose points are every whole step comes back whole: the CLAP face flags it
+  `CLAP_PARAM_IS_ENUM` and answers its labels to `value_to_text` (omx-plugins#97). The counts are `LOSSES` in
+  `tools/round-trip.mjs`;
 - on LV2: the step (404), automation (601), the plugin's version and vendor (21 each), the CLAP id (601), our point
   ids (97), the audio ports' ids and names (44 each).
 

@@ -53,18 +53,18 @@ static const omx_plugin_param OMX_DELAY_PARAMS[OMX_DELAY_PARAM_COUNT] = {
   { "fxDelayTaps", "Taps", "", 1.0f, 4.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "tap0Gain", "Tap 1 Gain", "", 0.0f, 1.0f, 1.0f, 0u },
   { "tap0Pan", "Tap 1 Pan", "", -1.0f, 1.0f, 0.0f, 0u },
-  { "tap1Factor", "Tap 2 Time", "", 0.0f, 10.0f, 3.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "tap1Factor", "Tap 2 Time", "", 0.0f, 10.0f, 3.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "tap1Gain", "Tap 2 Gain", "", 0.0f, 1.0f, 0.7f, 0u },
   { "tap1Pan", "Tap 2 Pan", "", -1.0f, 1.0f, -0.5f, 0u },
-  { "tap2Factor", "Tap 3 Time", "", 0.0f, 10.0f, 5.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "tap2Factor", "Tap 3 Time", "", 0.0f, 10.0f, 5.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "tap2Gain", "Tap 3 Gain", "", 0.0f, 1.0f, 0.5f, 0u },
   { "tap2Pan", "Tap 3 Pan", "", -1.0f, 1.0f, 0.5f, 0u },
-  { "tap3Factor", "Tap 4 Time", "", 0.0f, 10.0f, 8.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "tap3Factor", "Tap 4 Time", "", 0.0f, 10.0f, 8.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "tap3Gain", "Tap 4 Gain", "", 0.0f, 1.0f, 0.35f, 0u },
   { "tap3Pan", "Tap 4 Pan", "", -1.0f, 1.0f, 0.0f, 0u },
-  { "sync", "Sync", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "division", "Division", "", 0.0f, 17.0f, 6.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "mode", "Mode", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "sync", "Sync", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "division", "Division", "", 0.0f, 17.0f, 6.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "mode", "Mode", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "duckDb", "Duck", "dB", -24.0f, 0.0f, 0.0f, 0u },
   { "duckThresholdDb", "Duck Threshold", "dB", -60.0f, 0.0f, -30.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "duckReleaseMs", "Duck Release", "ms", 20.0f, 2000.0f, 250.0f, OMX_PLUGIN_PARAM_INTEGER },
@@ -96,6 +96,40 @@ static const char *const OMX_DELAY_PARAM_MODULES[OMX_DELAY_PARAM_COUNT] = {
   "Duck",
   "Duck",
   "Duck",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_DELAY_PARAM_TAP1_FACTOR_LABELS[] = { "1/4", "1/3", "3/8", "1/2", "2/3", "3/4", "1", "4/3", "3/2", "2", "3" };
+static const char *const OMX_DELAY_PARAM_TAP2_FACTOR_LABELS[] = { "1/4", "1/3", "3/8", "1/2", "2/3", "3/4", "1", "4/3", "3/2", "2", "3" };
+static const char *const OMX_DELAY_PARAM_TAP3_FACTOR_LABELS[] = { "1/4", "1/3", "3/8", "1/2", "2/3", "3/4", "1", "4/3", "3/2", "2", "3" };
+static const char *const OMX_DELAY_PARAM_SYNC_LABELS[] = { "Free", "Tempo" };
+static const char *const OMX_DELAY_PARAM_DIVISION_LABELS[] = { "1/1", "1/1 dotted", "1/1 triplet", "1/2", "1/2 dotted", "1/2 triplet", "1/4", "1/4 dotted", "1/4 triplet", "1/8", "1/8 dotted", "1/8 triplet", "1/16", "1/16 dotted", "1/16 triplet", "1/32", "1/32 dotted", "1/32 triplet" };
+static const char *const OMX_DELAY_PARAM_MODE_LABELS[] = { "Digital", "Tape", "Analog" };
+static const char *const *const OMX_DELAY_PARAM_LABELS[OMX_DELAY_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_DELAY_PARAM_TAP1_FACTOR_LABELS,
+  NULL,
+  NULL,
+  OMX_DELAY_PARAM_TAP2_FACTOR_LABELS,
+  NULL,
+  NULL,
+  OMX_DELAY_PARAM_TAP3_FACTOR_LABELS,
+  NULL,
+  NULL,
+  OMX_DELAY_PARAM_SYNC_LABELS,
+  OMX_DELAY_PARAM_DIVISION_LABELS,
+  OMX_DELAY_PARAM_MODE_LABELS,
+  NULL,
+  NULL,
+  NULL,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -184,8 +218,8 @@ static const char *const OMX_DELAY_PARAM_MODULES[OMX_DELAY_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DELAY_PARAM_CONTRACT_VERSION 2u
-#define OMX_DELAY_PARAM_CONTRACT_FINGERPRINT "5d68c368c9182981147b3872a22fa1e47097e14a683897a35f7e806e1be2d4e8"
+#define OMX_DELAY_PARAM_CONTRACT_VERSION 3u
+#define OMX_DELAY_PARAM_CONTRACT_FINGERPRINT "e9a3404df4512d4ff7023b68e15356cc59b0bbd6791283ed5163b5f64e8f9960"
 static const struct omx_param_contract_row OMX_DELAY_PARAM_CONTRACT[OMX_DELAY_PARAM_COUNT] = {
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* fxDelayTime ms */
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* fxDelayFeedback none */

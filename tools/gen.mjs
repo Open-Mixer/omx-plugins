@@ -540,6 +540,13 @@ export const scaleOf = (p) => p.scale ?? (p.unit === 'Hz' && !(p.min <= 0) ? 'lo
 /** The labelled values of an integer travel, `{value, label}` from min up: one per step (`values`)
  * or only the ones it takes (`points`). Either makes the LV2 port an enumeration. */
 export const choicesOf = (p) => p.points ?? p.values?.map((label, k) => ({ value: p.min + k, label }));
+/** A choice's labels when its points are every whole step of its travel: the CLAP face's enumeration
+ * (CLAP_PARAM_IS_ENUM, a value text per step from min to max, as CLAP's enum asks). Undefined for a travel, a toggle,
+ * and a choice with gaps (a slope's 12 and 24), which stays a stepped travel on CLAP. */
+export const enumLabelsOf = (p) => {
+  const choices = choicesOf(p);
+  return choices && choices.length === p.max - p.min + 1 ? choices.map((c) => c.label) : undefined;
+};
 
 /** The port symbols every plugin has, which no parameter or key may take. */
 const FIXED_PORTS = ['in_l', 'in_r', 'out_l', 'out_r', 'enabled', 'latency'];
@@ -664,7 +671,8 @@ ${tables.map((t) => `  ${ref(t)},`).join('\n')}
 export function emitParamsHeader(d) {
   const K = d.kernel.toUpperCase();
   const P = `OMX_${K}_PARAM`;
-  const flags = (p) => (p.kind === 'integer' ? 'OMX_PLUGIN_PARAM_INTEGER' : p.kind === 'toggle' ? 'OMX_PLUGIN_PARAM_TOGGLE' : '0u');
+  const flags = (p) => (p.kind === 'integer' ? `OMX_PLUGIN_PARAM_INTEGER${enumLabelsOf(p) ? ' | OMX_PLUGIN_PARAM_CHOICE' : ''}` : p.kind === 'toggle' ? 'OMX_PLUGIN_PARAM_TOGGLE' : '0u');
+  const labelsName = (p) => `${P}_${macro(p.symbol)}_LABELS`;
   const ports = lv2Ports(d);
   const firstParam = ports.find((p) => p.param).index;
   return `${BANNER}#ifndef OMX_${K}_PARAMS_H
@@ -703,6 +711,13 @@ ${d.params.map((p) => `  { "${p.symbol}", "${p.name}", "${p.unit}", ${cf(p.min)}
  * plugin with no descriptor. */
 static const char *const OMX_${K}_PARAM_MODULES[${P}_COUNT] = {
 ${d.params.map((p, i) => `  ${cstr(moduleOf(d, i))},`).join('\n')}
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+${d.params.filter((p) => enumLabelsOf(p)).map((p) => `static const char *const ${labelsName(p)}[] = { ${enumLabelsOf(p).map(cstr).join(', ')} };`).join('\n')}
+static const char *const *const OMX_${K}_PARAM_LABELS[${P}_COUNT] = {
+${d.params.map((p) => `  ${enumLabelsOf(p) ? labelsName(p) : 'NULL'},`).join('\n')}
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
