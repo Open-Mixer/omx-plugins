@@ -81,22 +81,23 @@ export const FORMATS = ['clap', 'lv2'];
  * and an LV2 term for some meanings; LV2 has no unit for ""). Each other entry is a word the format's table has no
  * row for, or one its face states otherwise, named in the header above. */
 /**
- * The versions LOSSES is counted against, in a clean fedora:44 with the channel's BuildRequires only: plugin-hostd's
+ * The versions LOSSES is counted against, in a clean fedora:45 with the channel's BuildRequires only: plugin-hostd's
  * format tables and probe, omx-contract's parameter contract, the CLAP host the probe loads through, and
  * omx-plugins-contract, whose installed descriptors lend a scan the meanings a face does not carry (null: not installed,
  * as in a build of omx-plugins).
  */
 export const LOSSES_COUNTED = Object.freeze({
-  'plugin-hostd': '0.20.3',
-  'omx-contract': '3.14.0',
-  'omx-clap-host': '0.31.2',
+  'plugin-hostd': '0.20.8',
+  'omx-contract': '3.20.2',
+  'omx-clap-host': '0.33.1',
   'omx-plugins-contract': null,
 });
 
 export const LOSSES = {
-  // OR2: a meaning has a CLAP word only for the bypass, an LV2 term only for some (lv2:designation); LV2 has no unit
+  // OR2: a meaning has a CLAP word for the bypass and, with plugin-hostd 0.20.8's tables, the few more that table rows read (10
+  // before 0.20.8, 4 now); an LV2 term only for some (lv2:designation); LV2 has no unit
   // for "" (a plain number)
-  'clap controls[].meaning': 10,
+  'clap controls[].meaning': 4,
   'lv2 controls[].meaning': 116,
   'lv2 controls[].travel.unit ""': 123,
   // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt (dB/oct, omx-contract 3.1.0)

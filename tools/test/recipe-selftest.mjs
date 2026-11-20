@@ -514,9 +514,9 @@ static inline void omx_wobble_instance_run(OmxWobbleInstance *s, const float *in
     const files = (widgets) => modgui({ ...d, panel: { ...d.panel, widgets } }, '--emit-stdout');
     const auto = files(undefined), named = files({ amount: 'fader', curve: 'selector' });
     expect(auto.status === 0 && named.status === 0, `modgui: omx-panel draws the declared panel (${auto.stderr || named.stderr})`);
-    expect(/omx-knob-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(auto.stdout) && !auto.stdout.includes('omx-fader.png'),
+    expect(/omx-knob-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(auto.stdout) && !/omx-fader-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(auto.stdout),
       'modgui: a control the panel names no widget for takes its kind\'s (amount a knob, no fader film)');
-    expect(/omx-fader-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(named.stdout) && named.stdout.includes('omx-fader.png') &&
+    expect(/omx-fader-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(named.stdout) && /fader-(?:vintage|console|3d)\.png/.test(named.stdout) && // omx-panel 0.14.0 names the films per look
       named.stdout.includes('.omx-fader-image') && named.stdout.includes('mod-port-symbol="curve" mod-widget="custom-select"'),
       'modgui: the panel\'s widgets are drawn (amount a fader with its film, curve a selector)');
   }
