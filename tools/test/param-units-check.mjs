@@ -48,6 +48,14 @@ const GOLDEN_CODES = {
 /** The domain and the header the codes are read from, omx-clap's (sorting row V23d). */
 const DOMAIN = 'omx-param-contract';
 const OWNER_HEADER = 'omx-clap-host/omx_param_units.h';
+/** The scale codes are omx-clap's too (sorting row V21b): its sheet OMX_CLAP_SCALE_CODES (domain omx-clap-scale),
+ * rendered to <omx-clap-host/omx_param_scales.h> as OMX_CLAP_SCALE_<WORD> defines; golden as the plugins shipped them. */
+const SCALES_HEADER = 'omx-clap-host/omx_param_scales.h';
+const GOLDEN_SCALES = [['linear', 0], ['log', 1], ['stepped', 2]];
+/** The scale codes a rendered scales header defines, `[[word, code]]` in code order. */
+export const scaleCodesOf = (text) => [...text.matchAll(/^#define OMX_CLAP_SCALE_([A-Z0-9_]+) (\d+)u\b/gm)].map((m) => [m[1].toLowerCase(), Number(m[2])]).sort((a, b) => a[1] - b[1]);
+/** The scale codes a header of this tree spells itself: none, they are omx-clap's rendered header's alone. */
+export const ownScaleCodes = (text) => [...text.matchAll(/^\s*#\s*define\s+(OMX_CLAP_SCALE_\w+)|^\s*(OMX_CLAP_SCALE_\w+)\s*=|^\s*(OMX_CLAP_SCALE_\w+)\s*,/gm)].map((m) => m[1] ?? m[2] ?? m[3]);
 
 /** The refusals of a declaration `units` ({ token: code }) and the text of a rendered header that drift apart. */
 export function drift(units, headerText) {
@@ -70,12 +78,12 @@ if (!contract.dir) {
   process.exit(1);
 }
 /** The header omx-clap renders, where pkg-config says its headers are, else the system's. */
-function ownerHeader() {
+function ownerHeader(name = OWNER_HEADER) {
   let dirs = [];
   try {
     dirs = execFileSync(process.env.PKG_CONFIG || 'pkg-config', ['--cflags-only-I', 'omx-clap'], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).split(/\s+/).filter((f) => f.startsWith('-I')).map((f) => f.slice(2));
   } catch { /* not installed through pkg-config: the system include directory below */ }
-  return [...dirs, '/usr/include', '/usr/local/include'].map((d) => join(d, OWNER_HEADER)).find((f) => existsSync(f));
+  return [...dirs, '/usr/include', '/usr/local/include'].map((d) => join(d, name)).find((f) => existsSync(f));
 }
 const renderedHeader = ownerHeader();
 const errors = [];
@@ -95,9 +103,15 @@ if (enumOf.size === 0) errors.push('omx_param_units.h: no OMX_CLAP_UNIT_ define'
 let scales = [];
 {
   scales = scalesOf(contract.dir);
-  // a scale's code is its position in PARAM_SCALES: the header's OMX_CLAP_SCALE_<WORD> values say the same
-  const codes = [...text.matchAll(/OMX_CLAP_SCALE_(\w+)\s*=\s*(\d+)/g)].map((m) => [m[1].toLowerCase(), Number(m[2])]);
-  if (JSON.stringify(codes) !== JSON.stringify(scales.map((w, i) => [w, i]))) errors.push(`${HEADER} numbers the scales ${JSON.stringify(codes)}; PARAM_SCALES is ${JSON.stringify(scales)}`);
+  // a scale's code is omx-clap's (V21b): its rendered header's OMX_CLAP_SCALE_<WORD> = golden, in PARAM_SCALES' order, and
+  // this tree's header spells none and includes the owner's
+  const scalesFile = ownerHeader(SCALES_HEADER);
+  const codes = scalesFile ? scaleCodesOf(readFileSync(scalesFile, 'utf8')) : [];
+  if (!scalesFile) errors.push(`${SCALES_HEADER}: not found; install omx-clap-devel >= 0.34.0`);
+  else if (JSON.stringify(codes) !== JSON.stringify(GOLDEN_SCALES)) errors.push(`${SCALES_HEADER} numbers the scales ${JSON.stringify(codes)}; golden ${JSON.stringify(GOLDEN_SCALES)}`);
+  if (JSON.stringify(codes.map(([w]) => w)) !== JSON.stringify(scales)) errors.push(`${SCALES_HEADER} words the scales ${JSON.stringify(codes.map(([w]) => w))}; PARAM_SCALES is ${JSON.stringify(scales)}`);
+  if (!text.includes(`#include <${SCALES_HEADER}>`)) errors.push(`${HEADER}: does not include <${SCALES_HEADER}>`);
+  for (const name of ownScaleCodes(text)) errors.push(`${HEADER}: spells ${name} itself; the scale codes are omx-clap's rendered header's`);
   const schema = JSON.parse(readFileSync(join(root, 'schema/plugin.decl.schema.json'), 'utf8'));
   const offered = schema.$defs.param.properties.scale.enum;
   const want = scales.filter((w) => w !== 'stepped');
@@ -163,6 +177,17 @@ if (process.argv.includes('--self-test')) {
       console.error(`SABOTAGE ${arm}: read ${JSON.stringify(out)}`);
       fail++;
     }
+  }
+  {
+    const scalesFile = ownerHeader(SCALES_HEADER);
+    const head = scalesFile ? readFileSync(scalesFile, 'utf8') : '';
+    const moved = head.replace('#define OMX_CLAP_SCALE_LOG 1u', '#define OMX_CLAP_SCALE_LOG 3u');
+    const got = scaleCodesOf(moved);
+    if (moved !== head && JSON.stringify(got) !== JSON.stringify(GOLDEN_SCALES)) console.log(`SABOTAGE scale-code-moved: red (${JSON.stringify(got)})`);
+    else { console.error(`SABOTAGE scale-code-moved: ${moved === head ? 'the sabotage did not land' : 'STAYED GREEN'}`); fail++; }
+    const spelled = ownScaleCodes(text + 'enum omx_clap_param_scale {\n  OMX_CLAP_SCALE_LINEAR = 0,\n};\n');
+    if (spelled.length === 1) console.log(`SABOTAGE own-scale-enumerator: red (${spelled[0]})`);
+    else { console.error(`SABOTAGE own-scale-enumerator: read ${JSON.stringify(spelled)}`); fail++; }
   }
   if (ownCodes(text).length) {
     console.error('self-test: the unsabotaged header defines a code');
