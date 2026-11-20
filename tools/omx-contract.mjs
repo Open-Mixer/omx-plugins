@@ -95,6 +95,20 @@ export const installedDataDir = () => pkgVariable('datadir');
 export const installedContractDir = () => process.env.OMX_INSTALLED_CONTRACTDIR || pkgVariable('contractdir');
 
 /**
+ * The document of domain `domain` in the contract directory `contractdir` (default: the installed one),
+ * `<contractdir>/<domain>/<domain>.json` (omx-contract docs/contract-dir.md, "Domains": a reader that is no C or
+ * TypeScript render reads the domain document itself). Refused by name when the directory or the document is absent,
+ * naming `want`, the package and floor that installs it.
+ */
+export function domainDocument(domain, want, contractdir = installedContractDir()) {
+  const file = contractdir && join(contractdir, domain, `${domain}.json`);
+  if (!file || !existsSync(file)) throw new Error(`domain ${domain}: ${file ?? 'no contract directory (pkg-config --variable=contractdir omx-contract finds none)'} is not installed; this tree needs ${want}`);
+  const doc = JSON.parse(readFileSync(file, 'utf8'));
+  if (typeof doc?.components?.schemas !== 'object') throw new Error(`${file}: no domain document (components.schemas)`);
+  return { file, doc, schemas: doc.components.schemas };
+}
+
+/**
  * omx-contract's `isMain(import.meta.url)`: whether the calling module is the script node runs, decided on real paths so
  * a tool started through a symlink runs. Read, at the first call, from the installed command's own files,
  * `<dir>/lib/entry.mjs`: the directory of $OMX_CONTRACT_CLI when it names bin/omx-contract.mjs, else
