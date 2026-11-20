@@ -798,7 +798,8 @@
         "modulation",
         "delay",
         "reverb",
-        "pitch"
+        "pitch",
+        "utility"
       ],
       "title": "Family",
       "description": "The panel families the console accepts, a closed set: the family names which panel the console draws and which roles it reads. An effect no family fits is `none` (the console draws its generic editor). The list is the console's; a family is added there first, then here, with its roles in `familyRoles`."
@@ -943,6 +944,21 @@
             "fine",
             "mix",
             "output"
+          ]
+        },
+        "utility": {
+          "enum": [
+            "gain",
+            "width",
+            "pseudo",
+            "pseudo_time",
+            "bass_mono",
+            "bass_mono_freq",
+            "amount",
+            "range",
+            "drive",
+            "ceiling",
+            "softness"
           ]
         }
       }
