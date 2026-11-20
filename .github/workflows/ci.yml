@@ -471,8 +471,8 @@ jobs:
           ! dpkg -s omx-plugins-dev >/dev/null 2>&1
           info=$(dpkg -I debs/omx-plugins-contract_*_all.deb)
           grep -qE '^ Architecture: all$' <<<"$info"
-          grep -qE '^ Breaks: omx-plugins-dev \(<< ' <<<"$info"
-          grep -qE '^ Replaces: omx-plugins-dev \(<< ' <<<"$info"
+          # no Breaks, Replaces or Conflicts between our packages (owner rule 2026-11-16, deps-check refuses them in the source)
+          ! grep -qE '^ (Breaks|Replaces|Conflicts):' <<<"$info"
           for deb in debs/omx-plugins_*.deb debs/omx-plugins-dev_*.deb; do
             info=$(dpkg -I "$deb"); grep -qE '^ Depends:.*omx-plugins-contract \(= ' <<<"$info"
           done
