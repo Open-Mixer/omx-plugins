@@ -1,7 +1,8 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
   "requires": {
-    "omx-contract-schema": ">= 3.7.0"
+    "omx-contract-schema": ">= 3.21.0",
+    "omx-dsp": ">= 0.34.0"
   },
   "origin": "authored",
   "plugin": {
@@ -247,7 +248,15 @@
     }
   },
   "latency": {
-    "reports": true
+    "reports": true,
+    "sweep": {
+      "min": {
+        "ref": "ROTARY_BASE_MS"
+      },
+      "max": {
+        "ref": "ROTARY_LONGEST_MS"
+      }
+    }
   },
   "extensions": {
     "clap": {
