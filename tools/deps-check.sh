@@ -18,7 +18,7 @@ count() { { grep -oF -- "$1" "$2" || true; } | wc -l; }
 check() {
   local root="$1" fail=0 spec="$1/packaging/omx-plugins.spec" control="$1/debian/control"
   # rpm name, deb name, how many times debian/control must carry the deb pair, does -devel require it
-  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-devel libomx-clap-dev 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 2 no" "plugin-qualify plugin-qualify 1 no"; do
+  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-devel libomx-clap-dev 2 yes" "omx-clap-contract omx-clap-contract 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 2 no" "plugin-qualify plugin-qualify 1 no"; do
     read -r rpm deb times devel <<<"$row"
     local floor
     floor="$(sed -n "s/^BuildRequires: $rpm >= \([0-9.]*\)\$/\1/p" "$spec")"

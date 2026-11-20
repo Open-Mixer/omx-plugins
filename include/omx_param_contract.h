@@ -19,8 +19,8 @@
 #include <stdint.h>
 
 /* The unit of a parameter's plain value: the OMX_CLAP_UNIT_* codes, 0..24 the LV2 units one to one, 0x100.. the vendor
- * block. Declared in omx-contract (OMX_PARAM_CONTRACT_UNITS, data/param-contract.json) and rendered there. */
-#include <omxcontract/omx_param_units.h>
+ * block. Declared in omx-clap (OMX_PARAM_CONTRACT_UNITS, its domain omx-param-contract) and rendered there. */
+#include <omx-clap-host/omx_param_units.h>
 
 #ifdef __cplusplus
 extern "C" {

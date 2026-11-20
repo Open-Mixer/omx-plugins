@@ -8,8 +8,8 @@
 #   make test       the fast set (what the package builds run): declaration checks, in-process probes, hints, manual
 #   make test-heavy the built plugins through a host: oracles, host-check.sh, the round trip; CI runs
 #                   it on every pull request in slices (OMX_HEAVY_SHARD=i/n); tools/test/test-split.json lists both
-#   make units      the declared units' contract codes (tools/param-contract.mjs) are omx-contract's header's
-#                   (OMX_PARAM_CONTRACT_UNITS, omx_param_units.h), its vendor block is dbfs, dbu, ratio, lufs, a unit
+#   make units      the declared units' contract codes (tools/param-contract.mjs) are omx-clap's header's
+#                   (OMX_PARAM_CONTRACT_UNITS, omx-clap-host/omx_param_units.h), its vendor block is dbfs, dbu, ratio, lufs, a unit
 #                   changed on either side red (tools/test/param-units-check.mjs)
 #   make lv2-units  every unit a declaration uses has an LV2 unit, and every port states the unit it declares
 #                   (tools/test/lv2-units-check.mjs, with its sabotage arms; part of `make test`)
@@ -170,6 +170,7 @@ SPEC       := packaging/omx-plugins.spec
 spec_floor   = $(shell sed -n 's/^BuildRequires: $(1) >= \([0-9.]*\)$$/\1/p' $(SPEC))
 OMXDSP_MIN        := $(call spec_floor,omx-dsp-devel)
 CONTRACT_MIN      := $(call spec_floor,omx-contract-devel)
+CLAPCORE_MIN      := $(call spec_floor,omx-clap-devel)
 # $(call dep_check,<pkg-config name>,<floor>): nothing, or a stop naming what is installed
 dep_check = $(if $(shell $(PKG_CONFIG) --atleast-version=$(2) $(1) && echo y),,$(error $(1) >= $(2) is required ($(SPEC)); installed: $(or $(shell $(PKG_CONFIG) --modversion $(1) 2>/dev/null),none). Install omx-dsp-devel and omx-contract-devel (or libomxdsp-dev and libomx-contract-dev) from the channel: BUILDING.md))
 PKG_CONFIG ?= pkg-config
@@ -540,7 +541,7 @@ $(foreach f,$(CLAP_FACES),$(eval $(call face_rule,$(f))))
 
 # The prefix, libdir and includedir are filled at install; the version and the omx-dsp and omx-contract floors here.
 $(LIB_PC): lib/omxplugins.pc.in Makefile $(SPEC) | $(LIB_B)
-	sed -e 's,@VERSION@,$(VERSION),' -e 's,@OMXDSP_MIN@,$(OMXDSP_MIN),' -e 's,@CONTRACT_MIN@,$(CONTRACT_MIN),' $< > $@
+	sed -e 's,@VERSION@,$(VERSION),' -e 's,@OMXDSP_MIN@,$(OMXDSP_MIN),' -e 's,@CONTRACT_MIN@,$(CONTRACT_MIN),' -e 's,@CLAPCORE_MIN@,$(CLAPCORE_MIN),' $< > $@
 
 $(LIB_B):
 	@mkdir -p $@
