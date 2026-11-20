@@ -21,6 +21,9 @@
  * asks for, as the CLAP latency extension says. The plan runs again IN PLACE (each output the buffer of
  * its input), bit for bit the first run; and, through CLAP, with each block split in two, its second half
  * carrying no event, bit for bit the kernel resolving the same values again before that half.
+ * The declaration's latency checks: at each, through both faces at every declared rate, a unit
+ * impulse lands where the reported latency says (within one frame: the kernel's delay can be
+ * fractional, the report is its rounding), or the reported latency is the number declared.
  */
 #include <dlfcn.h>
 #include <math.h>
@@ -279,6 +282,75 @@ static void run_checks(const char *face, Driver *d, double sr, bool keyed, bool 
   free(buf);
 }
 
+/* The declaration's latency checks: the values (declaration order, the host's bypass off), what the
+ * faces report (-1: where an impulse lands, else that many frames) and the values in words. */
+typedef struct {
+  float v[NP];
+  int reports;
+  const char *label;
+} LatencyCheck;
+
+static const LatencyCheck LATENCY_CHECKS[] = {
+    { {0.8f, 6.8f, 0.7f, 5.9f, 1.0f, 0.0f, 50.0f, 1.0f}, 0, "mix 50" },
+};
+#define NLATENCY (sizeof LATENCY_CHECKS / sizeof LATENCY_CHECKS[0])
+/* The run: half a second in blocks of IMPULSE_BLOCK frames, the impulse at the second block's start. */
+#define IMPULSE_BLOCK 256u
+#define IMPULSE_AT IMPULSE_BLOCK
+
+/* Where the impulse peaks in `out`, in frames after IMPULSE_AT; 0 with `*peak` 0 when it is silent. */
+static uint32_t impulse_delay(const float *out, uint32_t n, float *peak) {
+  uint32_t at = 0;
+  *peak = 0.0f;
+  for (uint32_t i = IMPULSE_AT; i < n; i++)
+    if (fabsf(out[i]) > *peak) *peak = fabsf(out[i]), at = i - IMPULSE_AT;
+  return at;
+}
+
+/* Each latency check through the face: its values held over every block, a unit impulse on both legs,
+ * no key routed; the reported latency is read back after the run (a CLAP face, after the restart it
+ * asked for). */
+static void latency_checks(const char *face, Driver *d, double sr) {
+  const size_t nb = (size_t)ceil(0.5 * sr / IMPULSE_BLOCK);
+  const uint32_t n = (uint32_t)nb * IMPULSE_BLOCK * STRETCH;
+  Block *plan = calloc(nb, sizeof *plan);
+  float *buf = calloc((size_t)n * 4u, sizeof(float));
+  if (!plan || !buf) abort();
+  float *il = buf, *ir = buf + n, *ol = buf + 2u * n, *orr = buf + 3u * n;
+  char what[200];
+  omx_denormals_off();
+  for (size_t c = 0; c < NLATENCY; c++) {
+    const LatencyCheck *lc = &LATENCY_CHECKS[c];
+    for (size_t b = 0; b < nb; b++) {
+      plan[b] = (Block){.frames = IMPULSE_BLOCK};
+      memcpy(plan[b].v, lc->v, sizeof lc->v);
+    }
+    memset(buf, 0, (size_t)n * 4u * sizeof(float));
+    il[IMPULSE_AT] = ir[IMPULSE_AT] = 1.0f;
+    uint32_t lat = UINT32_MAX;
+    latency_broke = false;
+    const bool ran = d->run(d->face, plan, nb, sr, NULL, il, ir, ol, orr, &lat);
+    snprintf(what, sizeof what, "the reported latency moves only at activation, after a restart asked for, at %s", lc->label);
+    check(ran && !latency_broke, face, sr, what);
+    if (lc->reports < 0) {
+      float pl, pr;
+      const uint32_t dl = impulse_delay(ol, n, &pl), dr = impulse_delay(orr, n, &pr);
+      snprintf(what, sizeof what, "at %s the impulse lands at %u/%u frames, the reported latency is %u", lc->label, dl, dr,
+               lat);
+      check(ran && pl > 0.0f && pr > 0.0f && labs((long)dl - (long)lat) <= 1 && labs((long)dr - (long)lat) <= 1, face, sr,
+            what);
+      /* the guard: the impulse lands late enough that a face reporting 0 is refused */
+      snprintf(what, sizeof what, "at %s the impulse lands later than a report of 0 allows", lc->label);
+      check(ran && dl > 1 && dr > 1, face, sr, what);
+    } else {
+      snprintf(what, sizeof what, "at %s the reported latency is %d frames (it is %u)", lc->label, lc->reports, lat);
+      check(ran && lat == (uint32_t)lc->reports, face, sr, what);
+    }
+  }
+  free(buf);
+  free(plan);
+}
+
 /* Every check at one rate: the plan (keyed, then with no key, for a keyed face), and the sabotage arm
  * over both, so each parameter one step off must be seen by one of them. */
 static void rate_checks(const char *face, Driver *d, double sr) {
@@ -290,6 +362,7 @@ static void rate_checks(const char *face, Driver *d, double sr) {
     snprintf(what, sizeof what, "a reference with %s one step off differs", OMX_ROTARY_PARAMS[p].symbol);
     check(seen[p], face, sr, what);
   }
+  latency_checks(face, d, sr);
 }
 
 /* ---- CLAP ---------------------------------------------------------------------------------- */
