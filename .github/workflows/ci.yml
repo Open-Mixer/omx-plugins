@@ -386,7 +386,7 @@ jobs:
           name: ci-check-omx-plugins-fc45-${{ matrix.arch }}
           path: rpms/*.rpm
           if-no-files-found: error
-          retention-days: 7
+          retention-days: ${{ (startsWith(github.ref, 'refs/tags/')) && 7 || 2 }}
 
   # The deb job's cells, from the shared check matrix (ruling D25): the quick set while a release wave is open
   # (OMX_RELEASE_MATRIX=quick: trixie arm64 alone, no amd64 cell), bookworm and trixie on amd64 and arm64 otherwise. Each
@@ -580,7 +580,7 @@ jobs:
             build/clap-validator/
             build/clap-validator.log
           if-no-files-found: error
-          retention-days: 30
+          retention-days: ${{ (startsWith(github.ref, 'refs/tags/')) && 30 || 2 }}
 
   release-dry-run:
     name: release workflow, dry run
