@@ -63,8 +63,8 @@ entries by CLAP id that `include/omx_clap_static.h` declares. A host links it th
 CLAP id is in the table once, and each one is created through its factory, activated and run.
 
 Before the plugins, `make test` runs `make units` (the param-contract units are the header's), `make panel-words`
-(`tools/test/panel-words-check.mjs`: the enums of `include/omx_panel_description.h` are omx-contract's PANEL_FAMILIES and
-PANEL_WIDGETS, omx-panel's display kinds, sources and placements, and omx-clap's lists, code for code) and
+(`tools/test/panel-words-check.mjs`: the five panel enums of `include/omx_panel_description.h` are omx-panel's panel
+domain, expanded from its render `omxdomain/panel_codes.h` with no code spelled, and the table enum is omx-clap's list) and
 `make panel-layout` (`tools/test/panel-layout-test.mjs`: our plugins' descriptors state no unknown word, and
 omx-panel's layout of each finds the declared family and roles; the layout's own rules are omx-panel's
 [docs/panel-layout.md](https://github.com/FreeMixer/omx-panel/blob/main/docs/panel-layout.md)) and `make descriptor-view`

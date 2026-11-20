@@ -31,7 +31,12 @@ BuildRequires: omx-clap-contract >= 0.34.0
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}
+# the panel words: omx-panel's panel domain and its render <omxdomain/panel_codes.h>, which include/omx_panel_description.h
+# expands (tools/test/panel-words-check.mjs)
+BuildRequires: omx-panel-contract >= 0.16.0
 BuildRequires: clap-devel >= 1.2.7
+# include/omx_panel_description.h includes omx-panel's <omxdomain/panel_codes.h>
+Requires: omx-panel-contract >= 0.16.0
 BuildRequires: lv2-devel
 # %%check: the generators and checks are Node scripts; the hosts that load the built plugins
 # (20.19: tools/omx-contract.mjs require()s omx-contract's entry.mjs, an ES module, unflagged from 20.19 / 22.12)
