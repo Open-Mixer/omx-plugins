@@ -21,10 +21,11 @@ and floating (`set_transient`, `suggest_title`, a window of its own when no pare
 and floating, which every Linux host can show. Wayland (`CLAP_WINDOW_API_WAYLAND`, floating only: a Wayland client cannot
 embed a foreign surface) waits on the Wayland backend of omx-panel's window (store spec lane 10): the adapter asks the
 window for its APIs, so it follows the window and holds no list of its own. Win32 and Cocoa are not offered: this tree
-ships for Linux, and the window has no such backend. `set_scale`, `get_size`, `can_resize`, `get_resize_hints`,
-`adjust_size`, `set_size`, `show`, `hide` and `destroy` are the CLAP defaults over the window's size, which is the
-panel's natural size at the host's scale; `can_resize` is true, since the layout re-flows by width
-(`omx_panel_view_visible_columns`).
+ships for Linux, and the window has no such backend. `set_scale` is taken before the window is made (the window is created at `set_parent` or `show`, at the host's scale);
+`get_size` is the panel's natural size at that scale, from the view, before any window exists; `can_resize` is false, since
+the window is not resizable yet (the layout re-flows by width, `omx_panel_view_visible_columns`, and a later slice turns it on
+with the window's `set_size`); `show`, `hide`, `destroy` and the timer (`clap.timer-support`, which drives `omx_panel_ui_idle`) are
+one call each.
 
 The LV2 UI is the standard X11UI: `ui:parent` (required) gives the parent window, `ui:portMap` maps a control's symbol to
 its port index, `ui:idleInterface` (required) drives events and redraws, `ui:resize` (optional) lets the UI follow the host. The
@@ -33,7 +34,7 @@ UI gets values through `port_event` and sends them through the host's `write_fun
 ## Where the drawing lives, and why not in the plugin
 
 The drawing, the layout, the gestures and the binding of a control to a value are omx-panel's C core
-(`libomx-panel-ui`, below): none is re-implemented here. This repository holds two thin adapters that translate a
+(`libomx-panel-ui`, `omx_panel_ui.h`, omx-panel#183, below): none is re-implemented here. This repository holds two thin adapters that translate a
 host's protocol (CLAP's gui calls, LV2's UI calls) into that library's calls.
 
 The adapters load the library with `dlopen("libomx-panel-ui.so.0")` the first time a host asks to create a GUI, not at
@@ -61,10 +62,13 @@ the library takes the layout as "the plugin's own" and does the choosing.
 
 ## The library: who owns it (decision need, default taken)
 
-The generic UI glue is **omx-panel's**: `libomx-panel-ui` (`omx_panel_ui.h`) over its renderer and window. It builds a
-view from a layout (or a store entry), binds each control to the host through three callbacks (`set` a value, `read` a
-value, `get meter`), owns the window's lifecycle (create embedded or floating, show, hide, size and scale, idle) and
-stays free of CLAP and LV2. The store spec already makes the generic LV2 UI library omx-panel's (section 8, lane 10); a second
+The generic UI glue is **omx-panel's**: `libomx-panel-ui` (`omx_panel_ui.h`, omx-panel#183, PR #184) over its renderer and
+window. It builds a view from a layout (or a store entry), takes the plugin's parameters (symbol, unit, travel, labels), tells
+the host a gesture through `begin`, `set` and `end`, shows a value the host reads (`omx_panel_ui_set_value`, never echoed),
+owns the window's lifecycle (`open` embedded or floating, `show`, `hide`, `idle`, the native handle) and stays free of CLAP and
+LV2. The window it stands on gained what a plugin GUI needs and the renderer lacked: pointer, wheel and key events reaching the
+gesture vocabulary, and a view made from a description in memory. The library is a new binary package (pugl and NanoVG build
+dependencies; omx-panel packages no window today), a later slice of omx-panel#183. The store spec already makes the generic LV2 UI library omx-panel's (section 8, lane 10); a second
 GUI library in another package would duplicate it. Recommended default, taken here: omx-panel owns it, as one PR in omx-panel
 (`Fixes` its issue); this repository carries the adapters only. The alternative is a new package: that costs a repository, a
 package pair and a pass, for the same code. No window-toolkit dependency is added: pugl and NanoVG are omx-panel's already
@@ -101,9 +105,9 @@ hand; it is listed as not proven until someone runs it.
 3. **Generator and adapters, green** (omx-plugins): `gen.mjs` emits the layout, the TTL stanzas and the UI stub;
    `lib/omx_gui_clap.c`, `lib/omx_gui_lv2.c`; the Makefiles build `<stem>-ui.so`; the packages ship it. Layers 1 and 2 go green
    with `libomx-panel-ui` absent (the adapters' absence path), which the built probe states. Waits on nothing.
-4. **omx-panel: `libomx-panel-ui`** (omx-panel PR, off `lane/sort-pass-omx-panel`, new worktree `wt/omx-panel-l1-guis`):
-   independent of `gui-stage` (#147), which stages files and touches no window; it shares only the window. Waits on the
-   window job's pugl and NanoVG packages (already in omx-panel's CI).
+4. **omx-panel: `libomx-panel-ui`** (omx-panel#183, PR #184, off `lane/sort-pass-omx-panel`): independent of `gui-stage`
+   (#147), which stages files and touches no window; it shares only the window. Its window half is proved in omx-panel's
+   `renderer-window` CI job (pugl and NanoVG). Its package (a new binary package) is the next slice there.
 5. **Layer 3, the Xvfb end to end** (omx-plugins CI job). Waits on slice 4 released to the channel the job installs from.
 6. **Wayland** floating. Waits on omx-panel's window backend (store lane 10).
 7. **Store entry preferred over the embedded layout.** Waits on store lanes 1 and 2 (the reader, `describeFromStored`).
