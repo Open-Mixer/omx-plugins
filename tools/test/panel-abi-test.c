@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * panel-abi-test.c — org.openmixer.panel-description/1 is omx-clap-core's <omx-clap-host/omx_clap_ext.h>,
+ * panel-abi-test.c — org.openmixer.panel-description/1 is omx-clap's <omx-clap-host/omx_clap_ext.h>,
  * which owns the layout; what this tree keeps is include/omx_panel_description.h, whose omx_clap_panel_*
  * structures a face serves and whose omx_panel_*_row structures omx_panel_get() fills them from. Held to the
  * installed header: the id, every code's value, the size and every member's offset of the five table
  * structures and of the extension, at compile time; then each table's row filled by omx_panel_get and read
- * back through omx-clap-core's structures, member by member. A change on either side stops this compiling
- * or failing (Open-Mixer/omx-clap-core#117).
+ * back through omx-clap's structures, member by member. A change on either side stops this compiling
+ * or failing (Open-Mixer/omx-clap#117).
  * Compile and run: `make panel-abi`, part of `make test`.
  */
 #include <stddef.h>
@@ -18,7 +18,7 @@
 
 #include <omx-clap-host/omx_clap_ext.h>
 
-/* mine: this tree's omx_panel_description.h; owner: omx-clap-core's omx_clap_ext.h */
+/* mine: this tree's omx_panel_description.h; owner: omx-clap's omx_clap_ext.h */
 #define SAME(mine, owner) _Static_assert(sizeof(mine) == sizeof(owner), "the size of " #mine " is " #owner "'s")
 #define AT(mine, owner, member) \
     _Static_assert(offsetof(mine, member) == offsetof(owner, member), #mine "." #member " is where " #owner " has it")
@@ -69,15 +69,22 @@ _Static_assert(OMX_CLAP_PANEL_DESCRIPTION_NAME_SIZE == OMX_CLAP_PANEL_NAME_SIZE,
 
 #define CODE(prefix, code, id) _Static_assert(prefix##id == code, #prefix #id " is " #code);
 #define TABLE(code, name, id) CODE(OMX_CLAP_PANEL_, code, id)
-#define FAMILY(code, name, id) CODE(OMX_CLAP_FAMILY_, code, id)
-#define WIDGET(code, name, id) CODE(OMX_CLAP_WIDGET_, code, id)
-#define DISPLAY_SOURCE(code, name, id) CODE(OMX_CLAP_DISPLAY_FROM_, code, id)
-#define PLACEMENT(code, name, id) CODE(OMX_CLAP_PLACEMENT_, code, id)
+/* the panel words are omx-panel's lists, X(code, WORD) (omxdomain/panel_codes.h, which omx_clap_ext.h re-exports) */
+#define FAMILY(code, id) CODE(OMX_CLAP_FAMILY_, code, id)
+#define WIDGET(code, id) CODE(OMX_CLAP_WIDGET_, code, id)
+#define DISPLAY_SOURCE(code, id) CODE(OMX_CLAP_DISPLAY_FROM_, code, id)
+#define PLACEMENT(code, id) CODE(OMX_CLAP_PLACEMENT_, code, id)
 OMX_CLAP_PANEL_TABLES(TABLE)
 OMX_CLAP_PANEL_FAMILIES(FAMILY)
 OMX_CLAP_PANEL_WIDGETS(WIDGET)
 OMX_CLAP_PANEL_DISPLAY_SOURCES(DISPLAY_SOURCE)
 OMX_CLAP_PANEL_PLACEMENTS(PLACEMENT)
+/* the ids the plugins shipped with, golden (sorting row V1): each list's last word at its code */
+_Static_assert(OMX_CLAP_FAMILY_UTILITY == 12 && OMX_CLAP_FAMILY_GATE == 1, "the families' ids");
+_Static_assert(OMX_CLAP_WIDGET_SELECTOR == 4 && OMX_CLAP_WIDGET_AUTO == 0, "the widgets' ids");
+_Static_assert(OMX_CLAP_DISPLAY_TIME_RESPONSE == 4 && OMX_CLAP_DISPLAY_TRANSFER_CURVE == 1, "the display kinds' ids");
+_Static_assert(OMX_CLAP_DISPLAY_FROM_CURVE == 3, "the display sources' ids");
+_Static_assert(OMX_CLAP_PLACEMENT_MASTER == 3 && OMX_CLAP_PLACEMENT_RETURN == 1, "the placements' ids");
 
 static int g_failures;
 

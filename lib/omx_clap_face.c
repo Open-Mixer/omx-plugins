@@ -514,12 +514,6 @@ static const omx_clap_plugin_panel_description_t G_PANEL_EXT = {g_panel_fingerpr
 
 /* ---- org.openmixer.param-contract/1: the declaration's contract, the bypass last --------------- */
 
-/* The scale codes the generator writes into the rows (include/omx_param_contract.h) are the owner's OMX_CLAP_PARAM_SCALES,
- * one each: tools/test/param-units-check.mjs holds their numbers to omx-contract's PARAM_SCALES words. */
-#define G_ONE_SCALE(code, name) +1
-_Static_assert(0 OMX_CLAP_PARAM_SCALES(G_ONE_SCALE) == OMX_CLAP_SCALE_COUNT, "omx_param_contract.h's scales are not omx-clap-core's");
-#undef G_ONE_SCALE
-
 static uint32_t g_contract_version(const clap_plugin_t *p) { return G_OF(p)->face->contract_version; }
 
 static const char *g_contract_fingerprint(const clap_plugin_t *p) { return G_OF(p)->face->contract_fingerprint; }

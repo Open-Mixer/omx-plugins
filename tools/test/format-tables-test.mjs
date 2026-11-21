@@ -14,9 +14,16 @@
  *   5. the installed contract's directories are asked of pkg-config once per pkg-config environment, not once per
  *      table row (omx-plugins#39: tableRows asked it on every call, 47 of gen.mjs --check's 60 s), and a changed
  *      PKG_CONFIG_PATH asks again and gets the new answer.
+ *   7. the declarations' own LV2 units are F1's (plugin-db's lv2 domain LV2_OPENMIXER_UNIT_IDS, exact x-uri; M3) and
+ *      every unit a face publishes is a standard unit by its symbol (PARAM_UNITS x-symbol; F4), golden, with an arm;
+ *   6. the CLAP features a descriptor writes are omx-clap's terms (CLAP_PLUGIN_FEATURES_TERMS of its domain clap,
+ *      <contractdir>/clap/clap.json; sorting row V24/27): every open feature the shipped descriptors name maps to its
+ *      term id and back = golden (omx-contract 3.20.2's terms), and over a copy of the contract directory whose clap
+ *      domain lost `delay`, delay is no term (the read is the domain's).
  *
- * Its arms, on a copy of the LV2 table (PLUGIN_HOSTD_TABLES): a meaning's row removed loses its designations, a unit's
- * row removed loses its unit, two rows mapping one value are refused. `make format-tables`, part of `make test`.
+ * Its arms, on a copy of the contract directory whose plugin-hostd/lv2 domain (PLUGIN_HOSTD_LV2_MAP, sorting row V19)
+ * is edited: a meaning's row removed loses its designations, a unit's row removed loses its unit, two rows mapping one
+ * value are refused. `make format-tables`, part of `make test`.
  */
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -24,6 +31,7 @@ import { join } from 'node:path';
 import { loadDecl, pluginDirs, ROOT } from '../gen.mjs';
 import { descriptorFile } from '../descriptor.mjs';
 import { lv2Designation, lv2UnitNames, tablesDir } from '../format-tables.mjs';
+import { installedContractDir } from '../omx-contract.mjs';
 
 let n = 0, bad = 0;
 function check(what, got, want) {
@@ -92,21 +100,21 @@ for (const dir of pluginDirs()) {
   check(`${d.stem}: the CLAP modules are its descriptor's groups`, modules, d.params.map((_, i) => (d.descriptor?.controls[i]?.group ?? []).join('/')));
 }
 
-// the arms, on a copy of the LV2 table
+// the arms, on a copy of the contract directory whose plugin-hostd/lv2 domain is edited (the tables are plugin-hostd's
+// domains plugin-hostd/clap and plugin-hostd/lv2, <contractdir>/plugin-hostd/<format>/<format>.json, a sheet each)
 const scratch = join(ROOT, 'build', 'tmp', 'format-tables');
 rmSync(scratch, { recursive: true, force: true });
 mkdirSync(scratch, { recursive: true });
-cpSync(tablesDir(), scratch, { recursive: true });
 const broken = (name, edit) => {
   const dir = join(scratch, name);
   cpSync(tablesDir(), dir, { recursive: true });
-  const file = join(dir, 'lv2.json'), t = JSON.parse(readFileSync(file, 'utf8'));
-  edit(t.PLUGIN_HOSTD_LV2_MAP.rows);
+  const file = join(dir, 'plugin-hostd', 'lv2', 'lv2.json'), t = JSON.parse(readFileSync(file, 'utf8'));
+  edit(t.components.schemas.PLUGIN_HOSTD_LV2_MAP['x-value'].rows);
   writeFileSync(file, JSON.stringify(t));
   return dir;
 };
 // each arm runs in a process of its own: the tables are read once per process
-const arm = (dir, code) => spawnSync(process.execPath, ['--input-type=module', '-e', code], { cwd: ROOT, env: { ...process.env, PLUGIN_HOSTD_TABLES: dir }, encoding: 'utf8' });
+const arm = (dir, code) => spawnSync(process.execPath, ['--input-type=module', '-e', code], { cwd: ROOT, env: { ...process.env, OMX_INSTALLED_CONTRACTDIR: dir }, encoding: 'utf8' });
 const FT = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
 let r = arm(broken('no-gain', (rows) => { delete rows['param:gain']; }), `import { lv2Designation } from ${FT}; console.log(String(lv2Designation('gain')));`);
 check('arm: the param:gain row removed, gain is designated by nothing', r.stdout.trim(), 'undefined');
@@ -132,13 +140,83 @@ rmSync(scratch, { recursive: true, force: true });
     process.env.PKG_CONFIG_PATH = 'b';
     for (let i = 0; i < 50; i++) seen.push(tablesDir(), installedDataDir());
     console.log(JSON.stringify([...new Set(seen)]));`], {
-    encoding: 'utf8', env: { ...process.env, PKG_CONFIG: join(dir, 'pkg-config'), PKG_CONFIG_PATH: 'a', PLUGIN_HOSTD_TABLES: '' },
+    encoding: 'utf8', env: { ...process.env, PKG_CONFIG: join(dir, 'pkg-config'), PKG_CONFIG_PATH: 'a', OMX_INSTALLED_CONTRACTDIR: '' },
   });
   const calls = existsSync(log) ? readFileSync(log, 'utf8').trim().split('\n') : [];
   check('pkg-config: each directory asked once per environment (2 environments, 2 variables: 4 calls)', calls.length, 4);
   check('pkg-config: a changed PKG_CONFIG_PATH gets the new answers', r.status === 0 ? JSON.parse(r.stdout) : r.stderr.trim(),
-    ['/fake/a/contractdir/3/plugin-hostd/formats', '/fake/a/datadir', '/fake/a/contractdir', '/fake/b/contractdir/3/plugin-hostd/formats', '/fake/b/datadir']);
+    ['/fake/a/contractdir', '/fake/a/datadir', '/fake/b/contractdir', '/fake/b/datadir']);
   rmSync(dir, { recursive: true, force: true });
+}
+
+// 6. the CLAP features: omx-clap's clap domain, golden from omx-contract 3.20.2's CLAP_PLUGIN_FEATURES_TERMS
+{
+  const GOLDEN_FEATURES = {
+    chorus: 'CLAP_PLUGIN_FEATURE_CHORUS', compressor: 'CLAP_PLUGIN_FEATURE_COMPRESSOR', 'de-esser': 'CLAP_PLUGIN_FEATURE_DEESSER',
+    delay: 'CLAP_PLUGIN_FEATURE_DELAY', distortion: 'CLAP_PLUGIN_FEATURE_DISTORTION', equalizer: 'CLAP_PLUGIN_FEATURE_EQUALIZER',
+    filter: 'CLAP_PLUGIN_FEATURE_FILTER', flanger: 'CLAP_PLUGIN_FEATURE_FLANGER', gate: 'CLAP_PLUGIN_FEATURE_GATE',
+    limiter: 'CLAP_PLUGIN_FEATURE_LIMITER', mixing: 'CLAP_PLUGIN_FEATURE_MIXING', phaser: 'CLAP_PLUGIN_FEATURE_PHASER',
+    'pitch-shifter': 'CLAP_PLUGIN_FEATURE_PITCH_SHIFTER', reverb: 'CLAP_PLUGIN_FEATURE_REVERB', stereo: 'CLAP_PLUGIN_FEATURE_STEREO',
+    'transient-shaper': 'CLAP_PLUGIN_FEATURE_TRANSIENT_SHAPER', tremolo: 'CLAP_PLUGIN_FEATURE_TREMOLO', utility: 'CLAP_PLUGIN_FEATURE_UTILITY',
+  };
+  const FTS = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
+  const call = (env) => spawnSync(process.execPath, ['--input-type=module', '-e', `
+    import { clapFeatureField, clapFeatureValue } from ${FTS};
+    const v = ${JSON.stringify(Object.keys(GOLDEN_FEATURES))};
+    console.log(JSON.stringify(Object.fromEntries(v.map((f) => [f, clapFeatureField(f)]).map(([f, id]) => [f, [id, clapFeatureValue(id)]]))));`], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
+  const golden = Object.fromEntries(Object.entries(GOLDEN_FEATURES).map(([f, id]) => [f, [id, f]]));
+  let r6 = call({});
+  check('the CLAP features the descriptors name map to their term ids and back (omx-clap clap domain = golden)', r6.status === 0 ? JSON.parse(r6.stdout) : r6.stderr.trim().split('\n').pop(), golden);
+  // (c) a copy of the contract directory whose clap domain has no delay: delay is no term there
+  const cdir = installedContractDir();
+  const tmp = join(ROOT, 'build', 'tmp', 'format-tables-clap');
+  rmSync(tmp, { recursive: true, force: true });
+  let planted = false;
+  try {
+    cpSync(cdir, tmp, { recursive: true });
+    const file = join(tmp, 'clap', 'clap.json'), doc = JSON.parse(readFileSync(file, 'utf8'));
+    const item = doc.components.schemas.CLAP_PLUGIN_FEATURES_TERMS;
+    item.oneOf = item.oneOf.filter((w) => w.const !== 'delay');
+    writeFileSync(file, JSON.stringify(doc));
+    planted = true;
+  } catch (e) {
+    console.log(`format-tables arm: the clap domain could not be copied (${e.message})`);
+  }
+  r6 = planted ? call({ OMX_INSTALLED_CONTRACTDIR: tmp }) : { status: 1, stdout: '', stderr: '' };
+  check('arm: the clap domain without delay, delay is no term (the read is omx-clap\'s)', r6.status === 0 ? JSON.parse(r6.stdout).delay : 'not planted', ['delay', 'delay']);
+  rmSync(tmp, { recursive: true, force: true });
+}
+
+// 7. M3 + F4: the declarations' own LV2 units are the standard units F1 spells (plugin-db's lv2 domain,
+// LV2_OPENMIXER_UNIT_IDS: the PARAM_UNITS word and the exact x-uri), and every unit a face publishes is a standard unit
+// by its symbol (omx-contract's param domain, PARAM_UNITS x-symbol): golden; the lv2 domain without dBu loses its URI
+{
+  const FTS = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
+  const PUBLISHED = { '': 'none', Hz: 'Hz', dB: 'dB', ms: 'ms', s: 's', min: 'min', '%': 'percent', x: 'x', oct: 'oct', cents: 'cents', st: 'st', dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', 'dB/oct': 'dB-oct', ratio: 'ratio' };
+  const OWN = { dBFS: 'urn:openmixer:unit#dBFS', LUFS: 'urn:openmixer:unit#LUFS', ratio: 'urn:openmixer:unit#ratio', dBu: 'urn:openmixer:unit#dBu', 'dB/oct': 'urn:openmixer:unit#dBoct' };
+  const call = (env) => spawnSync(process.execPath, ['--input-type=module', '-e', `
+    import { ownLv2Units, standardUnitOf, lv2UnitRef } from ${FTS};
+    console.log(JSON.stringify({ own: ownLv2Units(), std: Object.fromEntries(${JSON.stringify(Object.keys(PUBLISHED))}.map((u) => [u, standardUnitOf(u)])), dbu: String(lv2UnitRef('dBu')) }));`], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
+  let r7 = call({});
+  const got = r7.status === 0 ? JSON.parse(r7.stdout) : { error: r7.stderr.trim().split('\n').find((l) => /Error/.test(l)) };
+  check('M3: the own LV2 units are F1\'s words and exact URIs (plugin-db lv2 domain) = golden', got.own ?? got.error, OWN);
+  check('F4: every published unit is a standard unit by its symbol (PARAM_UNITS x-symbol) = golden', got.std ?? got.error, PUBLISHED);
+  const tmp = join(ROOT, 'build', 'tmp', 'format-tables-lv2');
+  rmSync(tmp, { recursive: true, force: true });
+  let planted = false;
+  try {
+    cpSync(installedContractDir(), tmp, { recursive: true });
+    const file = join(tmp, 'lv2', 'lv2.json'), doc = JSON.parse(readFileSync(file, 'utf8'));
+    const item = doc.components.schemas.LV2_OPENMIXER_UNIT_IDS;
+    item.oneOf = item.oneOf.filter((w) => w.const !== 'dBu');
+    writeFileSync(file, JSON.stringify(doc));
+    planted = true;
+  } catch (e) {
+    console.log(`format-tables arm: the lv2 domain could not be copied (${e.message})`);
+  }
+  r7 = planted ? call({ OMX_INSTALLED_CONTRACTDIR: tmp }) : { status: 1, stdout: '' };
+  check('arm: the lv2 domain without dBu, dBu has no LV2 unit (the read is plugin-db\'s)', r7.status === 0 ? JSON.parse(r7.stdout).dbu : 'not planted', 'undefined');
+  rmSync(tmp, { recursive: true, force: true });
 }
 
 console.log(bad ? `format-tables: ${bad} of ${n} failed` : `format-tables: ${n}/${n} pass`);

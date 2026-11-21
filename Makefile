@@ -16,6 +16,8 @@
 #   make lv2-maintainer  every generated TTL gives its doap:maintainer a foaf:homepage (tools/test/lv2-maintainer-check.mjs; part of `make test`)
 #   make no-modgui  omx-plugins ships no generated MOD GUI: no tracked MOD GUI file, no manifest pointing at one, no build step that
 #                   writes or checks one (tools/test/no-modgui-check.mjs; part of `make test`); a host generates it (omx-modgui-sync)
+#   make plugin-gui  every plugin of the tree declares its LV2 ui:X11UI and carries its layout (the CI gate of omx-plugins#120,
+#                   tools/test/plugin-gui-gate.mjs with its sabotage arms, docs/plugin-guis.md; part of `make test`)
 #   make format-tables  the generators read plugin-hostd's installed format tables backwards (tools/format-tables.mjs):
 #                   the units, the 169 lv2:designation lines and the ratio unit, the CLAP modules from the descriptors'
 #                   groups (tools/test/format-tables-test.mjs, with its sabotage arms; part of `make test`)
@@ -61,17 +63,17 @@
 #     make completeness  every plugin against recipes/plugin.recipe.json, each gap naming its wizard step;
 #                        a gap not in recipes/completeness-debt.json fails, and so does a paid debt entry
 #     make selftest      the recipe's checkers, wizard and commit protocol, each sabotaged (needs git)
-#   make meters-abi  the clap.meters/1 header omx-clap-core installs has the id, enums, sizeof and offsetof the
+#   make meters-abi  the clap.meters/1 header omx-clap installs has the id, enums, sizeof and offsetof the
 #                    plugins are built for (tools/test/meters-abi-test.c, compile and run; part of `make test`)
-#   make param-contract-abi  include/omx_param_contract.h's extension table and entry are the layout omx-clap-core's
+#   make param-contract-abi  include/omx_param_contract.h's extension table and entry are the layout omx-clap's
 #                    omx_clap_ext.h reads (tools/test/param-contract-abi-test.c, compile and run; part of `make test`)
 #   make panel-abi   include/omx_panel_description.h's structures, codes and omx_panel_get read-back are the layout
-#                    omx-clap-core's installed omx_clap_ext.h declares (tools/test/panel-abi-test.c, compile and run;
+#                    omx-clap's installed omx_clap_ext.h declares (tools/test/panel-abi-test.c, compile and run;
 #                    part of `make test`)
 #   make comp-published-scan  omx-comp.clap as built, read by omx-clap-scan: its four meters and four contract rows by
 #                    value, each expected value changed once and found (tools/test/published-comp-scan.py; part of
 #                    `make test` and `make test-faces`; OMX_CLAP_SCAN names the scanner)
-#   make host-contract  every shipped face opened by libomx-clap-core, whose own fingerprint of what get_info and the
+#   make host-contract  every shipped face opened by libomx-clap, whose own fingerprint of what get_info and the
 #                    contract serve must match the face's: omx_clap_host_param_contract() trusts it
 #                    (tools/test/host-contract-accept.c; part of `make test` and `make test-faces`)
 #   make strip-crosscheck   omx-strip, a chain, against the hand-ported strip it replaced, bit for bit at
@@ -170,6 +172,7 @@ SPEC       := packaging/omx-plugins.spec
 spec_floor   = $(shell sed -n 's/^BuildRequires: $(1) >= \([0-9.]*\)$$/\1/p' $(SPEC))
 OMXDSP_MIN        := $(call spec_floor,omx-dsp-devel)
 CONTRACT_MIN      := $(call spec_floor,omx-contract-devel)
+CLAPCORE_MIN      := $(call spec_floor,omx-clap-devel)
 # $(call dep_check,<pkg-config name>,<floor>): nothing, or a stop naming what is installed
 dep_check = $(if $(shell $(PKG_CONFIG) --atleast-version=$(2) $(1) && echo y),,$(error $(1) >= $(2) is required ($(SPEC)); installed: $(or $(shell $(PKG_CONFIG) --modversion $(1) 2>/dev/null),none). Install omx-dsp-devel and omx-contract-devel (or libomxdsp-dev and libomx-contract-dev) from the channel: BUILDING.md))
 PKG_CONFIG ?= pkg-config
@@ -179,13 +182,13 @@ CFLAGS     ?= -O2 -g
 LIB_WARN   := -std=gnu11 -Wall -Wextra -Werror
 LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
-lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap-core clap)
+lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
+.PHONY: graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui plugin-gui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib entry-symlink units panel-words schema-urls face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
+test: lib entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui plugin-gui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s presets-figures
@@ -277,6 +280,9 @@ lv2-maintainer:
 # omx-plugins ships no generated MOD GUI (owner decision 2026-11-19), with its sabotage arms
 no-modgui:
 	node tools/test/no-modgui-check.mjs --self-test
+# every plugin has a GUI: a new plugin without one is red (omx-plugins#120), with its sabotage arms
+plugin-gui:
+	node tools/test/plugin-gui-gate.mjs --self-test
 # every plugin states its resource hints, and its TTL (omxres:) and CLAP header say what it states, with its sabotage arms
 resource-hints:
 	node tools/test/resource-hints-check.mjs --self-test
@@ -291,6 +297,12 @@ probe-checks:
 	node tools/test/probe-checks-selftest.mjs
 # the host's bypass (CLAP) and enabled and latency (LV2) at contract/plugin-face.json's permanent ids in every plugin, none moved by an
 # appended parameter or an added sidechain; the self-test holds the rule it replaced red
+# schema/plugin.decl.schema.json's graph kinds are omx-dsp's CURVE_KINDS rendered (tools/graph-enum.mjs; tools/test/graph-enum-check.mjs)
+graph-enum:
+	node tools/test/graph-enum-check.mjs
+# the oracle rates are omx-dsp's ORACLE_FULL_RATES, read from nowhere else (tools/test/oracle-rates-check.mjs)
+oracle-rates:
+	node tools/test/oracle-rates-check.mjs
 face-ids:
 	node tools/test/face-ids-test.mjs
 	node tools/test/face-ids-test.mjs --self-test
@@ -313,7 +325,7 @@ core-init-answers:
 # the shared LV2 face refuses a rate outside the 32-bit rate every core holds, and a rate the core's own answer refuses
 lv2-refuse-rate:
 	@mkdir -p build
-	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags lv2 omx-clap-core) -o build/lv2-refuse-rate-test tools/test/lv2-refuse-rate-test.c lib/omx_lv2_face.c -lm
+	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags lv2 omx-clap) -o build/lv2-refuse-rate-test tools/test/lv2-refuse-rate-test.c lib/omx_lv2_face.c -lm
 	build/lv2-refuse-rate-test
 # make test and make test-heavy together run every check tools/test/test-split.json lists, each in its own target,
 # and CI runs the heavy set on every pull request, every shard (tools/test/test-split-check.mjs, its sabotage arms)
@@ -339,7 +351,7 @@ strip-visible-when:
 strip-pages-follow:
 	@mkdir -p build
 	@$(MAKE) -s -C plugins/omx-strip all
-	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/clap-pages-follow-probe tools/test/clap-pages-follow-probe.c -ldl
+	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap clap) -o build/clap-pages-follow-probe tools/test/clap-pages-follow-probe.c -ldl
 	@id=$$(node -e "import('./tools/gen.mjs').then(m=>{const d=m.loadDecl('plugins/omx-strip');console.log(d.params.findIndex(p=>p.symbol==='eqBands'))})"); \
 	  build/clap-pages-follow-probe plugins/omx-strip/build/omx-strip.clap $$id 4 32 9 9 4 > build/strip-pages-follow.txt && \
 	  node tools/test/strip-pages-follow-test.mjs build/strip-pages-follow.txt
@@ -386,22 +398,22 @@ panel-copies:
 	$(OMX_PANEL) copies .
 meters-abi:
 	@mkdir -p build
-	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/meters-abi-test tools/test/meters-abi-test.c
+	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap clap) -o build/meters-abi-test tools/test/meters-abi-test.c
 	build/meters-abi-test
-	@echo "ok   clap.meters/1 as omx-clap-core installs it: id, enums, sizeof and offsetof"
+	@echo "ok   clap.meters/1 as omx-clap installs it: id, enums, sizeof and offsetof"
 param-contract-abi:
 	@mkdir -p build
-	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-contract omx-clap-core clap) -o build/param-contract-abi-test tools/test/param-contract-abi-test.c
+	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-contract omx-clap clap) -o build/param-contract-abi-test tools/test/param-contract-abi-test.c
 	build/param-contract-abi-test
-	@echo "ok   org.openmixer.param-contract/1 as omx-clap-core reads it: id, sizeof and offsetof"
+	@echo "ok   org.openmixer.param-contract/1 as omx-clap reads it: id, sizeof and offsetof"
 panel-abi:
 	@mkdir -p build
-	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/panel-abi-test tools/test/panel-abi-test.c
+	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-clap clap) -o build/panel-abi-test tools/test/panel-abi-test.c
 	build/panel-abi-test
-	@echo "ok   org.openmixer.panel-description/1 as omx-clap-core declares it: id, codes, sizeof, offsetof and the omx_panel_get read-back"
+	@echo "ok   org.openmixer.panel-description/1 as omx-clap declares it: id, codes, sizeof, offsetof and the omx_panel_get read-back"
 host-contract: all
 	@mkdir -p build
-	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap-core clap) -o build/host-contract-accept tools/test/host-contract-accept.c $(shell $(PKG_CONFIG) --libs omx-clap-core)
+	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap clap) -o build/host-contract-accept tools/test/host-contract-accept.c $(shell $(PKG_CONFIG) --libs omx-clap)
 	build/host-contract-accept $(foreach p,$(SHIP_PLUGINS),$(p)build/$(notdir $(patsubst %/,%,$(p))).clap)
 # every level meter of the metered faces reads what tools/test/<face>.meter-level.txt holds within the bound
 # omx-dsp's fast-maths bound gives (meter-level-digest --tolerance), and a level moved past that bound is red; every
@@ -412,7 +424,7 @@ METER_GR_FACES := omx-keyed-gate omx-limiter
 meter-level:
 	@mkdir -p build
 	@for f in $(METER_LEVEL_FACES) $(METER_GR_FACES); do $(MAKE) -s -C plugins/$$f all || exit 1; done
-	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omxdsp omx-clap-core clap) -o build/meter-level-digest tools/test/meter-level-digest.c -ldl -lm
+	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omxdsp omx-clap clap) -o build/meter-level-digest tools/test/meter-level-digest.c -ldl -lm
 	node tools/test/meter-values-check.mjs --self-test
 	@tol=$$(build/meter-level-digest --tolerance) || exit 1; \
 	for f in $(METER_LEVEL_FACES); do \
@@ -540,7 +552,7 @@ $(foreach f,$(CLAP_FACES),$(eval $(call face_rule,$(f))))
 
 # The prefix, libdir and includedir are filled at install; the version and the omx-dsp and omx-contract floors here.
 $(LIB_PC): lib/omxplugins.pc.in Makefile $(SPEC) | $(LIB_B)
-	sed -e 's,@VERSION@,$(VERSION),' -e 's,@OMXDSP_MIN@,$(OMXDSP_MIN),' -e 's,@CONTRACT_MIN@,$(CONTRACT_MIN),' $< > $@
+	sed -e 's,@VERSION@,$(VERSION),' -e 's,@OMXDSP_MIN@,$(OMXDSP_MIN),' -e 's,@CONTRACT_MIN@,$(CONTRACT_MIN),' -e 's,@CLAPCORE_MIN@,$(CLAPCORE_MIN),' $< > $@
 
 $(LIB_B):
 	@mkdir -p $@

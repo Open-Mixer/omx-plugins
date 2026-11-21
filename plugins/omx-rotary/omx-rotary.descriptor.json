@@ -1,7 +1,8 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
   "requires": {
-    "omx-contract-schema": ">= 3.7.0"
+    "omx-contract-schema": ">= 3.21.0",
+    "omx-dsp": ">= 0.34.0"
   },
   "origin": "authored",
   "plugin": {
@@ -37,7 +38,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_HORN_SLOW_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.0"
         }
       }
     },
@@ -61,7 +62,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_HORN_FAST_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.0"
         }
       }
     },
@@ -85,7 +86,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_DRUM_SLOW_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.0"
         }
       }
     },
@@ -109,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_DRUM_FAST_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.0"
         }
       }
     },
@@ -133,7 +134,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_ACCEL_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.0"
         }
       }
     },
@@ -157,7 +158,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_BALANCE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.0"
         }
       }
     },
@@ -182,7 +183,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_MIX_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.0"
         }
       }
     },
@@ -214,7 +215,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_SPEEDS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.0"
         }
       }
     }
@@ -247,7 +248,15 @@
     }
   },
   "latency": {
-    "reports": true
+    "reports": true,
+    "sweep": {
+      "min": {
+        "ref": "ROTARY_BASE_MS"
+      },
+      "max": {
+        "ref": "ROTARY_LONGEST_MS"
+      }
+    }
   },
   "extensions": {
     "clap": {

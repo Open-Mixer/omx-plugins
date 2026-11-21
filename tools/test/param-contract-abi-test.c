@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * param-contract-abi-test.c — org.openmixer.param-contract/1 is omx-clap-core's <omx-clap-host/omx_clap_ext.h>;
+ * param-contract-abi-test.c — org.openmixer.param-contract/1 is omx-clap's <omx-clap-host/omx_clap_ext.h>;
  * what this tree keeps is struct omx_param_contract_row, the unit, scale and step a face fills a host's entry
  * from. The row's members are the entry's, member for member, and the scale codes are the owner's: a member
  * changed on either side, or a scale added on one, stops this compiling.
@@ -32,10 +32,10 @@ _Static_assert(offsetof(omx_clap_plugin_param_contract_ext_t, version) == 0, "of
 _Static_assert(offsetof(omx_clap_plugin_param_contract_ext_t, fingerprint) == PTR, "offsetof fingerprint");
 _Static_assert(offsetof(omx_clap_plugin_param_contract_ext_t, get) == 2 * PTR, "offsetof get");
 
-/* the scale codes this tree writes into a row are the owner's three */
+/* the scale codes this tree writes into a row are the owner's three (omx-clap's omx_param_scales.h), golden */
 #define COUNT_SCALE(code, name) +1
-_Static_assert(OMX_CLAP_SCALE_COUNT == (0 OMX_CLAP_PARAM_SCALES(COUNT_SCALE)), "the scale codes");
-_Static_assert(OMX_CLAP_SCALE_STEPPED == 2, "stepped is the owner's code 2");
+_Static_assert((0 OMX_CLAP_PARAM_SCALES(COUNT_SCALE)) == 3, "the owner's three scale codes");
+_Static_assert(OMX_CLAP_SCALE_STEPPED == 2u, "stepped is the owner's code 2");
 
 int main(void)
 {

@@ -18,7 +18,7 @@ count() { { grep -oF -- "$1" "$2" || true; } | wc -l; }
 check() {
   local root="$1" fail=0 spec="$1/packaging/omx-plugins.spec" control="$1/debian/control"
   # rpm name, deb name, how many times debian/control must carry the deb pair, does -devel require it
-  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-core-devel libomx-clap-core-dev 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 2 no" "plugin-qualify plugin-qualify 1 no"; do
+  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-devel libomx-clap-dev 2 yes" "omx-clap-contract omx-clap-contract 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 2 no" "plugin-qualify plugin-qualify 1 no"; do
     read -r rpm deb times devel <<<"$row"
     local floor
     floor="$(sed -n "s/^BuildRequires: $rpm >= \([0-9.]*\)\$/\1/p" "$spec")"
@@ -76,7 +76,7 @@ if [ "${1:-}" = --self-test ]; then
       qualify-ceiling-returns) sed -i 's/^BuildRequires: plugin-qualify >= \([0-9.]*\)$/BuildRequires: (plugin-qualify >= \1 with plugin-qualify < 0.21)/' "$scratch/t/packaging/omx-plugins.spec" ;;
       hostd-recommends-ceiling-returns) sed -i 's/^Recommends: plugin-hostd >= \([0-9.]*\)$/Recommends: (plugin-hostd >= \1 with plugin-hostd < 0.21)/' "$scratch/t/packaging/omx-plugins.spec" ;;
       control-dsp) sed -i '0,/libomxdsp-dev (>= [0-9.]*~)/s//libomxdsp-dev (>= 0.0.1~)/' "$scratch/t/debian/control" ;;
-      control-ceiling-returns) sed -i '0,/libomxdsp-dev (>= 0.32.0~),/s//libomxdsp-dev (>= 0.32.0~), libomxdsp-dev (<< 0.33~),/' "$scratch/t/debian/control" ;;
+      control-ceiling-returns) sed -i '0,/libomxdsp-dev (>= \([0-9.]*\)~),/s//libomxdsp-dev (>= \1~), libomxdsp-dev (<< 9.0~),/' "$scratch/t/debian/control" ;;
       control-hostd-ceiling-returns) sed -i 's/^Recommends: plugin-hostd (>= \([0-9.]*\)~)$/Recommends: plugin-hostd (>= \1~), plugin-hostd (<< 0.21~)/' "$scratch/t/debian/control" ;;
       pc-ceiling-returns) sed -i 's/omxdsp >= @OMXDSP_MIN@/omxdsp >= @OMXDSP_MIN@, omxdsp < @OMXDSP_MAX@/' "$scratch/t/lib/omxplugins.pc.in" ;;
       contract-devel-ceiling-returns) sed -i 's/^BuildRequires: omx-contract-devel >= \([0-9.]*\)$/BuildRequires: (omx-contract-devel >= \1 with omx-contract-devel < 4)/' "$scratch/t/packaging/omx-plugins.spec" ;;

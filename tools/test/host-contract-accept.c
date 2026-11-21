@@ -2,7 +2,7 @@
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
  * host-contract-accept.c — every built face's org.openmixer.param-contract/1 is trusted by the host that reads it:
- * libomx-clap-core opens the .clap and omx_clap_host_param_contract() answers 1. The host computes the fingerprint
+ * libomx-clap opens the .clap and omx_clap_host_param_contract() answers 1. The host computes the fingerprint
  * itself, over the ids get_info answers, so this holds what tools/param-contract.mjs writes to an implementation that
  * shares none of its code; clap-ext-check recomputes with contractCanonical and cannot tell a canonical that is wrong
  * the same way on both sides.
