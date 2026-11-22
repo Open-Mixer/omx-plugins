@@ -70,13 +70,13 @@ static const char *const OMX_BALANCER_PARAM_MODULES[OMX_BALANCER_PARAM_COUNT] = 
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_BALANCER_PARAM_CONTRACT_VERSION 2u
-#define OMX_BALANCER_PARAM_CONTRACT_FINGERPRINT "5e755c2ceeb1ca618602fc5b9d39aef3f7edcbe81ed218d629a954588962a79d"
+#define OMX_BALANCER_PARAM_CONTRACT_VERSION 3u
+#define OMX_BALANCER_PARAM_CONTRACT_FINGERPRINT "8b1f378490f57f6474cac545e78c3f613e4c2b2fa17aa5aa001749787c1b01e0"
 static const struct omx_param_contract_row OMX_BALANCER_PARAM_CONTRACT[OMX_BALANCER_PARAM_COUNT] = {
   { 14u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* amountPct pc */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* rangeDb db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* speedDbPerS db */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* slopeDbOct none */
+  { 260u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* slopeDbOct dbperoct */
 };
 
 /* org.openmixer.resource-hints.draft/0 (plugin-hostd RESOURCE_HINTS, tools/resource-hints.mjs): the hints the

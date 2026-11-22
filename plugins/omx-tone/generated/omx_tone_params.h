@@ -91,7 +91,7 @@ static const omx_resource_hints_t OMX_TONE_RESOURCE_HINTS = {
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family filter.
  * Declared roles not published:
- *   cutoff (filter): the cutoff role takes hz, khz, not no unit */
+ *   cutoff (filter): the cutoff role takes Hz, kHz, not no unit */
 #define OMX_TONE_PANEL_FINGERPRINT "cbd169d6af2f1e750a148ed7b1cca60644e10dfd30d7c13853e008092d7e4daa"
 static const struct omx_panel_section_row OMX_TONE_PANEL_SECTIONS[] = {
   { "tilt", "fx.tone.section.tilt", "Tilt" },

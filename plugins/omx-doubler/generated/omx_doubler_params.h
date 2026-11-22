@@ -112,7 +112,7 @@ static const omx_resource_hints_t OMX_DOUBLER_RESOURCE_HINTS = {
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family modulation.
  * Declared roles not published:
- *   depth (modDepthMs): the depth role takes none, pc, coef, oct, not ms */
+ *   depth (modDepthMs): the depth role takes none, percent, x, oct, not ms */
 #define OMX_DOUBLER_PANEL_FINGERPRINT "473323858d975bd4a9dc4c33793d227e4685b027715cbe5bd76a258626f10d96"
 static const struct omx_panel_section_row OMX_DOUBLER_PANEL_SECTIONS[] = {
   { "voices", "fx.doubler.section.voices", "Voices" },

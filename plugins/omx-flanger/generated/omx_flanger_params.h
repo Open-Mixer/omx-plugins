@@ -91,7 +91,7 @@ static const omx_resource_hints_t OMX_FLANGER_RESOURCE_HINTS = {
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family modulation.
  * Declared roles not published:
- *   depth (depth): the depth role takes none, pc, coef, oct, not ms */
+ *   depth (depth): the depth role takes none, percent, x, oct, not ms */
 #define OMX_FLANGER_PANEL_FINGERPRINT "efbf83c2361c47c85db68bcf5e339be2cc1679cbb35e2ce2c50eb8e39a6907a6"
 static const struct omx_panel_section_row OMX_FLANGER_PANEL_SECTIONS[] = {
   { "flanger", "fx.flanger.section.flanger", "Flanger" },

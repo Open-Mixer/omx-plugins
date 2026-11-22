@@ -98,7 +98,7 @@ static const omx_resource_hints_t OMX_CHORUS_RESOURCE_HINTS = {
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family modulation.
  * Declared roles not published:
- *   depth (depth): the depth role takes none, pc, coef, oct, not ms */
+ *   depth (depth): the depth role takes none, percent, x, oct, not ms */
 #define OMX_CHORUS_PANEL_FINGERPRINT "f74674fc0273db9c13b04bcefbdde42d9faa30dd64fec72cd7b881bfb1d98b2f"
 static const struct omx_panel_section_row OMX_CHORUS_PANEL_SECTIONS[] = {
   { "chorus", "fx.chorus.section.chorus", "Chorus" },

@@ -325,15 +325,15 @@ static const char *const OMX_EQ8_PARAM_MODULES[OMX_EQ8_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_EQ8_PARAM_CONTRACT_VERSION 2u
-#define OMX_EQ8_PARAM_CONTRACT_FINGERPRINT "fa5d824adc0ccb18b03484bf85b0fa0a82c55a676bbc41fcd34ce207dbae30eb"
+#define OMX_EQ8_PARAM_CONTRACT_VERSION 3u
+#define OMX_EQ8_PARAM_CONTRACT_FINGERPRINT "e6076ddeba742645393bea206748f8c5122b607af0c21de712c2c90ad5f5d6cc"
 static const struct omx_param_contract_row OMX_EQ8_PARAM_CONTRACT[OMX_EQ8_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_on none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* hpf_freq hz */
-  { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_slope none */
+  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_slope dbperoct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_on none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* lpf_freq hz */
-  { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_slope none */
+  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_slope dbperoct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* b1_type none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* b1_freq hz */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* b1_gain db */

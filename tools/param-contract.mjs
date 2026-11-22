@@ -16,7 +16,7 @@ import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
+import { lv2UnitNames, lv2UnitRef, standardUnitOf } from './format-tables.mjs';
 import { items, locateContract } from './omx-contract.mjs';
 import { travelUnit } from './descriptor.mjs';
 
@@ -98,10 +98,11 @@ export function headerUnits(text) {
 /** A declared unit -> the contract's unit, `[token, enum value]`: the token is the LV2 unit the face writes for it
  * (plugin-hostd's LV2 table read backwards, tools/format-tables.mjs: units:db -> db; a plugin-defined unit's name in
  * the vendor block's lower case: urn:openmixer:unit#dBFS -> dbfs), the value the declaration's. A unit it has no
- * value for (dB/oct), and "", is NONE, its text left to value_to_text. */
+ * value for, and "", is NONE, its text left to value_to_text. */
 export function contractUnit(unit) {
   const ref = lv2UnitRef(unit);
-  const token = ref && (ref.startsWith('units:') ? ref.slice('units:'.length) : ref.replace(/^<|>$/g, '').split('#').pop().toLowerCase());
+  // a unit of the vendor block takes its PARAM_UNITS id's name, `-` read "per" as omx-contract 3.21.0's sheet spells it (dB-oct -> dbperoct)
+  const token = ref && (ref.startsWith('units:') ? ref.slice('units:'.length) : String(standardUnitOf(unit) ?? ref.replace(/^<|>$/g, '').split('#').pop()).replaceAll('-', 'per').toLowerCase());
   const value = token && headerUnits().get(token.toUpperCase());
   return value === undefined ? ['none', 0] : [token, value];
 }

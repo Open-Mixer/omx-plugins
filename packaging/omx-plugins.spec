@@ -309,6 +309,9 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 - floors: omx-clap-devel and omx-clap-contract >= 0.34.0, omx-contract >= 3.21.0,
   omx-dsp >= 0.34.0
 - the sorting pass: the moves into the owner domains
+- units: the vendor block is omx-contract 3.21.0's eight (dbfs, dbu, ratio, lufs, dbperoct, dbpers, dbtp, lu), and a
+  slope is served as omx-panel serves it: dB/oct writes dbperoct (260) in the param contract, so the balancer, comp,
+  eq8, eq16, eq32 and strip contracts each move to their next version (clap#163)
 
 * Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
 - omx-plugins-contract installs role-meanings.json (the meaning each panel

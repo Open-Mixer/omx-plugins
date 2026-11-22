@@ -5,7 +5,7 @@
  * (OMX_PARAM_CONTRACT_UNITS, rendered to omxcontract/omx_param_units.h): each unit's token is the LV2 unit its face writes
  * (plugin-hostd's LV2 table read backwards) and names an OMX_CLAP_UNIT_<TOKEN>; the units the declarations shipped with
  * before the table was read keep their token and value; and the vendor block is the one openmixer's CONTRACT_UNITS ends
- * with (dbfs, dbu, ratio, lufs from 0x100, append-only). `make units`, part of `make test`.
+ * with (dbfs, dbu, ratio, lufs, dbPerOct, dbPerS, dbTp and lu from 0x100, append-only: omx-contract 3.21.0, clap#163). `make units`, part of `make test`.
  *
  * The declaration and the header are omx-contract's and cannot drift there; this holds what this tree reads of them:
  * the declared codes equal the header's defines, every unit a face writes has its code, and the scale words are PARAM_SCALES.
@@ -32,7 +32,7 @@ import { installedDataDir, locateContract } from '../omx-contract.mjs';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const HEADER = 'include/omx_param_contract.h';
 const headerFile = process.env.OMX_PARAM_CONTRACT_H ?? PARAM_CONTRACT_H;
-const VENDOR = ['dbfs', 'dbu', 'ratio', 'lufs'];
+const VENDOR = ['dbfs', 'dbu', 'ratio', 'lufs', 'dbperoct', 'dbpers', 'dbtp', 'lu'];
 /** The table tools/param-contract.mjs held before it read plugin-hostd's (FreeMixer/omx-plugins#210): unchanged. */
 const SHIPPED = {
   '': ['none', 0], s: ['s', 1], ms: ['ms', 2], min: ['min', 3], dB: ['db', 13], '%': ['pc', 14], x: ['coef', 15],
