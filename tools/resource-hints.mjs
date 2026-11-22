@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * resource-hints.mjs — what a plugin declares about its own footprint, in plugin-hostd's RESOURCE_HINTS (its domain
- * `resource`, plugin-hostd-contract >= 0.21.0; sorting row V28: the words are a host's, KEPT at plugin-hostd), read from
+ * resource-hints.mjs — what a plugin declares about its own footprint, in omx-contract's RESOURCE_HINTS (data/resource-profile.json;
+ * sorting row V28 keeps the words at plugin-hostd, but a domain words item cannot yet spell their extension, figureUnit and
+ * basis, so the item stays in omx-contract's data/ until that design lands: %4 ruling 2026-11-22), read from
  * the render the build reads, where that package owns the item; from the ONE place a plugin states it: its declaration's
  * `resourceHints`, keyed by the hint's word. tools/gen.mjs renders both carriers from it:
  *
@@ -18,9 +19,9 @@
  */
 import { items, OWNERS, ownersOf } from './omx-contract.mjs';
 
-/** The contract item that declares the hints, and the package that owns it (sorting row V28). */
+/** The contract item that declares the hints, and the package that owns it today (sorting row V28 waits for its design). */
 export const HINTS_ITEM = 'RESOURCE_HINTS';
-export const HINTS_OWNER = 'plugin-hostd';
+export const HINTS_OWNER = 'omx-contract';
 
 /** The hints every shipped plugin states: what each knows about itself without a measurement (#216's first cut).
  * The figures (footprint at rest, per voice, shared load, activate time) come from measurement
@@ -41,11 +42,11 @@ const constOf = (key) => key.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toUpperCase(
  * hint in the order of the declaration (bit k is hint k). */
 export function hintVocabulary(dir) {
   const item = items(dir)[HINTS_ITEM];
-  if (!item || item.kind !== 'words' || !item.extension) throw new Error(`${dir}: holds no ${HINTS_ITEM} words item with an extension (plugin-hostd-contract >= 0.21.0 declares it)`);
+  if (!item || item.kind !== 'words' || !item.extension) throw new Error(`${dir}: holds no ${HINTS_ITEM} words item with an extension (${HINTS_OWNER} declares it)`);
   const owners = ownersOf(dir);
   if (!owners.size) throw new Error(`${dir}: the render read carries no ${OWNERS}, so the owner of its ${HINTS_ITEM} is unknown (the words are ${HINTS_OWNER}'s)`);
   const owner = owners.get(item.rel)?.package;
-  if (owner !== HINTS_OWNER) throw new Error(`${dir}: its ${HINTS_ITEM} is ${owner ?? 'no package'}'s (${item.rel}); the words are ${HINTS_OWNER}'s, this tree needs plugin-hostd-contract >= 0.21.0`);
+  if (owner !== HINTS_OWNER) throw new Error(`${dir}: its ${HINTS_ITEM} is ${owner ?? 'no package'}'s (${item.rel}); the words are ${HINTS_OWNER}'s, this tree reads it from ${HINTS_OWNER}`);
   const hints = Object.entries(item.value).map(([key, w], bit) => {
     const unit = HINT_UNITS[w.figureUnit];
     if (!unit) throw new Error(`${dir}: ${HINTS_ITEM}.${key} is given in ${w.figureUnit}, a unit no carrier here has a type for (${Object.keys(HINT_UNITS).join(', ')})`);
@@ -80,7 +81,7 @@ const cValue = (h) => (h.figureUnit === 'flag' ? `${h.value}` : `${h.value}u${h.
 /** The C initializer of OMX_<K>_RESOURCE_HINTS, for the generated parameter header. */
 export function emitHintsC(K, stated) {
   const declared = stated.length ? stated.map((h) => h.macro).join(' | ') : '0u';
-  return `/* org.openmixer.resource-hints.draft/0 (plugin-hostd ${HINTS_ITEM}, tools/resource-hints.mjs): the hints the
+  return `/* org.openmixer.resource-hints.draft/0 (${HINTS_OWNER} ${HINTS_ITEM}, tools/resource-hints.mjs): the hints the
  * declaration's "resourceHints" states. A hint it leaves out has its bit of \`declared\` clear: unknown, never zero. */
 static const omx_resource_hints_t OMX_${K}_RESOURCE_HINTS = {
   .declared = ${declared},

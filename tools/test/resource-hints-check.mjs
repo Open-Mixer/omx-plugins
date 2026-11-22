@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * resource-hints-check.mjs — every shipped plugin declares its resource hints (plugin-hostd's RESOURCE_HINTS,
+ * resource-hints-check.mjs — every shipped plugin declares its resource hints (omx-contract's RESOURCE_HINTS,
  * tools/resource-hints.mjs), and both carriers say what the declaration says:
  *
  *   1. the vocabulary: the installed contract names the LV2 prefix omxres and the namespace
@@ -16,11 +16,11 @@
  *      no other, and each stated member to the declaration's value. (What the BUILT face's get returns is
  *      tools/clap-ext-check.mjs's, in each plugin's `make test`.)
  *
- *   0. the words are plugin-hostd's (sorting row V28: RESOURCE_* KEPT at plugin-hostd, R-P: its domain `resource`): the
- *      vocabulary is read from the item plugin-hostd's package holds in the render read, its hints in bit order =
+ *   0. the words are omx-contract's until sorting row V28's design lands (%4 ruling 2026-11-22): the
+ *      vocabulary is read from the item omx-contract's package holds in the render read, its hints in bit order =
  *      golden (omx-contract 3.20.2's RESOURCE_HINTS).
  *
- * `--self-test` adds the sabotage arms: each breaks one thing and must go red; one gives the item to omx-contract in a
+ * `--self-test` adds the sabotage arms: each breaks one thing and must go red; one gives the item to plugin-hostd in a
  * copy of the render read (its owners.json) and wants the vocabulary refused.
  *
  * `--binaries <plugin dir> <file>...` is the other half, run by each plugin's `make test` on its built faces: a
@@ -43,7 +43,7 @@ import { HINTS_OWNER, REQUIRED_HINTS, hintVocabulary, maskOf } from '../resource
 export const LV2_PREFIX = 'omxres';
 export const LV2_NAMESPACE = 'https://www.openmixer.org/ns/resource-hints#';
 const XSD = 'http://www.w3.org/2001/XMLSchema#';
-/** The hints in bit order as omx-contract 3.20.2 released them, frozen: plugin-hostd's item keeps every one at its bit. */
+/** The hints in bit order as omx-contract 3.20.2 released them, frozen: the owner's item keeps every one at its bit. */
 export const GOLDEN_HINTS = Object.freeze(['footprint-at-rest', 'footprint-per-voice', 'shared-load', 'threads-spawned', 'streams-from-disk', 'opens-sockets', 'activate-time']);
 
 
@@ -183,7 +183,7 @@ if (isMain(import.meta.url)) {
   const c = contractCarriers();
   const plugins = load();
   const errors = treeErrors(c, plugins);
-  // 0. the words are plugin-hostd's, golden in bit order
+  // 0. the words are HINTS_OWNER's, golden in bit order
   if (c.v.owner !== HINTS_OWNER) errors.push(`the hint vocabulary is read from ${c.v.owner ?? 'an item whose owner is not checked'}, not ${HINTS_OWNER}'s RESOURCE_HINTS`);
   const words = c.v.hints.map((h) => h.word);
   if (JSON.stringify(words.slice(0, GOLDEN_HINTS.length)) !== JSON.stringify(GOLDEN_HINTS)) errors.push(`the hints in bit order are ${words.join(', ')}; golden ${GOLDEN_HINTS.join(', ')}`);
@@ -214,12 +214,12 @@ if (isMain(import.meta.url)) {
       [`${delay.stem}'s face importing socket`]: () => importErrors(delay, ['face.so'], () => ['socket']),
     };
     // (c) the item given to omx-contract in a copy of the render read: the vocabulary is refused
-    arms['a render whose RESOURCE_HINTS is omx-contract\'s, not plugin-hostd\'s'] = () => {
+    arms['a render whose RESOURCE_HINTS is plugin-hostd\'s, not omx-contract\'s'] = () => {
       const tmp = mkdtempSync(join(tmpdir(), 'resource-hints-'));
       try {
         cpSync(join(c.dir, 'omx-contract.json'), join(tmp, 'omx-contract.json'));
         const owners = JSON.parse(readFileSync(join(c.dir, OWNERS), 'utf8'));
-        owners[items(c.dir).RESOURCE_HINTS.rel] = { package: 'omx-contract', version: '3.20.2' };
+        owners[items(c.dir).RESOURCE_HINTS.rel] = { package: 'plugin-hostd', version: '0.21.0' };
         writeFileSync(join(tmp, OWNERS), JSON.stringify(owners));
         hintVocabulary(tmp);
         return [];

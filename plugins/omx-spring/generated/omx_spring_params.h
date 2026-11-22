@@ -86,7 +86,7 @@ static const struct omx_param_contract_row OMX_SPRING_PARAM_CONTRACT[OMX_SPRING_
   { 14u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* mixPct pc */
 };
 
-/* org.openmixer.resource-hints.draft/0 (plugin-hostd RESOURCE_HINTS, tools/resource-hints.mjs): the hints the
+/* org.openmixer.resource-hints.draft/0 (omx-contract RESOURCE_HINTS, tools/resource-hints.mjs): the hints the
  * declaration's "resourceHints" states. A hint it leaves out has its bit of `declared` clear: unknown, never zero. */
 static const omx_resource_hints_t OMX_SPRING_RESOURCE_HINTS = {
   .declared = OMX_RESOURCE_HINT_THREADS_SPAWNED | OMX_RESOURCE_HINT_STREAMS_FROM_DISK | OMX_RESOURCE_HINT_OPENS_SOCKETS,
