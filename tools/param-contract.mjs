@@ -13,7 +13,7 @@
  * The wizard writes a new plugin's first fingerprint (registerFirstContract); every later one is appended by hand.
  */
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
@@ -62,6 +62,24 @@ export function declaredUnits(contractdir) {
   const item = schemas[PARAM_UNITS_ITEM];
   if (item?.['x-kind'] !== 'sheet' || typeof item['x-value'] !== 'object') throw new Error(`${file}: holds no ${PARAM_UNITS_ITEM} sheet (omx-clap-contract >= 0.35.0)`);
   return Object.fromEntries(Object.entries(item['x-value']).sort((a, b) => a[1] - b[1]));
+}
+
+/** The files under `root`'s include/, lib/, tools/ and plugins/ (C sources, headers, scripts) that include omx-contract's
+ * old copy of the unit codes, <omxcontract/omx_param_units.h>, relative to `root`: none, the codes are omx-clap's. */
+export function oldUnitIncludes(root = ROOT) {
+  const walk = (d) => {
+    let entries;
+    try {
+      entries = readdirSync(d, { withFileTypes: true });
+    } catch {
+      return [];
+    }
+    return entries.flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
+  };
+  return ['include', 'lib', 'tools', 'plugins'].flatMap((d) => walk(join(root, d)))
+    .filter((f) => /\.(c|h|mjs|js|sh)$/.test(f) && !f.endsWith(join('tools', 'test', 'param-units-check.mjs')))
+    .filter((f) => /#\s*include\s*<omxcontract\/omx_param_units\.h>/.test(readFileSync(f, 'utf8')))
+    .map((f) => f.slice(root.length + 1));
 }
 
 /** The ids a face gives its own controls are this tree's: the sheet OMX_PLUGIN_FACE_IDS of contract/plugin-face.json
