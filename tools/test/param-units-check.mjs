@@ -229,8 +229,9 @@ if (process.argv.includes('--self-test')) {
     try {
       cpSync(join(root, 'include'), join(tmp, 'include'), { recursive: true });
       writeFileSync(join(tmp, 'include', 'old_units.h'), '#include <omxcontract/omx_param_units.h>\n');
+      writeFileSync(join(tmp, 'include', 'old_units_quoted.h'), '#include "omxcontract/omx_param_units.h"\n');
       const seen = oldUnitIncludes(tmp);
-      if (seen.includes('include/old_units.h')) console.log('SABOTAGE old-units-include: red (include/old_units.h)');
+      if (seen.includes('include/old_units.h') && seen.includes('include/old_units_quoted.h')) console.log('SABOTAGE old-units-include: red (include/old_units.h, include/old_units_quoted.h)');
       else {
         console.error(`SABOTAGE old-units-include: STAYED GREEN (${JSON.stringify(seen)})`);
         fail++;
