@@ -10,8 +10,8 @@ Build-Depends: debhelper-compat (= 13),
                libomx-contract-dev (>= 3.21.0~),
                omx-contract (>= 3.21.0~),
                libomx-clap-dev (>= 0.34.0~),
-               plugin-hostd-dev (>= 0.20.5~),
-               omx-panel (>= 0.14.0~),
+               plugin-hostd-dev (>= 0.21.0~),
+               omx-panel (>= 0.16.0~),
                omx-clap-contract (>= 0.34.0~),
                lv2-dev,
                pkgconf,
@@ -26,10 +26,10 @@ Build-Depends: debhelper-compat (= 13),
                omx-contract-data (>= 3.21.0~),
                plugin-db-contract (>= 0.5.0~),
                serdi <!nocheck>,
-               omx-clap-host (>= 0.32.3~) <!nocheck>,
-               plugin-hostd (>= 0.20.5~) <!nocheck>,
+               omx-clap-host (>= 0.34.0~) <!nocheck>,
+               plugin-hostd (>= 0.21.0~) <!nocheck>,
                plugin-hostd-contract (>= 0.21.0~),
-               plugin-qualify (>= 0.20.4~)
+               plugin-qualify (>= 0.21.0~)
 Standards-Version: 4.6.2
 Homepage: https://github.com/FreeMixer/omx-plugins
 Rules-Requires-Root: no
@@ -38,7 +38,7 @@ Package: omx-plugins
 Section: metapackages
 Architecture: any
 Depends: omx-plugins-clap (= ${binary:Version}), omx-plugins-lv2 (= ${binary:Version}), omx-plugins-contract (= ${source:Version}), ${misc:Depends}
-Recommends: plugin-hostd (>= 0.20.5~)
+Recommends: plugin-hostd (>= 0.21.0~)
 Description: OpenMixer delay, drive, EQ, strip, gate and effects (CLAP, LV2)
  Take the sound of the OpenMixer console into your DAW or onto your own rig:
  delay, drive, the channel EQ as an 8-band EQ, a 16-band EQ or a 32-band EQ, a
@@ -102,7 +102,7 @@ Description: Headers and static library of the OpenMixer plugins
 Package: omx-plugins-contract
 Architecture: all
 Multi-Arch: foreign
-Depends: omx-contract-data (>= 3.19.1~), ${misc:Depends}
+Depends: omx-contract-data (>= 3.21.0~), ${misc:Depends}
 Description: OpenMixer plugins' descriptors in omx-contract's contract directory
  Each OpenMixer plugin's descriptor, its parameters in omx-contract's words, and
  the manifest naming this release, as files in omx-contract's contract
@@ -114,7 +114,7 @@ Description: OpenMixer plugins' descriptors in omx-contract's contract directory
 Package: omx-plugins-lv2
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Recommends: omx-panel (>= 0.14.0~)
+Recommends: omx-panel (>= 0.16.0~)
 Description: OpenMixer delay, drive, EQ, strip, gate and effects as LV2 plugins
  The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
  EQ, channel strip, keyed gate and effects (chorus, flanger, phaser, tremolo,

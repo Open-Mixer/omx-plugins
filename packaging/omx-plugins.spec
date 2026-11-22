@@ -18,14 +18,14 @@ BuildRequires: omx-dsp-devel >= 0.34.0
 BuildRequires: omx-contract-devel >= 3.21.0
 BuildRequires: omx-clap-devel >= 0.34.0
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
-BuildRequires: plugin-hostd-devel >= 0.20.5
+BuildRequires: plugin-hostd-devel >= 0.21.0
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
 # (3.3.0: the directory and its schema are omx-contract-data's, the definitions each owner's -contract package's)
 # (3.20.2: the tools decide "run, not imported" with its isMain, <clidir>/lib/entry.mjs, read through pkg-config)
 # (3.21.0: the descriptor word latency.sweep, which omx-rotary states)
 BuildRequires: omx-contract >= 3.21.0
 # the panel layout is omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
-BuildRequires: omx-panel >= 0.14.0
+BuildRequires: omx-panel >= 0.16.0
 # omx-clap's domain the generators read (tools/omx-contract.mjs domainDocument): clap, the CLAP feature terms
 # (tools/format-tables.mjs)
 BuildRequires: omx-clap-contract >= 0.34.0
@@ -55,15 +55,15 @@ BuildRequires: lilv-devel
 BuildRequires: omx-contract-data >= 3.21.0
 BuildRequires: plugin-db-contract >= 0.5.0
 BuildRequires: sord
-BuildRequires: omx-clap-host >= 0.32.3
+BuildRequires: omx-clap-host >= 0.34.0
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
-BuildRequires: plugin-hostd >= 0.20.5
+BuildRequires: plugin-hostd >= 0.21.0
 # plugin-hostd's words the generators read: its domains plugin-hostd/clap and plugin-hostd/lv2, the format tables
 # (tools/format-tables.mjs), and the resource hints, RESOURCE_* (tools/resource-hints.mjs)
 BuildRequires: plugin-hostd-contract >= 0.21.0
 # %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
 # shipped pins.d file to the shipped binaries' hashes (tools/pins-check.sh)
-BuildRequires: plugin-qualify >= 0.20.4
+BuildRequires: plugin-qualify >= 0.21.0
 # the shipped .clap is the stripped one (find-debuginfo runs after %%install), so its pin is measured
 # again once the buildroot is stripped: a pin taken at %%install names bytes the package never ships
 %define __spec_install_post \
@@ -79,7 +79,7 @@ Requires: %{name}-lv2%{?_isa} = %{version}-%{release}
 # each plugin's descriptor, which a host and the console read at run time
 Requires: %{name}-contract = %{version}-%{release}
 # the first plugin-hostd release that reads pins.d (plugin-hostd issue #42)
-Recommends: plugin-hostd >= 0.20.5
+Recommends: plugin-hostd >= 0.21.0
 
 %description
 Take the sound of the OpenMixer console into your DAW or onto your own rig:
@@ -113,7 +113,7 @@ Its documentation is on openmixer.org.
 %package lv2
 Summary: OpenMixer delay, drive, EQ, strip, gate and effects as LV2 plugins
 Requires: lv2
-Recommends: omx-panel >= 0.14.0
+Recommends: omx-panel >= 0.16.0
 
 %description lv2
 The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
@@ -161,7 +161,7 @@ BuildArch: noarch
 # the contract directory, its schema and its reader's own package
 # 3.19.1: its install-contract-dir.sh rewrites the relative $schema of contract/*.json and the descriptors to the
 # major's URL, and its reader requires that URL (3.13.0 brought the roleMeanings kind of contract/role-meanings.json)
-Requires: omx-contract-data >= 3.19.1
+Requires: omx-contract-data >= 3.21.0
 
 %description contract
 Each OpenMixer plugin's descriptor, its parameters in omx-contract's words,
