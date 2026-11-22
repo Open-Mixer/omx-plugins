@@ -5,7 +5,7 @@
 # its cell's own runner (runs-on: ${{ matrix.cell.runner }}) and takes its cells from Open-Mixer/.github's check-matrix,
 # never from an arch list of its own. A container of one architecture cannot install the packages of another, and the
 # channel's development debs are trixie arm64 only: an amd64 cell on an amd64 runner finds libomxdsp-dev and
-# libomx-clap-core-dev not installable (omx-plugins ci 44594367073), and an arm64 debian container on an amd64 runner
+# libomx-clap-dev not installable (omx-plugins ci 44594367073), and an arm64 debian container on an amd64 runner
 # has apt pick libomxdsp-dev arm64 (omx-panel ci 44563540081). check-matrix's quick set holds no amd64 deb cell.
 # Usage: workflow-deb-cells-check.sh [repo-root] (default: .), or --self-test, which runs this check on planted trees with
 # each shape, a missing directory and a tree with no DEB job included. Exit 0 clean, 1 a hit (each job named), 2 no

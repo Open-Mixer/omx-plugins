@@ -392,7 +392,7 @@ jobs:
   # (OMX_RELEASE_MATRIX=quick: trixie arm64 alone, no amd64 cell), bookworm and trixie on amd64 and arm64 otherwise. Each
   # cell runs on the runner of its own architecture (arm64 on ubuntu-24.04-arm): a container of one architecture cannot
   # install the packages of another, and the channel's development debs are trixie arm64 only (omx-plugins ci
-  # 44594367073: libomxdsp-dev and libomx-clap-core-dev not installable in the amd64 container; omx-panel ci 44563540081).
+  # 44594367073: libomxdsp-dev and libomx-clap-dev not installable in the amd64 container; omx-panel ci 44563540081).
   deb-cells:
     name: the deb cells (check-matrix)
     needs: changes
