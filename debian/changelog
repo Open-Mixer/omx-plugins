@@ -1,3 +1,13 @@
+omx-plugins (0.20.0) unstable; urgency=medium
+
+  * The version moves to 0.20.0.
+  * Floors: omx-clap-devel and omx-clap-contract >= 0.34.0 (Debian:
+    libomx-clap-dev, omx-clap-contract), omx-contract >= 3.21.0, omx-dsp >=
+    0.34.0.
+  * The sorting pass: the moves into the owner domains.
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sun, 22 Nov 2026 12:00:00 +0100
+
 omx-plugins (0.19.3) unstable; urgency=medium
 
   * omx-plugins-contract installs role-meanings.json (the meaning each panel

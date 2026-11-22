@@ -304,6 +304,12 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 # END GENERATED lv2-files
 
 %changelog
+* Sun Nov 22 2026 Pau Aliagas <linuxnow@gmail.com> - 0.20.0-1
+- the version moves to 0.20.0
+- floors: omx-clap-devel and omx-clap-contract >= 0.34.0, omx-contract >= 3.21.0,
+  omx-dsp >= 0.34.0
+- the sorting pass: the moves into the owner domains
+
 * Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
 - omx-plugins-contract installs role-meanings.json (the meaning each panel
   role plays) and plugin-face.json (the face ids, declared here since
