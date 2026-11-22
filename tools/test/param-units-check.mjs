@@ -25,7 +25,7 @@ import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, wri
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { contractUnits, declaredUnits, headerUnits, PARAM_CONTRACT_H, scalesOf } from '../param-contract.mjs';
+import { contractUnits, declaredUnits, headerUnits, oldUnitIncludes, PARAM_CONTRACT_H, scalesOf } from '../param-contract.mjs';
 import { installedContractDir, locateContract } from '../omx-contract.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -60,6 +60,8 @@ export const ownScaleCodes = (text) => [...text.matchAll(/^\s*#\s*define\s+(OMX_
 /** The refusals of a declaration `units` ({ token: code }) and the text of a rendered header that drift apart. */
 export function drift(units, headerText) {
   const errors = [];
+// omx-contract's old copy of the unit codes is read nowhere: no file of include/, lib/, tools/ or plugins/ includes it
+for (const at of oldUnitIncludes(root)) errors.push(`${at}: includes <omxcontract/omx_param_units.h>; the codes are omx-clap's <omx-clap-host/omx_param_units.h>`);
   const declared = new Map(Object.entries(units).map(([t, v]) => [t.toUpperCase(), v]));
   const header = headerUnits(headerText);
   for (const [name, v] of declared) if (header.get(name) !== v) errors.push(`unit ${name}: the declaration has ${v}, the header ${header.get(name) ?? 'none'}`);
@@ -217,6 +219,22 @@ if (process.argv.includes('--self-test')) {
     } catch (e) {
       console.error(`SABOTAGE domain-sheet-without-dbu: could not be planted: ${e.message}`);
       fail++;
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  }
+  // the tree walk sees an include of omx-contract's old header planted in a copy of include/
+  {
+    const tmp = mkdtempSync(join(tmpdir(), 'param-units-walk-'));
+    try {
+      cpSync(join(root, 'include'), join(tmp, 'include'), { recursive: true });
+      writeFileSync(join(tmp, 'include', 'old_units.h'), '#include <omxcontract/omx_param_units.h>\n');
+      const seen = oldUnitIncludes(tmp);
+      if (seen.includes('include/old_units.h')) console.log('SABOTAGE old-units-include: red (include/old_units.h)');
+      else {
+        console.error(`SABOTAGE old-units-include: STAYED GREEN (${JSON.stringify(seen)})`);
+        fail++;
+      }
     } finally {
       rmSync(tmp, { recursive: true, force: true });
     }
