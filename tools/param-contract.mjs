@@ -48,7 +48,7 @@ export function registerFirstContract(root, stem, fingerprint) {
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
 /** The declaration of the contract's units is omx-clap's (sorting row V23d): the sheet OMX_PARAM_CONTRACT_UNITS of
- * its domain omx-param-contract (<contractdir>/omx-param-contract/omx-param-contract.json, omx-clap-contract >= 0.35.0),
+ * its domain omx-param-contract (<contractdir>/omx-param-contract/omx-param-contract.json, omx-clap-contract >= 0.36.0),
  * each token's code, rendered to <omx-clap-host/omx_param_units.h> as OMX_CLAP_UNIT_* defines. */
 export const PARAM_UNITS_ITEM = 'OMX_PARAM_CONTRACT_UNITS';
 export const PARAM_UNITS_DOMAIN = 'omx-param-contract';
@@ -58,9 +58,9 @@ export const PARAM_CONTRACT_H = join(ROOT, 'include', 'omx_param_contract.h');
 /** The declared units, `{ <token>: <code> }` in code order, of the domain in the contract directory `contractdir`
  * (default: the installed one, tools/omx-contract.mjs installedContractDir). */
 export function declaredUnits(contractdir) {
-  const { file, schemas } = domainDocument(PARAM_UNITS_DOMAIN, 'omx-clap-contract >= 0.35.0', contractdir);
+  const { file, schemas } = domainDocument(PARAM_UNITS_DOMAIN, 'omx-clap-contract >= 0.36.0', contractdir);
   const item = schemas[PARAM_UNITS_ITEM];
-  if (item?.['x-kind'] !== 'sheet' || typeof item['x-value'] !== 'object') throw new Error(`${file}: holds no ${PARAM_UNITS_ITEM} sheet (omx-clap-contract >= 0.35.0)`);
+  if (item?.['x-kind'] !== 'sheet' || typeof item['x-value'] !== 'object') throw new Error(`${file}: holds no ${PARAM_UNITS_ITEM} sheet (omx-clap-contract >= 0.36.0)`);
   return Object.fromEntries(Object.entries(item['x-value']).sort((a, b) => a[1] - b[1]));
 }
 
