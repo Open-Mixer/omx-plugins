@@ -65,7 +65,7 @@ export function declaredUnits(contractdir) {
 }
 
 /** The files under `root`'s include/, lib/, tools/ and plugins/ (C sources, headers, scripts) that include omx-contract's
- * old copy of the unit codes, <omxcontract/omx_param_units.h>, relative to `root`: none, the codes are omx-clap's. */
+ * old copy of the unit codes, <omxcontract/omx_param_units.h> or its quoted form, relative to `root`: none, the codes are omx-clap's. */
 export function oldUnitIncludes(root = ROOT) {
   const walk = (d) => {
     let entries;
@@ -78,7 +78,7 @@ export function oldUnitIncludes(root = ROOT) {
   };
   return ['include', 'lib', 'tools', 'plugins'].flatMap((d) => walk(join(root, d)))
     .filter((f) => /\.(c|h|mjs|js|sh)$/.test(f) && !f.endsWith(join('tools', 'test', 'param-units-check.mjs')))
-    .filter((f) => /#\s*include\s*<omxcontract\/omx_param_units\.h>/.test(readFileSync(f, 'utf8')))
+    .filter((f) => /#\s*include\s*[<"]omxcontract\/omx_param_units\.h[>"]/.test(readFileSync(f, 'utf8')))
     .map((f) => f.slice(root.length + 1));
 }
 

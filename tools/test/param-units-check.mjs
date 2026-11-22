@@ -60,8 +60,6 @@ export const ownScaleCodes = (text) => [...text.matchAll(/^\s*#\s*define\s+(OMX_
 /** The refusals of a declaration `units` ({ token: code }) and the text of a rendered header that drift apart. */
 export function drift(units, headerText) {
   const errors = [];
-// omx-contract's old copy of the unit codes is read nowhere: no file of include/, lib/, tools/ or plugins/ includes it
-for (const at of oldUnitIncludes(root)) errors.push(`${at}: includes <omxcontract/omx_param_units.h>; the codes are omx-clap's <omx-clap-host/omx_param_units.h>`);
   const declared = new Map(Object.entries(units).map(([t, v]) => [t.toUpperCase(), v]));
   const header = headerUnits(headerText);
   for (const [name, v] of declared) if (header.get(name) !== v) errors.push(`unit ${name}: the declaration has ${v}, the header ${header.get(name) ?? 'none'}`);
@@ -89,6 +87,8 @@ function ownerHeader(name = OWNER_HEADER) {
 }
 const renderedHeader = ownerHeader();
 const errors = [];
+// omx-contract's old copy of the unit codes is read nowhere: no file of include/, lib/, tools/ or plugins/ includes it
+for (const at of oldUnitIncludes(root)) errors.push(`${at}: includes <omxcontract/omx_param_units.h>; the codes are omx-clap's <omx-clap-host/omx_param_units.h>`);
 const units = declaredUnits();
 if (!renderedHeader) errors.push(`${OWNER_HEADER}: not found; install omx-clap-devel >= 0.36.0`);
 const headerText = renderedHeader ? readFileSync(renderedHeader, 'utf8') : '';
