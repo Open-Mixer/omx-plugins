@@ -43,6 +43,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { emitPluginTtl, loadDecl, pluginDirs, ROOT } from '../gen.mjs';
 import { triplesOf } from './resource-hints-check.mjs';
+import { isMain } from '../omx-contract.mjs';
 
 const LV2 = 'http://lv2plug.in/ns/lv2core#';
 const PG = 'http://lv2plug.in/ns/ext/port-groups#';
@@ -183,7 +184,7 @@ const ARMS = [
     (t) => t.replace('    a pg:Group ;\n', '    a pg:Group ;;;\n    ] \n')],
 ];
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (isMain(import.meta.url)) {
   let bad = 0, n = 0;
   const check = (ok, what, detail = []) => {
     n++;

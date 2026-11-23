@@ -4,11 +4,11 @@
 
 The effects of the OpenMixer console, as plugins you can load
 in any host: **CLAP** for Bitwig, REAPER, Carla, openmixer and every other CLAP host, and **LV2** for
-Ardour, Carla, MOD and Zynthian, the MOD GUI included.
+Ardour, Carla, MOD and Zynthian (a host generates the MOD GUI from the plugin's description; none is shipped).
 
 The DSP inside each one is the console's own (the [omx-dsp](https://github.com/FreeMixer/omx-dsp)
 library), so a plugin sounds the same in your DAW as on the desk, sample for sample. Each plugin is
-drawn from one declaration: its CLAP parameters, its LV2 ports and its MOD GUI cannot disagree.
+drawn from one declaration: its CLAP parameters, and its LV2 ports cannot disagree.
 
 ## Install
 
@@ -19,7 +19,7 @@ sudo dnf install https://www.openmixer.org/rpm/openmixer-release.noarch.rpm
 sudo dnf install omx-plugins
 ```
 
-On **Debian** bookworm or trixie, **Raspberry Pi OS** and **Zynthian**:
+On **Debian** trixie (arm64), **Raspberry Pi OS** and **Zynthian**:
 
 ```sh
 cd /tmp && curl -fsSLO https://www.openmixer.org/deb/openmixer-release.deb && sudo apt install ./openmixer-release.deb
@@ -38,7 +38,8 @@ look without configuration: `/usr/lib/clap`, and `/usr/lib64/lv2` on Fedora or `
 <https://www.openmixer.org/projects/omx-plugins>, and the full documentation at
 <https://www.openmixer.org/docs/plugins>. In this repository: every plugin and its controls, the
 factory presets, the packages and the static library ([docs/catalogue.md](docs/catalogue.md)); a
-page of parameters per plugin ([docs/plugins/README.md](docs/plugins/README.md)); building from
+page of parameters per plugin ([docs/plugins/README.md](docs/plugins/README.md)); omx-strip's MOD GUI and its
+grouped controls, in pictures ([docs/omx-strip-modgui.md](docs/omx-strip-modgui.md)); building from
 source ([BUILDING.md](BUILDING.md)).
 
 ## Licence

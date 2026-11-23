@@ -8,7 +8,7 @@
 <urn:openmixer:tone>
     a lv2:Plugin ;
     lv2:binary <omx-tone.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-tone.ttl> .
+    rdfs:seeAlso <omx-tone.ttl> .
 
 <urn:openmixer:tone#preset-brighter>
     a pset:Preset ;

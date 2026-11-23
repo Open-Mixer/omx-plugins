@@ -8,7 +8,7 @@
 <urn:openmixer:width>
     a lv2:Plugin ;
     lv2:binary <omx-width.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-width.ttl> .
+    rdfs:seeAlso <omx-width.ttl> .
 
 <urn:openmixer:width#preset-haas-widen>
     a pset:Preset ;
