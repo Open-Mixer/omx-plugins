@@ -36,7 +36,7 @@ The channel is the OpenMixer package repository, added by installing the openmix
 everything above.
 
 The floors are written once, in the packaging: `packaging/omx-plugins.spec` (`BuildRequires`, a floor and no ceiling:
-`BuildRequires: omx-dsp-devel >= 0.34.0`) and `debian/control` (the same floor: `(>= 0.34.0~)`); `tools/deps-check.sh`
+`BuildRequires: omx-dsp-devel >= 0.34.1`) and `debian/control` (the same floor: `(>= 0.34.1~)`); `tools/deps-check.sh`
 holds the two equal and fails on any ceiling. Nothing else names a version: the Makefile reads the floors from the spec,
 and building the archive stops, naming the dependency, the floor and what `pkg-config` finds installed, when an installed
 release is below it.

@@ -14,7 +14,7 @@ BuildRequires: make
 BuildRequires: pkgconf-pkg-config
 # The releases this tree builds against: a floor each and no ceiling (floors only, as 0.8.0 ruled), once here and
 # in debian/control the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
-BuildRequires: omx-dsp-devel >= 0.34.0
+BuildRequires: omx-dsp-devel >= 0.34.1
 BuildRequires: omx-contract-devel >= 3.21.0
 BuildRequires: omx-clap-devel >= 0.35.0
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
@@ -47,7 +47,7 @@ BuildRequires: python3
 BuildRequires: tar
 BuildRequires: diffutils
 # the curve kinds the schema's graph enum renders: omx-dsp's CURVE_KINDS (tools/graph-enum.mjs)
-BuildRequires: omx-dsp-contract >= 0.34.0
+BuildRequires: omx-dsp-contract >= 0.34.1
 BuildRequires: lilv
 BuildRequires: lilv-devel
 # the standard units a face publishes, by symbol (omx-contract's param domain, PARAM_UNITS x-symbol), and the OpenMixer
@@ -138,7 +138,7 @@ Its documentation is on openmixer.org.
 
 %package devel
 Summary: Headers and static library of the OpenMixer plugins, for projects that build on them
-Requires: omx-dsp-devel >= 0.34.0
+Requires: omx-dsp-devel >= 0.34.1
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
 Requires: omx-contract-devel >= 3.21.0
 # include/omx_param_contract.h includes omx-clap's unit and scale codes, <omx-clap-host/omx_param_units.h> (0.35.0) and <omx-clap-host/omx_param_scales.h>
@@ -307,6 +307,8 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 * Mon Nov 23 2026 Pau Aliagas <linuxnow@gmail.com> - 0.21.0-1
 - the version moves to 0.21.0 (chain 3)
 - floors: omx-clap-devel and omx-clap-contract >= 0.35.0
+- floors: omx-dsp-devel and omx-dsp-contract >= 0.34.1, the release whose
+  ROTARY_ACCEL_RANGE travels in coef; the rotary's accel is coef
 - V23d: the unit codes are read from omx-clap's domain omx-param-contract and its
   render; make units refuses an include of omx-contract's old unit header
 

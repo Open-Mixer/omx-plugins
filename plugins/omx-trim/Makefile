@@ -22,7 +22,7 @@
 NAME       := omx-trim
 URI        := urn:openmixer:trim
 CLAP_ID    := org.openmixer.trim
-OMXDSP_MIN ?= 0.34.0
+OMXDSP_MIN ?= 0.34.1
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

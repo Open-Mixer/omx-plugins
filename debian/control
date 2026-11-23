@@ -6,7 +6,7 @@ Priority: optional
 Maintainer: Pau Aliagas <linuxnow@gmail.com>
 Build-Depends: debhelper-compat (= 13),
                clap-headers (>= 1.2.10~),
-               libomxdsp-dev (>= 0.34.0~),
+               libomxdsp-dev (>= 0.34.1~),
                libomx-contract-dev (>= 3.21.0~),
                omx-contract (>= 3.21.0~),
                libomx-clap-dev (>= 0.35.0~),
@@ -19,7 +19,7 @@ Build-Depends: debhelper-compat (= 13),
                nodejs (>= 20.19~) <!nocheck>,
                python3 <!nocheck>,
                tar <!nocheck>,
-               omx-dsp-contract (>= 0.34.0~),
+               omx-dsp-contract (>= 0.34.1~),
                liblilv-dev <!nocheck>,
                lilv-utils <!nocheck>,
                sordi <!nocheck>,
@@ -88,7 +88,7 @@ Description: OpenMixer test instruments, for host tests and plugin measurement
 Package: omx-plugins-dev
 Section: libdevel
 Architecture: any
-Depends: libomxdsp-dev (>= 0.34.0~), libomx-contract-dev (>= 3.21.0~), libomx-clap-dev (>= 0.35.0~), omx-plugins-contract (= ${source:Version}), clap-headers (>= 1.2.10~), ${misc:Depends}
+Depends: libomxdsp-dev (>= 0.34.1~), libomx-contract-dev (>= 3.21.0~), libomx-clap-dev (>= 0.35.0~), omx-plugins-contract (= ${source:Version}), clap-headers (>= 1.2.10~), ${misc:Depends}
 Description: Headers and static library of the OpenMixer plugins
  The headers other projects include to use the OpenMixer plugins' parameters and
  instance code, such as omx_delay_core.h and each plugin's generated parameter
