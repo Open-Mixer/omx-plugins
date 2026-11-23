@@ -101,14 +101,29 @@ What the descriptor has no word for, found laying out our panels, and where each
 One vocabulary, two directions (FreeMixer/omx-plugins#210, ruling B). plugin-hostd installs one mapping table per
 format as a domain of the contract directory, `plugin-hostd/clap` and `plugin-hostd/lv2` (named by their items' prefix,
 `PLUGIN_HOSTD_CLAP_MAP` and `PLUGIN_HOSTD_LV2_MAP`), `<contractdir>/plugin-hostd/<format>/<format>.json`: how each field a
-scan reads becomes a descriptor word. Our generators write a face from the authored descriptor by reading the same
-rows the other way (`tools/format-tables.mjs`), and only the rows whose transform is `identity` or `lookup`: the row
-whose `lookup` maps a source value to the word's value names what the face writes. No transform is code of ours.
-`$OMX_INSTALLED_CONTRACTDIR`, a contract directory holding the two domains, stands in for the installed one.
+scan reads becomes a descriptor word. Each item is omx-contract's mapping-table kind, `x-kind: map` (sorting row V19):
+`x-format` names the format and its `oneOf` holds one row per source field, `const` the field, `x-term` or `x-from` what
+covers it, and one of `x-word`, `x-extension` or `x-dropped` (plugin-hostd `docs/formats.md`). Our generators write a
+face from the authored descriptor by reading the same rows the other way (`tools/format-tables.mjs`), and only the rows
+whose transform carries pairs: `lookup`, whose `values` the row holds, and the two whose pairs the format level's owner
+publishes (row M5, plugin-hostd `docs/formats.md`, "Lookup values the owners publish"):
+
+| Transform | Rows | The owner's mapping read |
+|---|---|---|
+| `unit-id` | CLAP `omx_clap_param_contract_entry.unit` | omx-clap's domain `omx-param-contract`, `OMX_PARAM_CONTRACT_UNIT_IDS` (code -> id) |
+| `unit-id` | LV2 `units:<unit>` | plugin-db's domain `lv2`, the word of `LV2_UNIT_IDS` whose `x-from` names the row's `x-term` |
+| `unit-id` | LV2 `units:unit` | plugin-db's domain `lv2`, every word of `LV2_OPENMIXER_UNIT_IDS` (`x-uri` -> id) |
+| `designation-meaning` | LV2 `param:<term>`, `lv2:enabled` | plugin-db's domain `lv2`, the word of `LV2_DESIGNATION_MEANINGS` whose `x-from` names the row's `x-term` |
+
+The row whose pair maps a source value to the word's value names what the face writes. A unit's value is a
+`PARAM_UNITS` id (`percent`); a declaration's unit is read as the id its symbol stands for (`%`), so the faces follow
+either spelling. A mapping that is absent, a document that is not its owner's (`info.x-owner`), a row its mapping holds
+no pair for and a value two rows map are each refused by name. No transform is code of ours.
+`$OMX_INSTALLED_CONTRACTDIR`, a contract directory holding the domains, stands in for the installed one.
 
 - An LV2 port's `units:unit` is the LV2 row mapping its unit (`units:db` for `dB`, `<urn:openmixer:unit#dBFS>` for
-  `dBFS`); a unit no row maps is the declaration's own, defined in the plugin's TTL: `dBu`, `dB/oct` and `ratio`
-  (`urn:openmixer:unit#ratio`, gap 4).
+  `dBFS`); the OpenMixer units, `dBFS`, `dBu`, `LUFS`, `dB/oct` and `ratio` (`urn:openmixer:unit#ratio`, gap 4), are
+  the `units:unit` row's pairs and are defined in the plugin's TTL.
 - An LV2 port's `lv2:designation` is the LV2 row mapping its control's `meaning`: 186 ports carry a `param:` term
   (gain 93, frequency 63, wetDryRatio 11, release 5, threshold 4, ratio 4, attack 4, hold 1, delay 1). A meaning with
   no LV2 term is written nowhere.
