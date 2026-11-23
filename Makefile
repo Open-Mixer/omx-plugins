@@ -8,8 +8,8 @@
 #   make test       the fast set (what the package builds run): declaration checks, in-process probes, hints, manual
 #   make test-heavy the built plugins through a host: oracles, host-check.sh, the round trip; CI runs
 #                   it on every pull request in slices (OMX_HEAVY_SHARD=i/n); tools/test/test-split.json lists both
-#   make units      the declared units' contract codes (tools/param-contract.mjs) are omx-contract's header's
-#                   (OMX_PARAM_CONTRACT_UNITS, omx_param_units.h), its vendor block is dbfs, dbu, ratio, lufs, a unit
+#   make units      the declared units' contract codes (tools/param-contract.mjs) are omx-clap's header's
+#                   (OMX_PARAM_CONTRACT_UNITS, omx-clap-host/omx_param_units.h), its vendor block is dbfs, dbu, ratio, lufs, a unit
 #                   changed on either side red (tools/test/param-units-check.mjs)
 #   make lv2-units  every unit a declaration uses has an LV2 unit, and every port states the unit it declares
 #                   (tools/test/lv2-units-check.mjs, with its sabotage arms; part of `make test`)

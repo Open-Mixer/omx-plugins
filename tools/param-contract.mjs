@@ -4,8 +4,8 @@
  * param-contract.mjs — org.openmixer.param-contract/1 of a plugin, from its declaration: each
  * parameter's symbol, unit, scale and step, the host's bypass last, and the canonical serialisation
  * whose SHA-256 is the fingerprint. The extension is omx-clap's (<omx-clap-host/omx_clap_ext.h>); tools/gen.mjs
- * writes the rows a CLAP face serves it from (include/omx_param_contract.h); the unit codes are omx-contract's
- * (OMX_PARAM_CONTRACT_UNITS). tools/clap-ext-check.mjs reads what a built face serves back.
+ * writes the rows a CLAP face serves it from (include/omx_param_contract.h); the unit codes are omx-clap's
+ * (OMX_PARAM_CONTRACT_UNITS of its domain omx-param-contract). tools/clap-ext-check.mjs reads what a built face serves back.
  *
  * A plugin's contract version is the 1-based position of its fingerprint in tools/param-contract-versions.json: 1 its
  * first publication, and a later change of a symbol, unit, scale, travel or stepping changes the fingerprint and appends
@@ -13,11 +13,11 @@
  * The wizard writes a new plugin's first fingerprint (registerFirstContract); every later one is appended by hand.
  */
 import { createHash } from 'node:crypto';
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { lv2UnitNames, lv2UnitRef, standardUnitOf } from './format-tables.mjs';
-import { items, locateContract } from './omx-contract.mjs';
+import { domainDocument, items } from './omx-contract.mjs';
 import { travelUnit } from './descriptor.mjs';
 
 export const CONTRACT_ID = 'org.openmixer.param-contract/1';
@@ -47,23 +47,39 @@ export function registerFirstContract(root, stem, fingerprint) {
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-/** The declaration of the contract's units is omx-contract's: the sheet OMX_PARAM_CONTRACT_UNITS (data/param-contract.json,
- * omx-contract >= 3.6.0), each token's code, rendered to omxcontract/omx_param_units.h as OMX_CLAP_UNIT_* defines. */
+/** The declaration of the contract's units is omx-clap's (sorting row V23d): the sheet OMX_PARAM_CONTRACT_UNITS of
+ * its domain omx-param-contract (<contractdir>/omx-param-contract/omx-param-contract.json, omx-clap-contract >= 0.36.0),
+ * each token's code, rendered to <omx-clap-host/omx_param_units.h> as OMX_CLAP_UNIT_* defines. */
 export const PARAM_UNITS_ITEM = 'OMX_PARAM_CONTRACT_UNITS';
-/** The header the extension's C structures are in; it includes omx-contract's unit codes. */
+export const PARAM_UNITS_DOMAIN = 'omx-param-contract';
+/** The header the extension's C structures are in; it includes omx-clap's unit codes. */
 export const PARAM_CONTRACT_H = join(ROOT, 'include', 'omx_param_contract.h');
 
-/** The declared units, `{ <token>: <code> }` in code order, of the resolved contract at `dir` (default: the one this tree is
- * built against, tools/omx-contract.mjs locateContract). */
-export function declaredUnits(dir) {
-  if (dir === undefined) {
-    const found = locateContract(ROOT);
-    if (!found.dir) throw new Error(`${PARAM_UNITS_ITEM}: ${found.why}`);
-    dir = found.dir;
-  }
-  const item = items(dir)[PARAM_UNITS_ITEM];
-  if (item?.kind !== 'sheet' || typeof item.value !== 'object') throw new Error(`${dir}: the resolved contract holds no ${PARAM_UNITS_ITEM} sheet (omx-contract >= 3.6.0)`);
-  return Object.fromEntries(Object.entries(item.value).sort((a, b) => a[1] - b[1]));
+/** The declared units, `{ <token>: <code> }` in code order, of the domain in the contract directory `contractdir`
+ * (default: the installed one, tools/omx-contract.mjs installedContractDir). */
+export function declaredUnits(contractdir) {
+  const { file, schemas } = domainDocument(PARAM_UNITS_DOMAIN, 'omx-clap-contract >= 0.36.0', contractdir);
+  const item = schemas[PARAM_UNITS_ITEM];
+  if (item?.['x-kind'] !== 'sheet' || typeof item['x-value'] !== 'object') throw new Error(`${file}: holds no ${PARAM_UNITS_ITEM} sheet (omx-clap-contract >= 0.36.0)`);
+  return Object.fromEntries(Object.entries(item['x-value']).sort((a, b) => a[1] - b[1]));
+}
+
+/** The files under `root`'s include/, lib/, tools/ and plugins/ (C sources, headers, scripts) that include omx-contract's
+ * old copy of the unit codes, <omxcontract/omx_param_units.h> or its quoted form, relative to `root`: none, the codes are omx-clap's. */
+export function oldUnitIncludes(root = ROOT) {
+  const walk = (d) => {
+    let entries;
+    try {
+      entries = readdirSync(d, { withFileTypes: true });
+    } catch {
+      return [];
+    }
+    return entries.flatMap((e) => (e.isDirectory() ? walk(join(d, e.name)) : [join(d, e.name)]));
+  };
+  return ['include', 'lib', 'tools', 'plugins'].flatMap((d) => walk(join(root, d)))
+    .filter((f) => /\.(c|h|mjs|js|sh)$/.test(f) && !f.endsWith(join('tools', 'test', 'param-units-check.mjs')))
+    .filter((f) => /#\s*include\s*[<"]omxcontract\/omx_param_units\.h[>"]/.test(readFileSync(f, 'utf8')))
+    .map((f) => f.slice(root.length + 1));
 }
 
 /** The ids a face gives its own controls are this tree's: the sheet OMX_PLUGIN_FACE_IDS of contract/plugin-face.json
@@ -101,7 +117,7 @@ export function headerUnits(text) {
  * value for, and "", is NONE, its text left to value_to_text. */
 export function contractUnit(unit) {
   const ref = lv2UnitRef(unit);
-  // a unit of the vendor block takes its PARAM_UNITS id's name, `-` read "per" as omx-contract 3.21.0's sheet spells it (dB-oct -> dbperoct)
+  // a unit of the vendor block takes its PARAM_UNITS id's name, `-` read "per" as the sheet spells it (dB-oct -> dbperoct; omx-clap's omx-param-contract keeps omx-contract 3.21.0's tokens)
   const token = ref && (ref.startsWith('units:') ? ref.slice('units:'.length) : String(standardUnitOf(unit) ?? ref.replace(/^<|>$/g, '').split('#').pop()).replaceAll('-', 'per').toLowerCase());
   const value = token && headerUnits().get(token.toUpperCase());
   return value === undefined ? ['none', 0] : [token, value];
