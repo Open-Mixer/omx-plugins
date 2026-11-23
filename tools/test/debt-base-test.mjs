@@ -11,7 +11,10 @@
  *  - a STALE origin/main (already holding the grown row) and a fetch that fails: refused, never compared;
  *  - origin/main absent and no remote to fetch from, CI unset: refused, naming origin/main;
  *  - OMX_DEBT_BASE_REF naming a ref that does not exist: refused, naming that ref;
- *  - a single-branch, depth-1 clone (the shape of a CI checkout) with its remote gone: refused.
+ *  - a single-branch, depth-1 clone (the shape of a CI checkout) with its remote gone: refused;
+ *  - the fetch leaves the checkout's refs as they were: no remote-tracking ref written, no tag brought (#102);
+ *  - OMX_DEBT_BASE_REF=HEAD, a base that is HEAD's own commit: refused by name, never the debt against itself (#102);
+ *  - a checkout of main itself, its origin/main HEAD's commit: compared, not refused.
  *
  *   node tools/test/debt-base-test.mjs      (make debt-base, part of make test)
  */
@@ -62,8 +65,13 @@ function withRef(ref, fn) {
   execFileSync('git', ['clone', '-q', origin, topic]);
   git(topic, 'checkout', '-q', '-b', 'topic');
   git(topic, 'update-ref', '-d', 'refs/remotes/origin/main');
+  // a tag on the origin the checkout does not hold: a fetch with tags would bring it
+  git(origin, 'tag', 'v9.9.9', 'main');
+  const refsBefore = git(topic, 'for-each-ref', '--format=%(refname) %(objectname)');
   const g = withRef(undefined, () => recipe.debtGrowth(topic, DEBT));
   expect(g.base === DEBT.length, `the base is fetched before it is resolved: origin/main missing from the checkout, read from the remote (${g.base ?? g.why})`);
+  const refsAfter = git(topic, 'for-each-ref', '--format=%(refname) %(objectname)').split('\n').filter((l) => !l.startsWith('refs/omx-debt-base '));
+  expect(refsAfter.join('\n') === refsBefore, `the fetch leaves the checkout's refs as they were: no refs/remotes/origin/main written, no tag brought (${refsAfter.filter((l) => !refsBefore.split('\n').includes(l)).join(', ') || 'none changed'})`);
 }
 
 // 1b. a STALE origin/main and a fetch that fails: refused, never compared with the stale base
@@ -120,6 +128,31 @@ function withRef(ref, fn) {
   const g = withRef(undefined, () => recipe.debtGrowth(shallow, DEBT));
   const v = verdictWithoutCI(g);
   expect(g.base === undefined && v !== null && v.bad === 1 && /origin\/main/.test(v.line), `a single-branch depth-1 checkout with no main is refused by name, not passed (${v ? v.line.slice(0, 90) : 'no growthVerdict'})`);
+}
+
+// 5. OMX_DEBT_BASE_REF=HEAD: the merge-base is HEAD, the debt compared with itself could never grow: refused by name
+{
+  const self = join(WORK, 'self');
+  repoWithDebt(self);
+  git(self, 'checkout', '-q', '-b', 'topic');
+  const grown = [...DEBT, { plugin: 'omx-comp', entry: 'manual-section', owedBy: 'self' }];
+  writeFileSync(join(self, recipe.DEBT_PATH), JSON.stringify({ debt: grown }));
+  git(self, ...ID, 'commit', '-q', '-am', 'grown');
+  const g = withRef('HEAD', () => recipe.debtGrowth(self, grown));
+  const v = verdictWithoutCI(g);
+  expect(g.base === undefined && v !== null && v.bad === 1 && /HEAD/.test(v.line) && /its own commit/.test(v.line), `OMX_DEBT_BASE_REF=HEAD is refused by name, never the debt against itself (${v ? (v.line || 'passed: base ' + g.base).slice(0, 110) : 'no growthVerdict'})`);
+}
+
+// 6. main itself: a checkout whose origin/main is HEAD's commit compares with it (a run on main), never refused
+{
+  const src = join(WORK, 'src6');
+  repoWithDebt(src);
+  const origin = join(WORK, 'origin6.git');
+  execFileSync('git', ['clone', '-q', '--bare', src, origin]);
+  const onMain = join(WORK, 'onmain');
+  execFileSync('git', ['clone', '-q', origin, onMain]);
+  const g = withRef(undefined, () => recipe.debtGrowth(onMain, DEBT));
+  expect(g.base === DEBT.length && verdictWithoutCI(g).bad === 0, `a checkout of main itself compares with origin/main, HEAD's own commit (${g.base ?? g.why})`);
 }
 
 console.log(bad ? 'debt-base: FAILED' : 'debt-base: green');
