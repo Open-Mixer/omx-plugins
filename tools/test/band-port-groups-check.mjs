@@ -152,6 +152,7 @@ export function bandGroupErrors(d, ttlText) {
     if (node.names.length !== 1 || !node.names[0]) errors.push(`${what}: law 6: it states ${node.names.length} lv2:name`);
     if (node.labels.length !== 1 || !node.labels[0]) errors.push(`${what}: law 6: it states ${node.labels.length} rdfs:label`);
     if (node.priorities.length !== 1 || !Number.isInteger(node.priorities[0])) errors.push(`${what}: law 7: it states ${node.priorities.length} lv2:displayPriority`);
+    if (node.symbols.length === 1 && g !== `<${d.lv2.uri}#${node.symbols[0]}>`) errors.push(`${what}: law 8: it is not <${d.lv2.uri}#${node.symbols[0]}>, under its plugin's URI by its lv2:symbol`);
   }
   // law 7: the section of each group, from the model (a section's key, or the key of one of its subgroups)
   const sectionOf = new Map();
@@ -168,6 +169,21 @@ export function bandGroupErrors(d, ttlText) {
     if (before && sectionOf.get(before.symbols[0]) !== section) closed.add(sectionOf.get(before.symbols[0]));
   });
   return errors;
+}
+
+/** Law 9 over `[[d, ttlText], ...]`, every plugin's TTL: `[error, ...]`, one per group node two bundles state. */
+export function crossBundleGroupErrors(faces) {
+  const stated = new Map();
+  for (const [d, text] of faces) {
+    let groups;
+    try {
+      groups = readGroups(d, text).groups;
+    } catch {
+      continue; // a TTL that is not Turtle is law 5's, named by bandGroupErrors
+    }
+    for (const g of groups.keys()) stated.set(g, [...(stated.get(g) ?? []), d.stem]);
+  }
+  return [...stated].filter(([, stems]) => stems.length > 1).map(([g, stems]) => `law 9: ${g} is stated by ${stems.join(' and ')}`);
 }
 
 /** The sabotage arms: `[what, the law that must refuse it, the change to omx-eq8's TTL text]`. */
@@ -211,6 +227,8 @@ if (isMain(import.meta.url)) {
     const errors = bandGroupErrors(d, ttlOf(d));
     check(!errors.length, `${d.stem}: ${said}`, errors.slice(0, 6).concat(errors.length > 6 ? [`... and ${errors.length - 6} more`] : []));
   }
+  const across = crossBundleGroupErrors(plugins.map((d) => [d, ttlOf(d)]));
+  check(!across.length, `no group node is stated by two of the ${plugins.length} bundles (law 9)`, across.slice(0, 6));
   check(banded >= 5, `the model names the banded plugins (${banded} with a band of several controls; omx-eq8, 16, 32, omx-dyneq, omx-multiband at least)`);
   if (process.argv.includes('--self-test')) {
     const d = plugins.find((p) => p.stem === 'omx-eq8');
