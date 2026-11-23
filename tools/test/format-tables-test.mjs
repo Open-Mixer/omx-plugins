@@ -21,9 +21,15 @@
  *      term id and back = golden (omx-contract 3.20.2's terms), and over a copy of the contract directory whose clap
  *      domain lost `delay`, delay is no term (the read is the domain's).
  *
- * Its arms, on a copy of the contract directory whose plugin-hostd/lv2 domain (PLUGIN_HOSTD_LV2_MAP, sorting row V19)
- * is edited: a meaning's row removed loses its designations, a unit's row removed loses its unit, two rows mapping one
- * value are refused. `make format-tables`, part of `make test`.
+ *   8. the tables are x-kind map items whose unit and meaning rows carry no values: their pairs are the owners'
+ *      (sorting rows V19, M5; omx-plugins#182): the CLAP unit row's are omx-clap's OMX_PARAM_CONTRACT_UNIT_IDS, whole,
+ *      and a declared unit reaches the same LV2 unit by its symbol or its PARAM_UNITS id (% and percent: units:pc).
+ *
+ * Its arms, on a copy of the contract directory whose plugin-hostd/lv2 domain (PLUGIN_HOSTD_LV2_MAP) or plugin-db's lv2
+ * domain is edited: a meaning's row removed loses its designations, a unit's row removed loses its unit, two pairs
+ * mapping one value are refused; the table as the old sheet, an owner's mapping item absent, a domain that is not the
+ * owner's and a row its owner holds no pair for are each refused by name; a code renamed in omx-clap's sheet is the
+ * code the CLAP row then reads. `make format-tables`, part of `make test`.
  */
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -100,29 +106,56 @@ for (const dir of pluginDirs()) {
   check(`${d.stem}: the CLAP modules are its descriptor's groups`, modules, d.params.map((_, i) => (d.descriptor?.controls[i]?.group ?? []).join('/')));
 }
 
-// the arms, on a copy of the contract directory whose plugin-hostd/lv2 domain is edited (the tables are plugin-hostd's
-// domains plugin-hostd/clap and plugin-hostd/lv2, <contractdir>/plugin-hostd/<format>/<format>.json, a sheet each)
+// the arms, on a copy of the contract directory with one domain edited (the tables are plugin-hostd's domains
+// plugin-hostd/clap and plugin-hostd/lv2, <contractdir>/plugin-hostd/<format>/<format>.json, an x-kind map item each;
+// the unit and meaning pairs are plugin-db's domain lv2 and omx-clap's omx-param-contract)
 const scratch = join(ROOT, 'build', 'tmp', 'format-tables');
 rmSync(scratch, { recursive: true, force: true });
 mkdirSync(scratch, { recursive: true });
-const broken = (name, edit) => {
+/** A copy of the contract directory whose domain `domain` document is passed to `edit` (its parsed JSON). */
+const broken = (name, domain, edit) => {
   const dir = join(scratch, name);
   cpSync(tablesDir(), dir, { recursive: true });
-  const file = join(dir, 'plugin-hostd', 'lv2', 'lv2.json'), t = JSON.parse(readFileSync(file, 'utf8'));
-  edit(t.components.schemas.PLUGIN_HOSTD_LV2_MAP['x-value'].rows);
+  const file = join(dir, domain, `${domain.split('/').pop()}.json`), t = JSON.parse(readFileSync(file, 'utf8'));
+  edit(t, t.components.schemas);
   writeFileSync(file, JSON.stringify(t));
   return dir;
 };
+const LV2_MAP = 'plugin-hostd/lv2';
+const dropRow = (key) => (t, s) => { s.PLUGIN_HOSTD_LV2_MAP.oneOf = s.PLUGIN_HOSTD_LV2_MAP.oneOf.filter((r) => r.const !== key); };
 // each arm runs in a process of its own: the tables are read once per process
 const arm = (dir, code) => spawnSync(process.execPath, ['--input-type=module', '-e', code], { cwd: ROOT, env: { ...process.env, OMX_INSTALLED_CONTRACTDIR: dir }, encoding: 'utf8' });
 const FT = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
-let r = arm(broken('no-gain', (rows) => { delete rows['param:gain']; }), `import { lv2Designation } from ${FT}; console.log(String(lv2Designation('gain')));`);
+const refused = (r, re) => r.status !== 0 && re.test(r.stderr);
+let r = arm(broken('no-gain', LV2_MAP, dropRow('param:gain')), `import { lv2Designation } from ${FT}; console.log(String(lv2Designation('gain')));`);
 check('arm: the param:gain row removed, gain is designated by nothing', r.stdout.trim(), 'undefined');
-r = arm(broken('no-db', (rows) => { delete rows['units:db']; }), `import { lv2UnitRef } from ${FT}; console.log(String(lv2UnitRef('dB')));`);
+r = arm(broken('no-db', LV2_MAP, dropRow('units:db')), `import { lv2UnitRef } from ${FT}; console.log(String(lv2UnitRef('dB')));`);
 check('arm: the units:db row removed, dB has no LV2 unit', r.stdout.trim(), 'undefined');
-r = arm(broken('twice', (rows) => { rows['units:unit'].word.values['urn:openmixer:unit#dB'] = 'dB'; }), `import { lv2UnitRef } from ${FT}; lv2UnitRef('dB');`);
-check('arm: two rows mapping dB are refused', r.status !== 0 && /maps controls\[\]\.travel\.unit "dB" from units:db and urn:openmixer:unit#dB/.test(r.stderr), true);
+r = arm(broken('twice', 'lv2', (t, s) => { s.LV2_OPENMIXER_UNIT_IDS.oneOf.push({ const: 'dB', title: 'db', 'x-uri': 'urn:openmixer:unit#dB' }); }), `import { lv2UnitRef } from ${FT}; lv2UnitRef('dB');`);
+check('arm: two pairs mapping dB are refused', refused(r, /maps controls\[\]\.travel\.unit "dB" from units:db and urn:openmixer:unit#dB/), true);
+r = arm(broken('sheet', LV2_MAP, (t, s) => { s.PLUGIN_HOSTD_LV2_MAP['x-kind'] = 'sheet'; }), `import { lv2UnitRef } from ${FT}; lv2UnitRef('dB');`);
+check('arm: the table as a sheet, not x-kind map, is refused by name', refused(r, /holds no PLUGIN_HOSTD_LV2_MAP map of format lv2/), true);
+r = arm(broken('no-unit-ids', 'lv2', (t, s) => { delete s.LV2_UNIT_IDS; }), `import { lv2UnitRef } from ${FT}; lv2UnitRef('dB');`);
+check('arm: plugin-db\'s LV2_UNIT_IDS absent, refused by name', refused(r, /holds no LV2_UNIT_IDS \(plugin-db-contract >= 0\.5\.1\)/), true);
+r = arm(broken('not-owner', 'lv2', (t) => { t.info['x-owner'] = 'plugin-hostd'; }), `import { lv2Designation } from ${FT}; lv2Designation('gain');`);
+check('arm: a lv2 domain that is not plugin-db\'s is refused by name', refused(r, /the domain lv2 is "plugin-hostd"'s, not plugin-db's/), true);
+r = arm(broken('no-gain-pair', 'lv2', (t, s) => { s.LV2_DESIGNATION_MEANINGS.oneOf = s.LV2_DESIGNATION_MEANINGS.oneOf.filter((w) => w.const !== 'gain'); }), `import { lv2Designation } from ${FT}; lv2Designation('gain');`);
+check('arm: a meaning row whose owner holds no pair (gain) is refused by name', refused(r, /lv2 row param:gain \(designation-meaning, LV2_PARAMETERS_TERMS#gain\) has no pair in its owner's mapping/), true);
+r = arm(broken('clap-code', 'omx-param-contract', (t, s) => { const v = s.OMX_PARAM_CONTRACT_UNIT_IDS['x-value']; v.percent_code = v.pc; delete v.pc; }), `import { lookupValues } from ${FT}; console.log(JSON.stringify(lookupValues('clap', 'controls[].travel.unit')));`);
+check('arm: a code renamed in omx-clap\'s sheet (pc -> percent_code) is the code the CLAP unit row reads', r.status === 0 ? [JSON.parse(r.stdout).pc, JSON.parse(r.stdout).percent_code] : r.stderr.trim().split('\n').pop(), [undefined, 'percent']);
 rmSync(scratch, { recursive: true, force: true });
+
+// 8. the owners' pairs, as read: the CLAP unit row's are omx-clap's sheet whole; % and percent write the same LV2 unit
+{
+  const r8 = spawnSync(process.execPath, ['--input-type=module', '-e', `
+    import { lookupValues, lv2UnitRef } from ${FT};
+    import { domainDocument } from ${JSON.stringify(join(ROOT, 'tools', 'omx-contract.mjs'))};
+    console.log(JSON.stringify({ clap: lookupValues('clap', 'controls[].travel.unit'), sheet: domainDocument('omx-param-contract', '').schemas.OMX_PARAM_CONTRACT_UNIT_IDS['x-value'],
+      refs: ['%', 'percent', 'dB/oct', 'dB-oct', 'dB', 'coef'].map((u) => lv2UnitRef(u)) }));`], { cwd: ROOT, encoding: 'utf8' });
+  const g = r8.status === 0 ? JSON.parse(r8.stdout) : { error: r8.stderr.trim().split('\n').find((l) => /Error/.test(l)) };
+  check('M5: the CLAP unit row\'s pairs are omx-clap\'s OMX_PARAM_CONTRACT_UNIT_IDS, whole', g.clap ?? g.error, g.sheet ?? g.error);
+  check('M5: a declared unit writes one LV2 unit by its symbol or its PARAM_UNITS id', g.refs ?? g.error, ['units:pc', 'units:pc', '<urn:openmixer:unit#dBoct>', '<urn:openmixer:unit#dBoct>', 'units:db', 'units:coef']);
+}
 
 // 5. pkg-config once per environment: a fake pkg-config that logs each call and answers from PKG_CONFIG_PATH
 {
