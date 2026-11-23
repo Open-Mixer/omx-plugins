@@ -37,7 +37,7 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { descriptorFile } from './descriptor.mjs';
-import { lookupValues, tableRows, tableWords } from './format-tables.mjs';
+import { lookupValues, pairedOnly, tableWords } from './format-tables.mjs';
 import { compareVersions, isMain } from './omx-contract.mjs';
 
 /** `cmd args`' trimmed output, or undefined when it fails or says nothing. */
@@ -215,8 +215,7 @@ export function compareFace(format, authored, scanned) {
   const words = tableWords(format);
   // a value no row of the table gives the word is describe's own when no row set it (a CLAP control a `travel`, a CLAP
   // port that is not main `aux`): the face stated nothing
-  const lookupOnly = (word) => Object.values(tableRows(format)).every((r) => r.word?.word !== word || r.word.transform === 'lookup');
-  const defaulted = (word, s) => lookupOnly(word) && words.has(word) && !Object.values(lookupValues(format, word)).some((v) => same(v, s));
+  const defaulted = (word, s) => pairedOnly(format, word) && words.has(word) && !Object.values(lookupValues(format, word)).some((v) => same(v, s));
   const emit = (where, word, a, s, carried = true) => {
     // CLAP states an integer travel's step (CLAP_PARAM_IS_STEPPED, scanned stepped) and has no word for its law: the log
     // of an integer frequency is lost on the CLAP face, as every log and linear scale is there
