@@ -53,14 +53,14 @@ BuildRequires: lilv-devel
 # the standard units a face publishes, by symbol (omx-contract's param domain, PARAM_UNITS x-symbol), and the OpenMixer
 # unit spellings an LV2 face writes (plugin-db's lv2 domain, LV2_OPENMIXER_UNIT_IDS x-uri): tools/format-tables.mjs
 BuildRequires: omx-contract-data >= 3.21.0
-BuildRequires: plugin-db-contract >= 0.5.0
+BuildRequires: plugin-db-contract >= 0.5.1
 BuildRequires: sord
 BuildRequires: omx-clap-host >= 0.34.0
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
 BuildRequires: plugin-hostd >= 0.21.0
 # plugin-hostd's words the generators read: its domains plugin-hostd/clap and plugin-hostd/lv2, the format tables
 # (tools/format-tables.mjs), and the resource hints, RESOURCE_* (tools/resource-hints.mjs)
-BuildRequires: plugin-hostd-contract >= 0.21.0
+BuildRequires: plugin-hostd-contract >= 0.22.0
 # %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
 # shipped pins.d file to the shipped binaries' hashes (tools/pins-check.sh)
 BuildRequires: plugin-qualify >= 0.21.0
@@ -311,6 +311,9 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
   ROTARY_ACCEL_RANGE travels in coef; the rotary's accel is coef
 - V23d: the unit codes are read from omx-clap's domain omx-param-contract and its
   render; make units refuses an include of omx-contract's old unit header
+- floors: plugin-hostd-contract >= 0.22.0 and plugin-db-contract >= 0.5.1: the
+  format tables are x-kind map items, their unit and meaning pairs read from
+  omx-clap and plugin-db (plugin-hostd V19, M5)
 
 * Sun Nov 22 2026 Pau Aliagas <linuxnow@gmail.com> - 0.20.0-1
 - the version moves to 0.20.0
