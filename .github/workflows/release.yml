@@ -56,14 +56,41 @@ jobs:
   # is released. The rpm job below publishes the moment it builds, so this job comes first and the release waits
   # on it: tools/qualify-release.sh builds the tree, qualifies every installed .clap and refuses unless each one's
   # qualification record says suitable. The records and the probe outputs they judged are attached to the run.
+  # the cells the verdict runs in, from Open-Mixer/.github's release-matrix (ruling D25: no Fedora release written into
+  # a job; omx-plugins#54), the quick set or the whole matrix as the rpm build decides it
+  qualify-cells:
+    name: the verdict's cells (release-matrix)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      cells: ${{ steps.m.outputs.cells }}
+      count: ${{ steps.m.outputs.count }}
+    steps:
+      - id: m
+        uses: Open-Mixer/.github/.github/actions/release-matrix@openmixer-v1
+        with:
+          kind: rpm
+          wave: ${{ vars.OMX_RELEASE_MATRIX }}
+          staged: ${{ inputs.staged }}
+          releases: '["45"]'
+          arches: '["x86_64"]'
+
   qualify:
-    name: RT-safety verdict (every plugin)
+    name: RT-safety verdict (every plugin, fedora ${{ matrix.cell.fedora }}, ${{ matrix.cell.arch }})
+    needs: qualify-cells
+    if: needs.qualify-cells.outputs.count != '0'
     runs-on: ${{ (inputs.runner != 'ubuntu-latest' && inputs.runner) || github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 60
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        cell: ${{ fromJSON(needs.qualify-cells.outputs.cells) }}
     container:
-      image: fedora:45
+      image: fedora:${{ matrix.cell.fedora }}
     steps:
       - name: Install git and dnf plugins
         run: dnf install -y --setopt=install_weak_deps=False git dnf5-plugins nodejs
@@ -89,7 +116,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: omx-plugins-qualification
+          name: omx-plugins-qualification-fc${{ matrix.cell.fedora }}-${{ matrix.cell.arch }}
           path: |
             qualification/*.qualification.json
             qualification/*.probe.json
