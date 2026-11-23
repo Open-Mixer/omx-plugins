@@ -140,7 +140,7 @@ function withRef(ref, fn) {
   git(self, ...ID, 'commit', '-q', '-am', 'grown');
   const g = withRef('HEAD', () => recipe.debtGrowth(self, grown));
   const v = verdictWithoutCI(g);
-  expect(g.base === undefined && v !== null && v.bad === 1 && /HEAD/.test(v.line) && /its own commit/.test(v.line), `OMX_DEBT_BASE_REF=HEAD is refused by name, never the debt against itself (${v ? (v.line || 'passed: base ' + g.base).slice(0, 110) : 'no growthVerdict'})`);
+  expect(g.base === undefined && v !== null && v.bad === 1 && /the base HEAD resolves to HEAD's own commit/.test(v.line), `OMX_DEBT_BASE_REF=HEAD is refused by name, never the debt against itself (${v ? (v.line || 'passed: base ' + g.base).slice(0, 110) : 'no growthVerdict'})`);
 }
 
 // 6. main itself: a checkout whose origin/main is HEAD's commit compares with it (a run on main), never refused
