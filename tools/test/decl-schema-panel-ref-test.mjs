@@ -10,7 +10,8 @@
  * `omx-geq declaration`, `omx-strip declaration`).
  *
  *   1. ADDRESS MOVED. Under a scratch omx-panel tree that is the installed one with its schema's `$id` rewritten to
- *      another address, omx-geq's and omx-strip's declarations pass the recipe's declValid, no reference unresolved.
+ *      another address, omx-geq's and omx-strip's declarations get the recipe's declValid verdict they get under the
+ *      installed omx-panel, no reference unresolved.
  *   2. NO HOST. schema/plugin.decl.schema.json names no host in a `$ref`: omx-panel's definitions are
  *      `panel.schema.json#/$defs/<name>`.
  *   3. NOT EVERY NAME. A `$ref` into another document (`other.schema.json#/$defs/widget`) stays unresolved: the
@@ -47,15 +48,22 @@ const declValid = (stem, env = {}) => spawnSync(process.execPath, ['--input-type
   const r = CHECKERS.declValid(ROOT, loadRecipe(), pluginFacts(ROOT, '${stem}'));
   console.log(JSON.stringify(r));
 `], { encoding: 'utf8', cwd: ROOT, env: { ...process.env, OMX_PANEL_DIR: moved, ...env } });
-for (const stem of ['omx-geq', 'omx-strip']) {
-  const r = declValid(stem);
-  let out;
+// what declValid says of a plugin, `{ ok, detail }`, with omx-panel at `dir`
+const verdict = (stem, dir) => {
+  const r = declValid(stem, { OMX_PANEL_DIR: dir });
   try {
-    out = JSON.parse(r.stdout.trim().split('\n').pop());
+    return JSON.parse(r.stdout.trim().split('\n').pop());
   } catch {
-    out = { ok: false, detail: `${r.stdout}${r.stderr}`.trim() };
+    return { ok: false, detail: `${r.stdout}${r.stderr}`.trim() };
   }
-  say(r.status === 0 && out.ok && !/unresolved/.test(out.detail), `${stem}'s declaration validates under an omx-panel whose schema declares another $id`, (out.detail ?? '').slice(0, 300));
+};
+for (const stem of ['omx-geq', 'omx-strip']) {
+  // the property is the address alone: under the moved $id the verdict is the installed omx-panel's, with no reference
+  // unresolved (a finding of another check, e.g. a family's roles drifting from the installed omx-panel, is in both)
+  const atMoved = verdict(stem, moved), atInstalled = verdict(stem, PANEL_DIR);
+  say(!/unresolved/.test(atMoved.detail ?? '') && atMoved.ok === atInstalled.ok && atMoved.detail === atInstalled.detail,
+    `${stem}'s declaration validates under an omx-panel whose schema declares another $id as under the installed one`, (atMoved.detail ?? '').slice(0, 300));
+  if (!atInstalled.ok) console.log(`note decl-schema-panel-ref ${stem}: declValid is not ok under the installed omx-panel either, for another check: ${(atInstalled.detail ?? '').slice(0, 200)}`);
 }
 
 // 2. the declaration schema names no host

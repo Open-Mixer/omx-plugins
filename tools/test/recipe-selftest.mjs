@@ -977,15 +977,8 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
 
 }
 
-// the declaration schema names omx-panel's lists by the installed schema's own $id: a ref to any other address is
-// unresolved, and every declaration that draws a widget or a visibleWhen (omx-geq, omx-strip) lacks its `declaration`
-{
-  const { PANEL_SCHEMA } = await import('../omx-panel.mjs');
-  const text = readFileSync(join(ROOT, 'schema', 'plugin.decl.schema.json'), 'utf8');
-  const refs = [...text.matchAll(/"\$ref": "([^"#]*panel\.schema\.json)#/g)].map((m) => m[1]);
-  const strays = [...new Set(refs)].filter((r) => r !== PANEL_SCHEMA.$id);
-  expect(refs.length > 0 && strays.length === 0, `the declaration schema's refs into omx-panel name the installed schema's $id ${PANEL_SCHEMA.$id}${strays.length ? ` (found ${strays.join(', ')})` : ''}`);
-}
+// the declaration schema names omx-panel's lists by the document's name, panel.schema.json, whatever its $id prints:
+// tools/test/decl-schema-panel-ref-test.mjs holds it (make decl-schema-panel-ref)
 
 // an arm that stops early has failed already: the verdict and the exit come after main, always
 await main();
