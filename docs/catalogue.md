@@ -560,7 +560,7 @@ Plus the host's bypass.
 | Horn Fast | 3 to 10 Hz | 6.8 Hz |
 | Drum Slow | 0.1 to 2 Hz | 0.7 Hz |
 | Drum Fast | 3 to 10 Hz | 5.9 Hz |
-| Accel | 0.25 to 4 x | 1 x |
+| Accel | 0.25 to 4 coef | 1 coef |
 | Balance | -100 to 100 %, whole steps | 0 % |
 | Mix | 0 to 100 % | 100 % |
 | Speed | Stop / Slow / Fast | Slow |

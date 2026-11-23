@@ -123,7 +123,7 @@
         "min": 0.25,
         "max": 4,
         "step": 0,
-        "unit": "x",
+        "unit": "coef",
         "default": 1,
         "scale": "linear"
       },

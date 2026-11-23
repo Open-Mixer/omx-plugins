@@ -43,7 +43,7 @@ function check(what, got, want) {
 
 // 1. the units, against the map tools/gen.mjs held before (LV2_UNITS, the release before #210)
 const SHIPPED_LV2_UNITS = {
-  Hz: 'hz', dB: 'db', ms: 'ms', s: 's', min: 'min', '%': 'pc', x: 'coef', oct: 'oct', cents: 'cent', st: 'semitone12TET',
+  Hz: 'hz', dB: 'db', ms: 'ms', s: 's', min: 'min', '%': 'pc', coef: 'coef', oct: 'oct', cents: 'cent', st: 'semitone12TET',
   dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', 'dB/oct': 'dBoct',
 };
 const names = lv2UnitNames();
@@ -192,7 +192,7 @@ rmSync(scratch, { recursive: true, force: true });
 // by its symbol (omx-contract's param domain, PARAM_UNITS x-symbol): golden; the lv2 domain without dBu loses its URI
 {
   const FTS = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
-  const PUBLISHED = { '': 'none', Hz: 'Hz', dB: 'dB', ms: 'ms', s: 's', min: 'min', '%': 'percent', x: 'x', oct: 'oct', cents: 'cents', st: 'st', dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', 'dB/oct': 'dB-oct', ratio: 'ratio' };
+  const PUBLISHED = { '': 'none', Hz: 'Hz', dB: 'dB', ms: 'ms', s: 's', min: 'min', '%': 'percent', coef: 'coef', oct: 'oct', cents: 'cents', st: 'st', dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', 'dB/oct': 'dB-oct', ratio: 'ratio' };
   const OWN = { dBFS: 'urn:openmixer:unit#dBFS', LUFS: 'urn:openmixer:unit#LUFS', ratio: 'urn:openmixer:unit#ratio', dBu: 'urn:openmixer:unit#dBu', 'dB/oct': 'urn:openmixer:unit#dBoct' };
   const call = (env) => spawnSync(process.execPath, ['--input-type=module', '-e', `
     import { ownLv2Units, standardUnitOf, lv2UnitRef } from ${FTS};

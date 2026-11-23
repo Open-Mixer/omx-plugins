@@ -29,7 +29,7 @@
     },
     {
       "symbol": "accel",
-      "unit": "x",
+      "unit": "coef",
       "value": 1
     },
     {
