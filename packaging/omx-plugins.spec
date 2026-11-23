@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 Name: omx-plugins
-Version: 0.20.0
+Version: 0.21.0
 Release: 1%{?dist}
 License: GPL-3.0-or-later
 Summary: The OpenMixer console's delay, drive, EQ, channel strip, keyed gate and effects, as plugins for your DAW
@@ -304,6 +304,12 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 # END GENERATED lv2-files
 
 %changelog
+* Mon Nov 23 2026 Pau Aliagas <linuxnow@gmail.com> - 0.21.0-1
+- the version moves to 0.21.0 (chain 3)
+- floors: omx-clap-devel and omx-clap-contract >= 0.35.0
+- V23d: the unit codes are read from omx-clap's domain omx-param-contract and its
+  render; make units refuses an include of omx-contract's old unit header
+
 * Sun Nov 22 2026 Pau Aliagas <linuxnow@gmail.com> - 0.20.0-1
 - the version moves to 0.20.0
 - floors: omx-clap-devel and omx-clap-contract >= 0.34.0, omx-contract >= 3.21.0,
