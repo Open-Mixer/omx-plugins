@@ -72,7 +72,7 @@ static const char *const OMX_CHORUS_PARAM_MODULES[OMX_CHORUS_PARAM_COUNT] = {
 #define OMX_CHORUS_LV2_URI "urn:openmixer:chorus"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_CHORUS_DECL_SOURCE "omx chorus: Spread 0 to 0.5, Rate 0.05 to 8 Hz, Depth 0 to 12 ms, Voices 1 to 4, Mix 0 to 100 %"
-#define OMX_CHORUS_DECL_DIGEST "7e9d7de96f6b48a792b97d200fa3c98c64f705c253f31637301752d03a5a2e51"
+#define OMX_CHORUS_DECL_DIGEST "47bb4d2edaf0a74a46b1d4b950bff980642c1f004ec243d3994c53ba05402df7"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

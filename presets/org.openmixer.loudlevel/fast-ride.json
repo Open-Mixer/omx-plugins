@@ -29,7 +29,7 @@
     },
     {
       "symbol": "window",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Momentary"
     }

@@ -264,7 +264,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -402,7 +402,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -540,7 +540,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -678,7 +678,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -816,7 +816,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -954,7 +954,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1092,7 +1092,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1230,7 +1230,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1368,7 +1368,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1506,7 +1506,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1644,7 +1644,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1782,7 +1782,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1920,7 +1920,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2058,7 +2058,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2196,7 +2196,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2334,7 +2334,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },

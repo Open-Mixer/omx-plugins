@@ -75,7 +75,7 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | resolved `values`, `points` | a `choice`: `ids` (each value as text), `labels`, `values` | |
 | `params[].forKind`, `.defaultRef`, `.defaultId`, `.defaultBand`, `.perBand`, `.values` | the come-up value and the labels they give, stated | kept, by symbol (`controls`): how the value is read, not the value |
 | resolved `byKind` | | kept as the read (gap 2) |
-| a set's `unit` (`dB/oct`) | | kept, by symbol (gap 1) |
+| a set's `unit` (`dBPerOct`) | | kept, by symbol (gap 1) |
 | `params[].own` (a face's switch, a stage order) | the control, its travel typed, `source.impl` naming the face | `own`, the reason, by symbol |
 
 ## The gaps
@@ -116,13 +116,15 @@ publishes (row M5, plugin-hostd `docs/formats.md`, "Lookup values the owners pub
 | `designation-meaning` | LV2 `param:<term>`, `lv2:enabled` | plugin-db's domain `lv2`, the word of `LV2_DESIGNATION_MEANINGS` whose `x-from` names the row's `x-term` |
 
 The row whose pair maps a source value to the word's value names what the face writes. A unit's value is a
-`PARAM_UNITS` id (`percent`); a declaration's unit is read as the id its symbol stands for (`%`), so the faces follow
-either spelling. A mapping that is absent, a document that is not its owner's (`info.x-owner`), a row its mapping holds
+`PARAM_UNITS` id (`percent`), and a declaration states the id too: `%` is its `x-symbol`, what a person reads, and no
+declared unit. A face writes the id wherever a host reads a word (the descriptor, a TTL's `units:unit`, the parameter
+contract's token, a preset) and the `x-symbol` only where a person reads the value: the CLAP table value_to_text prints
+(`50 %`, `12 dB/oct`), a set's point labels, the manual and the parameter reference. A mapping that is absent, a document that is not its owner's (`info.x-owner`), a row its mapping holds
 no pair for and a value two rows map are each refused by name. No transform is code of ours.
 `$OMX_INSTALLED_CONTRACTDIR`, a contract directory holding the domains, stands in for the installed one.
 
 - An LV2 port's `units:unit` is the LV2 row mapping its unit (`units:db` for `dB`, `<urn:openmixer:unit#dBFS>` for
-  `dBFS`); the OpenMixer units, `dBFS`, `dBu`, `LUFS`, `dB/oct` and `ratio` (`urn:openmixer:unit#ratio`, gap 4), are
+  `dBFS`); the OpenMixer units, `dBFS`, `dBu`, `LUFS`, `dBPerOct` and `ratio` (`urn:openmixer:unit#ratio`, gap 4), are
   the `units:unit` row's pairs and are defined in the plugin's TTL.
 - An LV2 port's `lv2:designation` is the LV2 row mapping its control's `meaning`: 186 ports carry a `param:` term
   (gain 93, frequency 63, wetDryRatio 11, release 5, threshold 4, ratio 4, attack 4, hold 1, delay 1). A meaning with

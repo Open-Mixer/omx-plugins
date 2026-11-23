@@ -17,6 +17,7 @@
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { unitSymbol } from './format-tables.mjs';
 import { faceIds } from './param-contract.mjs';
 import { baseOf } from './variants.mjs';
 import { isMain } from './omx-contract.mjs';
@@ -99,7 +100,8 @@ export function pluginPage(root, stem) {
     '| Id | Symbol | Name | Unit | Min | Max | Default | Step or values | Flags | Page (priority) |', '|---|---|---|---|---|---|---|---|---|---|'];
   for (const c of descriptor.controls) {
     const v = valueOf(c);
-    const unit = c.kind === 'travel' ? c.travel.unit : (c.unit ?? '');
+    // the unit as a person reads it, its PARAM_UNITS id's x-symbol (percent is %)
+    const unit = unitSymbol(c.kind === 'travel' ? c.travel.unit : c.unit);
     const flags = [c.automatable ? 'automatable' : null, c.group ? null : 'hidden'].filter(Boolean).join(', ');
     const page = c.group ? `${c.group.join(' / ')} (${priorityOf.get(c.group.join('/'))})` : '';
     out.push(`| ${c.id} | \`${c.symbol}\` | ${cell(c.name)} | ${cell(unit)} | ${cell(v.min)} | ${cell(v.max)} | ${cell(v.def)} | ${cell(v.step)} | ${flags} | ${cell(page)} |`);

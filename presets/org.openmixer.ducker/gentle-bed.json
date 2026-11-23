@@ -34,7 +34,7 @@
     },
     {
       "symbol": "ratio",
-      "unit": "",
+      "unit": "none",
       "value": 4
     },
     {
@@ -54,7 +54,7 @@
     },
     {
       "symbol": "keyListen",
-      "unit": "",
+      "unit": "none",
       "value": 0
     }
   ],

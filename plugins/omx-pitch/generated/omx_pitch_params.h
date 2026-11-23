@@ -60,7 +60,7 @@ static const char *const OMX_PITCH_PARAM_MODULES[OMX_PITCH_PARAM_COUNT] = {
 #define OMX_PITCH_LV2_URI "urn:openmixer:pitch"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_PITCH_DECL_SOURCE "omx pitch: Semitones -12 to 12 st, Cents -50 to 50 cents, Mix 0 to 100 %"
-#define OMX_PITCH_DECL_DIGEST "1147fee9b0992b434223331f065cdfacf96577f00fb64751d0c42aca706448b6"
+#define OMX_PITCH_DECL_DIGEST "7316151538b317b414bc03c4d8d33a54d3b60c38b38f7b652611fa76470cec27"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

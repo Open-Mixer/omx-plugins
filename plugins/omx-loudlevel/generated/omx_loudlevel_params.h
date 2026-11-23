@@ -72,7 +72,7 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
 #define OMX_LOUDLEVEL_LV2_URI "urn:openmixer:loudlevel"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_LOUDLEVEL_DECL_SOURCE "omx loudlevel: Target -40 to -6 dB, Range 0 to 24 dB, Speed 0.1 to 6 dB, Gate -70 to -30 dB, Window 0 to 1"
-#define OMX_LOUDLEVEL_DECL_DIGEST "5ca40a12d69abada26cd79a670a6090d0dabf4de21b92531fafaccc34968ba61"
+#define OMX_LOUDLEVEL_DECL_DIGEST "c87ae980de51a6b82a3965a255349cdf70b7d0f0ecc64ef676cc210393c9ba4f"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

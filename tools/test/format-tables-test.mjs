@@ -49,8 +49,8 @@ function check(what, got, want) {
 
 // 1. the units, against the map tools/gen.mjs held before (LV2_UNITS, the release before #210)
 const SHIPPED_LV2_UNITS = {
-  Hz: 'hz', dB: 'db', ms: 'ms', s: 's', min: 'min', '%': 'pc', coef: 'coef', oct: 'oct', cents: 'cent', st: 'semitone12TET',
-  dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', 'dB/oct': 'dBoct',
+  Hz: 'hz', dB: 'db', ms: 'ms', s: 's', min: 'min', percent: 'pc', coef: 'coef', oct: 'oct', cents: 'cent', st: 'semitone12TET',
+  dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', dBPerOct: 'dBoct',
 };
 const names = lv2UnitNames();
 check('the LV2 units a face writes are the ones it wrote before the table was read', Object.fromEntries(Object.keys(SHIPPED_LV2_UNITS).map((u) => [u, names[u]])), SHIPPED_LV2_UNITS);
@@ -145,16 +145,17 @@ r = arm(broken('clap-code', 'omx-param-contract', (t, s) => { const v = s.OMX_PA
 check('arm: a code renamed in omx-clap\'s sheet (pc -> percent_code) is the code the CLAP unit row reads', r.status === 0 ? [JSON.parse(r.stdout).pc, JSON.parse(r.stdout).percent_code] : r.stderr.trim().split('\n').pop(), [undefined, 'percent']);
 rmSync(scratch, { recursive: true, force: true });
 
-// 8. the owners' pairs, as read: the CLAP unit row's are omx-clap's sheet whole; % and percent write the same LV2 unit
+// 8. the owners' pairs, as read: the CLAP unit row's are omx-clap's sheet whole; a declared unit is its PARAM_UNITS id, and
+// a display spelling (%, dB/oct) is no declared unit, so it writes none
 {
   const r8 = spawnSync(process.execPath, ['--input-type=module', '-e', `
     import { lookupValues, lv2UnitRef } from ${FT};
     import { domainDocument } from ${JSON.stringify(join(ROOT, 'tools', 'omx-contract.mjs'))};
     console.log(JSON.stringify({ clap: lookupValues('clap', 'controls[].travel.unit'), sheet: domainDocument('omx-param-contract', '').schemas.OMX_PARAM_CONTRACT_UNIT_IDS['x-value'],
-      refs: ['%', 'percent', 'dB/oct', 'dB-oct', 'dB', 'coef'].map((u) => lv2UnitRef(u)) }));`], { cwd: ROOT, encoding: 'utf8' });
+      refs: ['percent', '%', 'dBPerOct', 'dB/oct', 'dB', 'coef', 'none'].map((u) => String(lv2UnitRef(u))) }));`], { cwd: ROOT, encoding: 'utf8' });
   const g = r8.status === 0 ? JSON.parse(r8.stdout) : { error: r8.stderr.trim().split('\n').find((l) => /Error/.test(l)) };
   check('M5: the CLAP unit row\'s pairs are omx-clap\'s OMX_PARAM_CONTRACT_UNIT_IDS, whole', g.clap ?? g.error, g.sheet ?? g.error);
-  check('M5: a declared unit writes one LV2 unit by its symbol or its PARAM_UNITS id', g.refs ?? g.error, ['units:pc', 'units:pc', '<urn:openmixer:unit#dBoct>', '<urn:openmixer:unit#dBoct>', 'units:db', 'units:coef']);
+  check('M5, C2: a declared unit writes its LV2 unit by its PARAM_UNITS id; a symbol, and none, write none', g.refs ?? g.error, ['units:pc', 'undefined', '<urn:openmixer:unit#dBoct>', 'undefined', 'units:db', 'units:coef', 'undefined']);
 }
 
 // 5. pkg-config once per environment: a fake pkg-config that logs each call and answers from PKG_CONFIG_PATH
@@ -222,18 +223,18 @@ rmSync(scratch, { recursive: true, force: true });
 
 // 7. M3 + F4: the declarations' own LV2 units are the standard units F1 spells (plugin-db's lv2 domain,
 // LV2_OPENMIXER_UNIT_IDS: the PARAM_UNITS word and the exact x-uri), and every unit a face publishes is a standard unit
-// by its symbol (omx-contract's param domain, PARAM_UNITS x-symbol): golden; the lv2 domain without dBu loses its URI
+// by its id, shown by its x-symbol (omx-contract's param domain, PARAM_UNITS, C2): golden; the lv2 domain without dBu loses its URI
 {
   const FTS = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
-  const PUBLISHED = { '': 'none', Hz: 'Hz', dB: 'dB', ms: 'ms', s: 's', min: 'min', '%': 'percent', coef: 'coef', oct: 'oct', cents: 'cents', st: 'st', dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', 'dB/oct': 'dB-oct', ratio: 'ratio' };
-  const OWN = { dBFS: 'urn:openmixer:unit#dBFS', LUFS: 'urn:openmixer:unit#LUFS', ratio: 'urn:openmixer:unit#ratio', dBu: 'urn:openmixer:unit#dBu', 'dB/oct': 'urn:openmixer:unit#dBoct' };
+  const PUBLISHED = { none: '', Hz: 'Hz', dB: 'dB', ms: 'ms', s: 's', min: 'min', percent: '%', coef: 'coef', oct: 'oct', cents: 'cents', st: 'st', dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', dBPerOct: 'dB/oct', ratio: 'ratio' };
+  const OWN = { dBFS: 'urn:openmixer:unit#dBFS', LUFS: 'urn:openmixer:unit#LUFS', ratio: 'urn:openmixer:unit#ratio', dBu: 'urn:openmixer:unit#dBu', dBPerOct: 'urn:openmixer:unit#dBoct' };
   const call = (env) => spawnSync(process.execPath, ['--input-type=module', '-e', `
-    import { ownLv2Units, standardUnitOf, lv2UnitRef } from ${FTS};
-    console.log(JSON.stringify({ own: ownLv2Units(), std: Object.fromEntries(${JSON.stringify(Object.keys(PUBLISHED))}.map((u) => [u, standardUnitOf(u)])), dbu: String(lv2UnitRef('dBu')) }));`], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
+    import { ownLv2Units, unitSymbol, lv2UnitRef } from ${FTS};
+    console.log(JSON.stringify({ own: ownLv2Units(), std: Object.fromEntries(${JSON.stringify(Object.keys(PUBLISHED))}.map((u) => [u, unitSymbol(u)])), dbu: String(lv2UnitRef('dBu')) }));`], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });
   let r7 = call({});
   const got = r7.status === 0 ? JSON.parse(r7.stdout) : { error: r7.stderr.trim().split('\n').find((l) => /Error/.test(l)) };
   check('M3: the own LV2 units are F1\'s words and exact URIs (plugin-db lv2 domain) = golden', got.own ?? got.error, OWN);
-  check('F4: every published unit is a standard unit by its symbol (PARAM_UNITS x-symbol) = golden', got.std ?? got.error, PUBLISHED);
+  check('F4, C2: every published unit is a standard unit by its id, shown by its x-symbol (PARAM_UNITS) = golden', got.std ?? got.error, PUBLISHED);
   const tmp = join(ROOT, 'build', 'tmp', 'format-tables-lv2');
   rmSync(tmp, { recursive: true, force: true });
   let planted = false;

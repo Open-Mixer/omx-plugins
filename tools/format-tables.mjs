@@ -164,52 +164,52 @@ export const clapFeatureValue = (field) => Object.entries(clapFeatureTerms()).fi
 
 const UNIT_WORD = 'controls[].travel.unit', MEANING_WORD = 'controls[].meaning';
 
-/** The standard units by the symbol a face publishes (omx-contract's param domain, PARAM_UNITS: each word's x-symbol,
- * % for percent, dB/oct for dB-oct, '' for none; F4): `{ <symbol>: <PARAM_UNITS word> }`. No published unit is renamed. */
+/** The standard units by id (omx-contract's param domain, PARAM_UNITS, C2: a descriptor states the id, `percent`,
+ * `none`, `dBPerOct`), each with its x-symbol, the display spelling a person reads (`%`, `''`, `dB/oct`):
+ * `{ <id>: <symbol> }`. */
 let standardUnits;
-export function standardUnitsBySymbol() {
+export function standardUnitSymbols() {
   if (standardUnits) return standardUnits;
-  const { file, schemas } = domainDocument('param', 'omx-contract-data >= 3.21.0');
+  const { file, schemas } = domainDocument('param', 'omx-contract-data >= 3.22.0');
   const words = schemas.PARAM_UNITS?.oneOf;
   if (!Array.isArray(words)) throw new Error(`${file}: holds no PARAM_UNITS words`);
-  standardUnits = Object.fromEntries(words.map((w) => [w['x-symbol'] ?? w.const, w.const]));
+  standardUnits = Object.fromEntries(words.map((w) => [w.const, w['x-symbol'] ?? w.const]));
   return standardUnits;
 }
-/** The PARAM_UNITS word a published unit symbol is, or undefined (a plugin's own unit: N1's, not in this pass). */
-export const standardUnitOf = (symbol) => standardUnitsBySymbol()[symbol];
+/** The PARAM_UNITS id `unit` is, or undefined (a plugin's own unit, or a display spelling such as `%`, which is never a
+ * descriptor's word). */
+export const standardUnitOf = (unit) => (Object.hasOwn(standardUnitSymbols(), unit) ? unit : undefined);
 
-/** A declared unit as the PARAM_UNITS id the tables' pairs carry (M5, decision 2 of plugin-hostd#215): the id its
- * published symbol stands for (% -> percent, dB/oct -> dB-oct), or the unit itself when it is already an id. */
-export const unitId = (unit) => standardUnitOf(unit) ?? unit;
-/** The symbol a face publishes for PARAM_UNITS id `id` (its x-symbol, else the id), or undefined for no PARAM_UNITS word. */
-const symbolOfId = (id) => Object.entries(standardUnitsBySymbol()).find(([, w]) => w === id)?.[0];
+/** What a face shows a person for unit `unit`: its PARAM_UNITS id's x-symbol (`percent` -> `%`, `none` -> ``,
+ * `dBPerOct` -> `dB/oct`), else the unit as written. A C table's text, a manual page and a summary write this; every
+ * word a host reads (a descriptor, a TTL's units:unit, the param-contract token) stays the id. */
+export const unitSymbol = (unit) => standardUnitSymbols()[unit] ?? unit ?? '';
 
 /** The OpenMixer units, the pairs of the LV2 table's `units:unit` row (plugin-db's lv2 domain, LV2_OPENMIXER_UNIT_IDS:
- * the exact URI an LV2 file writes, x-uri, and its PARAM_UNITS id; sorting rows M3, M5): `{ <published symbol>: <uri> }`,
- * dB/oct -> urn:openmixer:unit#dBoct. The plugin's TTL defines each it uses (tools/gen.mjs LV2_CUSTOM_UNITS). */
+ * the exact URI an LV2 file writes, x-uri, and its PARAM_UNITS id; sorting rows M3, M5): `{ <PARAM_UNITS id>: <uri> }`,
+ * dBPerOct -> urn:openmixer:unit#dBoct. The plugin's TTL defines each it uses (tools/gen.mjs LV2_CUSTOM_UNITS). */
 export function ownLv2Units() {
   const row = tableRows('lv2')['units:unit'];
   const pairs = row?.word?.word === UNIT_WORD ? rowPairs('lv2', 'units:unit', row) : undefined;
   if (!pairs) throw new Error(`plugin-hostd's lv2 table has no units:unit row whose pairs give ${UNIT_WORD} (${TABLES_WANT})`);
   return Object.fromEntries(Object.entries(pairs).map(([uri, id]) => {
-    const symbol = symbolOfId(id);
-    if (symbol === undefined) throw new Error(`plugin-db's LV2_OPENMIXER_UNIT_IDS maps ${uri} to ${id}, no word of PARAM_UNITS`);
-    return [symbol, uri];
+    if (standardUnitOf(id) === undefined) throw new Error(`plugin-db's LV2_OPENMIXER_UNIT_IDS maps ${uri} to ${id}, no word of PARAM_UNITS`);
+    return [id, uri];
   }));
 }
 
-/** The `units:unit` value of a declared unit (a published symbol or its PARAM_UNITS id), as a TTL writes it: the LV2
- * table read backwards (units:db for dB, units:pc for % and percent, <urn:openmixer:unit#dBFS> for dBFS); none for "". */
+/** The `units:unit` value of a declared unit (its PARAM_UNITS id), as a TTL writes it: the LV2 table read backwards
+ * (units:db for dB, units:pc for percent, <urn:openmixer:unit#dBFS> for dBFS); none for none, which no row maps. */
 export function lv2UnitRef(unit) {
-  const key = unit ? outboundValue('lv2', UNIT_WORD, unitId(unit)) : undefined;
+  const key = unit ? outboundValue('lv2', UNIT_WORD, unit) : undefined;
   if (!key) return undefined;
   return key.startsWith('units:') ? key : `<${key}>`;
 }
 
-/** The LV2 name of each unit a face can write, by its published symbol, `{ <unit>: <name> }` (`units:db` -> db,
+/** The LV2 name of each unit a face can write, by its PARAM_UNITS id, `{ <id>: <name> }` (`units:db` -> db,
  * `urn:openmixer:unit#dBFS` -> dBFS). */
 export function lv2UnitNames() {
-  return Object.fromEntries(Object.entries(lookupValues('lv2', UNIT_WORD)).map(([key, id]) => [symbolOfId(id) ?? id, key.split(/[:#]/).pop()]));
+  return Object.fromEntries(Object.entries(lookupValues('lv2', UNIT_WORD)).map(([key, id]) => [id, key.split(/[:#]/).pop()]));
 }
 
 /** The LV2 designation of a meaning, the LV2 table read backwards (gain -> param:gain), or undefined. */
