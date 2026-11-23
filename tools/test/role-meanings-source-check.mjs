@@ -70,10 +70,15 @@ let installedSchema;
 try { installedSchema = installedSchemaOf(sources); } catch (e) { console.error(e.message); process.exit(2); }
 
 const tmp = mkdtempSync(join(tmpdir(), 'role-meanings-source-'));
-/** A contract directory holding every installed package but omx-plugins, plus `omxPlugins` files when given. */
+/** A contract directory holding every installed package but omx-plugins and every installed domain (param's PARAM_UNITS,
+ * which omx-panel's layout reads, among them), plus `omxPlugins` files when given. */
 function contractDir(name, omxPlugins) {
   const major = join(tmp, name, '3');
   mkdirSync(major, { recursive: true });
+  for (const src of sources) for (const dom of readdirSync(dirname(src), { withFileTypes: true })) {
+    if (!dom.isDirectory() || dom.name === '3' || existsSync(join(tmp, name, dom.name))) continue;
+    symlinkSync(join(dirname(src), dom.name), join(tmp, name, dom.name));
+  }
   for (const src of sources) for (const pkg of readdirSync(src, { withFileTypes: true })) {
     if (!pkg.isDirectory() || pkg.name === 'omx-plugins' || existsSync(join(major, pkg.name))) continue;
     symlinkSync(join(src, pkg.name), join(major, pkg.name));
