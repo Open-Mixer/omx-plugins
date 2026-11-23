@@ -8,7 +8,7 @@
 <urn:openmixer:upward>
     a lv2:Plugin ;
     lv2:binary <omx-upward.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-upward.ttl> .
+    rdfs:seeAlso <omx-upward.ttl> .
 
 <urn:openmixer:upward#preset-ambience>
     a pset:Preset ;

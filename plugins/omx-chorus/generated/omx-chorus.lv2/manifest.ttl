@@ -8,7 +8,7 @@
 <urn:openmixer:chorus>
     a lv2:Plugin ;
     lv2:binary <omx-chorus.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-chorus.ttl> .
+    rdfs:seeAlso <omx-chorus.ttl> .
 
 <urn:openmixer:chorus#preset-dimension>
     a pset:Preset ;

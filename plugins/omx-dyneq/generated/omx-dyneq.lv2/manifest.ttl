@@ -8,7 +8,7 @@
 <urn:openmixer:dyneq>
     a lv2:Plugin ;
     lv2:binary <omx-dyneq.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-dyneq.ttl> .
+    rdfs:seeAlso <omx-dyneq.ttl> .
 
 <urn:openmixer:dyneq#preset-harsh-vocal>
     a pset:Preset ;

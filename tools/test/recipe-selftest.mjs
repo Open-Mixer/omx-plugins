@@ -57,7 +57,7 @@ import { fileURLToPath } from 'node:url';
 import { checkCommits, rangeCommits } from '../commit-plan-check.mjs';
 import { chainSources, commitPlan, draftChain, draftDeclaration, kernelSources, planChain, planPlugin, reviewMarks, writePlugin } from '../omx-new-plugin.mjs';
 import { bindFace, parseFace } from '../instance-face.mjs';
-import { eqDefaultBands, kernelControls, locateContract, resolveParam } from '../omx-contract.mjs';
+import { OWNERS, eqDefaultBands, kernelControls, locateContract, resolveParam } from '../omx-contract.mjs';
 import { omxdspInclude } from '../template.mjs';
 import { defaultPanel, emitPluginTtl, generateInstance, loadDecl, meterRows } from '../gen.mjs';
 import { hintErrors } from '../port-hints.mjs';
@@ -98,6 +98,9 @@ function fakeContract(dst, kernels, listed) {
   }
   if (listed) render.kernels = { ...(render.kernels ?? {}), ...listed };
   writeFileSync(join(dst, 'omx-contract.json'), JSON.stringify(render, null, 2));
+  // the owners beside the render: a build reads the owners of the render it is handed (descriptor.mjs), so the stand-in carries the
+  // installed render's, as every copy of a union render does
+  if (existsSync(join(real.dir, OWNERS))) cpSync(join(real.dir, OWNERS), join(dst, OWNERS));
 }
 
 const travel = (min, max, step, unit, def) => ({ kind: 'travels', shape: 'travel', value: { min, max, step, unit, default: def, defaultFrom: 'desk' } });
@@ -314,7 +317,6 @@ async function main() {
     ['declValid', 'declaration', () => edit(`${P}/omx-drive.descriptor.json`, (s) => s.replace('"org.openmixer.drive"', '"org.openmixer.delay"'))],
     ['generatedFresh', 'params-header', () => edit(`${P}/generated/omx_drive_params.h`, (s) => `${s}\n`)],
     ['generatedFresh', 'lv2-description', () => edit(`${P}/generated/omx-drive.lv2/omx-drive.ttl`, (s) => s.replace('lv2:default 0 ;', 'lv2:default 1 ;'))],
-    ['modguiFresh', 'modgui', () => add(`${P}/generated/omx-drive.lv2/modgui/stray.css`, '')],
     ['makefile', 'makefile', () => edit(`${P}/Makefile`, (s) => s.replace('urn:openmixer:drive', 'urn:openmixer:drives'))],
     // the generated faces reach the table directly and through the binding: both includes go
     ['face', 'clap-face', () => edit(`${P}/omx_drive_clap.c`, (s) => s.replace('#include "omx_drive_params.h"', '').replace('#include "omx_drive_core.h"', ''))],
@@ -383,7 +385,7 @@ async function main() {
   const ratchet = (reports, debt, known) => debtVerdict(reports, debt, known);
   const whole = ratchet(wholeReports, loadDebt(t));
   expect(!whole.fresh.length && !whole.stale.length && whole.held.length === loadDebt(t).length,
-    `the debt holds today's gaps exactly (${whole.held.length} held, ${whole.fresh.length} new, ${whole.stale.length} stale)`);
+    `the debt holds today's gaps exactly (${whole.held.length} held, ${whole.fresh.length} new, ${whole.stale.length} stale)${whole.fresh.length ? `; new: ${whole.fresh.join(', ')}` : ''}${whole.stale.length ? `; stale: ${whole.stale.join(', ')}` : ''}`);
   const reading = (file) => ({ ...recipe, artifacts: recipe.artifacts.filter((e) => e.checker?.file === file || (e.paths ?? []).includes(file)),
     laws: recipe.laws.filter((e) => e.checker?.file === file) });
   const recheck = async (file) => {
@@ -512,9 +514,9 @@ static inline void omx_wobble_instance_run(OmxWobbleInstance *s, const float *in
     const files = (widgets) => modgui({ ...d, panel: { ...d.panel, widgets } }, '--emit-stdout');
     const auto = files(undefined), named = files({ amount: 'fader', curve: 'selector' });
     expect(auto.status === 0 && named.status === 0, `modgui: omx-panel draws the declared panel (${auto.stderr || named.stderr})`);
-    expect(/omx-knob-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(auto.stdout) && !auto.stdout.includes('omx-fader.png'),
+    expect(/omx-knob-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(auto.stdout) && !/omx-fader-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(auto.stdout),
       'modgui: a control the panel names no widget for takes its kind\'s (amount a knob, no fader film)');
-    expect(/omx-fader-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(named.stdout) && named.stdout.includes('omx-fader.png') &&
+    expect(/omx-fader-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(named.stdout) && /fader-(?:vintage|console|3d)\.png/.test(named.stdout) && // omx-panel 0.14.0 names the films per look
       named.stdout.includes('.omx-fader-image') && named.stdout.includes('mod-port-symbol="curve" mod-widget="custom-select"'),
       'modgui: the panel\'s widgets are drawn (amount a fader with its film, curve a selector)');
   }
@@ -874,7 +876,7 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
       symbols[symbols.indexOf('compOn') + 1] === 'compThresholdDb' && symbols.at(-1) === 'order' && plan.resolved.at(-1).max === 5,
       `chain: the flattened list is each element's switch then its parameters, then order over 3! orders (${symbols.length} parameters)`);
     const written = writePlugin(plan, { root: ct });
-    for (const f of ['Makefile', 'omx_chainproof_core.h', 'omx_chainproof_clap.c', 'omx_chainproof_lv2.c', 'test/chainproof-oracle.c', 'generated/omx_chainproof_params.h', `generated/${stem}.lv2/modgui.ttl`])
+    for (const f of ['Makefile', 'omx_chainproof_core.h', 'omx_chainproof_clap.c', 'omx_chainproof_lv2.c', 'test/chainproof-oracle.c', 'generated/omx_chainproof_params.h'])
       expect(written.includes(`${CP}/${f}`), `chain: the wizard wrote ${CP}/${f}`);
     const header = readFileSync(join(ct, CP, 'generated/omx_chainproof_params.h'), 'utf8');
     expect(header.includes('#define OMX_EQ_INSTANCE_BANDS OMX_EQ_BAND_COUNTS_EQ8_MAX'), 'chain: the eq element\'s band count is the contract\'s, compiled into its face');

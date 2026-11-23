@@ -127,7 +127,6 @@ jobs:
         run: |
           set -euo pipefail
           node tools/gen.mjs --check
-          make modgui
           node tools/gen-presets.mjs --check
           make check-params-doc
 
@@ -151,8 +150,7 @@ jobs:
           make meter-ring
 
   test-heavy:
-    # Beside make test: the set that runs the built plugins through a host (each plugin's oracles on both faces, its
-    # MOD GUI test, host-check.sh, the round trip), in four slices of the plugins in parallel, the round trip in the
+    # Beside make test: the set that runs the built plugins through a host (each plugin's oracles on both faces, host-check.sh, the round trip), in four slices of the plugins in parallel, the round trip in the
     # first. The package build runs make test only; every check of both sets runs on every pull request
     # (tools/test/test-split.json). The slice comes from the job's environment, so the step itself is plain
     # `make test-heavy`, which runs every slice when OMX_HEAVY_SHARD is unset.
@@ -414,21 +412,41 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-  deb:
-    name: omx-plugins DEBs (${{ matrix.suite }}, ${{ matrix.arch }})
+  # The deb job's cells, from the shared check matrix (ruling D25): the quick set while a release wave is open
+  # (OMX_RELEASE_MATRIX=quick: trixie arm64 alone, no amd64 cell), bookworm and trixie on amd64 and arm64 otherwise. Each
+  # cell runs on the runner of its own architecture (arm64 on ubuntu-24.04-arm): a container of one architecture cannot
+  # install the packages of another, and the channel's development debs are trixie arm64 only (omx-plugins ci
+  # 44594367073: libomxdsp-dev and libomx-clap-core-dev not installable in the amd64 container; omx-panel ci 44563540081).
+  deb-cells:
+    name: the deb cells (check-matrix)
     needs: changes
     if: needs.changes.outputs.packages == 'true'
-    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      deb: ${{ steps.m.outputs.deb }}
+      deb-count: ${{ steps.m.outputs.deb-count }}
+    steps:
+      - id: m
+        uses: Open-Mixer/.github/.github/actions/check-matrix@openmixer-v1
+        with:
+          wave: ${{ vars.OMX_RELEASE_MATRIX }}
+          deb-releases: '["bookworm", "trixie"]'
+          deb-arches: '["amd64", "arm64"]'
+          x86-runner: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+
+  deb:
+    name: omx-plugins DEBs (${{ matrix.cell.suite }}, ${{ matrix.cell.arch }})
+    needs: deb-cells
+    if: needs.deb-cells.outputs.deb-count != '0'
+    runs-on: ${{ matrix.cell.runner }}
     timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
-        # the quick set while a release wave is open (OMX_RELEASE_MATRIX=quick: trixie alone, as the shared release dry run
-        # below builds), bookworm and trixie otherwise; a quick wave's packages are not in bookworm yet
-        suite: ${{ fromJSON(vars.OMX_RELEASE_MATRIX == 'quick' && '["trixie"]' || '["bookworm", "trixie"]') }}
-        arch: [amd64]  # arm64 builds run at release only (release.yml)
+        cell: ${{ fromJSON(needs.deb-cells.outputs.deb) }}
     container:
-      image: debian:${{ matrix.suite }}
+      image: ${{ matrix.cell.image }}
     defaults:
       run:
         shell: bash
@@ -477,8 +495,8 @@ jobs:
           ! dpkg -s omx-plugins-dev >/dev/null 2>&1
           info=$(dpkg -I debs/omx-plugins-contract_*_all.deb)
           grep -qE '^ Architecture: all$' <<<"$info"
-          grep -qE '^ Breaks: omx-plugins-dev \(<< ' <<<"$info"
-          grep -qE '^ Replaces: omx-plugins-dev \(<< ' <<<"$info"
+          # no Breaks, Replaces or Conflicts between our packages (owner rule 2026-11-16, deps-check refuses them in the source)
+          ! grep -qE '^ (Breaks|Replaces|Conflicts):' <<<"$info"
           for deb in debs/omx-plugins_*.deb debs/omx-plugins-dev_*.deb; do
             info=$(dpkg -I "$deb"); grep -qE '^ Depends:.*omx-plugins-contract \(= ' <<<"$info"
           done
@@ -551,7 +569,9 @@ jobs:
           set -euo pipefail
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
           dnf copr enable -y ycollet/audinux
-          dnf install -y --setopt=install_weak_deps=False clap-validator nodejs
+          # node comes with the builddep above (omx-contract requires it: nodejs22-bin); Fedora's own `nodejs` conflicts with it
+          dnf install -y --setopt=install_weak_deps=False clap-validator
+          command -v node >/dev/null || { echo "::error::no node after the builddep: the tools need it"; exit 1; }
 
       - name: Build every plugin
         run: make -j"$(nproc)" all

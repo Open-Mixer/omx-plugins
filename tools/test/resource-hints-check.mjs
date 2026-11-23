@@ -28,7 +28,7 @@ import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadDecl, pluginDirs, ROOT } from '../gen.mjs';
-import { installedDataDir, locateContract } from '../omx-contract.mjs';
+import { installedDataDir, locateContract, isMain } from '../omx-contract.mjs';
 import { presetsOf } from '../preset-lib.mjs';
 import { REQUIRED_HINTS, hintVocabulary, maskOf } from '../resource-hints.mjs';
 
@@ -160,7 +160,7 @@ const treeErrors = (c, plugins) => [
   ...plugins.flatMap((p) => [...ttlErrors(c.v, p.d, p.ttl), ...headerErrors(c.v, p.d, p.header)]),
 ];
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (isMain(import.meta.url)) {
   const args = process.argv.slice(2);
   if (args[0] === '--binaries') {
     const [, dir, ...files] = args;

@@ -3,7 +3,8 @@
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 #
 # round-trip-contract-dir.sh <dir> — compose the contract directory the round trip hands plugin-hostd-probe
-# (tools/round-trip.sh): every installed package of omx-contract's contract directory BUT omx-plugins, linked, and
+# (tools/round-trip.sh): every installed package of omx-contract's contract directory BUT omx-plugins, copied (a
+# reader that lists the packages as directory entries skips a link), and
 # this tree's omx-plugins package (its descriptors and its definition files, contract/role-meanings.json among them),
 # installed by this tree's own `make install-contract`. The probe writes a control's meaning from the role meanings it
 # reads there, so what the round trip counts never depends on which omx-plugins-contract is installed (none on a clean
@@ -13,19 +14,26 @@ set -eu
 [ $# -eq 1 ] || { echo "usage: round-trip-contract-dir.sh <dir>" >&2; exit 2; }
 out=$1
 here=$(cd "$(dirname "$0")/.." && pwd)
-installed=${OMX_INSTALLED_CONTRACTDIR:-$(pkg-config --variable=contractdir omx-contract 2>/dev/null || true)}
+installed=${OMX_INSTALLED_CONTRACTDIR:-$(${PKG_CONFIG:-pkg-config} --variable=contractdir omx-contract 2>/dev/null || true)}
 [ -n "$installed" ] || installed=/usr/share/omx-contract/contract.d
 rm -rf "$out"
 mkdir -p "$out"
 for major in "$installed"/*/; do
   [ -d "$major" ] || continue
   m=$(basename "$major")
+  case $m in
+    *[!0-9]*)
+      # a DOMAIN directory (plugin-hostd's machine domain: <domain>/<domain>.json and its own subdirectories) is no
+      # numbered major: its subdirectories are not packages, and omx-contract refuses it without its document
+      cp -RL "${major%/}" "$out/$m"
+      continue ;;
+  esac
   mkdir -p "$out/$m"
   for pkg in "$major"*/; do
     [ -d "$pkg" ] || continue
     name=$(basename "$pkg")
     [ "$name" = omx-plugins ] && continue
-    ln -s "${pkg%/}" "$out/$m/$name"
+    cp -RL "${pkg%/}" "$out/$m/$name"
   done
 done
 make -s -C "$here" install-contract DESTDIR= CONTRACTDIR="$out" >/dev/null
