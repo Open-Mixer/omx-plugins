@@ -23,6 +23,7 @@
  */
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -43,20 +44,20 @@ export function compareVersions(a, b) {
 
 /**
  * The range packaging/omx-plugins.spec requires of the build dependency `pkg` (`omx-dsp-devel`,
- * `omx-contract-devel`): `{ floor, ceiling }`, from its BuildRequires line `(pkg >= floor with pkg < ceiling)`.
- * Throws when it is missing, written twice, or has no ceiling.
+ * `omx-contract-devel`): `{ floor }`, from its BuildRequires line `BuildRequires: pkg >= floor` (floors only: no ceiling).
+ * Throws when it is missing or written twice.
  */
 export function packagingRange(pkg, root = ROOT) {
   const file = join(root, SPEC_FILE);
   if (!existsSync(file)) throw new Error(`${SPEC_FILE} is missing: the packaging is where the releases this tree builds against are declared`);
   const spec = readFileSync(file, 'utf8');
   const name = pkg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const found = [...spec.matchAll(new RegExp(`^BuildRequires: \\(${name} >= ([0-9][0-9.]*) with ${name} < ([0-9][0-9.]*)\\)$`, 'gm'))];
-  if (found.length !== 1) throw new Error(`${SPEC_FILE}: ${found.length ? 'more than one' : 'no'} "BuildRequires: (${pkg} >= <floor> with ${pkg} < <ceiling>)" line`);
-  return { floor: found[0][1], ceiling: found[0][2] };
+  const found = [...spec.matchAll(new RegExp(`^BuildRequires: ${name} >= ([0-9][0-9.]*)$`, 'gm'))];
+  if (found.length !== 1) throw new Error(`${SPEC_FILE}: ${found.length ? 'more than one' : 'no'} "BuildRequires: ${pkg} >= <floor>" line`);
+  return { floor: found[0][1] };
 }
 
-const inRange = (v, r) => compareVersions(v, r.floor) >= 0 && compareVersions(v, r.ceiling) < 0;
+const inRange = (v, r) => compareVersions(v, r.floor) >= 0;
 
 const versionOf = (dir) => {
   try {
@@ -88,8 +89,30 @@ function pkgVariable(name) {
 /** The installed omx-contract's data directory (pkg-config), or undefined. */
 export const installedDataDir = () => pkgVariable('datadir');
 
-/** The installed omx-contract's contract directory (pkg-config's contractdir, from 2.15.0 on), or undefined. */
-export const installedContractDir = () => pkgVariable('contractdir');
+/** The installed omx-contract's contract directory ($OMX_INSTALLED_CONTRACTDIR, else pkg-config's contractdir, from
+ * 2.15.0 on), or undefined. It holds the OTHER owners' packages: this tree's own omx-plugins package is read from the
+ * directory unionRender composes, never from here (an older released omx-plugins-contract may stand in this one). */
+export const installedContractDir = () => process.env.OMX_INSTALLED_CONTRACTDIR || pkgVariable('contractdir');
+
+/**
+ * omx-contract's `isMain(import.meta.url)`: whether the calling module is the script node runs, decided on real paths so
+ * a tool started through a symlink runs. Read, at the first call, from the installed command's own files,
+ * `<dir>/lib/entry.mjs`: the directory of $OMX_CONTRACT_CLI when it names bin/omx-contract.mjs, else
+ * `pkg-config --variable=clidir omx-contract` (from 3.20.2 on; the files ship in the omx-contract package, a build
+ * dependency here). A module that only imports this one never reads it.
+ * @param {string} moduleUrl the calling module's `import.meta.url`
+ * @returns {boolean} true when node was asked to run that module
+ */
+export function isMain(moduleUrl) {
+  if (!entry) {
+    const cli = process.env.OMX_CONTRACT_CLI;
+    const dir = cli?.endsWith('.mjs') ? resolve(dirname(cli), '..') : pkgVariable('clidir');
+    if (!dir) throw new Error('omx-contract: no installed command directory (pkg-config --variable=clidir omx-contract answers nothing; omx-contract >= 3.20.2 names it): isMain is read from <clidir>/lib/entry.mjs');
+    entry = createRequire(import.meta.url)(join(dir, 'lib', 'entry.mjs'));
+  }
+  return entry.isMain(moduleUrl);
+}
+let entry;
 
 /** The omx-contract CLI: $OMX_CONTRACT_CLI (its bin/omx-contract.mjs, or an executable), else `omx-contract`
  * on PATH; `[command, ...leading args]`, or undefined when there is none. */
@@ -108,7 +131,9 @@ const unionCache = new Map();
 /**
  * From omx-contract 2.15.0 on, the kernels ship with their owners (omx-dsp) into omx-contract's contract
  * directory, and the installed omx-contract.json holds only the shared facts. The union is read through the
- * omx-contract CLI, `render --target json --installed`. Every node process renders for itself, and the
+ * omx-contract CLI, `render --target json --contract-dir <composed>`: every installed package BUT omx-plugins, and this
+ * tree's own (tools/round-trip-contract-dir.sh), so an older released omx-plugins-contract that a build root pulls in
+ * is never read while this tree builds. Every node process renders for itself, and the
  * make targets run side by side (`make -j`), so no render is ever written where another process reads:
  * it goes into a private temporary directory, which is renamed to build/contract-union-<digest of its
  * files>, a name only that content has. A directory under that name is whole by construction and is never
@@ -122,14 +147,16 @@ function unionRender(root, contractdir) {
   if (!cli) out = { why: `omx-contract keeps its kernels in the contract directory ${contractdir}, read through the omx-contract CLI (\`omx-contract render --target json --installed\`), and none is installed: set OMX_CONTRACT_CLI to its bin/omx-contract.mjs or put omx-contract on PATH (BUILDING.md)` };
   else {
     const build = join(root, 'build');
-    let tmp;
+    let tmp, composed;
     try {
       mkdirSync(build, { recursive: true });
       tmp = mkdtempSync(join(build, 'contract-union.tmp-'));
-      execFileSync(cli[0], [...cli.slice(1), 'render', '--target', 'json', '--out', tmp, '--installed'], { stdio: ['ignore', 'ignore', 'pipe'] });
+      composed = mkdtempSync(join(build, 'contract-compose.tmp-'));
+      execFileSync('sh', [join(ROOT, 'tools', 'round-trip-contract-dir.sh'), join(composed, 'contract.d')], { env: { ...process.env, OMX_INSTALLED_CONTRACTDIR: contractdir }, stdio: ['ignore', 'ignore', 'pipe'] });
+      execFileSync(cli[0], [...cli.slice(1), 'render', '--target', 'json', '--out', tmp, '--contract-dir', join(composed, 'contract.d')], { stdio: ['ignore', 'ignore', 'pipe'] });
       // the render cites each definition by its path only: who owns it goes beside it, so a reader
       // pointed at this directory (OMX_CONTRACT_DIR) still knows
-      writeFileSync(join(tmp, OWNERS), `${JSON.stringify(Object.fromEntries(ownersOf(contractdir)), null, 2)}\n`);
+      writeFileSync(join(tmp, OWNERS), `${JSON.stringify(Object.fromEntries(ownersOf(join(composed, 'contract.d'))), null, 2)}\n`);
       const digest = createHash('sha256');
       for (const f of readdirSync(tmp).sort()) digest.update(f).update('\0').update(readFileSync(join(tmp, f))).update('\0');
       const dir = join(build, `contract-union-${digest.digest('hex').slice(0, 16)}`);
@@ -145,6 +172,7 @@ function unionRender(root, contractdir) {
       out = { why: `the omx-contract CLI refused the contract directory ${contractdir}: ${String(e.stderr ?? e.message).trim().split('\n')[0]}` };
     } finally {
       if (tmp) rmSync(tmp, { recursive: true, force: true });
+      if (composed) rmSync(composed, { recursive: true, force: true });
     }
   }
   unionCache.set(contractdir, out);
@@ -186,7 +214,7 @@ export function locateContract(root = ROOT) {
   } catch (e) {
     return { dir: undefined, why: e.message };
   }
-  const want = `omx-contract >= ${range.floor} and < ${range.ceiling} (${SPEC_FILE})`;
+  const want = `omx-contract >= ${range.floor} (${SPEC_FILE})`;
   const env = process.env.OMX_CONTRACT_DIR;
   const dir = env || installedDataDir();
   const at = env ? `OMX_CONTRACT_DIR=${env}` : dir;
@@ -198,7 +226,7 @@ export function locateContract(root = ROOT) {
   if (contractdir && !Object.keys(JSON.parse(readFileSync(join(dir, RESOLVED), 'utf8')).kernels ?? {}).length) {
     const union = unionRender(root, contractdir);
     if (!union.dir) return { dir: undefined, range, why: union.why };
-    return { dir: union.dir, version, range, at: `${contractdir} (omx-contract ${version} and its owners)`, contractdir };
+    return { dir: union.dir, version, range, at: `${contractdir} (omx-contract ${version} and its owners; this tree's omx-plugins)`, contractdir: union.dir };
   }
   return { dir, version, range, at: `${at} (omx-contract ${version})` };
 }

@@ -9,6 +9,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { releaseVersion } from '../release-version.mjs';
+import { isMain } from '../omx-contract.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -37,7 +38,7 @@ export function check(root) {
   return { bad, seen };
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (isMain(import.meta.url)) {
   const { bad, seen } = check(ROOT);
   if (!seen.header || !seen.descriptor || !seen.ttl) { console.error(`FAIL release-version: read ${JSON.stringify(seen)}; a kind of file was not found`); process.exit(1); }
   for (const b of bad) console.error(`FAIL ${b.file} says ${b.said}, the release is ${b.want}`);

@@ -16,7 +16,8 @@
     "omx-comp": [
       "9e6eb2dc019e7d5c8c4d9bfd3c4125056dc2eb2db90a34b5719e46bf0a8477cb",
       "80e0daeb20ee68aed82fdcf501c0f6661e277ba71fb91d2d2efc2e4bb8e10375",
-      "10fc471c4d006888aa0c0ef660fff9384363e0f788378a757d059af558a8189b"
+      "10fc471c4d006888aa0c0ef660fff9384363e0f788378a757d059af558a8189b",
+      "406476383bdf2dc44974fcecfa00d20f98fa03c0930b474b4a7443b39c5eaa05"
     ],
     "omx-deesser": [
       "762fa5fbcc17e69ff69407b8f46f1192c7d87b40d5c03db82749a35e390bd592",
@@ -101,7 +102,8 @@
     ],
     "omx-reverb": [
       "3c6d0c052481f1fbafefc5f64bb8f16b76d00dfea1598888d5c90129a2e4a99d",
-      "4bfc8b448bcedb15595b78e1694ba771f4cf8f7cd7fb2ce077d9414b9af31afc"
+      "4bfc8b448bcedb15595b78e1694ba771f4cf8f7cd7fb2ce077d9414b9af31afc",
+      "4ba02d00b3f036e5c1ef5382391c23bfdc4d4d4263923d9a05f5493f40a1eaf8"
     ],
     "omx-rotary": [
       "7b064efba0e9985f2c12b82e577a32aeecd9502f6fcfce98f373d8a88d720c79",
@@ -131,10 +133,16 @@
       "7eda7f36d4553d98706b108002422d309b187291a28efb210a2d3c6369dee62f",
       "4869e2dd250aba1dafcc6dd592d8caab74e279f7caedc68c68a1a2f92432ce05"
     ],
+    "omx-trim": [
+      "d907fd51485f3e84928aa1707841fd45301d7c8db8b5ba499b28d9037a74f6e5"
+    ],
     "omx-upward": [
       "c75452b5fd9339a5adb42e9bec62697ff1f201af0596211bfcc108cfb72baa5b",
       "2fc982aabf55f20d07941be4636a22c33034de41d19a62ea47d472ae04b9c214",
       "f1a99ace3897dca92e108cadb2d47aed721a5a750dacef994235028410ccd58f"
+    ],
+    "omx-width": [
+      "6a77b6877ad3ddd60e4b227e2d98aa601be552ed3e9c696acb1cbc9413b5653d"
     ]
   }
 }

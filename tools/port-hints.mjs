@@ -23,6 +23,7 @@ import { readFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { choicesOf, hintsView, loadDecl, lv2UnitRef, pluginDirs, scaleOf } from './gen.mjs';
+import { isMain } from './omx-contract.mjs';
 
 const ROOT = resolve(fileURLToPath(import.meta.url), '..', '..');
 
@@ -102,7 +103,7 @@ export function hintErrors(root = ROOT) {
   return errors;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (isMain(import.meta.url)) {
   const errors = hintErrors();
   for (const e of errors) console.log(`FAIL ${e}`);
   console.log(errors.length ? `port-hints: ${errors.length} hint(s) lost` : `PASS port-hints: every face keeps its hints (${pluginStems().length} plugins)`);

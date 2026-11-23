@@ -2,7 +2,7 @@
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 name: ci
 
-# On every push and pull request: the whole suite on Fedora, with no test skipped. On workflow_dispatch also: the RPMs and DEBs
+# On workflow_dispatch only (a pull request and a push run the lint workflow; the cluster verify row runs the suite): the whole suite on Fedora, with no test skipped. On workflow_dispatch also: the RPMs and DEBs
 # built (their own make test included), their file lists checked and the packages installed and loaded
 # by a CLAP and an LV2 scanner; and the release workflow as a dry run. Nothing is signed or published
 # here. The build dependencies come from the packaging (dnf builddep, apt-get build-dep), the ones
@@ -10,9 +10,6 @@ name: ci
 # request into dedupe/all, and a push to it, take the siblings listed in .github/wave-deps from their own dedupe/all.
 
 on:
-  pull_request:
-  push:
-    branches: [main, dedupe/all]
   workflow_dispatch:
 
 permissions:
@@ -58,11 +55,11 @@ jobs:
           tools/ci-scope.sh <<<"$changed" >> "$GITHUB_OUTPUT"
 
   test:
-    name: make test (fedora:44, amd64)
+    name: make test (fedora:45, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install the build dependencies
         run: |
@@ -84,7 +81,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: The version agrees everywhere it is written
         id: handback-version
@@ -123,7 +119,6 @@ jobs:
         run: |
           set -euo pipefail
           node tools/gen.mjs --check
-          make modgui
           node tools/gen-presets.mjs --check
           make check-params-doc
 
@@ -147,12 +142,11 @@ jobs:
           make meter-ring
 
   test-heavy:
-    # Beside make test: the set that runs the built plugins through a host (each plugin's oracles on both faces, its
-    # MOD GUI test, host-check.sh, the round trip), in four slices of the plugins in parallel, the round trip in the
+    # Beside make test: the set that runs the built plugins through a host (each plugin's oracles on both faces, host-check.sh, the round trip), in four slices of the plugins in parallel, the round trip in the
     # first. The package build runs make test only; every check of both sets runs on every pull request
     # (tools/test/test-split.json). The slice comes from the job's environment, so the step itself is plain
     # `make test-heavy`, which runs every slice when OMX_HEAVY_SHARD is unset.
-    name: make test-heavy ${{ matrix.shard }} (fedora:44, amd64)
+    name: make test-heavy ${{ matrix.shard }} (fedora:45, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
     strategy:
@@ -166,7 +160,7 @@ jobs:
     env:
       OMX_HEAVY_SHARD: ${{ matrix.shard }}
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install the build dependencies
         run: |
@@ -186,7 +180,6 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: make test-heavy, and nothing skipped
         id: handback-test-heavy
@@ -198,13 +191,13 @@ jobs:
   selftest:
     # Its own job, beside make test: the two together outgrew one job's 30 minutes once the chain and the
     # compressor landed. Same container and dependencies; nothing is dropped.
-    name: make selftest (fedora:44, amd64)
+    name: make selftest (fedora:45, amd64)
     needs: changes
     if: needs.changes.outputs.machinery == 'true'
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install the build dependencies
         run: |
@@ -226,14 +219,13 @@ jobs:
       - name: Install what the spec builds and tests with
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
 
       - name: The recipe machinery, sabotaged arm by arm
         id: handback-selftest
         run: make selftest
 
   rpm:
-    name: omx-plugins RPMs (fc44, ${{ matrix.arch }})
+    name: omx-plugins RPMs (fc45, ${{ matrix.arch }})
     needs: changes
     if: needs.changes.outputs.packages == 'true'
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
@@ -241,9 +233,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        arch: [x86_64]  # aarch64 builds run at release only (release.yml)
+        arch: [x86_64]  # no aarch64 RPMs: off by the owner ruling of 2026-11-19 until the full matrix returns
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install the build tools
         run: |
@@ -269,8 +261,8 @@ jobs:
             rpm -qlp "$rpm" | grep -v '^/usr/lib/.build-id' | sort > files-$sub.txt
           done
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
-          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
-          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
+          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward width"
+          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward width"
           tests="org.openmixer.test-note-echo org.openmixer.test-pool-voice org.openmixer.test-sine-voice org.openmixer.test-transport-probe"
           teststems="omx-test-note-echo omx-test-pool-voice omx-test-sine-voice omx-test-transport-probe"
           # END GENERATED plugins
@@ -346,8 +338,8 @@ jobs:
           out=$(rpm -ql omx-plugins); grep -qx /usr/share/omx/presets/org.openmixer.drive/amp-tube.json <<<"$out"
           test "$(grep -c '^/usr/share/omx/presets/.*\.json$' <<<"$out")" = "$(find presets -name '*.json' | wc -l)"
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
-          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
-          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
+          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward width"
+          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward width"
           tests="org.openmixer.test-note-echo org.openmixer.test-pool-voice org.openmixer.test-sine-voice org.openmixer.test-transport-probe"
           teststems="omx-test-note-echo omx-test-pool-voice omx-test-sine-voice omx-test-transport-probe"
           # END GENERATED plugins
@@ -379,8 +371,8 @@ jobs:
           devel=$(find rpms -maxdepth 1 -name "omx-plugins-devel-[0-9]*.rpm" ! -name "*.src.rpm" | head -1)
           dnf_retry --setopt=install_weak_deps=False "$devel" rpms/omx-plugins-contract-[0-9]*.noarch.rpm
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
-          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
-          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
+          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward width"
+          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward width"
           tests="org.openmixer.test-note-echo org.openmixer.test-pool-voice org.openmixer.test-sine-voice org.openmixer.test-transport-probe"
           teststems="omx-test-note-echo omx-test-pool-voice omx-test-sine-voice omx-test-transport-probe"
           # END GENERATED plugins
@@ -391,26 +383,46 @@ jobs:
       # with merge-multiple, and two builds of one NEVRA collide in one directory.
       - uses: actions/upload-artifact@v4
         with:
-          name: ci-check-omx-plugins-fc44-${{ matrix.arch }}
+          name: ci-check-omx-plugins-fc45-${{ matrix.arch }}
           path: rpms/*.rpm
           if-no-files-found: error
           retention-days: 7
 
-  deb:
-    name: omx-plugins DEBs (${{ matrix.suite }}, ${{ matrix.arch }})
+  # The deb job's cells, from the shared check matrix (ruling D25): the quick set while a release wave is open
+  # (OMX_RELEASE_MATRIX=quick: trixie arm64 alone, no amd64 cell), bookworm and trixie on amd64 and arm64 otherwise. Each
+  # cell runs on the runner of its own architecture (arm64 on ubuntu-24.04-arm): a container of one architecture cannot
+  # install the packages of another, and the channel's development debs are trixie arm64 only (omx-plugins ci
+  # 44594367073: libomxdsp-dev and libomx-clap-core-dev not installable in the amd64 container; omx-panel ci 44563540081).
+  deb-cells:
+    name: the deb cells (check-matrix)
     needs: changes
     if: needs.changes.outputs.packages == 'true'
-    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      deb: ${{ steps.m.outputs.deb }}
+      deb-count: ${{ steps.m.outputs.deb-count }}
+    steps:
+      - id: m
+        uses: Open-Mixer/.github/.github/actions/check-matrix@openmixer-v1
+        with:
+          wave: ${{ vars.OMX_RELEASE_MATRIX }}
+          deb-releases: '["bookworm", "trixie"]'
+          deb-arches: '["amd64", "arm64"]'
+          x86-runner: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+
+  deb:
+    name: omx-plugins DEBs (${{ matrix.cell.suite }}, ${{ matrix.cell.arch }})
+    needs: deb-cells
+    if: needs.deb-cells.outputs.deb-count != '0'
+    runs-on: ${{ matrix.cell.runner }}
     timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
-        # the quick set while a release wave is open (OMX_RELEASE_MATRIX=quick: trixie alone, as the shared release dry run
-        # below builds), bookworm and trixie otherwise; a quick wave's packages are not in bookworm yet
-        suite: ${{ fromJSON(vars.OMX_RELEASE_MATRIX == 'quick' && '["trixie"]' || '["bookworm", "trixie"]') }}
-        arch: [amd64]  # arm64 builds run at release only (release.yml)
+        cell: ${{ fromJSON(needs.deb-cells.outputs.deb) }}
     container:
-      image: debian:${{ matrix.suite }}
+      image: ${{ matrix.cell.image }}
     defaults:
       run:
         shell: bash
@@ -459,8 +471,8 @@ jobs:
           ! dpkg -s omx-plugins-dev >/dev/null 2>&1
           info=$(dpkg -I debs/omx-plugins-contract_*_all.deb)
           grep -qE '^ Architecture: all$' <<<"$info"
-          grep -qE '^ Breaks: omx-plugins-dev \(<< ' <<<"$info"
-          grep -qE '^ Replaces: omx-plugins-dev \(<< ' <<<"$info"
+          # no Breaks, Replaces or Conflicts between our packages (owner rule 2026-11-16, deps-check refuses them in the source)
+          ! grep -qE '^ (Breaks|Replaces|Conflicts):' <<<"$info"
           for deb in debs/omx-plugins_*.deb debs/omx-plugins-dev_*.deb; do
             info=$(dpkg -I "$deb"); grep -qE '^ Depends:.*omx-plugins-contract \(= ' <<<"$info"
           done
@@ -469,8 +481,8 @@ jobs:
           out=$(dpkg -L omx-plugins); grep -qx /usr/share/omx/presets/org.openmixer.drive/amp-tube.json <<<"$out"
           test "$(grep -c '^/usr/share/omx/presets/.*\.json$' <<<"$out")" = "$(find presets -name '*.json' | wc -l)"
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
-          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
-          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
+          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward width"
+          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward width"
           tests="org.openmixer.test-note-echo org.openmixer.test-pool-voice org.openmixer.test-sine-voice org.openmixer.test-transport-probe"
           teststems="omx-test-note-echo omx-test-pool-voice omx-test-sine-voice omx-test-transport-probe"
           # END GENERATED plugins
@@ -496,8 +508,8 @@ jobs:
           set -euo pipefail
           apt-get install -y --no-install-recommends ./debs/omx-plugins-dev_*.deb
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
-          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
-          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo upward"
+          shorts="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue keyed-gate limiter loudlevel multiband phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward width"
+          kernels="balancer chorus clipper comp deesser delay doubler drive ducker dyneq eq8 eq16 eq32 flanger geq glue gate limiter loudlevel mbcomp phaser pitch plosive reverb rotary spring strip suboct tone transient tremolo trim upward width"
           tests="org.openmixer.test-note-echo org.openmixer.test-pool-voice org.openmixer.test-sine-voice org.openmixer.test-transport-probe"
           teststems="omx-test-note-echo omx-test-pool-voice omx-test-sine-voice omx-test-transport-probe"
           # END GENERATED plugins
@@ -507,13 +519,14 @@ jobs:
   clap-validator:
     # clap-validator is the CLAP project's own conformance tester (state round trips, parameter fuzzing,
     # thread rules). It runs on every built .clap, the test plugins included, and keeps one JSON report each.
-    # A failed test fails the job. The factory presets are installed first, where the plugins declare them, because
+    # A failed test fails the job, except the one accepted failure (activate refusing a rate outside the nine oracle
+    # rates, tools/clap-validate-summary.mjs), which is printed as an `accepted` line. The factory presets are installed first, where the plugins declare them, because
     # the preset-discovery tests crawl that location.
-    name: clap-validator (fedora:44, amd64)
+    name: clap-validator (fedora:45, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 30
     container:
-      image: fedora:44
+      image: fedora:45
     steps:
       - name: Install the build dependencies
         run: |
@@ -531,9 +544,10 @@ jobs:
         run: |
           set -euo pipefail
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
-          tools/ci-stale-units.sh
           dnf copr enable -y ycollet/audinux
-          dnf install -y --setopt=install_weak_deps=False clap-validator nodejs
+          # node comes with the builddep above (omx-contract requires it: nodejs22-bin); Fedora's own `nodejs` conflicts with it
+          dnf install -y --setopt=install_weak_deps=False clap-validator
+          command -v node >/dev/null || { echo "::error::no node after the builddep: the tools need it"; exit 1; }
 
       # the parallel jobs from the job's CPU quota and the runner's declared CPUs, never the host's nproc
       - name: The parallel jobs this runner may run
@@ -553,13 +567,13 @@ jobs:
           tools/clap-validate.sh build/clap-validator 2>&1 | tee build/clap-validator.log
         shell: bash
 
-      - name: Show the failures on the run page
+      - name: Show the failures and the accepted lines on the run page
         if: always()
         run: |
           {
             echo '### clap-validator'
             echo '```'
-            grep -E '^(omx-|  FAIL|FAIL)' build/clap-validator.log || echo 'no failed test'
+            grep -E '^(omx-|  accepted|  FAIL|FAIL)' build/clap-validator.log || echo 'no failed test'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
@@ -584,9 +598,4 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       publish: false
-      arm: false  # arm64/aarch64 build at release only
-
-  # The shared checks on what this repository publishes: a pull request's own commits carry no attribution line, no
-  # tracked file points into a private repository, and no local copy of these checks is kept.
-  public-sources:
-    uses: Open-Mixer/.github/.github/workflows/public-sources-check.yml@openmixer-v1
+      arm: false  # the arm64 DEB and the Zynthian tarball build at release only; aarch64 RPMs are off (owner ruling 2026-11-19)

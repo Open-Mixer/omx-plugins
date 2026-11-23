@@ -9,7 +9,6 @@
  *
  * GENERATED — DO NOT EDIT BY HAND. Produced by tools/gen.mjs from plugins/omx-comp/omx-comp.decl.json and
  * the face's resolve() prototype: each argument takes the parameter whose contract control it names.
- * `release_mode` is no parameter: the declaration holds it at its kernel's declared default, OMX_COMP_RELEASE_MODES_DEFAULT.
  */
 #ifndef OMX_COMP_CORE_H
 #define OMX_COMP_CORE_H
@@ -30,11 +29,12 @@ typedef struct {
   OmxCompInstance inst;
 } OmxCompCore;
 
-/** A fresh instance at `rate`: every state word zero. A rate the kernel does not declare leaves it a wire. */
-static inline void omx_comp_core_init(OmxCompCore *c, uint32_t rate) {
+/** A fresh instance at `rate`: every state word zero. 1 when the kernel takes the rate, 0 when it refuses
+ * it (the instance is then the identity: the caller must not run it). */
+static inline int omx_comp_core_init(OmxCompCore *c, uint32_t rate) {
   memset(c, 0, sizeof *c);
   c->rate = rate;
-  (void)omx_comp_instance_init(&c->inst, (float)rate);
+  return omx_comp_instance_init(&c->inst, (float)rate);
 }
 
 /** The block's parameters (declaration order) and the host's bypass, each to its resolve() argument. */
@@ -59,7 +59,7 @@ static inline void omx_comp_core_resolve(OmxCompCore *c, const float *values, in
                                   /* detect_link */ (int)lrintf(values[OMX_COMP_PARAM_DETECT_LINK]),
                                   /* duck */ (int)lrintf(values[OMX_COMP_PARAM_DUCK]),
                                   /* range_db */ values[OMX_COMP_PARAM_RANGE_DB],
-                                  /* release_mode */ (int)OMX_COMP_RELEASE_MODES_DEFAULT);
+                                  /* release_mode */ (int)lrintf(values[OMX_COMP_PARAM_RELEASE_MODE]));
 }
 
 /** The latency the kernel adds, in samples. */
@@ -89,7 +89,7 @@ static inline void omx_comp_core_run(OmxCompCore *c, const float *key, const flo
 }
 
 /* The core behind the vtable the shared faces call (include/omx_plugin_face.h): the same functions, untyped. */
-static inline void omx_comp_core_init_v(void *c, uint32_t rate) { omx_comp_core_init((OmxCompCore *)c, rate); }
+static inline int omx_comp_core_init_v(void *c, uint32_t rate) { return omx_comp_core_init((OmxCompCore *)c, rate); }
 static inline void omx_comp_core_resolve_v(void *c, const float *values, int bypass) {
   omx_comp_core_resolve((OmxCompCore *)c, values, bypass);
 }

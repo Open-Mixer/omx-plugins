@@ -23,7 +23,8 @@
  * face allocates, and every call takes it untyped. A face without a key gets `run` with a NULL key. */
 struct omx_face_core {
   size_t size;
-  void (*init)(void *core, uint32_t rate);
+  /** 1 when the kernel takes `rate`, 0 when it refuses it: the face then refuses to activate. */
+  int (*init)(void *core, uint32_t rate);
   void (*resolve)(void *core, const float *values, int bypass);
   uint32_t (*latency)(const void *core);
   void (*run)(void *core, const float *key, const float *in_l, const float *in_r, float *out_l, float *out_r,

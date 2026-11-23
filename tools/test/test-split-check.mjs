@@ -16,7 +16,7 @@
  *     plugin's `test` and `test-heavy` recipes is one listed step, in the listed target, and every listed
  *     step is there;
  *   - every plugin Makefile has both targets (the hand-written test plugins too), so the loops reach them;
- *   - .github/workflows/ci.yml runs make test-heavy on pull requests, in a matrix whose shards are 1/n..n/n.
+ *   - .github/workflows/ci.yml runs make test-heavy on a pull request, dispatch or call, in a matrix whose shards are 1/n..n/n.
  * A step dropped from both targets, moved without the list, or a shard left out is red.
  *
  * --self-test: each sabotage arm must be red, the unsabotaged tree green.
@@ -104,8 +104,8 @@ export function splitErrors(t) {
   for (const [name, text] of Object.entries(t.plugins)) {
     for (const target of ['test', 'test-heavy']) if (!rule(text, target)) errors.push(`plugins/${name}/Makefile: no \`${target}\` target`);
   }
-  // CI runs the heavy set on every pull request, every shard
-  if (!/^\s*pull_request:/m.test(t.ci)) errors.push('ci.yml: does not run on pull requests');
+  // CI runs the heavy set (every shard) on a pull request, or on a dispatch or a call when the pull request is checked elsewhere
+  if (!/^\s*(pull_request|workflow_dispatch|workflow_call):/m.test(t.ci)) errors.push('ci.yml: runs on none of pull_request, workflow_dispatch, workflow_call');
   const job = t.ci.match(/\n {2}test-heavy:\n([\s\S]*?)(?=\n {2}[a-z][a-z0-9-]*:\n|$)/);
   if (!job) errors.push('ci.yml: no `test-heavy` job');
   else {
@@ -145,7 +145,7 @@ const errors = splitErrors(t);
 let failed = report(errors);
 if (!failed) {
   const list = JSON.parse(t.list);
-  console.log(`PASS test-split: make test runs ${list.test.prerequisites.length + list.test.steps.length} listed targets and steps, make test-heavy ${list['test-heavy'].steps.length}; a plugin's test ${list.plugin.test.length} steps, its test-heavy ${list.plugin['test-heavy'].length}; CI runs the heavy set on pull requests`);
+  console.log(`PASS test-split: make test runs ${list.test.prerequisites.length + list.test.steps.length} listed targets and steps, make test-heavy ${list['test-heavy'].steps.length}; a plugin's test ${list.plugin.test.length} steps, its test-heavy ${list.plugin['test-heavy'].length}; CI runs the heavy set on pull requests, dispatch or call`);
 }
 
 if (process.argv.includes('--self-test')) {
@@ -153,7 +153,7 @@ if (process.argv.includes('--self-test')) {
   const arms = {
     'round-trip dropped from make test-heavy': { ...t, makefile: swap(t.makefile, '$(MAKE) -s round-trip;', 'true;') },
     'hints dropped from make test': { ...t, makefile: swap(t.makefile, '\t@$(MAKE) -s hints\n', '') },
-    'a fast prerequisite dropped from make test': { ...t, makefile: swap(t.makefile, ' face-dirty-order test-split\n', ' test-split\n') },
+    'a fast prerequisite dropped from make test': { ...t, makefile: swap(t.makefile, ' debt-base test-split\n', ' test-split\n') },
     'host-check.sh dropped from a plugin\'s test-heavy': { ...t, template: t.template.split('\n').filter((l) => !l.includes('host-check.sh')).join('\n') },
     'a plugin Makefile with no test-heavy': { ...t, plugins: { ...t.plugins, 'omx-x': 'all:\n\ttrue\ntest: all\n\ttrue\n' } },
     'a shard left out of the CI matrix': { ...t, ci: swap(t.ci, '          - 4/4\n', '') },
@@ -170,6 +170,19 @@ if (process.argv.includes('--self-test')) {
     moved.splice(testAt + 2, 0, line);
     arms['the kernel oracle moved back into a plugin\'s test'] = { ...t, template: moved.join('\n') };
   }
+  // the accepted shapes: a ci.yml whose trigger set is workflow_dispatch (or workflow_call) runs the split and is green
+  const onBlock = (ci, keys) => ci.replace(/\non:\n[\s\S]*?\n(?=\S)/, `\non:\n${keys.map((k) => `  ${k}:\n`).join('')}\n`);
+  for (const [name, ci] of Object.entries({
+    'a ci.yml triggered by workflow_dispatch only': onBlock(t.ci, ['workflow_dispatch']),
+    'a ci.yml triggered by workflow_call only': onBlock(t.ci, ['workflow_call']),
+    'a ci.yml triggered by pull_request': onBlock(t.ci, ['pull_request']),
+  })) {
+    const errs = splitErrors({ ...t, ci });
+    if (errs.length === 0) console.log(`PASS test-split accepted: ${name} is green`);
+    else { console.log(`FAIL test-split accepted: ${name} is refused: ${errs.join('; ')}`); failed++; }
+  }
+  arms['a push-only ci.yml'] = { ...t, ci: onBlock(t.ci, ['push']) };
+  arms['a ci.yml with no pull_request, workflow_dispatch or workflow_call trigger'] = { ...t, ci: onBlock(t.ci, ['schedule']) };
   for (const [name, sabotaged] of Object.entries(arms)) {
     let red;
     try { red = splitErrors(sabotaged).length > 0; } catch (e) { red = false; console.log(`FAIL test-split sabotage: ${name}: ${e.message}`); }

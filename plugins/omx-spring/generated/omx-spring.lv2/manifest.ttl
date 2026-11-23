@@ -8,7 +8,7 @@
 <urn:openmixer:spring>
     a lv2:Plugin ;
     lv2:binary <omx-spring.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-spring.ttl> .
+    rdfs:seeAlso <omx-spring.ttl> .
 
 <urn:openmixer:spring#preset-guitar-amp>
     a pset:Preset ;

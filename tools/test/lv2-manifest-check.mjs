@@ -14,6 +14,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadDecl, pluginDirs, ROOT } from '../gen.mjs';
+import { isMain } from '../omx-contract.mjs';
 
 const SEES_MODGUI = /(?:rdfs:seeAlso|rdf-schema#seeAlso>)[^.;]*<modgui\.ttl>/;
 
@@ -30,7 +31,7 @@ export function load(root = ROOT) {
   });
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (isMain(import.meta.url)) {
   const plugins = load();
   const errors = manifestErrors(plugins);
   for (const e of errors) console.log(`FAIL lv2-manifest ${e}`);

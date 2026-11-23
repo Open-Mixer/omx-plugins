@@ -18,6 +18,7 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { FORMAT, PRESET_DIR, ROOT, plugins, presetFiles, presetsTtl } from './preset-lib.mjs';
+import { isMain } from './omx-contract.mjs';
 
 /** The date every factory file carries: fixed, so regenerating changes nothing. */
 const WHEN = '2026-10-17T00:00:00Z';
@@ -259,6 +260,12 @@ const DEFINITIONS = {
     ['long-drip', 'Long Drip', { decayS: 4, lengthMs: 50, tensionPct: 70, dampHz: 3000, mixPct: 35 }],
     ['tight', 'Tight Spring', { decayS: 1, lengthMs: 25, tensionPct: 30, dampHz: 6000, mixPct: 20 }],
   ],
+  'org.openmixer.width': [
+    ['wide', 'Wide', { widthPct: 140 }],
+    ['mono-source-spread', 'Mono Source Spread', { widthPct: 100, pseudo: 1, pseudoMs: 12 }],
+    ['haas-widen', 'Haas Widen', { widthPct: 100, pseudo: 2, pseudoMs: 18 }],
+    ['tight-bass', 'Tight Bass', { widthPct: 130, bassMono: 1, bassMonoHz: 120 }],
+  ],
   'org.openmixer.tremolo': [
     ['classic', 'Classic', { rateHz: 5, depth: 60 }],
     ['slow-swell', 'Slow Swell', { rateHz: 0.8, depth: 80 }],
@@ -273,6 +280,11 @@ const DEFINITIONS = {
     ['vocal', 'Vocal', { hpfOn: 1, hpfFreq: 90, eqOn: 1, ...eqBands([bell(300, -2.5, 1.2), bell(3500, 2), high(10000, 2)], 'strip'), compOn: 1, ...Object.fromEntries(Object.entries(COMP(-18, 3, 5, 120, 4)).map(([k, v]) => [`comp${k[0].toUpperCase()}${k.slice(1).replace(/Db$|Ms$/, '')}`, v])) }],
     ['kick', 'Kick', { hpfOn: 1, hpfFreq: 30, gateOn: 1, ...Object.fromEntries(Object.entries(GATE(-35, -60, -38, -30, 0.5, 30, 80, 4, 20)).map(([k, v]) => [`gate${k[0].toUpperCase()}${k.slice(1).replace(/_(.)/g, (_, c) => c.toUpperCase())}`, v])), eqOn: 1, ...eqBands([low(60, 3), bell(350, -4, 1.4), bell(4000, 3)], 'strip'), compOn: 1, compThreshold: -14, compRatio: 4, compAttack: 8, compRelease: 90, compMakeup: 3 }],
     ['bass', 'Bass', { hpfOn: 1, hpfFreq: 35, eqOn: 1, ...eqBands([low(80, 2), bell(800, -2, 1.2), bell(2500, 2)], 'strip'), compOn: 1, compThreshold: -16, compRatio: 3.5, compAttack: 15, compRelease: 150, compMakeup: 3 }],
+  ],
+  'org.openmixer.trim': [
+    ['pad-10', 'Pad 10 dB', { trimDb: -10 }],
+    ['lift-6', 'Lift 6 dB', { trimDb: 6 }],
+    ['quiet-source', 'Quiet Source', { trimDb: 12 }],
   ],
 };
 
@@ -334,7 +346,7 @@ export function build() {
   return files;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMain(import.meta.url)) {
   const check = process.argv.includes('--check');
   const want = build();
   const have = new Set(presetFiles().map((f) => f.file));

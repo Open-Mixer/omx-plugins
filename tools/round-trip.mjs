@@ -38,7 +38,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { descriptorFile } from './descriptor.mjs';
 import { lookupValues, tableRows, tableWords } from './format-tables.mjs';
-import { compareVersions } from './omx-contract.mjs';
+import { compareVersions, isMain } from './omx-contract.mjs';
 
 /** `cmd args`' trimmed output, or undefined when it fails or says nothing. */
 function output(cmd, args) {
@@ -81,22 +81,23 @@ export const FORMATS = ['clap', 'lv2'];
  * and an LV2 term for some meanings; LV2 has no unit for ""). Each other entry is a word the format's table has no
  * row for, or one its face states otherwise, named in the header above. */
 /**
- * The versions LOSSES is counted against, in a clean fedora:44 with the channel's BuildRequires only: plugin-hostd's
+ * The versions LOSSES is counted against, in a clean fedora:45 with the channel's BuildRequires only: plugin-hostd's
  * format tables and probe, omx-contract's parameter contract, the CLAP host the probe loads through, and
  * omx-plugins-contract, whose installed descriptors lend a scan the meanings a face does not carry (null: not installed,
  * as in a build of omx-plugins).
  */
 export const LOSSES_COUNTED = Object.freeze({
-  'plugin-hostd': '0.20.3',
-  'omx-contract': '3.14.0',
-  'omx-clap-host': '0.31.2',
+  'plugin-hostd': '0.20.8',
+  'omx-contract': '3.20.2',
+  'omx-clap-host': '0.33.1',
   'omx-plugins-contract': null,
 });
 
 export const LOSSES = {
-  // OR2: a meaning has a CLAP word only for the bypass, an LV2 term only for some (lv2:designation); LV2 has no unit
+  // OR2: a meaning has a CLAP word for the bypass and, with plugin-hostd 0.20.8's tables, the few more that table rows read (10
+  // before 0.20.8, 4 now); an LV2 term only for some (lv2:designation); LV2 has no unit
   // for "" (a plain number)
-  'clap controls[].meaning': 10,
+  'clap controls[].meaning': 4,
   'lv2 controls[].meaning': 116,
   'lv2 controls[].travel.unit ""': 123,
   // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt (dB/oct, omx-contract 3.1.0)
@@ -105,36 +106,36 @@ export const LOSSES = {
   // row reads the rest of the units and steps, a choice (our faces set no CLAP_PARAM_IS_ENUM), the session symbol, the
   // LV2 URI, a side-chain's role or what an LV2 host may lend
   'clap controls[].travel.unit': 125,
-  'clap controls[].travel.step': 375,
-  'clap controls[].kind': 266,
-  'clap controls[].ids': 137,
-  'clap controls[].values': 137,
-  'clap controls[].labels': 137,
-  'clap controls[].default': 266,
-  'clap controls[].symbol': 825,
-  'clap plugin.uri': 32,
+  'clap controls[].travel.step': 381,
+  'clap controls[].kind': 270,
+  'clap controls[].ids': 139,
+  'clap controls[].values': 139,
+  'clap controls[].labels': 139,
+  'clap controls[].default': 270,
+  'clap controls[].symbol': 841,
+  'clap plugin.uri': 34,
   'clap ports[].role': 3,
-  'clap needs.extensions.optional': 32,
+  'clap needs.extensions.optional': 34,
   // LV2: no row reads a step, automation, the plugin's version or vendor (our .ttl writes no doap:maintainer); a
   // control's id is its symbol and a point's id its label, so the CLAP id and our point ids are no LV2 word; the
   // audio ports are one per channel, with the generator's symbols and names
-  'lv2 controls[].travel.step': 559,
-  'lv2 controls[].automatable': 825,
-  'lv2 controls[].id': 825,
-  'lv2 controls[].ids': 137,
-  'lv2 plugin.version': 32,
-  'lv2 plugin.vendor': 32,
-  'lv2 ports[].id': 67,
-  'lv2 ports[].name': 67,
+  'lv2 controls[].travel.step': 571,
+  'lv2 controls[].automatable': 841,
+  'lv2 controls[].id': 841,
+  'lv2 controls[].ids': 139,
+  'lv2 plugin.version': 34,
+  'lv2 plugin.vendor': 34,
+  'lv2 ports[].id': 71,
+  'lv2 ports[].name': 71,
   // LV2 port groups are flat: a control in a section's subgroup (an EQ's band, #257) carries the group, not the
-  // section above it (omx-eq8, omx-eq16 and omx-eq32: five controls a band, 8 + 16 + 32 bands)
-  'lv2 controls[].group (panel section)': 280,
+  // section above it (five controls a band: omx-eq8, omx-eq16 and omx-eq32, 8 + 16 + 32 bands; omx-strip, 32 bands)
+  'lv2 controls[].group (panel section)': 440,
   // the toggles UPSTREAM names, scanned as travels, carry no toggle's default
-  'lv2 controls[].default': 129,
+  'lv2 controls[].default': 131,
   // neither face carries a control's prose (omx-delay's sync), nor states that it reads the tempo: CLAP has no static
   // word for it, and the LV2 face's control port supports time:Position, which a scan reads as no tempo word
-  'clap controls[].doc': 1,
-  'lv2 controls[].doc': 1,
+  'clap controls[].doc': 10,
+  'lv2 controls[].doc': 10,
   'clap needs.tempo': 1,
   'lv2 needs.tempo': 1,
   // a meter: plugin-hostd's CLAP table has no row for clap.meters/1 (one word a meter: 20 meters); an LV2 output
@@ -367,7 +368,7 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
   return { lines, losses, fails, inside, outside };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
+if (isMain(import.meta.url)) {
   const args = process.argv.slice(2);
   const authoredFiles = {};
   for (let i = 1; i < args.length; i += 2) if (args[i] === '--authored') { const [s, f] = args[i + 1].split('='); authoredFiles[s] = f; }

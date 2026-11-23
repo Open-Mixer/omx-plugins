@@ -67,6 +67,51 @@
       "unit": "",
       "value": 4,
       "label": "Gated"
+    },
+    {
+      "symbol": "earlyDb",
+      "unit": "dB",
+      "value": -60
+    },
+    {
+      "symbol": "tailDb",
+      "unit": "dB",
+      "value": 0
+    },
+    {
+      "symbol": "earlySizePct",
+      "unit": "%",
+      "value": 50
+    },
+    {
+      "symbol": "duckDb",
+      "unit": "dB",
+      "value": 0
+    },
+    {
+      "symbol": "duckThresholdDb",
+      "unit": "dB",
+      "value": -30
+    },
+    {
+      "symbol": "duckReleaseMs",
+      "unit": "ms",
+      "value": 250
+    },
+    {
+      "symbol": "wetDeess",
+      "unit": "",
+      "value": 0
+    },
+    {
+      "symbol": "deessFreqHz",
+      "unit": "Hz",
+      "value": 7000
+    },
+    {
+      "symbol": "deessThresholdDb",
+      "unit": "dB",
+      "value": -30
     }
   ],
   "createdAt": "2026-10-17T00:00:00Z",

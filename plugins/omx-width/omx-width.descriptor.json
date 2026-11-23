@@ -1,0 +1,189 @@
+{
+  "$schema": "../schema/omx-contract.schema.json",
+  "requires": {
+    "omx-contract-schema": ">= 3.7.0"
+  },
+  "origin": "authored",
+  "plugin": {
+    "id": "org.openmixer.width",
+    "format": "clap",
+    "uri": "urn:openmixer:width",
+    "name": "omx width",
+    "vendor": "openmixer",
+    "version": "0.19.3",
+    "doc": "Widens or narrows the stereo image, with an optional pseudo-stereo spread for a mono source and a bass-mono cutoff that keeps the lows centred.",
+    "features": [
+      "audio-effect"
+    ]
+  },
+  "controls": [
+    {
+      "id": 0,
+      "symbol": "widthPct",
+      "name": "Width",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 200,
+        "step": 1,
+        "unit": "%",
+        "default": 100,
+        "scale": "stepped"
+      },
+      "group": [
+        "Width"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/width.json#WIDTH_WIDTH_PCT_RANGE",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 1,
+      "symbol": "pseudo",
+      "name": "Pseudo",
+      "kind": "choice",
+      "ids": [
+        "0",
+        "1",
+        "2"
+      ],
+      "labels": [
+        "Off",
+        "Comb",
+        "Haas"
+      ],
+      "values": [
+        0,
+        1,
+        2
+      ],
+      "default": "0",
+      "group": [
+        "Width"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/width.json#WIDTH_PSEUDOS",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "symbol": "pseudoMs",
+      "name": "Pseudo Delay",
+      "kind": "travel",
+      "travel": {
+        "min": 0,
+        "max": 30,
+        "step": 0,
+        "unit": "ms",
+        "default": 12,
+        "scale": "linear"
+      },
+      "group": [
+        "Width"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/width.json#WIDTH_PSEUDO_MS_RANGE",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "symbol": "bassMono",
+      "name": "Bass Mono",
+      "kind": "toggle",
+      "default": false,
+      "group": [
+        "Width"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/width.json#WIDTH_BASS_MONOS",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "symbol": "bassMonoHz",
+      "name": "Bass Mono Frequency",
+      "kind": "travel",
+      "travel": {
+        "min": 20,
+        "max": 300,
+        "step": 1,
+        "unit": "Hz",
+        "default": 120,
+        "scale": "log"
+      },
+      "group": [
+        "Width"
+      ],
+      "automatable": true,
+      "source": {
+        "from": {
+          "link": "data/kernels/width.json#WIDTH_BASS_MONO_HZ_RANGE",
+          "at": "omx-dsp@0.32.0"
+        }
+      }
+    }
+  ],
+  "ports": [
+    {
+      "id": 0,
+      "name": "in",
+      "kind": "audio",
+      "direction": "in",
+      "role": "main",
+      "channels": 2,
+      "layout": "stereo"
+    },
+    {
+      "id": 0,
+      "name": "out",
+      "kind": "audio",
+      "direction": "out",
+      "role": "main",
+      "channels": 2,
+      "layout": "stereo"
+    }
+  ],
+  "needs": {
+    "extensions": {
+      "optional": [
+        "lv2:hardRTCapable"
+      ]
+    }
+  },
+  "latency": {
+    "reports": true
+  },
+  "extensions": {
+    "clap": {
+      "clap_plugin_descriptor.features": [
+        "CLAP_PLUGIN_FEATURE_UTILITY",
+        "CLAP_PLUGIN_FEATURE_STEREO"
+      ]
+    },
+    "lv2": {
+      "rdf:type": [
+        "lv2:Plugin",
+        "lv2:UtilityPlugin"
+      ]
+    }
+  },
+  "source": {
+    "impl": "plugins/omx-width/omx_width_clap.c#clap_entry"
+  }
+}

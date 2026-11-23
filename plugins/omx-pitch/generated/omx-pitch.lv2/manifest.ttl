@@ -8,7 +8,7 @@
 <urn:openmixer:pitch>
     a lv2:Plugin ;
     lv2:binary <omx-pitch.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-pitch.ttl> .
+    rdfs:seeAlso <omx-pitch.ttl> .
 
 <urn:openmixer:pitch#preset-detune-thicken>
     a pset:Preset ;
