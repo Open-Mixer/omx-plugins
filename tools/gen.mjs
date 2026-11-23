@@ -28,7 +28,7 @@
  * and the hint view tools/test/port-hints.json (git-ignored), assembled from every declaration's
  * `portHints` (the pin of its LV2 port hints) for tools/port-hints.mjs.
  *
- * The MOD GUI of the same bundle is omx-panel's (tools/panel-file.mjs hands it the declared panel).
+ * No MOD GUI is generated or shipped here: a host generates it from the plugin's description (omx-modgui-sync).
  *
  * Usage: `node tools/gen.mjs [--check] [plugins/<stem> ...]` — `--check` writes nothing and fails on a
  * stale, missing or changed file. Named plugins are generated alone; with none, every plugin and
@@ -45,7 +45,7 @@ import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription
 import { lv2Designation, lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
 import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
-import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam } from './omx-contract.mjs';
+import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam, isMain } from './omx-contract.mjs';
 import { bandsMacro, baseOf, expandVariant, variantStems } from './variants.mjs';
 import { omxdspInclude, render } from './template.mjs';
 import { generateTest, isTestDir, loadTestDecl, testPluginDirs } from './test-plugins.mjs';
@@ -93,8 +93,10 @@ export function loadDecl(dir) {
  * resolved for the plugin folder `dir`, whose name is `stem`. */
 export function prepareDecl(file, d, stem, dir = dirname(file)) {
   if (d.variants) throw new Error(`${file}: the base of ${variantStems(d).join(', ')} is no plugin of its own; load one of its variants`);
-  // a variant's sections had their `subgroups` expanded (tools/variants.mjs); a band is a variant's word only
-  for (const s of d.panel?.sections ?? []) if (s.subgroups !== undefined) throw new Error(`${file}: section '${s.key}' says "subgroups", a word of a declaration with variants (its bands)`);
+  // a variant's sections had their `subgroups` expanded (tools/variants.mjs), and a chain's are expanded below
+  // (chainSubgroups): a band is the word of a declaration with variants or of a chain, and of no other
+  const banded = (d.panel?.sections ?? []).filter((s) => s.subgroups !== undefined);
+  if (d.binding !== 'chain') for (const s of banded) throw new Error(`${file}: section '${s.key}' says "subgroups", a word of a declaration with variants or of a chain (its bands)`);
   if (d.subgroups !== undefined && !d.variantOf) throw new Error(`${file}: "subgroups" is what tools/variants.mjs writes for a variant (its bands); a declaration without variants carries none`);
   if (d.stem !== stem) throw new Error(`${file}: stem '${d.stem}' is not the directory's '${stem}'`);
   if (!/^[a-z][a-z0-9_]*$/.test(d.kernel)) throw new Error(`${file}: kernel '${d.kernel}' is not a C identifier`);
@@ -113,6 +115,11 @@ export function prepareDecl(file, d, stem, dir = dirname(file)) {
   d.hints = hints.stated;
   d.hintVocabulary = hints.vocabulary;
   if (generatedBinding(d)) d.controls = controls();
+  if (banded.length) {
+    // kept beside the panel, not in it, as a variant's are: the panel is drawn as declared
+    d.subgroups = chainSubgroups(file, d, banded);
+    d.panel = { ...d.panel, sections: d.panel.sections.map(({ subgroups: _subgroups, ...s }) => s) };
+  }
   const seen = new Set();
   for (const p of d.params) {
     if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(p.symbol)) throw new Error(`${file}: symbol '${p.symbol}' is not an LV2 symbol`);
@@ -265,6 +272,46 @@ function bandCountParam(file, d, el) {
   const gated = controls.find((c) => c.name === bc.gates);
   if (!gated?.count) throw new Error(`${file}: chain element '${el.id}': "bandCount" gates '${bc.gates}', no per-band control of the ${el.kernel} kernel`);
   return { symbol: bc.symbol, name: bc.name, unit: '', min: 1, max, def, kind: 'integer', own: 'band-count', element: el.id, gates: bc.gates };
+}
+
+/**
+ * The LV2 port groups of a chain's sections marked `"subgroups": "band"` (`banded`), by section key, in the shape
+ * tools/variants.mjs writes a variant's: a group per band of each chain element whose per-band controls the section
+ * lists. A control omx-contract counts is declared once per band, in band order, so the n-th parameter of each
+ * counted control of an element is its band n: the group `<element id><n>`, labelled `<element name> <n>` (omx-strip's
+ * `eq1`, `EQ 1`, as its parameters are named), holding that band's controls of the section in the section's order.
+ * What the section lists beside the bands (the element's switch, its band count) stays in the section's own group.
+ */
+function chainSubgroups(file, d, banded) {
+  const taken = new Set(d.panel.sections.map((s) => s.key));
+  const out = {};
+  for (const s of banded) {
+    if (s.subgroups !== 'band') throw new Error(`${file}: section '${s.key}': "subgroups" is "band" or left out`);
+    const listed = new Set(s.controls);
+    const groups = [];
+    for (const el of d.chain) {
+      const byControl = new Map();
+      d.params.forEach((p, i) => {
+        const c = d.controls[i];
+        if (p.element !== el.id || !c?.count) return;
+        if (!byControl.has(c.name)) byControl.set(c.name, []);
+        byControl.get(c.name).push(p.symbol);
+      });
+      const lists = [...byControl.values()];
+      const bands = Math.max(0, ...lists.map((l) => l.length));
+      for (let b = 0; b < bands; b++) {
+        const band = new Set(lists.map((l) => l[b]).filter((sym) => listed.has(sym)));
+        if (!band.size) continue;
+        const key = `${el.id}${b + 1}`;
+        if (taken.has(key)) throw new Error(`${file}: section '${s.key}': band ${b + 1} of '${el.id}' would be the port group '${key}', which is taken`);
+        taken.add(key);
+        groups.push({ key, label: `${elementName(el)} ${b + 1}`, controls: s.controls.filter((sym) => band.has(sym)) });
+      }
+    }
+    if (!groups.length) throw new Error(`${file}: section '${s.key}' says "subgroups": "band" and lists no per-band control of a chain element`);
+    out[s.key] = groups;
+  }
+  return out;
 }
 
 /** The band-count parameter of element `el`, or undefined. */
@@ -712,7 +759,7 @@ const ttlStr = (s) => `"${s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 
 /** The manifest: the plugin, and each factory preset of presets/<clap id>/ (its pset:Preset, in the
  * presets.ttl tools/gen-presets.mjs writes from the same files; docs/presets.md). */
-export function emitManifest(d, { modgui = false } = {}) {
+export function emitManifest(d) {
   const presets = d.clap?.id ? presetsOf(d.clap.id) : [];
   return `${TTL_BANNER}# GENERATED by tools/gen.mjs from plugins/${d.stem}/${d.stem}.decl.json — DO NOT EDIT BY HAND.
 @prefix lv2:  <http://lv2plug.in/ns/lv2core#> .
@@ -721,7 +768,7 @@ ${presets.length ? '@prefix pset: <http://lv2plug.in/ns/ext/presets#> .\n' : ''}
 <${d.lv2.uri}>
     a lv2:Plugin ;
     lv2:binary <${d.stem}.so> ;
-    rdfs:seeAlso ${modgui ? '<modgui.ttl> , ' : ''}<${d.stem}.ttl> .
+    rdfs:seeAlso <${d.stem}.ttl> .
 ${presetsManifest(d.lv2.uri, presets)}`;
 }
 
@@ -1407,7 +1454,7 @@ export function generate(d) {
   const lv2 = `generated/${d.stem}.lv2`;
   return {
     [`generated/omx_${d.kernel}_params.h`]: emitParamsHeader(d),
-    [`${lv2}/manifest.ttl`]: emitManifest(d, { modgui: Boolean(d.panel) }),
+    [`${lv2}/manifest.ttl`]: emitManifest(d),
     [`${lv2}/${d.stem}.ttl`]: emitPluginTtl(d),
     ...(d.binding === 'instance' ? generateInstance(d) : {}),
     ...(d.binding === 'chain' ? generateChain(d) : {}),
@@ -1586,4 +1633,4 @@ function main(argv) {
   if (check) console.log(`gen: every generated file is fresh${dirs.length ? '' : ', the shared files too'}`);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main(process.argv.slice(2));
+if (isMain(import.meta.url)) main(process.argv.slice(2));

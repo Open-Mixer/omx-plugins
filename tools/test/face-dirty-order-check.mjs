@@ -18,6 +18,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ROOT } from '../gen.mjs';
+import { isMain } from '../omx-contract.mjs';
 
 const FACE = 'lib/omx_clap_face.c';
 /** The functions that run on the audio thread: a relaxed store there is ordered by program order. */
@@ -54,7 +55,7 @@ export function dirtyOrderErrors(src, file = FACE) {
   return errors;
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (isMain(import.meta.url)) {
   const src = readFileSync(join(ROOT, FACE), 'utf8');
   const errors = dirtyOrderErrors(src);
   for (const e of errors) console.log(`FAIL face-dirty-order ${e}`);

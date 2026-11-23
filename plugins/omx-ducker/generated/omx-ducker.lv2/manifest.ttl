@@ -8,7 +8,7 @@
 <urn:openmixer:ducker>
     a lv2:Plugin ;
     lv2:binary <omx-ducker.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-ducker.ttl> .
+    rdfs:seeAlso <omx-ducker.ttl> .
 
 <urn:openmixer:ducker#preset-bass-under-kick>
     a pset:Preset ;

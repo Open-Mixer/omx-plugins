@@ -11,7 +11,7 @@
 # drives or names (tools/test/ci-scope-check.sh keeps this list whole). Anything else, and an empty list, is true:
 # main and tags never ask this at all.
 set -euo pipefail
-SELFTEST_PLUGINS=" omx-chainproof omx-comp omx-delay omx-delay9 omx-drive omx-eq omx-eq16 omx-eq32 omx-eq8 omx-eq9 omx-fader omx-gate omx-ghost omx-knob omx-strip omx-trem omx-tremolo omx-wobble "
+SELFTEST_PLUGINS=" omx-chainproof omx-comp omx-delay omx-delay9 omx-drive omx-eq omx-eq16 omx-eq32 omx-eq8 omx-eq9 omx-fader omx-geq omx-gate omx-ghost omx-knob omx-strip omx-trem omx-tremolo omx-wobble "
 n=0
 while IFS= read -r path; do
   [ -n "$path" ] || continue

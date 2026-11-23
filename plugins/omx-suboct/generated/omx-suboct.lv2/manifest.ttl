@@ -8,7 +8,7 @@
 <urn:openmixer:suboct>
     a lv2:Plugin ;
     lv2:binary <omx-suboct.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-suboct.ttl> .
+    rdfs:seeAlso <omx-suboct.ttl> .
 
 <urn:openmixer:suboct#preset-bass-octave>
     a pset:Preset ;

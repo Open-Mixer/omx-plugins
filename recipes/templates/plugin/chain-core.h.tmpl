@@ -43,13 +43,15 @@ typedef struct {
 {{#elements}}  {{faceType}} {{id}};
 {{/elements}}} Omx{{Kernel}}Core;
 
-/** A fresh chain at `rate`: every state word zero, each face bound to the rate. A rate a face does not
- * declare leaves that element a wire. */
-static inline void omx_{{kernel}}_core_init(Omx{{Kernel}}Core *c, uint32_t rate) {
+/** A fresh chain at `rate`: every state word zero, each face bound to the rate. 1 when every element's
+ * kernel takes the rate, 0 when any refuses it (the caller must not run the chain). */
+static inline int omx_{{kernel}}_core_init(Omx{{Kernel}}Core *c, uint32_t rate) {
   memset(c, 0, sizeof *c);
   c->rate = rate;
-{{#elements}}  (void)omx_{{face}}_instance_init(&c->{{id}}, ({{srType}})rate);
-{{/elements}}}
+  int ok = 1;
+{{#elements}}  ok &= omx_{{face}}_instance_init(&c->{{id}}, ({{srType}})rate) != 0;
+{{/elements}}  return ok;
+}
 
 /** The block's parameters (declaration order) and the host's bypass, each element's to its own face. */
 static inline void omx_{{kernel}}_core_resolve(Omx{{Kernel}}Core *c, const float *values, int bypass) {
