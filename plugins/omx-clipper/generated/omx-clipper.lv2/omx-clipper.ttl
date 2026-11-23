@@ -20,7 +20,7 @@
     doap:name "omx clipper" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
-    lv2:minorVersion 20 ;
+    lv2:minorVersion 21 ;
     lv2:microVersion 0 ;
     rdfs:comment "Clips the peaks at a ceiling, with drive in front and an adjustable softness of the bend." ;
     lv2:optionalFeature lv2:hardRTCapable ;

@@ -22,7 +22,7 @@
     doap:name "omx flanger" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
-    lv2:minorVersion 20 ;
+    lv2:minorVersion 21 ;
     lv2:microVersion 0 ;
     rdfs:comment "The console's flanger: one modulated short delay with signed feedback, swept by one oscillator and mixed with the dry signal." ;
     lv2:optionalFeature lv2:hardRTCapable ;
