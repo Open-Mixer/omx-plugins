@@ -90,7 +90,7 @@ const errors = [];
 // omx-contract's old copy of the unit codes is read nowhere: no file of include/, lib/, tools/ or plugins/ includes it
 for (const at of oldUnitIncludes(root)) errors.push(`${at}: includes <omxcontract/omx_param_units.h>; the codes are omx-clap's <omx-clap-host/omx_param_units.h>`);
 const units = declaredUnits();
-if (!renderedHeader) errors.push(`${OWNER_HEADER}: not found; install omx-clap-devel >= 0.36.0`);
+if (!renderedHeader) errors.push(`${OWNER_HEADER}: not found; install omx-clap-devel >= 0.35.0`);
 const headerText = renderedHeader ? readFileSync(renderedHeader, 'utf8') : '';
 errors.push(...(renderedHeader ? drift(units, headerText) : []));
 // the call-level golden: every code omx-contract 3.20.2 released is the declaration's, at the same code
@@ -127,7 +127,7 @@ for (const [declared, [token, code]] of Object.entries(UNITS)) {
 }
 const vendor = [...enumOf].filter(([, v]) => v >= 0x100).sort((a, b) => a[1] - b[1]);
 const want = VENDOR.map((t, i) => [t.toUpperCase(), 0x100 + i]);
-// append-only: the block starts with the four this tree shipped with; the owner appends (omx-clap 0.36.0: dB/oct, dB/s,
+// append-only: the block starts with the four this tree shipped with; the owner appends (omx-clap 0.35.0: dB/oct, dB/s,
 // dBTP, LU at 0x104..0x107, V23d's Q15 codes)
 if (JSON.stringify(vendor.slice(0, want.length)) !== JSON.stringify(want)) {
   errors.push(`vendor block is ${vendor.map(([n, v]) => `${n}=0x${v.toString(16)}`).join(', ')}; expected it to start ${want.map(([n, v]) => `${n}=0x${v.toString(16)}`).join(', ')}`);
