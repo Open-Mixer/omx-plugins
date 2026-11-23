@@ -28,7 +28,7 @@ BuildRequires: omx-panel >= 0.14.0
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}
-BuildRequires: clap-devel >= 1.2.7
+BuildRequires: clap-devel >= 1.2.10
 BuildRequires: lv2-devel
 # %%check: the generators and checks are Node scripts; the hosts that load the built plugins
 # (20.19: tools/omx-contract.mjs require()s omx-contract's entry.mjs, an ES module, unflagged from 20.19 / 22.12)
@@ -124,7 +124,7 @@ Requires: omx-dsp-devel >= 0.32.0
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
 Requires: omx-contract-devel >= 3.20.2
 Requires: %{name}-contract = %{version}-%{release}
-Requires: clap-devel >= 1.2.7
+Requires: clap-devel >= 1.2.10
 
 %description devel
 The headers other projects include to use the OpenMixer plugins' parameters and
