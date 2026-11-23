@@ -121,6 +121,17 @@ static bool run_one(const clap_plugin_factory_t *fac, const char *id) {
   return ok;
 }
 
+/* A rate the kernel refuses: activate must say no, so the host never runs the plugin as a silent wire.
+ * 0.5 Hz is positive and finite, so only the kernel's own answer (the rate as the kernel takes it is 0) refuses it;
+ * 1e10 does not fit the 32-bit rate every core holds. */
+static bool refuses_rate(const clap_plugin_factory_t *fac, const char *id, double rate) {
+  const clap_plugin_t *p = fac->create_plugin(fac, &HOST, id);
+  if (!p) return false;
+  bool refused = p->init(p) && !p->activate(p, rate, 1, BLOCK);
+  p->destroy(p);
+  return refused;
+}
+
 int main(int argc, char **argv) {
   /* argv: the shipped plugins' ids, then `--test` and the test plugins' ids */
   int sep = argc;
@@ -149,6 +160,8 @@ int main(int argc, char **argv) {
     CHECK(d && strcmp(d->id, id) == 0, "%s: its factory holds one plugin, descriptor id %s", id, d ? d->id : "(none)");
     CHECK(fac && fac->create_plugin(fac, &HOST, "org.example.not-ours") == NULL, "%s: its factory refuses another id", id);
     CHECK(fac && run_one(fac, id), "%s: created, activated at 48 kHz, one block run on every port, destroyed", id);
+    CHECK(fac && refuses_rate(fac, id, 0.5), "%s: activate at 0.5 Hz (a rate the kernel refuses) returns false", id);
+    CHECK(fac && refuses_rate(fac, id, 1e10), "%s: activate at 1e10 Hz (past the 32-bit rate) returns false", id);
     e->deinit();
   }
   CHECK(omx_clap_static_find("org.example.not-ours") == NULL, "find refuses an id no plugin has");

@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
+/*
+ * omx_width_core.h — omx-width's binding to omx-dsp's width kernel: the ONE place both faces
+ * (omx_width_clap.c, omx_width_lv2.c) reach the DSP. It holds no DSP of its own: it hands the
+ * declared parameter values, by name, to omx-dsp's instance face (<omxdsp/fx/omx_width_instance.h>)
+ * and runs it. The instance is plain inline state: nothing is allocated, locked or called into the
+ * system, in process or at activate.
+ *
+ * GENERATED — DO NOT EDIT BY HAND. Produced by tools/gen.mjs from plugins/omx-width/omx-width.decl.json and
+ * the face's resolve() prototype: each argument takes the parameter whose contract control it names.
+ */
+#ifndef OMX_WIDTH_CORE_H
+#define OMX_WIDTH_CORE_H
+
+#include <math.h>
+#include <stdint.h>
+#include <string.h>
+
+/* The generated table FIRST: its guard is omx-dsp's own, so the instance header reads this table. */
+#include "omx_width_params.h"
+#include "omx_plugin_face.h"
+
+#include <omxdsp/fx/omx_width_instance.h>
+
+/** The kernel's state and what a block runs with. */
+typedef struct {
+  uint32_t rate;
+  OmxWidthInstance inst;
+} OmxWidthCore;
+
+/** A fresh instance at `rate`: every state word zero. 1 when the kernel takes the rate, 0 when it refuses
+ * it (the instance is then the identity: the caller must not run it). */
+static inline int omx_width_core_init(OmxWidthCore *c, uint32_t rate) {
+  memset(c, 0, sizeof *c);
+  c->rate = rate;
+  return omx_width_instance_init(&c->inst, (float)rate);
+}
+
+/** The block's parameters (declaration order) and the host's bypass, each to its resolve() argument. */
+static inline void omx_width_core_resolve(OmxWidthCore *c, const float *values, int bypass) {
+  omx_width_instance_resolve(&c->inst, bypass,
+                                  /* width_pct */ values[OMX_WIDTH_PARAM_WIDTH_PCT],
+                                  /* pseudo */ (int)lrintf(values[OMX_WIDTH_PARAM_PSEUDO]),
+                                  /* pseudo_ms */ values[OMX_WIDTH_PARAM_PSEUDO_MS],
+                                  /* bass_mono */ (int)lrintf(values[OMX_WIDTH_PARAM_BASS_MONO]),
+                                  /* bass_mono_hz */ values[OMX_WIDTH_PARAM_BASS_MONO_HZ]);
+}
+
+/** The latency the kernel adds, in samples. */
+static inline uint32_t omx_width_core_latency(const OmxWidthCore *c) {
+  (void)c;
+  return (uint32_t)lrintf((float)(omx_width_instance_latency(&c->inst)));
+}
+
+/** One block, stereo; the outputs may alias the inputs. */
+static inline void omx_width_core_run(OmxWidthCore *c, const float *in_l, const float *in_r, float *out_l,
+                                         float *out_r, uint32_t frames) {
+  omx_width_instance_run(&c->inst, in_l, in_r, out_l, out_r, frames);
+}
+
+/* The core behind the vtable the shared faces call (include/omx_plugin_face.h): the same functions, untyped. */
+static inline int omx_width_core_init_v(void *c, uint32_t rate) { return omx_width_core_init((OmxWidthCore *)c, rate); }
+static inline void omx_width_core_resolve_v(void *c, const float *values, int bypass) {
+  omx_width_core_resolve((OmxWidthCore *)c, values, bypass);
+}
+static inline uint32_t omx_width_core_latency_v(const void *c) { return omx_width_core_latency((const OmxWidthCore *)c); }
+static inline void omx_width_core_run_v(void *c, const float *key, const float *in_l, const float *in_r, float *out_l,
+                                           float *out_r, uint32_t frames) {
+  (void)key;
+  omx_width_core_run((OmxWidthCore *)c, in_l, in_r, out_l, out_r, frames);
+}
+
+static const struct omx_face_core OMX_WIDTH_CORE = {sizeof(OmxWidthCore), omx_width_core_init_v, omx_width_core_resolve_v,
+                                                   omx_width_core_latency_v, omx_width_core_run_v,
+                                                   NULL};
+
+#endif /* OMX_WIDTH_CORE_H */

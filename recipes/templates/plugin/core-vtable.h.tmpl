@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /* The core behind the vtable the shared faces call (include/omx_plugin_face.h): the same functions, untyped. */
-static inline void omx_{{kernel}}_core_init_v(void *c, uint32_t rate) { omx_{{kernel}}_core_init((Omx{{Kernel}}Core *)c, rate); }
+static inline int omx_{{kernel}}_core_init_v(void *c, uint32_t rate) { return omx_{{kernel}}_core_init((Omx{{Kernel}}Core *)c, rate); }
 static inline void omx_{{kernel}}_core_resolve_v(void *c, const float *values, int bypass) {
   omx_{{kernel}}_core_resolve((Omx{{Kernel}}Core *)c, values, bypass);
 }

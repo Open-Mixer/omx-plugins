@@ -35,11 +35,12 @@ typedef struct {
   {{faceType}} inst;
 } Omx{{Kernel}}Core;
 
-/** A fresh instance at `rate`: every state word zero. A rate the kernel does not declare leaves it a wire. */
-static inline void omx_{{kernel}}_core_init(Omx{{Kernel}}Core *c, uint32_t rate) {
+/** A fresh instance at `rate`: every state word zero. 1 when the kernel takes the rate, 0 when it refuses
+ * it (the instance is then the identity: the caller must not run it). */
+static inline int omx_{{kernel}}_core_init(Omx{{Kernel}}Core *c, uint32_t rate) {
   memset(c, 0, sizeof *c);
   c->rate = rate;
-  (void)omx_{{face}}_instance_init(&c->inst, ({{srType}})rate);
+  return omx_{{face}}_instance_init(&c->inst, ({{srType}})rate);
 }
 
 /** The block's parameters (declaration order) and the host's bypass, each to its resolve() argument. */

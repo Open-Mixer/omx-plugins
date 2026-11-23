@@ -12,13 +12,14 @@
  * control with its resolved travel or choices) and the panel its declaration draws (plugins/<stem>/<stem>.decl.json, or
  * the base declaration of a variant: the section keys). It reads no built file, no installed package and no version.
  * A page is the LV2 port group and the CLAP module of a control (tools/descriptor.mjs portGroupsOf): the group path of
- * the control is the page, and its priority counts the groups down in the order their first port comes.
+ * the control is the page, and its priority counts the groups down section by section (pagesOf).
  */
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { faceIds } from './param-contract.mjs';
 import { baseOf } from './variants.mjs';
+import { isMain } from './omx-contract.mjs';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = 'docs/plugins';
@@ -43,7 +44,9 @@ function panelOwner(root, stem) {
   return base.decl;
 }
 
-/** The pages of a descriptor: each distinct group path in the order its first control comes, with its LV2 symbol and priority. */
+/** The pages of a descriptor: each distinct group path, with its LV2 symbol and priority, a panel section's pages
+ * together where the section's first control comes and, within the section, in the order their first control comes
+ * (the order tools/descriptor.mjs portGroupsOf counts the priorities down in). */
 export function pagesOf(descriptor, decl) {
   const sections = new Map((decl.panel?.sections ?? []).map((s) => [s.label, s.key]));
   const pages = [];
@@ -58,8 +61,10 @@ export function pagesOf(descriptor, decl) {
     const key = path.length > 1 ? last.toLowerCase().replace(/\s+/g, '') : sections.get(last);
     pages.push({ id, path, key, controls: [c] });
   }
-  pages.forEach((p, i) => { p.priority = pages.length - i; });
-  return pages;
+  const sectionAt = (p) => pages.findIndex((q) => q.path[0] === p.path[0]);
+  const ordered = [...pages].sort((p, q) => sectionAt(p) - sectionAt(q) || pages.indexOf(p) - pages.indexOf(q));
+  ordered.forEach((p, i) => { p.priority = ordered.length - i; });
+  return ordered;
 }
 
 const valueOf = (c) => {
@@ -148,4 +153,4 @@ function main(argv) {
   if (check) console.log(`params-doc: ${Object.keys(files).length} pages are what the declarations say`);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main(process.argv.slice(2));
+if (isMain(import.meta.url)) main(process.argv.slice(2));
