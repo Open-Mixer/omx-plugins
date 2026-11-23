@@ -82,13 +82,9 @@ jobs:
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
 
-      # an ordinary run builds against the channel: name where each omx package came from, refuse one from staging (D25,
-      # plugin-hostd-protocol#27: a stale staged contract package outranked the channel)
+      # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
       - name: Every omx package comes from the channel
-        run: |
-          set -euo pipefail
-          dnf repoquery --installed --qf '%{name} %{version} %{from_repo}\n' 'omx-*' 'plugin-*' | tee /tmp/from-repo
-          if grep staging /tmp/from-repo; then echo "a package above came from the staging channel: an ordinary run builds against the channel"; exit 1; fi
+        run: tools/from-channel-check.sh
 
       - name: The version agrees everywhere it is written
         id: handback-version
@@ -189,13 +185,9 @@ jobs:
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
 
-      # an ordinary run builds against the channel: name where each omx package came from, refuse one from staging (D25,
-      # plugin-hostd-protocol#27: a stale staged contract package outranked the channel)
+      # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
       - name: Every omx package comes from the channel
-        run: |
-          set -euo pipefail
-          dnf repoquery --installed --qf '%{name} %{version} %{from_repo}\n' 'omx-*' 'plugin-*' | tee /tmp/from-repo
-          if grep staging /tmp/from-repo; then echo "a package above came from the staging channel: an ordinary run builds against the channel"; exit 1; fi
+        run: tools/from-channel-check.sh
 
       - name: make test-heavy, and nothing skipped
         id: handback-test-heavy
@@ -236,13 +228,9 @@ jobs:
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
 
-      # an ordinary run builds against the channel: name where each omx package came from, refuse one from staging (D25,
-      # plugin-hostd-protocol#27: a stale staged contract package outranked the channel)
+      # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
       - name: Every omx package comes from the channel
-        run: |
-          set -euo pipefail
-          dnf repoquery --installed --qf '%{name} %{version} %{from_repo}\n' 'omx-*' 'plugin-*' | tee /tmp/from-repo
-          if grep staging /tmp/from-repo; then echo "a package above came from the staging channel: an ordinary run builds against the channel"; exit 1; fi
+        run: tools/from-channel-check.sh
 
       - name: The recipe machinery, sabotaged arm by arm
         id: handback-selftest
