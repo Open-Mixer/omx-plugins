@@ -37,7 +37,8 @@ enum {
   OMX_COMP_PARAM_DETECT_LINK = 16,
   OMX_COMP_PARAM_DUCK = 17,
   OMX_COMP_PARAM_RANGE_DB = 18,
-  OMX_COMP_PARAM_COUNT = 19
+  OMX_COMP_PARAM_RELEASE_MODE = 19,
+  OMX_COMP_PARAM_COUNT = 20
 };
 
 static const omx_plugin_param OMX_COMP_PARAMS[OMX_COMP_PARAM_COUNT] = {
@@ -60,6 +61,7 @@ static const omx_plugin_param OMX_COMP_PARAMS[OMX_COMP_PARAM_COUNT] = {
   { "detectLink", "Detect Link", "", 0.0f, 3.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "duck", "Duck", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
   { "rangeDb", "Duck Range", "dB", -40.0f, 0.0f, -12.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "releaseMode", "Release Mode", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -84,6 +86,7 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
   "Key",
   "Duck",
   "Duck",
+  "Comp",
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -144,6 +147,9 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 #define OMX_COMP_PARAM_RANGE_DB_MIN -40.0f
 #define OMX_COMP_PARAM_RANGE_DB_MAX 0.0f
 #define OMX_COMP_PARAM_RANGE_DB_DEFAULT -12.0f
+#define OMX_COMP_PARAM_RELEASE_MODE_MIN 0.0f
+#define OMX_COMP_PARAM_RELEASE_MODE_MAX 2.0f
+#define OMX_COMP_PARAM_RELEASE_MODE_DEFAULT 0.0f
 
 /* The identity every face publishes. */
 #define OMX_COMP_NAME "omx comp"
@@ -155,13 +161,13 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 #define OMX_COMP_CLAP_FEATURES "audio-effect", "compressor", "stereo"
 #define OMX_COMP_LV2_URI "urn:openmixer:comp"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
-#define OMX_COMP_DECL_SOURCE "omx comp: Threshold -60 to 0 dB, Ratio 1 to 20, Knee 0 to 24 dB, Attack 0.1 to 100 ms, Release 5 to 3000 ms, Makeup 0 to 24 dB, Mix 0 to 100 %, Kind 0 to 1, Detector Oversampling 0 to 2, Detector Topology 0 to 1, Key Source 0 to 1, Key HP 0 to 2000 Hz, Key LP 0 to 20000 Hz, Key Tilt -6 to 6 dB/oct, Key Listen 0 to 1, Hold 0 to 2000 ms, Detect Link 0 to 3, Duck 0 to 1, Duck Range -40 to 0 dB"
-#define OMX_COMP_DECL_DIGEST "433ca2f5811fecbbb6cc46a13dad9327d5b372ddfc808c51ecdefcc09495e0f7"
+#define OMX_COMP_DECL_SOURCE "omx comp: Threshold -60 to 0 dB, Ratio 1 to 20, Knee 0 to 24 dB, Attack 0.1 to 100 ms, Release 5 to 3000 ms, Makeup 0 to 24 dB, Mix 0 to 100 %, Kind 0 to 1, Detector Oversampling 0 to 2, Detector Topology 0 to 1, Key Source 0 to 1, Key HP 0 to 2000 Hz, Key LP 0 to 20000 Hz, Key Tilt -6 to 6 dB/oct, Key Listen 0 to 1, Hold 0 to 2000 ms, Detect Link 0 to 3, Duck 0 to 1, Duck Range -40 to 0 dB, Release Mode 0 to 2"
+#define OMX_COMP_DECL_DIGEST "589c4119820fb26e5685c8c7a48c50bc984d8b735a9324fab16a8ae87ce5bf10"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_COMP_PARAM_CONTRACT_VERSION 3u
-#define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "10fc471c4d006888aa0c0ef660fff9384363e0f788378a757d059af558a8189b"
+#define OMX_COMP_PARAM_CONTRACT_VERSION 4u
+#define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "406476383bdf2dc44974fcecfa00d20f98fa03c0930b474b4a7443b39c5eaa05"
 static const struct omx_param_contract_row OMX_COMP_PARAM_CONTRACT[OMX_COMP_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* thresholdDb db */
   { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio ratio */
@@ -182,6 +188,7 @@ static const struct omx_param_contract_row OMX_COMP_PARAM_CONTRACT[OMX_COMP_PARA
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* detectLink none */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* duck none */
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* rangeDb db */
+  { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* releaseMode none */
 };
 
 /* org.openmixer.resource-hints.draft/0 (omx-contract RESOURCE_HINTS, tools/resource-hints.mjs): the hints the
@@ -195,7 +202,7 @@ static const omx_resource_hints_t OMX_COMP_RESOURCE_HINTS = {
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics. */
-#define OMX_COMP_PANEL_FINGERPRINT "62e5fda63d8af6fd4d4ca6bff17890bc931195598bfb42815b8cb3018d86768f"
+#define OMX_COMP_PANEL_FINGERPRINT "3ca5adc1d410e6ee10d4609470bb649d633fe4fdffbde7f2d811ea097e5b0d2c"
 static const struct omx_panel_section_row OMX_COMP_PANEL_SECTIONS[] = {
   { "comp", "fx.comp.section.comp", "Comp" },
   { "key", "fx.comp.section.key", "Key" },
@@ -213,6 +220,7 @@ static const struct omx_panel_control_row OMX_COMP_PANEL_CONTROLS[] = {
   { 7u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.comp.kind", "Kind", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 8u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.comp.detector_oversampling", "Detector Oversampling", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 9u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.comp.detector_topology", "Detector Topology", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
+  { 19u, 0u, OMX_CLAP_WIDGET_AUTO, "fx.comp.release_mode", "Release Mode", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 10u, 1u, OMX_CLAP_WIDGET_AUTO, "fx.comp.key_source", "Key Source", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 11u, 1u, OMX_CLAP_WIDGET_KNOB, "fx.comp.key_hp_hz", "Key HP", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 12u, 1u, OMX_CLAP_WIDGET_KNOB, "fx.comp.key_lp_hz", "Key LP", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
@@ -239,7 +247,7 @@ static const struct omx_panel_display_row OMX_COMP_PANEL_DISPLAYS[] = {
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_COMP_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 1u, 5u, 6u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Comp", "Comp", { 2u, 15u, 7u, 8u, 9u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Comp", "Comp", { 2u, 15u, 7u, 8u, 9u, 19u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Key", "Key", { 10u, 11u, 12u, 13u, 16u, 14u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Duck", "Duck", { 17u, 18u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
@@ -247,7 +255,7 @@ static const struct omx_panel_page_row OMX_COMP_PANEL_PAGES[] = {
 static const struct omx_panel_rows OMX_COMP_PANEL = {
   OMX_COMP_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DYNAMICS,
   OMX_COMP_PANEL_SECTIONS, 3u,
-  OMX_COMP_PANEL_CONTROLS, 19u,
+  OMX_COMP_PANEL_CONTROLS, 20u,
   OMX_COMP_PANEL_ROLES, 7u,
   OMX_COMP_PANEL_DISPLAYS, 2u,
   NULL, 0u,
@@ -265,6 +273,6 @@ static const struct omx_panel_rows OMX_COMP_PANEL = {
 #define OMX_COMP_LV2_PORT_FIRST_PARAM 13u
 /* The meters' output control ports, one per channel in the order their values are published, from here on. */
 #define OMX_COMP_LV2_PORT_FIRST_METER 2u
-#define OMX_COMP_LV2_PORT_COUNT 32u
+#define OMX_COMP_LV2_PORT_COUNT 33u
 
 #endif /* OMX_COMP_PARAMS_H */

@@ -1,0 +1,19 @@
+{
+  "format": "org.openmixer.preset/1",
+  "plugin": {
+    "id": "org.openmixer.trim"
+  },
+  "id": "pad-10",
+  "name": "Pad 10 dB",
+  "carries": "params",
+  "params": [
+    {
+      "symbol": "trimDb",
+      "unit": "dB",
+      "value": -10
+    }
+  ],
+  "createdAt": "2026-10-17T00:00:00Z",
+  "modifiedAt": "2026-10-17T00:00:00Z",
+  "copyOf": null
+}

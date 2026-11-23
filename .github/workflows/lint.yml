@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
+name: lint
+
+# The one workflow that runs on a pull request: it is cheap. No other workflow runs on a push or a pull request;
+# the suite runs in the cluster verify row, and ci.yml and release.yml run on dispatch and on tags.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: Open-Mixer/.github/.github/actions/trigger-gate@openmixer-v1
+        with:
+          lint-workflow: lint.yml
+      - uses: Open-Mixer/.github/.github/actions/commit-message-check@openmixer-v1
+      # Fedora 45 only (Fedora 44 is dropped for this pass): a workflow that names the old release is refused here.
+      - name: No Fedora 44 reference in the workflows
+        run: |
+          tools/test/workflow-fedora-check.sh --self-test
+          tools/test/workflow-fedora-check.sh .
+
+  # The shared checks on what this repository publishes: a pull request's own commits carry no attribution line, no
+  # tracked file points into a private repository, and no local copy of these checks is kept.
+  public-sources:
+    uses: Open-Mixer/.github/.github/workflows/public-sources-check.yml@openmixer-v1
+
+  pr-fixes-issue:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: read
+    uses: Open-Mixer/.github/.github/workflows/pr-fixes-issue.yml@openmixer-v1

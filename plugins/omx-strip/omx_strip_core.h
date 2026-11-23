@@ -207,16 +207,18 @@ typedef struct {
   OmxCompInstance comp;
 } OmxStripCore;
 
-/** A fresh chain at `rate`: every state word zero, each face bound to the rate. A rate a face does not
- * declare leaves that element a wire. */
-static inline void omx_strip_core_init(OmxStripCore *c, uint32_t rate) {
+/** A fresh chain at `rate`: every state word zero, each face bound to the rate. 1 when every element's
+ * kernel takes the rate, 0 when any refuses it (the caller must not run the chain). */
+static inline int omx_strip_core_init(OmxStripCore *c, uint32_t rate) {
   memset(c, 0, sizeof *c);
   c->rate = rate;
-  (void)omx_trim_instance_init(&c->trim, (float)rate);
-  (void)omx_eq_instance_init(&c->filter, (float)rate);
-  (void)omx_gate_instance_init(&c->gate, (float)rate);
-  (void)omx_eq_instance_init(&c->eq, (float)rate);
-  (void)omx_comp_instance_init(&c->comp, (float)rate);
+  int ok = 1;
+  ok &= omx_trim_instance_init(&c->trim, (float)rate) != 0;
+  ok &= omx_eq_instance_init(&c->filter, (float)rate) != 0;
+  ok &= omx_gate_instance_init(&c->gate, (float)rate) != 0;
+  ok &= omx_eq_instance_init(&c->eq, (float)rate) != 0;
+  ok &= omx_comp_instance_init(&c->comp, (float)rate) != 0;
+  return ok;
 }
 
 /** The block's parameters (declaration order) and the host's bypass, each element's to its own face. */
@@ -329,7 +331,7 @@ static inline void omx_strip_core_run(OmxStripCore *c, const float *in_l, const 
 }
 
 /* The core behind the vtable the shared faces call (include/omx_plugin_face.h): the same functions, untyped. */
-static inline void omx_strip_core_init_v(void *c, uint32_t rate) { omx_strip_core_init((OmxStripCore *)c, rate); }
+static inline int omx_strip_core_init_v(void *c, uint32_t rate) { return omx_strip_core_init((OmxStripCore *)c, rate); }
 static inline void omx_strip_core_resolve_v(void *c, const float *values, int bypass) {
   omx_strip_core_resolve((OmxStripCore *)c, values, bypass);
 }

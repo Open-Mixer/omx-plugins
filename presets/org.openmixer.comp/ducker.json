@@ -100,6 +100,12 @@
       "symbol": "rangeDb",
       "unit": "dB",
       "value": -12
+    },
+    {
+      "symbol": "releaseMode",
+      "unit": "",
+      "value": 0,
+      "label": "Fixed"
     }
   ],
   "createdAt": "2026-10-17T00:00:00Z",

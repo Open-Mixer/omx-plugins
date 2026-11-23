@@ -1,0 +1,19 @@
+{
+  "format": "org.openmixer.preset/1",
+  "plugin": {
+    "id": "org.openmixer.trim"
+  },
+  "id": "quiet-source",
+  "name": "Quiet Source",
+  "carries": "params",
+  "params": [
+    {
+      "symbol": "trimDb",
+      "unit": "dB",
+      "value": 12
+    }
+  ],
+  "createdAt": "2026-10-17T00:00:00Z",
+  "modifiedAt": "2026-10-17T00:00:00Z",
+  "copyOf": null
+}

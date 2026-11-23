@@ -12,7 +12,7 @@
     }
   },
   "contract": {
-    "range": "packaging/omx-plugins.spec: BuildRequires (omx-contract-devel >= floor with omx-contract-devel < ceiling)",
+    "range": "packaging/omx-plugins.spec: BuildRequires omx-contract-devel >= floor",
     "byReferenceSince": "1.1.0"
   },
   "derived": {
@@ -160,26 +160,6 @@
           "generated/{stem}.lv2/manifest.ttl",
           "generated/{stem}.lv2/{stem}.ttl"
         ]
-      }
-    },
-    {
-      "id": "modgui",
-      "what": "the MOD GUI of the LV2 bundle, generated from the panel block and fresh",
-      "step": "generate",
-      "layer": "generated",
-      "made": "GENERATED",
-      "target": "plugins/{stem}/generated/{stem}.lv2/modgui{.ttl,/}",
-      "paths": [
-        "plugins/{stem}/generated/{stem}.lv2/modgui.ttl",
-        "plugins/{stem}/generated/{stem}.lv2/modgui/**"
-      ],
-      "questions": [
-        "/$defs/plugin/properties/panel"
-      ],
-      "template": "tools/panel-file.mjs",
-      "when": "panel",
-      "checker": {
-        "fn": "modguiFresh"
       }
     },
     {

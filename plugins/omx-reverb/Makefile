@@ -5,11 +5,11 @@
 #
 # omx-reverb as CLAP and LV2, in plain C, from ONE declaration (omx-reverb.decl.json).
 #
-#   make            build/omx-reverb.clap and build/omx-reverb.lv2/ (binary, TTL, MOD GUI)
+#   make            build/omx-reverb.clap and build/omx-reverb.lv2/ (binary, TTL)
 #   make test       freshness of every generated file, the parameters as declared, every parameter
 #                   live, the CLAP state's round trip, the reverb kernel-identity oracle, the panel
 #                   description both faces serve, the CLAP face's parameter contract, remote controls
-#                   and track-info, the LV2 port groups, the MOD GUI checks, the factory
+#                   and track-info, the LV2 port groups, the factory
 #                   presets as hosts find and load them (CLAP preset discovery and preset-load, lilv), and
 #                   the host checks (omx-clap-scan, lv2info) where installed
 #   make gen        regenerate generated/ from the declaration (commit the result)
@@ -17,7 +17,7 @@
 #
 # Build deps: omx-dsp (pkg-config omxdsp, >= OMXDSP_MIN, the floor packaging/omx-plugins.spec declares),
 # omx-contract (its resource-hints header), omx-clap-core (the CLAP ABI's openmixer extensions), clap, lv2; for the
-# tests lilv and node. The MOD GUI is omx-panel's (the omx-panel command, its tree $(OMX_PANEL_DIR)).
+# tests lilv and node.
 
 NAME       := omx-reverb
 URI        := urn:openmixer:reverb
@@ -27,14 +27,6 @@ ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build
 BUNDLE     := $(B)/$(NAME).lv2
-
-# The MOD GUI: omx-panel over the plugin's descriptor and its declared panel (tools/panel-file.mjs writes the panel file)
-OMX_PANEL     ?= omx-panel
-OMX_PANEL_DIR ?= /usr/share/omx-panel
-PANEL_FILE    := $(B)/$(NAME).panel.json
-MODGUI_SOURCE := plugins/$(NAME)/$(NAME).decl.json (its panel block) and tools/look.json
-MODGUI        := --descriptor $(NAME).descriptor.json --panel $(PANEL_FILE) --out $(GEN)/$(NAME).lv2 --source '$(MODGUI_SOURCE)'
-
 
 PKG_CONFIG ?= pkg-config
 ifeq ($(shell $(PKG_CONFIG) --atleast-version=$(OMXDSP_MIN) omxdsp && echo y),)
@@ -75,14 +67,11 @@ $(BUNDLE)/$(NAME).so: omx_reverb_lv2.c $(ROOT)/lib/omx_lv2_face.c $(ROOT)/includ
 	@mkdir -p $(BUNDLE)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(WARN) $(PLUGIN) $(LV2_CFLAGS) -o $@ $(filter %.c,$^) $(LDFLAGS) $(LDLIBS)
 
-# The bundle's text and images are generated and committed; the build copies them beside the binary.
-# The film strips are omx-panel's render of its look, the same in every bundle: never committed, omx-panel writes them
-# into the built bundle.
+# The bundle's text is generated and committed; the build copies it beside the binary. No MOD GUI is built or shipped here:
+# a host generates it from the plugin's description (omx-modgui-sync).
 $(BUNDLE)/manifest.ttl: $(TTL_SRCS) | $(B)
 	@mkdir -p $(BUNDLE)
 	cp -r $(TTL)/. $(BUNDLE)/
-	node $(ROOT)/tools/panel-file.mjs $(CURDIR) $(PANEL_FILE)
-	$(OMX_PANEL) modgui --films-only --descriptor $(NAME).descriptor.json --panel $(PANEL_FILE) --out $(BUNDLE)
 
 $(B):
 	@mkdir -p $@
@@ -105,15 +94,14 @@ $(B)/preset-probe: $(ROOT)/tools/preset-probe.c | $(B)
 $(B)/reverb-oracle: test/reverb-oracle.c $(CORE) | $(B)
 	$(CC) $(CFLAGS) $(WARN) -I$(GEN) -I$(ROOT)/include $(DSP_CFLAGS) $(ABI_CFLAGS) -o $@ $< $(LILV) -ldl $(LDLIBS)
 
+# Hand-written (the declaration's `oracles`): moved from the console engine with the effect.
+$(B)/reverb-return: test/reverb-return.c $(CORE) | $(B)
+	$(CC) $(CFLAGS) $(WARN) -I$(GEN) -I$(ROOT)/include -I$(ROOT)/tools/test $(DSP_CFLAGS) $(ABI_CFLAGS) -o $@ $< $(LILV) -ldl -lpthread $(LDLIBS)
+
 gen:
 	node $(ROOT)/tools/gen.mjs $(CURDIR)
-	node $(ROOT)/tools/panel-file.mjs $(CURDIR) $(PANEL_FILE)
-	$(OMX_PANEL) modgui --no-films $(MODGUI)
-
 check:
 	node $(ROOT)/tools/gen.mjs --check $(CURDIR)
-	node $(ROOT)/tools/panel-file.mjs $(CURDIR) $(PANEL_FILE)
-	$(OMX_PANEL) modgui --check --no-films $(MODGUI)
 
 # The parameter test: the built CLAP face's parameters are the declaration's, and every one of them
 # reaches the kernel. The state test: a saved state, loaded into a fresh instance, gives back every
@@ -130,8 +118,9 @@ check:
 # Every test runs, and the target fails if any failed, so a new plugin shows all its red tests at
 # once. `test` is the fast set a package build runs (in-process probes and declaration checks);
 # `test-heavy` runs the built faces through a host: the kernel-identity oracle (both faces, every
-# declared rate, every parameter a step off), the hand-written oracles, the MOD GUI test and the
+# declared rate, every parameter a step off), the hand-written oracles and the
 # external scanners of host-check.sh. Both run on every pull request (tools/test/test-split.json).
+# reverb-return: the hand-written oracle the declaration names, on both faces.
 test: all check $(B)/clap-probe $(B)/panel-probe $(B)/clap-ext-probe $(B)/port-groups-probe $(B)/preset-probe
 	@fail=0; \
 	$(B)/clap-probe params $(B)/$(NAME).clap > $(B)/clap-params.txt && \
@@ -150,11 +139,12 @@ test: all check $(B)/clap-probe $(B)/panel-probe $(B)/clap-ext-probe $(B)/port-g
 	node $(ROOT)/tools/test/presets-host-check.mjs --self-test $(B)/preset-probe $(CURDIR) || fail=1; \
 	exit $$fail
 
-test-heavy: all check $(B)/reverb-oracle
+test-heavy: all check $(B)/reverb-oracle $(B)/reverb-return
 	@fail=0; \
 	$(B)/reverb-oracle clap $(B)/$(NAME).clap || fail=1; \
 	$(B)/reverb-oracle lv2 $(BUNDLE) $(URI) || fail=1; \
-	MODGUI_SOURCE='$(MODGUI_SOURCE)' sh $(OMX_PANEL_DIR)/tools/modgui-test.sh $(BUNDLE) $(NAME).descriptor.json $(PANEL_FILE) || fail=1; \
+	$(B)/reverb-return clap $(B)/$(NAME).clap || fail=1; \
+	$(B)/reverb-return lv2 $(BUNDLE) $(URI) || fail=1; \
 	sh $(ROOT)/tools/host-check.sh $(B)/$(NAME).clap $(BUNDLE) $(URI) $(CLAP_ID) || fail=1; \
 	exit $$fail
 

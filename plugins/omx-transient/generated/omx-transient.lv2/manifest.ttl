@@ -8,7 +8,7 @@
 <urn:openmixer:transient>
     a lv2:Plugin ;
     lv2:binary <omx-transient.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-transient.ttl> .
+    rdfs:seeAlso <omx-transient.ttl> .
 
 <urn:openmixer:transient#preset-punch>
     a pset:Preset ;
