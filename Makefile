@@ -206,6 +206,8 @@ test: lib
 	$(MAKE) -s host-contract || { rc=1; red="$$red host-contract"; }; \
 	$(MAKE) -s meter-level || { rc=1; red="$$red meter-level"; }; \
 	$(MAKE) -s comp-published-scan || { rc=1; red="$$red comp-published-scan"; }; \
+	$(MAKE) -s meter-held || { rc=1; red="$$red meter-held"; }; \
+	$(MAKE) -s meter-rows || { rc=1; red="$$red meter-rows"; }; \
 	$(MAKE) -s strip-bands || { rc=1; red="$$red strip-bands"; }; \
 	$(MAKE) -s test-role || { rc=1; red="$$red test-role"; }; \
 	$(MAKE) -s package-lists || { rc=1; red="$$red package-lists"; }; \

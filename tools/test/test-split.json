@@ -62,6 +62,8 @@
       "host-contract",
       "meter-level",
       "comp-published-scan",
+      "meter-held",
+      "meter-rows",
       "strip-bands",
       "test-role",
       "package-lists"
