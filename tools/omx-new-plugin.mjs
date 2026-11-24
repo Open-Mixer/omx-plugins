@@ -34,9 +34,8 @@
 import { spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { bindFace, instanceHeader, parseFace } from './instance-face.mjs';
-import { controlOf, items, kernelControls, kernelExists, locateContract, resolveParam } from './omx-contract.mjs';
+import { controlOf, items, kernelControls, kernelExists, locateContract, resolveParam, isMain } from './omx-contract.mjs';
 import { ROOT, checkPlugin, consoleErrors, gapLines, layerOfPath, loadRecipe, loadSchema, panelErrors, pluginFacts, pluginStems, validate } from './plugin-recipe.mjs';
 import { chainBindings, defaultPanel, instanceExtras, loadDecl, prepareDecl, scaleOf } from './gen.mjs';
 import { contractFingerprint, contractOf, registerFirstContract } from './param-contract.mjs';
@@ -455,7 +454,7 @@ export function writePlugin(plan, { root = ROOT } = {}) {
   }
   written.push(...registerContract(root, d.stem));
   // a generated plugin always has its MOD GUI: its declared panel, or gen.mjs's one section of every parameter
-  const tools = [[join(root, 'tools', 'gen.mjs')], ...(d.panel || d.binding === 'instance' || d.binding === 'chain' ? [[join(root, 'tools', 'panel-file.mjs'), '--modgui', join(root, 'plugins', d.stem)]] : [])];
+  const tools = [[join(root, 'tools', 'gen.mjs')]];
   const generate = () => {
     for (const args of tools) {
       const r = run('node', args, { cwd: root });
@@ -614,7 +613,7 @@ async function variantsMain(raw, src, { root, recipe, declPath, argv, opt }) {
   }
   const written = [relative(root, declPath)];
   for (const p of plans) written.push(...registerContract(root, p.decl.stem));
-  const tools = [[join(root, 'tools', 'gen.mjs')], ...plans.map((p) => [join(root, 'tools', 'panel-file.mjs'), '--modgui', join(root, 'plugins', p.decl.stem)])];
+  const tools = [[join(root, 'tools', 'gen.mjs')]];
   for (const args of tools) {
     const r = run('node', args, { cwd: root });
     if (r.code !== 0) throw new Error(`${relative(root, args[0])}: ${r.out.trim()}`);
@@ -646,4 +645,4 @@ async function variantsMain(raw, src, { root, recipe, declPath, argv, opt }) {
   if (red) process.exit(1);
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main(process.argv.slice(2));
+if (isMain(import.meta.url)) await main(process.argv.slice(2));

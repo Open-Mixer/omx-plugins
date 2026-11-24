@@ -9,18 +9,19 @@
  *
  * Usage:
  *   node tools/panel-file.mjs <plugin dir> <out file>
- *       writes the declared panel of the plugin as JSON, for a Makefile that calls `omx-panel modgui` itself
+ *       writes the declared panel of the plugin as JSON, for a host that calls `omx-panel modgui` itself
  *       (plugins/<stem>/Makefile, `make gen` and `make check`);
  *   node tools/panel-file.mjs --modgui [--check | --emit-stdout] <plugin dir>
- *       runs `omx-panel modgui` over the plugin, as the Makefile does (the wizard and the completeness test).
+ *       runs `omx-panel modgui` over the plugin to read what it would draw (the wizard and the completeness test); omx-plugins
+ *       ships no MOD GUI, a host generates it (omx-modgui-sync).
  */
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { descriptorFile, descriptorText } from './descriptor.mjs';
 import { loadDecl } from './gen.mjs';
 import { omxPanel } from './omx-panel.mjs';
+import { isMain } from './omx-contract.mjs';
 
 /** The declared panel of `d`, as the file omx-panel reads. */
 export const panelFileText = (d) => `${JSON.stringify(d.panel, null, 2)}\n`;
@@ -77,4 +78,4 @@ function main(argv) {
   writeFileSync(out, panelFileText(d));
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main(process.argv.slice(2));
+if (isMain(import.meta.url)) main(process.argv.slice(2));

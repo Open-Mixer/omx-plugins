@@ -18,7 +18,7 @@ count() { { grep -oF -- "$1" "$2" || true; } | wc -l; }
 check() {
   local root="$1" fail=0 spec="$1/packaging/omx-plugins.spec" control="$1/debian/control"
   # rpm name, deb name, how many times debian/control must carry the deb pair, does -devel require it
-  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-core-devel libomx-clap-core-dev 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 1 no" "plugin-qualify plugin-qualify 1 no"; do
+  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-core-devel libomx-clap-core-dev 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 2 no" "plugin-qualify plugin-qualify 1 no"; do
     read -r rpm deb times devel <<<"$row"
     local floor
     floor="$(sed -n "s/^BuildRequires: $rpm >= \([0-9.]*\)\$/\1/p" "$spec")"
@@ -39,8 +39,12 @@ check() {
   # upgrade path that ruling accepts is named in the PR). A relation line (Breaks, Conflicts, BuildConflicts, Replaces,
   # Obsoletes, Provides) is refused by name, file and line when a name it relates to is ours: omx-*, plugin-*, libomx*,
   # with %{name} read as the package name. A relation to a foreign name (a bundled(...) Provides, a third-party Breaks)
-  # is not ours and stays green. The spec is read before its %changelog (the history is not read); debian/control whole
+  # is not ours and stays green. The spec is read before its %changelog (the history is not read); debian/control whole,
+  # each field with its continuation lines
   local rel='^[[:space:]]*(Build-?)?(Breaks|Conflicts|Replaces|Obsoletes|Provides)[[:space:]]*:' hit text
+  unfold() { # $1: debian/control; each field on one line, a continuation line (leading blank) joined to it, as N:field
+    awk '/^[ \t]/ && n { line = line $0; next } { if (n) print n ":" line; n = NR; line = $0 } END { if (n) print n ":" line }' "$1"
+  }
   ours_relation() { # $1: a relation line; true when one of the names it relates to is ours
     local value item name
     value="${1#*:}"
@@ -55,12 +59,17 @@ check() {
     if ours_relation "$(sed 's/%{name}/omx-plugins/g' <<<"$text")"; then
       echo "deps-check: refuses a relation to one of our packages (no compat relation between our packages, owner ruling 11-16): $hit" >&2; fail=1
     fi
-  done < <({ sed '/^%changelog/q' "$spec" | grep -nE "$rel" | sed 's|^|packaging/omx-plugins.spec:|'; grep -nE "$rel" "$control" | sed 's|^|debian/control:|'; } || true)
+  done < <({ sed '/^%changelog/q' "$spec" | grep -nE "$rel" | sed 's|^|packaging/omx-plugins.spec:|'
+              unfold "$control" | grep -E "^[0-9]+:${rel#^}" | sed 's|^|debian/control:|'; } || true)
   # no ceiling on any dependency: the spec before its %changelog (the history is not read), and debian/control outside
   # its relation lines (a relation is not a dependency; a relation to ours is refused above). A ceiling is any '<' on a
   # dependency line in the spec, bare or inside 'with' (rpm), and any '(<' clause in debian/control (dpkg: << or <)
   if sed '/^%changelog/q' "$spec" | grep -qE '^(BuildRequires|Requires|Recommends|Suggests)[(:].*<'; then echo "deps-check: the spec states a ceiling (<) on a dependency" >&2; fail=1; fi
   if grep -vE '^(Build-?)?(Breaks|Conflicts|Replaces|Obsoletes|Provides):' "$control" | grep -q '(<'; then echo "deps-check: debian/control states a ceiling (<< or <) on a dependency" >&2; fail=1; fi
+  # the LV2 package recommends omx-panel at the BuildRequires floor, so omx-modgui-sync (the host's MOD GUI generator) is there
+  panel_floor=$(sed -n 's/^BuildRequires: omx-panel >= \([0-9.]*\)$/\1/p' "$spec")
+  sed -n '/^%package lv2$/,/^%description lv2$/p' "$spec" | grep -qx "Recommends: omx-panel >= $panel_floor" || { echo "deps-check: the spec's lv2 package needs 'Recommends: omx-panel >= $panel_floor' (omx-modgui-sync)" >&2; fail=1; }
+  sed -n '/^Package: omx-plugins-lv2$/,/^Description:/p' "$control" | grep -qx "Recommends: omx-panel (>= ${panel_floor}~)" || { echo "deps-check: debian/control's omx-plugins-lv2 needs 'Recommends: omx-panel (>= ${panel_floor}~)' (omx-modgui-sync)" >&2; fail=1; }
   # plugin-hostd at run time (Recommends) and at build time: a floor, no ceiling
   grep -qE '^BuildRequires: plugin-hostd >= [0-9.]+$' "$spec" || { echo "deps-check: the spec needs one 'BuildRequires: plugin-hostd >= <floor>' line" >&2; fail=1; }
   grep -qE '^Recommends: plugin-hostd >= [0-9.]+$' "$spec" || { echo "deps-check: the spec's Recommends on plugin-hostd is not a floor" >&2; fail=1; }
@@ -78,7 +87,7 @@ check() {
 if [ "${1:-}" = --self-test ]; then
   scratch="$(mktemp -d)"; trap 'rm -rf "$scratch"' EXIT
   fail=0
-  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added contract-missing control-no-command rules-skip plant-breaks-control plant-replaces-control plant-provides-control plant-conflicts-spec plant-build-conflicts-spec plant-obsoletes-spec green-foreign-breaks-control green-foreign-provides-spec green-foreign-provides-control plant-breaks-mixed-list plant-conflicts-rich-form; do
+  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added control-breaks-sibling-added spec-conflicts-sibling-added control-breaks-own-added control-replaces-added control-breaks-continued spec-conflicts-own-added panel-recommends-dropped-spec panel-recommends-dropped-control panel-recommends-floor-moved contract-missing control-no-command rules-skip plant-breaks-control plant-replaces-control plant-provides-control plant-conflicts-spec plant-build-conflicts-spec plant-obsoletes-spec green-foreign-breaks-control green-foreign-provides-spec green-foreign-provides-control plant-breaks-mixed-list plant-conflicts-rich-form plant-breaks-continued-ours; do
     rm -rf "$scratch/t"; mkdir -p "$scratch/t/packaging" "$scratch/t/debian"
     mkdir -p "$scratch/t/lib"; cp "$HERE/lib/omxplugins.pc.in" "$scratch/t/lib/"; cp "$HERE/debian/rules" "$scratch/t/debian/"
     cp "$HERE/packaging/omx-plugins.spec" "$scratch/t/packaging/"; cp "$HERE/debian/control" "$scratch/t/debian/"
@@ -99,6 +108,15 @@ if [ "${1:-}" = --self-test ]; then
       control-panel-ceiling-returns) sed -i '0,/omx-panel (>= \([0-9.]*\)~)/s//omx-panel (>= \1~), omx-panel (<< 0.14~)/' "$scratch/t/debian/control" ;;
       spec-bare-ceiling-added) sed -i '/^BuildRequires: omx-contract >= /a BuildRequires: omx-contract < 4' "$scratch/t/packaging/omx-plugins.spec" ;;
       control-bare-ceiling-added) sed -i '/^Recommends: plugin-hostd (>= /a Suggests: omx-dsp-contract (<< 0.33~)' "$scratch/t/debian/control" ;;
+      control-breaks-sibling-added) sed -i '/^Breaks: omx-clap-host /d; /^Package: omx-plugins-clap$/,/^Description:/s/^Description:/Breaks: omx-clap-host (<< 0.23.0~)\nDescription:/' "$scratch/t/debian/control" ;;
+      spec-conflicts-sibling-added) sed -i '/^Conflicts: omx-clap-host /d; /^%package clap$/,/^%description clap$/s/^%description clap$/Conflicts: omx-clap-host < 0.23.0\n&/' "$scratch/t/packaging/omx-plugins.spec" ;;
+      control-breaks-own-added) sed -i '/^Package: omx-plugins-clap$/,/^Description:/s/^Description:/Breaks: omx-plugins-dev (<< ${source:Version})\nDescription:/' "$scratch/t/debian/control" ;;
+      control-replaces-added) sed -i '/^Package: omx-plugins-clap$/,/^Description:/s/^Description:/Replaces: omx-plugins-dev (<< ${source:Version})\nDescription:/' "$scratch/t/debian/control" ;;
+      control-breaks-continued) sed -i '/^Package: omx-plugins-clap$/,/^Description:/s/^Description:/Breaks: omx-plugins-dev (<< ${source:Version}),\n omx-clap-host (<< 0.23.0~)\nDescription:/' "$scratch/t/debian/control" ;;
+      spec-conflicts-own-added) sed -i '/^%package clap$/,/^%description clap$/s/^%description clap$/Conflicts: %{name}-devel < %{version}-%{release}\n&/' "$scratch/t/packaging/omx-plugins.spec" ;;
+      panel-recommends-dropped-spec) sed -i '/^Recommends: omx-panel >= /d' "$scratch/t/packaging/omx-plugins.spec" ;;
+      panel-recommends-dropped-control) sed -i '/^Recommends: omx-panel (>= /d' "$scratch/t/debian/control" ;;
+      panel-recommends-floor-moved) sed -i 's/^Recommends: omx-panel >= .*/Recommends: omx-panel >= 9.9.9/' "$scratch/t/packaging/omx-plugins.spec" ;;
       control-no-command) sed -i '/^ *omx-contract (>=/d' "$scratch/t/debian/control" ;;
       rules-skip) sed -i 's/^override_dh_auto_test:/&\n\t@echo NO-CONTRACT-COMMAND; $(MAKE) test-faces; exit 0/' "$scratch/t/debian/rules" ;;
       contract-missing) sed -i '/^BuildRequires: omx-contract-devel /d' "$scratch/t/packaging/omx-plugins.spec" ;;
@@ -112,6 +130,7 @@ if [ "${1:-}" = --self-test ]; then
       green-foreign-provides-spec) sed -i '/^%changelog/i Provides: bundled(libfoo) = 1.0' "$scratch/t/packaging/omx-plugins.spec" ;;
       green-foreign-provides-control) sed -i '/^Package: omx-plugins-test$/a Provides: bundled(libbar)' "$scratch/t/debian/control" ;;
       plant-breaks-mixed-list) sed -i '/^Package: omx-plugins-test$/a Breaks: libfoo-other (<< 1.0~), omx-plugins-test-old' "$scratch/t/debian/control" ;;
+      plant-breaks-continued-ours) sed -i '/^Package: omx-plugins-test$/a Breaks: libfoo-other (<< 1.0~),\n omx-clap-host' "$scratch/t/debian/control" ;;
       plant-conflicts-rich-form) sed -i '/^%changelog/i Conflicts: (omx-clap-host < 0.23)' "$scratch/t/packaging/omx-plugins.spec" ;;
     esac
     if [ "${s#green-}" != "$s" ]; then

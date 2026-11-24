@@ -11,6 +11,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { loadDecl, pluginDirs, ROOT } from '../gen.mjs';
+import { isMain } from '../omx-contract.mjs';
 
 const MAINTAINER = /doap:maintainer\s*\[[^\]]*foaf:homepage\s+<[^>\s]+>[^\]]*\]/;
 
@@ -26,7 +27,7 @@ export function load(root = ROOT) {
   });
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (isMain(import.meta.url)) {
   const plugins = load();
   const errors = maintainerErrors(plugins);
   for (const e of errors) console.log(`FAIL lv2-maintainer ${e}`);

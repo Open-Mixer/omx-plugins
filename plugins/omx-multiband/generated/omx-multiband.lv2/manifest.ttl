@@ -8,7 +8,7 @@
 <urn:openmixer:multiband>
     a lv2:Plugin ;
     lv2:binary <omx-multiband.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-multiband.ttl> .
+    rdfs:seeAlso <omx-multiband.ttl> .
 
 <urn:openmixer:multiband#preset-iem-control>
     a pset:Preset ;

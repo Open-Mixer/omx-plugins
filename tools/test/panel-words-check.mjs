@@ -32,7 +32,9 @@ const OWNER = 'omx-clap-host/omx_clap_ext.h';
 const ENUMS = {
   family: { c: 'omx_clap_panel_family', prefix: 'OMX_CLAP_FAMILY_', owner: 'OMX_CLAP_PANEL_FAMILIES' },
   widget: { c: 'omx_clap_panel_widget', prefix: 'OMX_CLAP_WIDGET_', owner: 'OMX_CLAP_PANEL_WIDGETS' },
-  display_kind: { c: 'omx_clap_panel_display_kind', prefix: 'OMX_CLAP_DISPLAY_', owner: 'OMX_CLAP_PANEL_DISPLAY_KINDS' },
+  // omx-clap-core 0.33.1 no longer lists the display kinds (the table is omx-panel's, the struct field a number): no owner list,
+  // the enum is held against omx-panel's DISPLAY_KINDS alone
+  display_kind: { c: 'omx_clap_panel_display_kind', prefix: 'OMX_CLAP_DISPLAY_', owner: null },
   display_source: { c: 'omx_clap_panel_display_source', prefix: 'OMX_CLAP_DISPLAY_FROM_', owner: 'OMX_CLAP_PANEL_DISPLAY_SOURCES' },
   placement: { c: 'omx_clap_panel_placement', prefix: 'OMX_CLAP_PLACEMENT_', owner: 'OMX_CLAP_PANEL_PLACEMENTS' },
   table: { c: 'omx_clap_panel_table', prefix: 'OMX_CLAP_PANEL_', owner: 'OMX_CLAP_PANEL_TABLES' },
@@ -52,6 +54,7 @@ export function enumsOf(text) {
 export function ownerListsOf(text) {
   const out = {};
   for (const [key, { owner }] of Object.entries(ENUMS)) {
+    if (!owner) continue;
     const m = text.match(new RegExp(`#define ${owner}\\(X\\)((?:[^\\n]*\\\\\\n)*[^\\n]*)`));
     out[key] = m ? [...m[1].matchAll(/X\((\d+),\s*"([^"]*)",\s*(\w+)\)/g)].map((x) => [Number(x[1]), x[2], x[3]]) : undefined;
   }
@@ -73,6 +76,7 @@ export function drift(enums, declared, owner) {
       const want = words.map((w, i) => [w.toUpperCase(), i]);
       if (JSON.stringify(got) !== JSON.stringify(want)) errors.push(`${HEADER}: enum ${c} is ${got.map(([n, v]) => `${n}=${v}`).join(', ')}; the declaration says ${want.map(([n, v]) => `${n}=${v}`).join(', ')}`);
     }
+    if (!ENUMS[key].owner) continue; // omx-panel's words are the only list (above)
     const x = owner[key];
     if (!x) {
       errors.push(`${OWNER}: no ${ENUMS[key].owner}(X) list`);
@@ -133,6 +137,7 @@ if (process.argv.includes('--self-test')) {
     'family-dropped': headerText.replace(/^\s*OMX_CLAP_FAMILY_PITCH = 11,\n/m, ''),
     'family-appended': headerText.replace('OMX_CLAP_FAMILY_PITCH = 11,', 'OMX_CLAP_FAMILY_PITCH = 11,\n  OMX_CLAP_FAMILY_OTHER = 12,'),
     'widgets-swapped': headerText.replace('OMX_CLAP_WIDGET_KNOB = 1,', 'OMX_CLAP_WIDGET_KNOB = 2,').replace('OMX_CLAP_WIDGET_FADER = 2,', 'OMX_CLAP_WIDGET_FADER = 1,'),
+    'display-kind-renumbered': headerText.replace(/(OMX_CLAP_DISPLAY_\w+ = )1,/, '$12,'),
     'placement-renamed': headerText.replace('OMX_CLAP_PLACEMENT_BUS = 2,', 'OMX_CLAP_PLACEMENT_BUSS = 2,'),
   };
   let fail = 0;

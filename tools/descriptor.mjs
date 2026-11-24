@@ -17,14 +17,14 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { choicesOf, metersOf, scaleOf } from './gen.mjs';
 import { clapFeatureField, clapFeatureValue } from './format-tables.mjs';
-import { installedContractDir, installedDataDir, locateContract, ownersOf, packagingRange } from './omx-contract.mjs';
+import { installedDataDir, locateContract, OWNERS, ownersOf, packagingRange } from './omx-contract.mjs';
 import { meaningOfRole, panelLayout } from './omx-panel.mjs';
 
 /** The descriptor file of a plugin folder. */
 export const descriptorFile = (stem) => `${stem}.descriptor.json`;
 
 /** The schema the descriptor words are in, and the release that added them. */
-export const DESCRIPTOR_SCHEMA = 'https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json';
+export const DESCRIPTOR_SCHEMA = '../schema/omx-contract.schema.json';
 export const DESCRIPTOR_SCHEMA_FLOOR = '3.7.0';
 /** The release that added `meters` (omx-contract docs/descriptors.md): the floor of a descriptor that states them. */
 export const DESCRIPTOR_METERS_FLOOR = '3.9.0';
@@ -161,10 +161,11 @@ export function descriptorOf(d) {
   const atOf = (rel) => {
     if (owners === undefined) {
       // the owners beside the render read (owners.json: a union render and every copy of it carry
-      // one, OMX_CONTRACT_DIR's included), else the installed contract directory's manifests
+      // one, OMX_CONTRACT_DIR's included); never the installed contract directory's manifests, which
+      // hold the installed omx-plugins, not this tree's
       const where = locateContract(d.tree);
       owners = ownersOf(where.contractdir ?? where.dir);
-      if (!owners.size) owners = ownersOf(installedContractDir());
+      if (!owners.size) throw new Error(`${where.at ?? where.dir}: the render read carries no ${OWNERS}, so a link's owner is unknown; a build reads the owners of the render it is handed, never the installed contract directory's`);
     }
     const owner = owners.get(rel.split('#')[0]) ?? { package: 'omx-contract' };
     try {
