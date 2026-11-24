@@ -65,8 +65,8 @@ export function filterResponses(schema = JSON.parse(readFileSync(descriptorSchem
   return list;
 }
 
-/** The installed schema's filter responses. */
-export const FILTER_RESPONSES = filterResponses();
+/** The installed schema's filter responses, read once, when a control first states one: a tool that meets none needs none. */
+let installedResponses;
 
 /** Whether a type choice (a `*_BAND_TYPES` set) picks the shape of the band parameter `p` of `params` is on: the two carry one
  * band number in their symbols (b1_type and b1_freq, eq1Type and eq1Freq, bandType1 and freq1). */
@@ -79,7 +79,8 @@ export function typedBand(p, params) {
  * a band whose shape a type choice picks (`typed`): its response is the choice's value (omx-plugins#218). */
 export function responseOfControl(p, where, typed = false) {
   if (p.response === undefined) return undefined;
-  if (!FILTER_RESPONSES.includes(p.response)) throw new Error(`${where}: '${p.symbol}' states the response '${p.response}', no word of the schema's $defs.filterResponse`);
+  installedResponses ??= filterResponses();
+  if (!installedResponses.includes(p.response)) throw new Error(`${where}: '${p.symbol}' states the response '${p.response}', no word of the schema's $defs.filterResponse`);
   if (typed) throw new Error(`${where}: '${p.symbol}' states a response, and a type choice picks its band's shape: its response is the choice's value`);
   return p.response;
 }
