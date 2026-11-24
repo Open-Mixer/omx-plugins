@@ -1,5 +1,5 @@
 {
-  "$schema": "https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json",
+  "$schema": "../schema/omx-contract.schema.json",
   "requires": {
     "omx-contract-schema": ">= 3.7.0"
   },
@@ -484,7 +484,8 @@
       ],
       "default": "1",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 1"
       ],
       "automatable": true,
       "source": {
@@ -508,7 +509,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 1"
       ],
       "automatable": true,
       "source": {
@@ -532,7 +534,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 1"
       ],
       "automatable": true,
       "source": {
@@ -556,7 +559,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 1"
       ],
       "automatable": true,
       "source": {
@@ -573,7 +577,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 1"
       ],
       "automatable": true,
       "source": {
@@ -614,7 +619,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 2"
       ],
       "automatable": true,
       "source": {
@@ -638,7 +644,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 2"
       ],
       "automatable": true,
       "source": {
@@ -662,7 +669,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 2"
       ],
       "automatable": true,
       "source": {
@@ -686,7 +694,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 2"
       ],
       "automatable": true,
       "source": {
@@ -703,7 +712,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 2"
       ],
       "automatable": true,
       "source": {
@@ -744,7 +754,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 3"
       ],
       "automatable": true,
       "source": {
@@ -768,7 +779,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 3"
       ],
       "automatable": true,
       "source": {
@@ -792,7 +804,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 3"
       ],
       "automatable": true,
       "source": {
@@ -816,7 +829,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 3"
       ],
       "automatable": true,
       "source": {
@@ -833,7 +847,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 3"
       ],
       "automatable": true,
       "source": {
@@ -874,7 +889,8 @@
       ],
       "default": "2",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 4"
       ],
       "automatable": true,
       "source": {
@@ -898,7 +914,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 4"
       ],
       "automatable": true,
       "source": {
@@ -922,7 +939,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 4"
       ],
       "automatable": true,
       "source": {
@@ -946,7 +964,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 4"
       ],
       "automatable": true,
       "source": {
@@ -963,7 +982,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 4"
       ],
       "automatable": true,
       "source": {
@@ -1289,7 +1309,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 5"
       ],
       "automatable": true,
       "source": {
@@ -1313,7 +1334,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 5"
       ],
       "automatable": true,
       "source": {
@@ -1337,7 +1359,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 5"
       ],
       "automatable": true,
       "source": {
@@ -1361,7 +1384,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 5"
       ],
       "automatable": true,
       "source": {
@@ -1378,7 +1402,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 5"
       ],
       "automatable": true,
       "source": {
@@ -1419,7 +1444,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 6"
       ],
       "automatable": true,
       "source": {
@@ -1443,7 +1469,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 6"
       ],
       "automatable": true,
       "source": {
@@ -1467,7 +1494,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 6"
       ],
       "automatable": true,
       "source": {
@@ -1491,7 +1519,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 6"
       ],
       "automatable": true,
       "source": {
@@ -1508,7 +1537,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 6"
       ],
       "automatable": true,
       "source": {
@@ -1549,7 +1579,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 7"
       ],
       "automatable": true,
       "source": {
@@ -1573,7 +1604,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 7"
       ],
       "automatable": true,
       "source": {
@@ -1597,7 +1629,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 7"
       ],
       "automatable": true,
       "source": {
@@ -1621,7 +1654,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 7"
       ],
       "automatable": true,
       "source": {
@@ -1638,7 +1672,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 7"
       ],
       "automatable": true,
       "source": {
@@ -1679,7 +1714,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 8"
       ],
       "automatable": true,
       "source": {
@@ -1703,7 +1739,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 8"
       ],
       "automatable": true,
       "source": {
@@ -1727,7 +1764,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 8"
       ],
       "automatable": true,
       "source": {
@@ -1751,7 +1789,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 8"
       ],
       "automatable": true,
       "source": {
@@ -1768,7 +1807,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 8"
       ],
       "automatable": true,
       "source": {
@@ -1809,7 +1849,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 9"
       ],
       "automatable": true,
       "source": {
@@ -1833,7 +1874,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 9"
       ],
       "automatable": true,
       "source": {
@@ -1857,7 +1899,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 9"
       ],
       "automatable": true,
       "source": {
@@ -1881,7 +1924,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 9"
       ],
       "automatable": true,
       "source": {
@@ -1898,7 +1942,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 9"
       ],
       "automatable": true,
       "source": {
@@ -1939,7 +1984,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 10"
       ],
       "automatable": true,
       "source": {
@@ -1963,7 +2009,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 10"
       ],
       "automatable": true,
       "source": {
@@ -1987,7 +2034,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 10"
       ],
       "automatable": true,
       "source": {
@@ -2011,7 +2059,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 10"
       ],
       "automatable": true,
       "source": {
@@ -2028,7 +2077,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 10"
       ],
       "automatable": true,
       "source": {
@@ -2069,7 +2119,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 11"
       ],
       "automatable": true,
       "source": {
@@ -2093,7 +2144,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 11"
       ],
       "automatable": true,
       "source": {
@@ -2117,7 +2169,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 11"
       ],
       "automatable": true,
       "source": {
@@ -2141,7 +2194,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 11"
       ],
       "automatable": true,
       "source": {
@@ -2158,7 +2212,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 11"
       ],
       "automatable": true,
       "source": {
@@ -2199,7 +2254,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 12"
       ],
       "automatable": true,
       "source": {
@@ -2223,7 +2279,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 12"
       ],
       "automatable": true,
       "source": {
@@ -2247,7 +2304,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 12"
       ],
       "automatable": true,
       "source": {
@@ -2271,7 +2329,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 12"
       ],
       "automatable": true,
       "source": {
@@ -2288,7 +2347,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 12"
       ],
       "automatable": true,
       "source": {
@@ -2329,7 +2389,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 13"
       ],
       "automatable": true,
       "source": {
@@ -2353,7 +2414,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 13"
       ],
       "automatable": true,
       "source": {
@@ -2377,7 +2439,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 13"
       ],
       "automatable": true,
       "source": {
@@ -2401,7 +2464,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 13"
       ],
       "automatable": true,
       "source": {
@@ -2418,7 +2482,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 13"
       ],
       "automatable": true,
       "source": {
@@ -2459,7 +2524,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 14"
       ],
       "automatable": true,
       "source": {
@@ -2483,7 +2549,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 14"
       ],
       "automatable": true,
       "source": {
@@ -2507,7 +2574,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 14"
       ],
       "automatable": true,
       "source": {
@@ -2531,7 +2599,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 14"
       ],
       "automatable": true,
       "source": {
@@ -2548,7 +2617,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 14"
       ],
       "automatable": true,
       "source": {
@@ -2589,7 +2659,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 15"
       ],
       "automatable": true,
       "source": {
@@ -2613,7 +2684,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 15"
       ],
       "automatable": true,
       "source": {
@@ -2637,7 +2709,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 15"
       ],
       "automatable": true,
       "source": {
@@ -2661,7 +2734,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 15"
       ],
       "automatable": true,
       "source": {
@@ -2678,7 +2752,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 15"
       ],
       "automatable": true,
       "source": {
@@ -2719,7 +2794,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 16"
       ],
       "automatable": true,
       "source": {
@@ -2743,7 +2819,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 16"
       ],
       "automatable": true,
       "source": {
@@ -2767,7 +2844,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 16"
       ],
       "automatable": true,
       "source": {
@@ -2791,7 +2869,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 16"
       ],
       "automatable": true,
       "source": {
@@ -2808,7 +2887,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 16"
       ],
       "automatable": true,
       "source": {
@@ -2849,7 +2929,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 17"
       ],
       "automatable": true,
       "source": {
@@ -2873,7 +2954,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 17"
       ],
       "automatable": true,
       "source": {
@@ -2897,7 +2979,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 17"
       ],
       "automatable": true,
       "source": {
@@ -2921,7 +3004,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 17"
       ],
       "automatable": true,
       "source": {
@@ -2938,7 +3022,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 17"
       ],
       "automatable": true,
       "source": {
@@ -2979,7 +3064,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 18"
       ],
       "automatable": true,
       "source": {
@@ -3003,7 +3089,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 18"
       ],
       "automatable": true,
       "source": {
@@ -3027,7 +3114,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 18"
       ],
       "automatable": true,
       "source": {
@@ -3051,7 +3139,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 18"
       ],
       "automatable": true,
       "source": {
@@ -3068,7 +3157,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 18"
       ],
       "automatable": true,
       "source": {
@@ -3109,7 +3199,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 19"
       ],
       "automatable": true,
       "source": {
@@ -3133,7 +3224,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 19"
       ],
       "automatable": true,
       "source": {
@@ -3157,7 +3249,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 19"
       ],
       "automatable": true,
       "source": {
@@ -3181,7 +3274,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 19"
       ],
       "automatable": true,
       "source": {
@@ -3198,7 +3292,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 19"
       ],
       "automatable": true,
       "source": {
@@ -3239,7 +3334,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 20"
       ],
       "automatable": true,
       "source": {
@@ -3263,7 +3359,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 20"
       ],
       "automatable": true,
       "source": {
@@ -3287,7 +3384,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 20"
       ],
       "automatable": true,
       "source": {
@@ -3311,7 +3409,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 20"
       ],
       "automatable": true,
       "source": {
@@ -3328,7 +3427,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 20"
       ],
       "automatable": true,
       "source": {
@@ -3369,7 +3469,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 21"
       ],
       "automatable": true,
       "source": {
@@ -3393,7 +3494,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 21"
       ],
       "automatable": true,
       "source": {
@@ -3417,7 +3519,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 21"
       ],
       "automatable": true,
       "source": {
@@ -3441,7 +3544,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 21"
       ],
       "automatable": true,
       "source": {
@@ -3458,7 +3562,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 21"
       ],
       "automatable": true,
       "source": {
@@ -3499,7 +3604,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 22"
       ],
       "automatable": true,
       "source": {
@@ -3523,7 +3629,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 22"
       ],
       "automatable": true,
       "source": {
@@ -3547,7 +3654,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 22"
       ],
       "automatable": true,
       "source": {
@@ -3571,7 +3679,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 22"
       ],
       "automatable": true,
       "source": {
@@ -3588,7 +3697,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 22"
       ],
       "automatable": true,
       "source": {
@@ -3629,7 +3739,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 23"
       ],
       "automatable": true,
       "source": {
@@ -3653,7 +3764,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 23"
       ],
       "automatable": true,
       "source": {
@@ -3677,7 +3789,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 23"
       ],
       "automatable": true,
       "source": {
@@ -3701,7 +3814,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 23"
       ],
       "automatable": true,
       "source": {
@@ -3718,7 +3832,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 23"
       ],
       "automatable": true,
       "source": {
@@ -3759,7 +3874,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 24"
       ],
       "automatable": true,
       "source": {
@@ -3783,7 +3899,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 24"
       ],
       "automatable": true,
       "source": {
@@ -3807,7 +3924,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 24"
       ],
       "automatable": true,
       "source": {
@@ -3831,7 +3949,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 24"
       ],
       "automatable": true,
       "source": {
@@ -3848,7 +3967,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 24"
       ],
       "automatable": true,
       "source": {
@@ -3889,7 +4009,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 25"
       ],
       "automatable": true,
       "source": {
@@ -3913,7 +4034,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 25"
       ],
       "automatable": true,
       "source": {
@@ -3937,7 +4059,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 25"
       ],
       "automatable": true,
       "source": {
@@ -3961,7 +4084,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 25"
       ],
       "automatable": true,
       "source": {
@@ -3978,7 +4102,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 25"
       ],
       "automatable": true,
       "source": {
@@ -4019,7 +4144,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 26"
       ],
       "automatable": true,
       "source": {
@@ -4043,7 +4169,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 26"
       ],
       "automatable": true,
       "source": {
@@ -4067,7 +4194,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 26"
       ],
       "automatable": true,
       "source": {
@@ -4091,7 +4219,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 26"
       ],
       "automatable": true,
       "source": {
@@ -4108,7 +4237,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 26"
       ],
       "automatable": true,
       "source": {
@@ -4149,7 +4279,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 27"
       ],
       "automatable": true,
       "source": {
@@ -4173,7 +4304,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 27"
       ],
       "automatable": true,
       "source": {
@@ -4197,7 +4329,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 27"
       ],
       "automatable": true,
       "source": {
@@ -4221,7 +4354,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 27"
       ],
       "automatable": true,
       "source": {
@@ -4238,7 +4372,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 27"
       ],
       "automatable": true,
       "source": {
@@ -4279,7 +4414,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 28"
       ],
       "automatable": true,
       "source": {
@@ -4303,7 +4439,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 28"
       ],
       "automatable": true,
       "source": {
@@ -4327,7 +4464,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 28"
       ],
       "automatable": true,
       "source": {
@@ -4351,7 +4489,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 28"
       ],
       "automatable": true,
       "source": {
@@ -4368,7 +4507,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 28"
       ],
       "automatable": true,
       "source": {
@@ -4409,7 +4549,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 29"
       ],
       "automatable": true,
       "source": {
@@ -4433,7 +4574,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 29"
       ],
       "automatable": true,
       "source": {
@@ -4457,7 +4599,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 29"
       ],
       "automatable": true,
       "source": {
@@ -4481,7 +4624,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 29"
       ],
       "automatable": true,
       "source": {
@@ -4498,7 +4642,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 29"
       ],
       "automatable": true,
       "source": {
@@ -4539,7 +4684,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 30"
       ],
       "automatable": true,
       "source": {
@@ -4563,7 +4709,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 30"
       ],
       "automatable": true,
       "source": {
@@ -4587,7 +4734,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 30"
       ],
       "automatable": true,
       "source": {
@@ -4611,7 +4759,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 30"
       ],
       "automatable": true,
       "source": {
@@ -4628,7 +4777,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 30"
       ],
       "automatable": true,
       "source": {
@@ -4669,7 +4819,8 @@
       ],
       "default": "0",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 31"
       ],
       "automatable": true,
       "source": {
@@ -4693,7 +4844,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 31"
       ],
       "automatable": true,
       "source": {
@@ -4717,7 +4869,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 31"
       ],
       "automatable": true,
       "source": {
@@ -4741,7 +4894,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 31"
       ],
       "automatable": true,
       "source": {
@@ -4758,7 +4912,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 31"
       ],
       "automatable": true,
       "source": {
@@ -4799,7 +4954,8 @@
       ],
       "default": "2",
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 32"
       ],
       "automatable": true,
       "source": {
@@ -4823,7 +4979,8 @@
         "scale": "log"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 32"
       ],
       "automatable": true,
       "source": {
@@ -4847,7 +5004,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 32"
       ],
       "automatable": true,
       "source": {
@@ -4871,7 +5029,8 @@
         "scale": "linear"
       },
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 32"
       ],
       "automatable": true,
       "source": {
@@ -4888,7 +5047,8 @@
       "kind": "toggle",
       "default": false,
       "group": [
-        "EQ"
+        "EQ",
+        "EQ 32"
       ],
       "automatable": true,
       "source": {

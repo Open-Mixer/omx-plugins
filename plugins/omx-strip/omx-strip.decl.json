@@ -2763,7 +2763,8 @@
           "eq32Gain",
           "eq32Q",
           "eq32On"
-        ]
+        ],
+        "subgroups": "band"
       },
       {
         "key": "comp",

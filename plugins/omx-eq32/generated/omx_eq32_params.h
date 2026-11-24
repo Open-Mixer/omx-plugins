@@ -1226,11 +1226,8 @@ static const omx_resource_hints_t OMX_EQ32_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family eq.
- * Declared roles not published:
- *   hpf_slope (hpf_slope): the hpf_slope role takes none, db, not dB/oct
- *   lpf_slope (lpf_slope): the lpf_slope role takes none, db, not dB/oct */
-#define OMX_EQ32_PANEL_FINGERPRINT "651005dc8f17869527386e27404fb34669f2e865adc75317810bc4d94ce8d337"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family eq. */
+#define OMX_EQ32_PANEL_FINGERPRINT "12aed8400a5a2f87c1379bb6ac8003876866c5e93fc18a546dac64cbd405574f"
 static const struct omx_panel_section_row OMX_EQ32_PANEL_SECTIONS[] = {
   { "bands", "fx.eq.section.bands", "Bands" },
   { "hpf", "fx.eq.section.hpf", "HPF" },
@@ -1566,8 +1563,10 @@ static const struct omx_panel_role_row OMX_EQ32_PANEL_ROLES[] = {
   { "band_on", 30u, 160u },
   { "band_on", 31u, 165u },
   { "hpf_freq", 0u, 1u },
+  { "hpf_slope", 0u, 2u },
   { "hpf_on", 0u, 0u },
   { "lpf_freq", 0u, 4u },
+  { "lpf_slope", 0u, 5u },
   { "lpf_on", 0u, 3u },
 };
 static const struct omx_panel_display_row OMX_EQ32_PANEL_DISPLAYS[] = {
@@ -1617,7 +1616,7 @@ static const struct omx_panel_rows OMX_EQ32_PANEL = {
   OMX_EQ32_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_EQ,
   OMX_EQ32_PANEL_SECTIONS, 3u,
   OMX_EQ32_PANEL_CONTROLS, 166u,
-  OMX_EQ32_PANEL_ROLES, 164u,
+  OMX_EQ32_PANEL_ROLES, 166u,
   OMX_EQ32_PANEL_DISPLAYS, 1u,
   NULL, 0u,
 };

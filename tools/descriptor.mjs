@@ -17,14 +17,14 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { choicesOf, metersOf, scaleOf } from './gen.mjs';
 import { clapFeatureField, clapFeatureValue } from './format-tables.mjs';
-import { installedContractDir, installedDataDir, locateContract, ownersOf, packagingRange } from './omx-contract.mjs';
+import { installedDataDir, locateContract, OWNERS, ownersOf, packagingRange } from './omx-contract.mjs';
 import { meaningOfRole, panelLayout } from './omx-panel.mjs';
 
 /** The descriptor file of a plugin folder. */
 export const descriptorFile = (stem) => `${stem}.descriptor.json`;
 
 /** The schema the descriptor words are in, and the release that added them. */
-export const DESCRIPTOR_SCHEMA = 'https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json';
+export const DESCRIPTOR_SCHEMA = '../schema/omx-contract.schema.json';
 export const DESCRIPTOR_SCHEMA_FLOOR = '3.7.0';
 /** The release that added `meters` (omx-contract docs/descriptors.md): the floor of a descriptor that states them. */
 export const DESCRIPTOR_METERS_FLOOR = '3.9.0';
@@ -109,25 +109,31 @@ export const CONTROL_EXTRAS = ['forKind', 'defaultRef', 'defaultId', 'defaultBan
 
 /**
  * The LV2 port groups of declaration `d` (as tools/gen.mjs loads it), in panel section order: one per section, or,
- * for a section the declaration splits (`subgroups`, tools/variants.mjs), one per subgroup and one for the section's
+ * for a section the declaration splits (`subgroups`: tools/variants.mjs for a variant, tools/gen.mjs chainSubgroups
+ * for a chain), one per subgroup and one for the section's
  * controls no subgroup holds, if any. Each is `{ key, label, path, controls, priority }`: `key` its lv2:symbol, `label`
  * its lv2:name and rdfs:label, `path` its controls' descriptor `group` (the panel section's label first, the group's
- * last; a section's own group has a one-element path), `priority` its lv2:displayPriority, the groups counted down
- * in the order their first port comes (a host that shows the higher first, as Zynthian does, shows them in port
- * order). A section with no controls left makes no group.
+ * last; a section's own group has a one-element path), `priority` its lv2:displayPriority, counted down section by
+ * section in the order each section's first port comes, a section's groups together and, within it, in the order
+ * their first port comes (a host that shows the higher first, as Zynthian does, shows a section's bands together,
+ * never split by a later section whose ports come before a band's). A section with no controls left makes no group.
  */
 export function portGroupsOf(d) {
-  const groups = [];
+  const groups = [], sectionOf = new Map();
   for (const s of d.panel?.sections ?? []) {
     const subs = d.subgroups?.[s.key] ?? [];
     const held = new Set(subs.flatMap((g) => g.controls));
     const own = s.controls.filter((sym) => !held.has(sym));
-    if (own.length) groups.push({ key: s.key, label: s.label, path: [s.label], controls: own });
-    for (const g of subs) groups.push({ key: g.key, label: g.label, path: [s.label, g.label], controls: g.controls });
+    const mine = [...(own.length ? [{ key: s.key, label: s.label, path: [s.label], controls: own }] : []),
+      ...subs.map((g) => ({ key: g.key, label: g.label, path: [s.label, g.label], controls: g.controls }))];
+    for (const g of mine) sectionOf.set(g, s);
+    groups.push(...mine);
   }
   const indexOf = new Map(d.params.map((p, i) => [p.symbol, i]));
-  const first = (g) => Math.min(...g.controls.map((sym) => indexOf.get(sym) ?? Infinity));
-  const order = [...groups].sort((a, b) => first(a) - first(b));
+  const first = (controls) => Math.min(...controls.map((sym) => indexOf.get(sym) ?? Infinity));
+  // a section's groups stay together, placed where the section's first port comes (omx-strip's EQ bands 5 to 32 are
+  // ports appended after Comp and Order, and still come with the EQ); within a section, by each group's first port
+  const order = [...groups].sort((a, b) => first(sectionOf.get(a).controls) - first(sectionOf.get(b).controls) || first(a.controls) - first(b.controls));
   for (const g of groups) g.priority = groups.length - order.indexOf(g);
   return groups;
 }
@@ -155,10 +161,11 @@ export function descriptorOf(d) {
   const atOf = (rel) => {
     if (owners === undefined) {
       // the owners beside the render read (owners.json: a union render and every copy of it carry
-      // one, OMX_CONTRACT_DIR's included), else the installed contract directory's manifests
+      // one, OMX_CONTRACT_DIR's included); never the installed contract directory's manifests, which
+      // hold the installed omx-plugins, not this tree's
       const where = locateContract(d.tree);
       owners = ownersOf(where.contractdir ?? where.dir);
-      if (!owners.size) owners = ownersOf(installedContractDir());
+      if (!owners.size) throw new Error(`${where.at ?? where.dir}: the render read carries no ${OWNERS}, so a link's owner is unknown; a build reads the owners of the render it is handed, never the installed contract directory's`);
     }
     const owner = owners.get(rel.split('#')[0]) ?? { package: 'omx-contract' };
     try {

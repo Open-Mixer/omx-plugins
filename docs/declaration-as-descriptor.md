@@ -11,8 +11,8 @@ the extras file carries only the extras, and `viewOf` (`tools/descriptor.mjs`) r
 says (the identity, the parameters, the CLAP features, the LV2 class, the description).
 
 `tools/gen.mjs`'s `loadDecl` reads the two and gives every generator the declaration it gave before, so the
-headers, both faces, the panel description, the MOD GUI and its rasters do not change by a byte when a
-plugin moves to a descriptor (`node tools/gen.mjs --check`, `omx-panel modgui --check`, `make panel-layout`).
+headers, both faces and the panel description do not change by a byte when a
+plugin moves to a descriptor (`node tools/gen.mjs --check`, `make panel-layout`).
 The panel is omx-panel's: it lays a panel out from a descriptor (its `docs/panel-layout.md`) and writes the MOD GUI
 (its `docs/modgui.md`), and reads a descriptor, never a declaration. This repository renders a declaration to its
 descriptor (`panelDescription(d)` lays that descriptor out under the declared panel) and hands omx-panel the
@@ -62,7 +62,7 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | `meters` | `meters[]`: `id` its index, `symbol` its id, `name` from it, `kind` (`gain-reduction`, `level`), `channels`, the range, unit and scale (the kernel readout's, linked in `source.from` as `data/kernels/<kernel>.json#readouts[<name>]`; a level's as declared, `dBFS`), the readout's `doc` | kept: where the face reads it (`field`, `read`, `linear`, `source`) |
 | `oracles`, `portHints` | | kept: tests, the LV2 hint pin |
 | `panel.sections[].label` | each listed control's `group` | `panel` (family, roles, section keys, order, widgets, graphs): the panel's hints |
-| `panel.sections[].subgroups` (`band`, a declaration with variants) | each band's controls' `group`, the path `[<section label>, "Band <n>"]`: the panel section first, the LV2 port group last (#257) | the panel is handed to omx-panel without it: the section is drawn as declared |
+| `panel.sections[].subgroups` (`band`, a declaration with variants or a chain) | each band's controls' `group`, the path `[<section label>, "Band <n>"]` (a chain's: `[<section label>, "<element name> <n>"]`, omx-strip's `["EQ", "EQ 1"]`): the panel section first, the LV2 port group last (#257) | the panel is handed to omx-panel without it: the section is drawn as declared |
 | `panel.roles` | each bound control's `meaning`, where the role has a meaning word (omx-panel docs/panel-layout.md) | kept: the roles themselves |
 | `console` | | kept: the console's placement, card and chip |
 | `params[i]` | `controls[i]`, `id: i` | |

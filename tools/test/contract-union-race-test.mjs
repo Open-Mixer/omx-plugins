@@ -29,13 +29,16 @@ const STAGGER_MS = 500;
 function scratch() {
   const root = mkdtempSync(join(tmpdir(), 'union-race-'));
   mkdirSync(join(root, 'packaging'));
-  writeFileSync(join(root, 'packaging', 'omx-plugins.spec'), 'BuildRequires: (omx-contract-devel >= 2.15.0 with omx-contract-devel < 3)\n');
+  writeFileSync(join(root, 'packaging', 'omx-plugins.spec'), 'BuildRequires: omx-contract-devel >= 2.15.0\n');
   const data = join(root, 'data');
   const contractdir = join(root, 'contractdir');
   mkdirSync(data);
   mkdirSync(contractdir);
   // the installed render holds only the shared facts: no kernels, which is what asks for the union
   writeFileSync(join(data, 'omx-contract.json'), JSON.stringify({ version: '2.16.0', kernels: {}, items: {} }));
+  // the composed contract directory (tools/round-trip-contract-dir.sh) installs this tree's package through omx-contract's
+  // install script: a stand-in that places the staged files under <dest>/<major>/omx-plugins
+  writeFileSync(join(data, 'install-contract-dir.sh'), '#!/bin/sh\nmkdir -p "$5/$3/omx-plugins" && cp -r "$4"/. "$5/$3/omx-plugins/"\n');
   const pkg = join(root, 'pkg-config');
   writeFileSync(pkg, `#!/bin/sh\ncase "$*" in\n  *datadir*) echo ${data};;\n  *contractdir*) echo ${contractdir};;\nesac\n`);
   chmodSync(pkg, 0o755);

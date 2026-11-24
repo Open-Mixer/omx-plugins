@@ -223,7 +223,7 @@ static const omx_resource_hints_t OMX_DELAY_RESOURCE_HINTS = {
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family delay. */
-#define OMX_DELAY_PANEL_FINGERPRINT "a801adf0482b982181e8648ec892281e38f8ed2f7f8a17a071f216e6346d2cae"
+#define OMX_DELAY_PANEL_FINGERPRINT "baa6f260f8edf420be0fec712ceae55a39ea46e7b427f3431c881bce57a72fa1"
 static const struct omx_panel_section_row OMX_DELAY_PANEL_SECTIONS[] = {
   { "delay", "fx.delay.section.delay", "Delay" },
   { "tempo", "fx.delay.section.tempo", "Tempo" },
@@ -262,6 +262,9 @@ static const struct omx_panel_role_row OMX_DELAY_PANEL_ROLES[] = {
   { "pingpong", 0u, 4u },
   { "mix", 0u, 3u },
 };
+static const struct omx_panel_display_row OMX_DELAY_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_TIME_RESPONSE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.delay.display.time_response", "Delay" },
+};
 static const struct omx_panel_default_row OMX_DELAY_PANEL_DEFAULTS[] = {
   { OMX_CLAP_PLACEMENT_RETURN, 3u, 1 },
 };
@@ -281,7 +284,7 @@ static const struct omx_panel_rows OMX_DELAY_PANEL = {
   OMX_DELAY_PANEL_SECTIONS, 4u,
   OMX_DELAY_PANEL_CONTROLS, 23u,
   OMX_DELAY_PANEL_ROLES, 5u,
-  NULL, 0u,
+  OMX_DELAY_PANEL_DISPLAYS, 1u,
   OMX_DELAY_PANEL_DEFAULTS, 1u,
 };
 

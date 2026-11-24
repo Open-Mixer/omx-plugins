@@ -216,7 +216,7 @@ static const omx_resource_hints_t OMX_REVERB_RESOURCE_HINTS = {
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family reverb. */
-#define OMX_REVERB_PANEL_FINGERPRINT "07a58828dbb8796cc24e118102c6411cf2132c0929565f4bb21825c1a1f614da"
+#define OMX_REVERB_PANEL_FINGERPRINT "a4274963586025125dc2e469eb0805db51bd4eae0572f04f7e2c279a4c4c9b0c"
 static const struct omx_panel_section_row OMX_REVERB_PANEL_SECTIONS[] = {
   { "reverb", "fx.reverb.section.reverb", "Reverb" },
   { "reverse", "fx.reverb.section.reverse", "Reverse" },
@@ -260,6 +260,9 @@ static const struct omx_panel_role_row OMX_REVERB_PANEL_ROLES[] = {
   { "high_cut", 0u, 7u },
   { "mix", 0u, 1u },
 };
+static const struct omx_panel_display_row OMX_REVERB_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_TIME_RESPONSE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.reverb.display.time_response", "Reverb" },
+};
 static const struct omx_panel_default_row OMX_REVERB_PANEL_DEFAULTS[] = {
   { OMX_CLAP_PLACEMENT_RETURN, 1u, 1 },
 };
@@ -281,7 +284,7 @@ static const struct omx_panel_rows OMX_REVERB_PANEL = {
   OMX_REVERB_PANEL_SECTIONS, 7u,
   OMX_REVERB_PANEL_CONTROLS, 22u,
   OMX_REVERB_PANEL_ROLES, 8u,
-  NULL, 0u,
+  OMX_REVERB_PANEL_DISPLAYS, 1u,
   OMX_REVERB_PANEL_DEFAULTS, 1u,
 };
 
