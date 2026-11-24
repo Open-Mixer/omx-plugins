@@ -6,7 +6,7 @@
       "descriptor-features", "placement-strips", "lv2-units", "lv2-deprecated", "lv2-maintainer", "no-modgui",
       "release-version", "resource-hints", "format-tables", "contract-union", "contract-dir", "lv2bench-ran",
       "ci-scope", "no-ci-bridge", "deb-cells", "probe-checks", "eq-probe-race", "band-groups", "phaser-depth", "geq-widgets", "summary-numbers",
-      "param-tie", "face-ids", "comp-release-mode", "strip-visible-when", "face-dirty-order", "core-init-answers", "debt-base", "test-split"
+      "param-tie", "own-units", "face-ids", "comp-release-mode", "strip-visible-when", "face-dirty-order", "core-init-answers", "debt-base", "test-split"
     ],
     "steps": [
       "per-plugin test", "presets-figures", "lib-test", "hints", "manual", "presets", "meters-abi", "lv2-refuse-rate", "param-contract-abi", "panel-abi",

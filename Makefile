@@ -32,6 +32,9 @@
 #                   one change at a time (tools/test/probe-checks-selftest.mjs; part of `make test`)
 #   make eq-probe-race  parallel make targets each build build/eq-default-probe privately and run it whole
 #                   (tools/test/eq-probe-race-test.mjs; part of `make test` and `make test-faces`)
+#   make own-units   a plugin's own units (its declaration's `units` block) flow to every face as a standard unit does, and
+#                   an own name that is PARAM_UNITS', or a parameter naming an undeclared unit, is refused
+#                   (Open-Mixer/omx-plugins#172; tools/test/own-units-test.mjs; part of `make test`)
 #   make param-tie   every by-reference parameter's symbol is its control's words or says its `control`: swapped refs are refused
 #                   (FreeMixer/omx-plugins#58; tools/test/param-tie-test.mjs; part of `make test`)
 #   make summary-numbers  a plugin summary reads its numbers from the declaration: none types a limit or default of its parameters,
@@ -182,11 +185,11 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
+.PHONY: graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
+test: lib entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie own-units face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s presets-figures
@@ -309,6 +312,9 @@ eq-probe-race:
 	node tools/test/eq-probe-race-test.mjs
 param-tie:
 	node tools/test/param-tie-test.mjs
+# a plugin's own units, over a fixture plugin: they flow to every face, and the refusals (one name, one home)
+own-units:
+	node tools/test/own-units-test.mjs
 # the CLAP face reads its dirty flag acquire and publishes it release, so the audio thread never sees the flag
 # before the values (weak-memory targets), with its sabotage arms
 face-dirty-order:
