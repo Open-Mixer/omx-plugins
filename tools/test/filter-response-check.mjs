@@ -12,11 +12,14 @@
  *   node tools/test/filter-response-check.mjs --self-test   the arms, each red, then the shipped descriptors
  * Exit: 0 pass, 1 refused.
  */
-import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { FILTER_RESPONSES, filterResponses, responseOfControl, typedBand } from '../descriptor.mjs';
+import { descriptorSchemaFile, filterResponses, responseOfControl, typedBand } from '../descriptor.mjs';
 
+const FILTER_RESPONSES = filterResponses();
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const load = (stem) => JSON.parse(readFileSync(join(root, 'plugins', stem, `${stem}.descriptor.json`), 'utf8'));
 const edges = (on, freq, slope) => Object.fromEntries(['hpf', 'lpf'].flatMap((f) => [on, freq, slope].map((s) => [f + s, f === 'hpf' ? 'highpass' : 'lowpass'])));
@@ -58,6 +61,21 @@ if (process.argv.includes('--self-test')) {
     const params = [{ symbol: type, ref: 'EQ_BAND_TYPES' }, { symbol: on, ref: 'EQ_FREQ_RANGE' }, { symbol: off, ref: 'EQ_FREQ_RANGE' }];
     if (!typedBand(params[1], params)) bad.push(`arm: ${on} is not on ${type}'s band`);
     if (typedBand(params[2], params)) bad.push(`arm: ${off} is on ${type}'s band`);
+  }
+  // an installed schema with no filterResponse stops only a control that states a response, never a tool's import
+  const dir = mkdtempSync(join(tmpdir(), 'filter-response-'));
+  try {
+    const schema = JSON.parse(readFileSync(descriptorSchemaFile(), 'utf8'));
+    const { filterResponse: _f, ...defs } = schema.$defs;
+    const file = join(dir, 'omx-contract.schema.json');
+    writeFileSync(file, JSON.stringify({ ...schema, $defs: defs }));
+    const tool = JSON.stringify(new URL('../descriptor.mjs', import.meta.url).href);
+    const child = (code) => spawnSync(process.execPath, ['--input-type=module', '-e', `const m = await import(${tool}); ${code}`], { encoding: 'utf8', env: { ...process.env, OMX_CONTRACT_SCHEMA: file } });
+    const plain = child("if (m.responseOfControl({ symbol: 'x' }, 'arm') !== undefined) process.exit(3);");
+    if (plain.status !== 0) bad.push(`arm: a tool that reads no response does not load without filterResponse (${plain.stderr.split('\n').find((l) => /Error/.test(l)) ?? plain.status})`);
+    if (child("m.responseOfControl({ symbol: 'x', response: 'y' }, 'arm');").status === 0) bad.push('arm: a stated response passed without filterResponse');
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
   }
   if (responseOfControl({ symbol: 'x' }, 'arm') !== undefined) bad.push('arm: a control with no response was given one');
   if (responseOfControl({ symbol: 'x', response: FILTER_RESPONSES[0] }, 'arm') !== FILTER_RESPONSES[0]) bad.push('arm: a stated word was not kept');
