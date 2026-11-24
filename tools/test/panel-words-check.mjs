@@ -132,7 +132,7 @@ try {
 const renderFile = installedHeader('omx-panel', RENDER);
 const ownerFile = installedHeader('omx-clap', OWNER);
 if (!renderFile) errors.push(`${RENDER} not found: install omx-panel-contract >= 0.16.0`);
-if (!ownerFile) errors.push(`${OWNER} not found: install omx-clap-devel >= 0.34.0`);
+if (!ownerFile) errors.push(`${OWNER} not found: install omx-clap-devel >= 0.34.1`);
 const renderText = renderFile ? readFileSync(renderFile, 'utf8') : '';
 const ownerText = ownerFile ? readFileSync(ownerFile, 'utf8') : '';
 if (words && renderFile) errors.push(...wordErrors(words, renderLists(renderText)));

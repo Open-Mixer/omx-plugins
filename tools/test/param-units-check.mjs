@@ -102,7 +102,7 @@ let scales = [];
   // this tree's header spells none and includes the owner's
   const scalesFile = clapHeader(SCALES_HEADER);
   const codes = scalesFile ? scaleCodesOf(readFileSync(scalesFile, 'utf8')) : [];
-  if (!scalesFile) errors.push(`${SCALES_HEADER}: not found; install omx-clap-devel >= 0.34.0`);
+  if (!scalesFile) errors.push(`${SCALES_HEADER}: not found; install omx-clap-devel >= 0.34.1`);
   else if (JSON.stringify(codes) !== JSON.stringify(GOLDEN_SCALES)) errors.push(`${SCALES_HEADER} numbers the scales ${JSON.stringify(codes)}; golden ${JSON.stringify(GOLDEN_SCALES)}`);
   if (JSON.stringify(codes.map(([w]) => w)) !== JSON.stringify(scales)) errors.push(`${SCALES_HEADER} words the scales ${JSON.stringify(codes.map(([w]) => w))}; PARAM_SCALES is ${JSON.stringify(scales)}`);
   if (!text.includes(`#include <${SCALES_HEADER}>`)) errors.push(`${HEADER}: does not include <${SCALES_HEADER}>`);

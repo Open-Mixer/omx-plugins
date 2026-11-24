@@ -16,7 +16,7 @@ BuildRequires: pkgconf-pkg-config
 # in debian/control the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
 BuildRequires: omx-dsp-devel >= 0.34.0
 BuildRequires: omx-contract-devel >= 3.21.0
-BuildRequires: omx-clap-devel >= 0.34.0
+BuildRequires: omx-clap-devel >= 0.34.1
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
 BuildRequires: plugin-hostd-devel >= 0.21.0
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
@@ -28,7 +28,7 @@ BuildRequires: omx-contract >= 3.21.0
 BuildRequires: omx-panel >= 0.16.0
 # omx-clap's domain the generators read (tools/omx-contract.mjs domainDocument): clap, the CLAP feature terms
 # (tools/format-tables.mjs)
-BuildRequires: omx-clap-contract >= 0.34.0
+BuildRequires: omx-clap-contract >= 0.34.1
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}
@@ -57,7 +57,7 @@ BuildRequires: lilv-devel
 BuildRequires: omx-contract-data >= 3.21.0
 BuildRequires: plugin-db-contract >= 0.5.0
 BuildRequires: sord
-BuildRequires: omx-clap-host >= 0.34.0
+BuildRequires: omx-clap-host >= 0.34.1
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
 BuildRequires: plugin-hostd >= 0.21.0
 # plugin-hostd's words the generators read: its domains plugin-hostd/clap and plugin-hostd/lv2, the format tables
@@ -132,7 +132,7 @@ Requires: omx-dsp-devel >= 0.34.0
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
 Requires: omx-contract-devel >= 3.21.0
 # include/omx_param_contract.h includes omx-clap's scale codes, <omx-clap-host/omx_param_scales.h>
-Requires: omx-clap-devel >= 0.34.0
+Requires: omx-clap-devel >= 0.34.1
 Requires: %{name}-contract = %{version}-%{release}
 Requires: clap-devel >= 1.2.7
 
@@ -290,7 +290,8 @@ Its documentation is on openmixer.org.
 %changelog
 * Sun Nov 22 2026 Pau Aliagas <linuxnow@gmail.com> - 0.20.0-1
 - the version moves to 0.20.0
-- floors: omx-clap-devel and omx-clap-contract >= 0.34.0, omx-contract >= 3.21.0,
+- floors: omx-clap-devel, omx-clap-contract and omx-clap-host >= 0.34.1 (0.34.1 carries
+  the rename's Obsoletes an upgrade needs), omx-contract >= 3.21.0,
   omx-dsp >= 0.34.0
 - the sorting pass: the moves into the owner domains
 - units: the vendor block is omx-contract 3.21.0's eight (dbfs, dbu, ratio, lufs, dbPerOct, dbPerS, dbtp, lu), and a
