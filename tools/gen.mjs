@@ -857,6 +857,11 @@ lv2:displayPriority
     rdfs:label ${ttlStr(LV2_CUSTOM_UNITS[word].label)} ;
     units:render ${ttlStr(LV2_CUSTOM_UNITS[word].render)} ;
     units:symbol ${ttlStr(LV2_CUSTOM_UNITS[word].symbol)} .
+`).join('')}${meaningDesignationsOf(d).map(([meaning, uri]) => `
+<${uri}>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label ${ttlStr(meaning)} ;
+    rdfs:comment "A control's standard meaning (omx-contract), which LV2's param: vocabulary has no term for." .
 `).join('')}`;
 }
 
@@ -872,6 +877,12 @@ const customUnitsOf = (d) => {
     return [word, uriOf[word]];
   }).filter(([, uri]) => [...d.params.map((q, i) => faceUnit(d, i)), ...metersOf(d).map((m) => m.unit)].some((u) => lv2UnitRef(u) === `<${uri}>`));
 };
+
+/** The OpenMixer meaning designations this plugin's ports use (plugin-db's LV2_OPENMIXER_MEANING_IDS, read through
+ * lv2Designation; omx-plugins#12), `[[<meaning>, <uri>], ...]`, each once, in port order: the TTL defines each
+ * Property its lv2:designation names, as it defines each OpenMixer unit. */
+const meaningDesignationsOf = (d) => [...new Map(d.params.map((q, i) => [d.descriptor?.controls[i]?.meaning, faceDesignation(d, i)])
+  .filter(([, x]) => x?.startsWith('<urn:')).map(([m, x]) => [m, x.slice(1, -1)])).entries()];
 
 /** A control's group as a CLAP module path (plugin-hostd's group-path, written: the labels joined by "/"). */
 const moduleOf = (d, i) => (d.descriptor?.controls[i]?.group ?? []).join('/');
