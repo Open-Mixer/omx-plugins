@@ -7,7 +7,7 @@
 #   make            build every plugin
 #   make test       the fast set (what the package builds run): declaration checks, in-process probes, hints, manual;
 #                   every part runs whatever an earlier part answered (the fast checks with -k, every plugin, each step)
-#   make test-heavy the built plugins through a host: oracles, host-check.sh, the round trip; CI runs
+#   make test-heavy the built plugins through a host: oracles, host-check.sh, the round trip, the curve proof; CI runs
 #                   it on every pull request in slices (OMX_HEAVY_SHARD=i/n); tools/test/test-split.json lists both
 #   make units      the declared units' contract codes (tools/param-contract.mjs) are omx-clap's header's
 #                   (OMX_PARAM_CONTRACT_UNITS, omx-clap-host/omx_param_units.h), its vendor block is dbfs, dbu, ratio, lufs, a unit

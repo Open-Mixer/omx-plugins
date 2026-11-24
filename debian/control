@@ -29,8 +29,7 @@ Build-Depends: debhelper-compat (= 13),
                serdi <!nocheck>,
                omx-clap-host (>= 0.34.1~) <!nocheck>,
                plugin-hostd (>= 0.21.0~) <!nocheck>,
-               plugin-hostd-contract (>= 0.22.0~),
-               plugin-qualify (>= 0.21.0~)
+               plugin-hostd-contract (>= 0.22.0~)
 Standards-Version: 4.6.2
 Homepage: https://github.com/FreeMixer/omx-plugins
 Rules-Requires-Root: no

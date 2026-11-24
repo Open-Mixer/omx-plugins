@@ -63,17 +63,6 @@ BuildRequires: plugin-hostd >= 0.21.0
 # plugin-hostd's words the generators read: its domains plugin-hostd/clap and plugin-hostd/lv2, the format tables
 # (tools/format-tables.mjs), and the resource hints, RESOURCE_* (tools/resource-hints.mjs)
 BuildRequires: plugin-hostd-contract >= 0.22.0
-# %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
-# shipped pins.d file to the shipped binaries' hashes (tools/pins-check.sh)
-BuildRequires: plugin-qualify >= 0.21.0
-# the shipped .clap is the stripped one (find-debuginfo runs after %%install), so its pin is measured
-# again once the buildroot is stripped: a pin taken at %%install names bytes the package never ships
-%define __spec_install_post \
-    %{?__debug_package:%{__debug_install_post}}\
-    %{__arch_install_post}\
-    %{__os_install_post}\
-    %{__make} -s install-pins DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir} CLAPDIR=/usr/lib/clap\
-%{nil}
 
 # The name a user installs: both formats.
 Requires: %{name}-clap%{?_isa} = %{version}-%{release}
