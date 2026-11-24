@@ -5,7 +5,7 @@
       "lib", "entry-symlink", "units", "panel-words", "schema-urls", "graph-enum", "oracle-rates", "face-header", "role-meanings", "meter-binding", "panel-layout", "descriptor-view",
       "descriptor-features", "placement-strips", "lv2-units", "lv2-deprecated", "lv2-maintainer", "no-modgui",
       "release-version", "resource-hints", "format-tables", "contract-union", "contract-dir", "lv2bench-ran",
-      "ci-scope", "no-ci-bridge", "deb-cells", "probe-checks", "eq-probe-race", "band-groups", "phaser-depth", "geq-widgets", "summary-numbers",
+      "ci-scope", "no-ci-bridge", "deb-cells", "probe-checks", "eq-probe-race", "band-groups", "phaser-depth", "geq-widgets", "decl-schema-panel-ref", "summary-numbers",
       "param-tie", "face-ids", "comp-release-mode", "strip-visible-when", "face-dirty-order", "core-init-answers", "debt-base", "test-split"
     ],
     "steps": [
