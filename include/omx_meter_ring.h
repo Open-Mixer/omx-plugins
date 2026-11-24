@@ -29,9 +29,9 @@
  * thread keeps its accumulator: the largest value published since the reader's last take() (the deepest,
  * i.e. the smallest, for a value the policy marks as a gain reduction), and for a clip word the longest run.
  * The accumulator travels in the same copy as the value, so a take is as whole as a read. The reader says
- * what it has seen by storing the count of the copy it took; the audio thread, at its next block, restarts
- * every accumulator from the block's own value when that count is the last one it published (one compare per
- * value, one load per block), and folds the block in otherwise. A block published between the reader's copy
+ * what it has seen by storing, for each value it took, the count of the copy; the audio thread, at its next
+ * block, restarts a value's accumulator from the block's own value when that count is the last one it
+ * published (one compare per value), and folds the block in otherwise. Taking a meter takes only its values. A block published between the reader's copy
  * and its store is therefore held once more: the error is one-sided, a burst is never lost, and a slow
  * reader sees a value a block too high at worst. ONE reader per instance may take(); read() stays for any
  * number of observers and takes nothing.
@@ -73,7 +73,7 @@ struct omx_meter_ring {
   unsigned int deep_mask;     /* bit i: value i holds its smallest (a gain reduction), else its largest */
   unsigned int hold_mask;     /* bit i: value i is held until read; clear: the held word is the block's value */
   double acc[OMX_METER_RING_MAX], clip_acc[OMX_METER_RING_MAX]; /* the audio thread's accumulators */
-  _Atomic unsigned int taken; /* the count of the copy the reader last took; the reader's, one writer */
+  _Atomic unsigned int taken[OMX_METER_RING_MAX]; /* per value: the count of the copy the reader last took it from */
   _Atomic unsigned int reads; /* how many takes succeeded; the reader's */
   _Atomic unsigned long long copy[OMX_METER_RING_COPIES][OMX_METER_RING_STRIDE]; /* values, held, clip: bits */
 };
@@ -102,12 +102,12 @@ static inline void omx_meter_ring_clear(struct omx_meter_ring *r) {
 static inline void omx_meter_ring_publish_clip(struct omx_meter_ring *r, const double *values, const double *clips,
                                                unsigned int n) {
   const unsigned int c = r->next;
-  /* the reader has seen every block published so far: the accumulators start again from this one */
-  const int restart = atomic_load_explicit(&r->taken, memory_order_acquire) == r->count;
   /* the previous word stays ahead of this fill, for any reader that sees a value of it */
   atomic_thread_fence(memory_order_release);
   for (unsigned int i = 0; i < n; i++) {
     const double v = values[i], k = clips ? clips[i] : 0.0;
+    /* the reader has taken this value from the last block published: it starts again from this one */
+    const int restart = atomic_load_explicit(&r->taken[i], memory_order_acquire) == r->count;
     if (restart || !((r->hold_mask >> i) & 1u)) {
       r->acc[i] = v;
       r->clip_acc[i] = k;
@@ -179,7 +179,7 @@ static inline unsigned int omx_meter_ring_take(struct omx_meter_ring *r, unsigne
     atomic_thread_fence(memory_order_acquire);
     const unsigned int again = atomic_load_explicit(&r->word, memory_order_relaxed);
     if (again != 0u && (((again >> 2) - (w >> 2)) & OMX_METER_RING_COUNT_MASK) <= 1u) {
-      atomic_store_explicit(&r->taken, w >> 2, memory_order_release);
+      for (unsigned int i = 0; i < n; i++) atomic_store_explicit(&r->taken[first + i], w >> 2, memory_order_release);
       atomic_fetch_add_explicit(&r->reads, 1u, memory_order_relaxed);
       return n;
     }

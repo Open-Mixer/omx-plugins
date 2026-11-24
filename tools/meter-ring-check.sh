@@ -37,7 +37,7 @@ if [ "${1:-}" = --self-test ]; then
   awk '/^  atomic_thread_fence\(memory_order_release\);$/ { print "  atomic_store_explicit(&r->word, (((r->count + 1u) & OMX_METER_RING_COUNT_MASK) << 2) | c, memory_order_release);"; next }
        { print }' "$h" > "$scratch/word-first.h"
   sed 's/^    if (restart || !((r->hold_mask >> i) & 1u)) {$/    if (1 || restart) {/' "$h" > "$scratch/no-hold.h"
-  sed 's/^  const int restart = .*$/  const int restart = 0;/' "$h" > "$scratch/no-restart.h"
+  sed 's/^    const int restart = .*$/    const int restart = 0;/' "$h" > "$scratch/no-restart.h"
   sed 's/((r->deep_mask >> i) \& 1u) ?/0 ?/' "$h" > "$scratch/no-deep.h"
   sed 's/^      if (k > r->clip_acc\[i\]) r->clip_acc\[i\] = k;$/      r->clip_acc[i] = k;/' "$h" > "$scratch/no-clip-hold.h"
   sed '/atomic_fetch_add_explicit(&r->reads/d' "$h" > "$scratch/no-count.h"

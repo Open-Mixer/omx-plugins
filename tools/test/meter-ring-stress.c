@@ -243,7 +243,7 @@ static int held_deterministic(void) {
   EXPECT(h[0] == 0 && h[1] == 0 && h[2] == 0 && c[0] == 0, "the take after a quiet stretch recovers");
   /* the lag: a block published between the reader's copy and its store of what it saw is held once more */
   omx_meter_ring_publish_clip(&r, b, bc, 3);
-  atomic_store(&r.taken, 0u); /* a reader that has not stored its take yet */
+  for (int i = 0; i < 3; i++) atomic_store(&r.taken[i], 0u); /* a reader that has not stored its take yet */
   omx_meter_ring_publish(&r, q, 3);
   EXPECT(omx_meter_ring_take(&r, 0, v, h, c, 3) == 3 && h[0] == 1.0, "an unconfirmed take keeps the burst");
   EXPECT(omx_meter_ring_reads(&r) == 3u, "three takes counted");
@@ -252,7 +252,15 @@ static int held_deterministic(void) {
   omx_meter_ring_publish(&r, b, 3);
   omx_meter_ring_publish(&r, q, 3);
   EXPECT(omx_meter_ring_take(&r, 0, v, h, NULL, 3) == 3 && h[0] == 0.0 && h[2] == 1.0, "an unheld value is the block's own");
-  printf("PASS held: burst, deepest, clip run, recovery, unconfirmed take, unheld value\n");
+  /* a meter taken restarts its own values only: the next meter's burst waits for its own take */
+  omx_meter_ring_init(&r);
+  omx_meter_ring_policy(&r, 1u << 1, ~0u);
+  omx_meter_ring_publish(&r, b, 3);
+  EXPECT(omx_meter_ring_take(&r, 0, v, h, NULL, 1) == 1 && h[0] == 1.0, "the first meter is taken");
+  omx_meter_ring_publish(&r, q, 3);
+  EXPECT(omx_meter_ring_take(&r, 1, v, h, NULL, 1) == 1 && h[0] == -1.0, "the second meter still holds its burst");
+  EXPECT(omx_meter_ring_take(&r, 0, v, h, NULL, 1) == 1 && h[0] == 0.0, "the first meter recovered");
+  printf("PASS held: burst, deepest, clip run, recovery, unconfirmed take, unheld value, one meter at a time\n");
   return 0;
 }
 
