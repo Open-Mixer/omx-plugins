@@ -90,7 +90,7 @@ static const char *const OMX_GLUE_PARAM_MODULES[OMX_GLUE_PARAM_COUNT] = {
 #define OMX_GLUE_LV2_URI "urn:openmixer:glue"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_GLUE_DECL_SOURCE "omx glue: Threshold -40 to 0 dB, Ratio 0 to 2, Attack 0 to 5, Release 0 to 4, Makeup 0 to 24 dB, Key High-pass 0 to 500 Hz, Mix 0 to 100 %, Detector Topology 0 to 1"
-#define OMX_GLUE_DECL_DIGEST "7bcb023ca90e579d8a3ed67bd6066c428c3c8eb20cb121d2d092ce0876f6de0f"
+#define OMX_GLUE_DECL_DIGEST "ebef8b9ebb20e26a2d71baa69d161164b6e8495eefdc1e29c096b05652232e5a"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

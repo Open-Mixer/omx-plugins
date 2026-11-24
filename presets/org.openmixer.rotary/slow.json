@@ -34,17 +34,17 @@
     },
     {
       "symbol": "balance",
-      "unit": "%",
+      "unit": "percent",
       "value": 0
     },
     {
       "symbol": "mix",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {
       "symbol": "speed",
-      "unit": "",
+      "unit": "none",
       "value": 1,
       "label": "Slow"
     }

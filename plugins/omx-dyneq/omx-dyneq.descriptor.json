@@ -620,7 +620,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -645,7 +645,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -670,7 +670,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -695,7 +695,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -720,7 +720,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -745,7 +745,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1784,7 +1784,7 @@
         "min": 0,
         "max": 100,
         "step": 1,
-        "unit": "%",
+        "unit": "percent",
         "default": 100,
         "scale": "stepped"
       },

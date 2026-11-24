@@ -9,7 +9,7 @@
   "params": [
     {
       "symbol": "amountPct",
-      "unit": "%",
+      "unit": "percent",
       "value": 70
     },
     {
@@ -24,7 +24,7 @@
     },
     {
       "symbol": "slopeDbOct",
-      "unit": "dB/oct",
+      "unit": "dBPerOct",
       "value": -3
     }
   ],

@@ -66,7 +66,7 @@ static const char *const OMX_TONE_PARAM_MODULES[OMX_TONE_PARAM_COUNT] = {
 #define OMX_TONE_LV2_URI "urn:openmixer:tone"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_TONE_DECL_SOURCE "omx tone: Tilt -6 to 6 dB, Pivot 200 to 5000 Hz, DJ Filter -100 to 100, Resonance 0.5 to 4"
-#define OMX_TONE_DECL_DIGEST "98bc8d37e1cb6e843ad5cae6db1e41273e996044dc425c5aa435f945ed96656e"
+#define OMX_TONE_DECL_DIGEST "78282e136a47be090fa9d7c2810dd9512aa78a94ba718f248ab398feb1d4ee1c"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

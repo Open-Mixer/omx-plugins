@@ -84,7 +84,7 @@ static const char *const OMX_DOUBLER_PARAM_MODULES[OMX_DOUBLER_PARAM_COUNT] = {
 #define OMX_DOUBLER_LV2_URI "urn:openmixer:doubler"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_DOUBLER_DECL_SOURCE "omx doubler: Voices 1 to 4, Delay 5 to 40 ms, Detune 0 to 25 cents, Drift Rate 0.1 to 2 Hz, Drift Depth 0 to 3 ms, Spread 0 to 100 %, Mix 0 to 100 %"
-#define OMX_DOUBLER_DECL_DIGEST "592de6b0ab8b42b9169e9007f3fa2bd33b350d61b48292ee6fba41e8fa2f3870"
+#define OMX_DOUBLER_DECL_DIGEST "c924c79ddc2304099ce4522c66ed5653f9a23e864bc7002518a017fcc1706ff5"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

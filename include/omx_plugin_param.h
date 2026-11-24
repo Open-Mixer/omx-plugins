@@ -17,7 +17,7 @@
 typedef struct {
   const char *symbol; /* the declared field name — the LV2 symbol, the CLAP param's identity */
   const char *name;   /* derived from the symbol, never a label table */
-  const char *unit;
+  const char *unit;   /* the text value_to_text prints: the unit id's x-symbol (%, dB/oct, "" for none), never the id */
   float min, max, def;
   unsigned flags;
 } omx_plugin_param;

@@ -57,7 +57,7 @@
           "symbol": "hpfSlope",
           "name": "HPF Slope",
           "ref": "FILTER_SLOPES",
-          "unit": "dB/oct"
+          "unit": "dBPerOct"
         },
         {
           "symbol": "lpfOn",
@@ -74,7 +74,7 @@
           "symbol": "lpfSlope",
           "name": "LPF Slope",
           "ref": "FILTER_SLOPES",
-          "unit": "dB/oct"
+          "unit": "dBPerOct"
         }
       ],
       "faceBands": "eq32",

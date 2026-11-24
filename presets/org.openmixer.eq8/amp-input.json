@@ -9,7 +9,7 @@
   "params": [
     {
       "symbol": "hpf_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
@@ -19,13 +19,13 @@
     },
     {
       "symbol": "hpf_slope",
-      "unit": "dB/oct",
+      "unit": "dBPerOct",
       "value": 12,
       "label": "12 dB/oct"
     },
     {
       "symbol": "lpf_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
@@ -35,13 +35,13 @@
     },
     {
       "symbol": "lpf_slope",
-      "unit": "dB/oct",
+      "unit": "dBPerOct",
       "value": 12,
       "label": "12 dB/oct"
     },
     {
       "symbol": "b1_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -57,17 +57,17 @@
     },
     {
       "symbol": "b1_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b1_on",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b2_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -83,17 +83,17 @@
     },
     {
       "symbol": "b2_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b2_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b3_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -109,17 +109,17 @@
     },
     {
       "symbol": "b3_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b3_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b4_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -135,17 +135,17 @@
     },
     {
       "symbol": "b4_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b4_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b5_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -161,17 +161,17 @@
     },
     {
       "symbol": "b5_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b5_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b6_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -187,17 +187,17 @@
     },
     {
       "symbol": "b6_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b6_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b7_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -213,17 +213,17 @@
     },
     {
       "symbol": "b7_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b7_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b8_type",
-      "unit": "",
+      "unit": "none",
       "value": 2,
       "label": "High Shelf"
     },
@@ -239,12 +239,12 @@
     },
     {
       "symbol": "b8_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b8_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     }
   ],

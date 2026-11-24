@@ -195,7 +195,7 @@ fresh();
 editJson(DESC, (x) => { x.extensions.lv2['rdf:type'] = 'lv2:DelayPlugin'; });
 check('arm: an LV2 bag without lv2:Plugin is refused', refusal(() => loadDecl(copy)), `extensions.lv2["rdf:type"] is the LV2 face's types, "lv2:Plugin" and at most its class`);
 
-const united = JSON.parse(readFileSync(join(dir, DESC), 'utf8')).controls.find((c) => c.kind === 'travel' && c.source?.from && c.travel.unit !== '');
+const united = JSON.parse(readFileSync(join(dir, DESC), 'utf8')).controls.find((c) => c.kind === 'travel' && c.source?.from && c.travel.unit !== 'none');
 fresh();
 editJson(DESC, (x) => { x.controls[united.id].travel.unit = 'ratio'; });
 check(`arm: ${united.symbol}, a ${united.travel.unit} travel stating ratio, is stale`, descriptorText(loadDecl(copy)) === readFileSync(join(copy, DESC), 'utf8'), false);

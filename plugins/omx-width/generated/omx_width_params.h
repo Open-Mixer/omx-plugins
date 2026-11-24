@@ -72,7 +72,7 @@ static const char *const OMX_WIDTH_PARAM_MODULES[OMX_WIDTH_PARAM_COUNT] = {
 #define OMX_WIDTH_LV2_URI "urn:openmixer:width"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_WIDTH_DECL_SOURCE "omx width: Width 0 to 200 %, Pseudo 0 to 2, Pseudo Delay 0 to 30 ms, Bass Mono 0 to 1, Bass Mono Frequency 20 to 300 Hz"
-#define OMX_WIDTH_DECL_DIGEST "5592ab8286eb977bb1bef34784abe9d75476fb7abc8c1717dcce1b03fb34ab57"
+#define OMX_WIDTH_DECL_DIGEST "c4f8888c027f4ce250f12b68314bda665bb1e8d96594d17f2f67ff410ecf9eba"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

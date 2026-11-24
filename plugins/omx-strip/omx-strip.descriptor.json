@@ -256,7 +256,7 @@
         "min": 1,
         "max": 100,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 16,
         "scale": "linear"
       },
@@ -554,7 +554,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -689,7 +689,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -824,7 +824,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -959,7 +959,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1040,7 +1040,7 @@
         "min": 1,
         "max": 20,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 4,
         "scale": "linear"
       },
@@ -1189,7 +1189,7 @@
         "min": 0,
         "max": 100,
         "step": 1,
-        "unit": "%",
+        "unit": "percent",
         "default": 100,
         "scale": "stepped"
       },
@@ -1245,7 +1245,7 @@
         "min": 0,
         "max": 119,
         "step": 1,
-        "unit": "",
+        "unit": "none",
         "default": 0,
         "scale": "stepped"
       },
@@ -1266,7 +1266,7 @@
         "min": 1,
         "max": 32,
         "step": 1,
-        "unit": "",
+        "unit": "none",
         "default": 4,
         "scale": "stepped"
       },
@@ -1379,7 +1379,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1514,7 +1514,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1649,7 +1649,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1784,7 +1784,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -1919,7 +1919,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2054,7 +2054,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2189,7 +2189,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2324,7 +2324,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2459,7 +2459,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2594,7 +2594,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2729,7 +2729,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2864,7 +2864,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -2999,7 +2999,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -3134,7 +3134,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -3269,7 +3269,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -3404,7 +3404,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -3539,7 +3539,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -3674,7 +3674,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -3809,7 +3809,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -3944,7 +3944,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -4079,7 +4079,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -4214,7 +4214,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -4349,7 +4349,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -4484,7 +4484,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -4619,7 +4619,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -4754,7 +4754,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -4889,7 +4889,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -5024,7 +5024,7 @@
         "min": 0.3,
         "max": 116,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },

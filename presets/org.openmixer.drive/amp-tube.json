@@ -14,7 +14,7 @@
     },
     {
       "symbol": "character",
-      "unit": "",
+      "unit": "none",
       "value": 0.6
     },
     {
@@ -24,7 +24,7 @@
     },
     {
       "symbol": "mix",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {
@@ -34,35 +34,35 @@
     },
     {
       "symbol": "curve",
-      "unit": "",
+      "unit": "none",
       "value": 2,
       "label": "Tube"
     },
     {
       "symbol": "band",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Full"
     },
     {
       "symbol": "autoGain",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "stereoLink",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "hfRolloff",
-      "unit": "",
+      "unit": "none",
       "value": 1,
       "label": "12 kHz"
     },
     {
       "symbol": "oversample",
-      "unit": "",
+      "unit": "none",
       "value": 4,
       "label": "4"
     }

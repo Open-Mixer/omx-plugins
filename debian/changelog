@@ -9,6 +9,9 @@ omx-plugins (0.21.0) unstable; urgency=medium
   * V23d: the unit codes are read from omx-clap's domain omx-param-contract
     and its render; make units refuses an include of omx-contract's old unit
     header.
+  * Floors: plugin-hostd-contract >= 0.22.0 and plugin-db-contract >= 0.5.1:
+    the format tables are x-kind map items, their unit and meaning pairs read
+    from omx-clap and plugin-db (plugin-hostd V19, M5).
 
  -- Pau Aliagas <linuxnow@gmail.com>  Mon, 23 Nov 2026 22:00:00 +0100
 

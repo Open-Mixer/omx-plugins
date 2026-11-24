@@ -90,7 +90,7 @@ static const char *const OMX_ROTARY_PARAM_MODULES[OMX_ROTARY_PARAM_COUNT] = {
 #define OMX_ROTARY_LV2_URI "urn:openmixer:rotary"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_ROTARY_DECL_SOURCE "omx rotary: Horn Slow 0.1 to 2 Hz, Horn Fast 3 to 10 Hz, Drum Slow 0.1 to 2 Hz, Drum Fast 3 to 10 Hz, Accel 0.25 to 4 coef, Balance -100 to 100 %, Mix 0 to 100 %, Speed 0 to 2"
-#define OMX_ROTARY_DECL_DIGEST "47cc547ff0d8ae757499eb4bbcc950d1e96863f00f9f1232309d6cc46730aa65"
+#define OMX_ROTARY_DECL_DIGEST "fde2adbf1fc45edf4f35030de6f95d50e5600dcdf4f108e36e58f208dc470cd7"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

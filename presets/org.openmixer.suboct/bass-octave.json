@@ -9,23 +9,23 @@
   "params": [
     {
       "symbol": "range",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Low"
     },
     {
       "symbol": "oct1",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {
       "symbol": "oct2",
-      "unit": "%",
+      "unit": "percent",
       "value": 0
     },
     {
       "symbol": "dry",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {

@@ -76,7 +76,7 @@
         "min": 0,
         "max": 100,
         "step": 0,
-        "unit": "%",
+        "unit": "percent",
         "default": 100,
         "scale": "linear"
       },

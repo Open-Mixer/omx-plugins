@@ -37,7 +37,7 @@ if (process.argv.includes('--self-test')) {
     'a value above its travel': (c) => { c.params.find((p) => p.symbol === 'amount').value = 37; },
     'a value below its travel': (c) => { c.params.find((p) => p.symbol === 'trim').value = -25; },
     'a fractional step': (c) => { c.params.find((p) => p.symbol === 'bandFreq').value = 2000.5; },
-    'a parameter the plugin lacks': (c) => { c.params.push({ symbol: 'wobble', unit: '', value: 0 }); },
+    'a parameter the plugin lacks': (c) => { c.params.push({ symbol: 'wobble', unit: 'none', value: 0 }); },
     'a label the plugin does not give': (c) => { c.params.find((p) => p.symbol === 'curve').label = 'Fuzz'; },
     'a plugin that is a string': (c) => { c.plugin = c.plugin.id; },
     'a plugin with an empty id': (c) => { c.plugin.id = ''; },

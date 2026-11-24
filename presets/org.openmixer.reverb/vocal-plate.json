@@ -9,22 +9,22 @@
   "params": [
     {
       "symbol": "plateModDepth",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {
       "symbol": "size",
-      "unit": "",
+      "unit": "none",
       "value": 0.6
     },
     {
       "symbol": "damping",
-      "unit": "",
+      "unit": "none",
       "value": 0.35
     },
     {
       "symbol": "width",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
@@ -64,7 +64,7 @@
     },
     {
       "symbol": "algorithm",
-      "unit": "",
+      "unit": "none",
       "value": 1,
       "label": "Plate"
     },
@@ -80,7 +80,7 @@
     },
     {
       "symbol": "earlySizePct",
-      "unit": "%",
+      "unit": "percent",
       "value": 50
     },
     {
@@ -100,7 +100,7 @@
     },
     {
       "symbol": "wetDeess",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {

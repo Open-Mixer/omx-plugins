@@ -162,7 +162,7 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 #define OMX_COMP_LV2_URI "urn:openmixer:comp"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_COMP_DECL_SOURCE "omx comp: Threshold -60 to 0 dB, Ratio 1 to 20, Knee 0 to 24 dB, Attack 0.1 to 100 ms, Release 5 to 3000 ms, Makeup 0 to 24 dB, Mix 0 to 100 %, Kind 0 to 1, Detector Oversampling 0 to 2, Detector Topology 0 to 1, Key Source 0 to 1, Key HP 0 to 2000 Hz, Key LP 0 to 20000 Hz, Key Tilt -6 to 6 dB/oct, Key Listen 0 to 1, Hold 0 to 2000 ms, Detect Link 0 to 3, Duck 0 to 1, Duck Range -40 to 0 dB, Release Mode 0 to 2"
-#define OMX_COMP_DECL_DIGEST "589c4119820fb26e5685c8c7a48c50bc984d8b735a9324fab16a8ae87ce5bf10"
+#define OMX_COMP_DECL_DIGEST "93bb0c58a5129078b63109505a2d5ab6cafffe7eaa7c0e3c4900d5071c63a1bd"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

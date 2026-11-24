@@ -176,7 +176,7 @@
         "min": 0,
         "max": 100,
         "step": 1,
-        "unit": "%",
+        "unit": "percent",
         "default": 100,
         "scale": "stepped"
       },
@@ -368,7 +368,7 @@
         "min": -6,
         "max": 6,
         "step": 0,
-        "unit": "dB/oct",
+        "unit": "dBPerOct",
         "default": 0,
         "scale": "linear"
       },

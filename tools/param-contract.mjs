@@ -16,7 +16,7 @@ import { createHash } from 'node:crypto';
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { lv2UnitNames, lv2UnitRef, standardUnitOf } from './format-tables.mjs';
+import { lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
 import { domainDocument, items } from './omx-contract.mjs';
 import { travelUnit } from './descriptor.mjs';
 
@@ -111,23 +111,23 @@ export function headerUnits(text) {
   return new Map([...text.matchAll(/^#define OMX_CLAP_UNIT_(\w+) (\d+)u\b/gm)].map((m) => [m[1].replaceAll('_', ''), Number(m[2])]));
 }
 
-/** A declared unit -> the contract's unit, `[token, enum value]`: the token is the LV2 unit the face writes for it
- * (plugin-hostd's LV2 table read backwards, tools/format-tables.mjs: units:db -> db; a plugin-defined unit's name in
- * the vendor block's lower case: urn:openmixer:unit#dBFS -> dbfs), the value the declaration's. A unit it has no
- * value for, and "", is NONE, its text left to value_to_text. */
+/** A declared unit, a PARAM_UNITS id -> the contract's unit, `[token, enum value]`: the token is the LV2 unit the face
+ * writes for it (plugin-hostd's LV2 table read backwards, tools/format-tables.mjs: units:db -> db; a plugin-defined
+ * unit's id in the vendor block's lower case: urn:openmixer:unit#dBFS -> dbfs, dBPerOct -> dbperoct), the value the
+ * declaration's. A unit it has no value for, and none, is NONE, its text left to value_to_text. */
 export function contractUnit(unit) {
   const ref = lv2UnitRef(unit);
-  // a unit of the vendor block takes its PARAM_UNITS id's name, `-` read "per" as the sheet spells it (dB-oct -> dbperoct; omx-clap's omx-param-contract keeps omx-contract 3.21.0's tokens)
-  const token = ref && (ref.startsWith('units:') ? ref.slice('units:'.length) : String(standardUnitOf(unit) ?? ref.replace(/^<|>$/g, '').split('#').pop()).replaceAll('-', 'per').toLowerCase());
+  // a unit of the vendor block takes its PARAM_UNITS id, lower case, as omx-clap's omx-param-contract spells its tokens (dBPerOct -> dbperoct)
+  const token = ref && (ref.startsWith('units:') ? ref.slice('units:'.length) : unit.toLowerCase());
   const value = token && headerUnits().get(token.toUpperCase());
   return value === undefined ? ['none', 0] : [token, value];
 }
 
-/** The token of a unit the contract serves (one with a header value, or "" for none), else undefined. */
-export const servedToken = (unit) => (unit === '' ? 'none' : contractUnit(unit)[1] ? contractUnit(unit)[0] : undefined);
+/** The token of a unit the contract serves (one with a header value, or none), else undefined. */
+export const servedToken = (unit) => (unit === 'none' ? 'none' : contractUnit(unit)[1] ? contractUnit(unit)[0] : undefined);
 
-/** Every unit a face can write, with its contract unit: `{ <unit>: [token, value] }`, "" among them. */
-export const contractUnits = () => Object.fromEntries(['', ...Object.keys(lv2UnitNames())].map((u) => [u, contractUnit(u)]));
+/** Every unit a face can write, by its PARAM_UNITS id, with its contract unit: `{ <id>: [token, value] }`, none among them. */
+export const contractUnits = () => Object.fromEntries(['none', ...Object.keys(lv2UnitNames())].map((u) => [u, contractUnit(u)]));
 
 /** The scale words in the order of their codes (OMX_CLAP_SCALE_*), PARAM_SCALES of the resolved contract at `dir`
  * (tools/omx-contract.mjs locateContract): the list is omx-contract's, never retyped here. */
