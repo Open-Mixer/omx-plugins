@@ -198,12 +198,12 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dirmeter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base decl-schema-panel-ref
+.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dirmeter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base selftest-shards decl-schema-panel-ref
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
 # every fast check, each its own target: `make test` runs them with -k, so one red does not hide the others
-test-checks: entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings plugin-labels meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets decl-schema-panel-ref summary-numbers param-tie own-units face-ids comp-release-mode strip-visible-when strip-pages-follow face-dirty-order core-init-answers meter-words debt-base test-split
+test-checks: entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings plugin-labels meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets decl-schema-panel-ref summary-numbers param-tie own-units face-ids comp-release-mode strip-visible-when strip-pages-follow face-dirty-order core-init-answers selftest-shards meter-words debt-base test-split
 # make test runs every part whatever an earlier part answered, and is red when any part was: the fast checks (-k),
 # then every plugin's test, then the steps that read the built plugins. A red check never hides a plugin's test
 # (tools/test/test-split-check.mjs holds the recipe to that).
@@ -376,6 +376,11 @@ debt-base:
 	node tools/test/debt-base-test.mjs
 test-split:
 	node tools/test/test-split-check.mjs --self-test
+# make selftest runs in CI as shards packed by measured time (tools/test/selftest-shards.json), each part in exactly
+# one, each shard under its budget, the fewest that fit, the CI matrix the table's (tools/test/selftest-shards-check.mjs,
+# its sabotage arms)
+selftest-shards:
+	node tools/test/selftest-shards-check.mjs --self-test
 summary-numbers:
 	node tools/test/summary-numbers-test.mjs --self-test
 phaser-depth:
@@ -444,9 +449,14 @@ presets-figures:
 recipe-test: selftest completeness
 completeness:
 	node tools/plugin-recipe.mjs
+# OMX_SELFTEST_SHARD=i/n runs the i-th of the n shards of the selftest's parts (tools/test/selftest-shards.json, packed
+# by measured time; CI runs each in its own job), the release and pin gates' self-tests (seconds) in the first; unset, all
+OMX_SELFTEST_SHARD ?=
 selftest:
-	node tools/test/recipe-selftest.mjs
-	tools/qualify-release.sh --self-test
+	@case '$(OMX_SELFTEST_SHARD)' in ''|[1-9]/[1-9]|[1-9]/[1-9][0-9]|[1-9][0-9]/[1-9][0-9]) ;; \
+	  *) echo "selftest: OMX_SELFTEST_SHARD='$(OMX_SELFTEST_SHARD)' is not i/n" >&2; exit 2;; esac
+	OMX_SELFTEST_SHARD='$(OMX_SELFTEST_SHARD)' node tools/test/recipe-selftest.mjs
+	@case '$(OMX_SELFTEST_SHARD)' in ''|1/*) set -e; tools/qualify-release.sh --self-test;; esac
 OMX_PANEL ?= omx-panel
 panel-copies:
 	$(OMX_PANEL) copies --self-test

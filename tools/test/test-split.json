@@ -46,6 +46,7 @@
       "strip-pages-follow",
       "face-dirty-order",
       "core-init-answers",
+      "selftest-shards",
       "meter-words",
       "debt-base",
       "test-split"
