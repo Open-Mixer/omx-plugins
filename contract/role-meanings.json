@@ -12,6 +12,10 @@
         "role": "algorithm",
         "meaning": "algorithm"
       },
+      "amount": {
+        "role": "amount",
+        "meaning": "unknown"
+      },
       "attack": {
         "role": "attack",
         "meaning": "attack"
@@ -35,6 +39,14 @@
       "bandType": {
         "role": "band_type",
         "meaning": "unknown"
+      },
+      "bassMono": {
+        "role": "bass_mono",
+        "meaning": "unknown"
+      },
+      "bassMonoFreq": {
+        "role": "bass_mono_freq",
+        "meaning": "frequency"
       },
       "ceiling": {
         "role": "ceiling",
@@ -79,6 +91,10 @@
       "frequency": {
         "role": "frequency",
         "meaning": "frequency"
+      },
+      "gain": {
+        "role": "gain",
+        "meaning": "gain"
       },
       "highCut": {
         "role": "high_cut",
@@ -172,6 +188,14 @@
         "role": "predelay",
         "meaning": "predelay"
       },
+      "pseudo": {
+        "role": "pseudo",
+        "meaning": "unknown"
+      },
+      "pseudoTime": {
+        "role": "pseudo_time",
+        "meaning": "delay"
+      },
       "range": {
         "role": "range",
         "meaning": "range"
@@ -203,6 +227,10 @@
       "size": {
         "role": "size",
         "meaning": "size"
+      },
+      "softness": {
+        "role": "softness",
+        "meaning": "unknown"
       },
       "spread": {
         "role": "spread",
