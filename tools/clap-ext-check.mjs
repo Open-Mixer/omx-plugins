@@ -8,7 +8,8 @@
  *   - org.openmixer.param-contract/1: each parameter's symbol, unit, scale and step are the
  *     declaration's (tools/param-contract.mjs), the bypass last; version 1; the
  *     fingerprint is the SHA-256 of what get_info and the contract serve, and the declaration's;
- *   - clap.remote-controls: the pages of the page rule over the declaration's panel sections;
+ *   - clap.remote-controls: the pages of the page rule over every control of the declaration's panel sections, a control
+ *     hidden at the defaults served as a blank slot;
  *   - clap.track-info: under each placement, before activation and after it, every parameter reads
  *     the placement's default the contract states for it, else its own default; a parameter the host
  *     has set keeps its value;
@@ -23,7 +24,7 @@ import { panelDescription } from './descriptor.mjs';
 import { loadDecl, scaleOf } from './gen.mjs';
 import { locateContract } from './omx-contract.mjs';
 import { contractCanonical, contractFingerprint, contractOf, contractVersionOf, scalesOf } from './param-contract.mjs';
-import { PLACEMENTS, pagesOf } from './omx-panel.mjs';
+import { PLACEMENTS, isVisible, pagesOf } from './omx-panel.mjs';
 import { maskOf } from './resource-hints.mjs';
 
 const [dir, dump] = process.argv.slice(2);
@@ -59,7 +60,12 @@ check(fingerprint === contractFingerprint(want), "param-contract: the fingerprin
 
 // the remote controls
 const desc = panelDescription(d);
-const pages = pagesOf(desc, d).map((g, k) => [k, k, g.sectionName, g.pageName, g.ids.map((i) => (i === null ? NONE : i)).join(','), 0]);
+// the face's page table holds every control in its slot (tools/gen.mjs, emitPanelRows): the boundaries do not move with
+// the values, and a control hidden at the values the probe reads (the defaults) is served as a blank slot (omx-plugins#191)
+const everyShown = { ...desc, controls: desc.controls.map((c) => ({ ...c, visible: null })) };
+const hidden = new Set(desc.controls.filter((c) => !isVisible(c)).map((c) => c.param));
+const slot = (i) => (i === null || hidden.has(i) ? NONE : i);
+const pages = pagesOf(everyShown, d).map((g, k) => [k, k, g.sectionName, g.pageName, g.ids.map(slot).join(','), 0]);
 const servedPages = of('page').map(([k, id, section, name, ids, preset]) => [Number(k), Number(id), section, name, ids, Number(preset)]);
 check(same(servedPages, pages), `remote-controls: the ${pages.length} page(s) of the declaration's sections`, JSON.stringify(servedPages));
 
