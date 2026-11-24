@@ -576,6 +576,19 @@ export function meterLabel(id) {
  * of the kernel's, two for a level the face measures, left and right), label, display range and unit (a
  * readout's, else the declared range in dBFS), and the output symbol of each channel: the id for one channel,
  * `<id>_<channel>` from 0 for more, the names omx-clap derives from clap.meters/1 (doc/reference.md). */
+/** A declared meter's words, the one rule the face rows and the descriptor read (docs/meters.md, omx-contract's
+ * descriptorMeter): `reads`, a reading of the kernel's (a gain reduction, or a level the kernel reads); `held`, unless
+ * the declaration says `held: false`; `clip`, a clip word, on a held level the face measures unless it says
+ * `clip: false`; `measurement`, what it measures where the plugin knows it: a gain reduction its own, a level the face
+ * measures a sample peak, and none for a level the kernel reads (its readout does not say what its detector measures). */
+export function meterWords(m) {
+  const reads = m.kind === 'gain_reduction' || 'read' in m;
+  const held = m.held !== false;
+  const clip = held && !reads && m.clip !== false;
+  const measurement = m.kind === 'gain_reduction' ? 'gain-reduction' : reads ? undefined : 'peak';
+  return { reads, held, clip, measurement };
+}
+
 export function metersOf(d) {
   const readouts = d.meterReadouts ?? (d.meters ?? []).map(() => null);
   return (d.meters ?? []).map((m, k) => {
@@ -583,7 +596,8 @@ export function metersOf(d) {
     const channels = m.kind === 'gain_reduction' || 'read' in m ? 1 : 2;
     const range = r ? { min: r.min, max: r.max, unit: r.unit, scale: r.scale } : { min: m.min, max: m.max, unit: 'dBFS', scale: 'linear' };
     const symbols = channels === 1 ? [m.id] : Array.from({ length: channels }, (_, c) => `${m.id}_${c}`);
-    return { id: m.id, kind: m.kind, channels, label: meterLabel(m.id), ...range, symbols, readout: r };
+    const { held, clip, measurement } = meterWords(m);
+    return { id: m.id, kind: m.kind, channels, label: meterLabel(m.id), ...range, symbols, readout: r, held, clip, measurement };
   });
 }
 
@@ -1132,7 +1146,7 @@ export function meterRows(d, face) {
       if (!(Number.isFinite(m.min) && Number.isFinite(m.max) && m.min < m.max)) throw new Error(`${where}: the range ${m.min}..${m.max} is not a range`);
       row = { channels: 2, min: m.min, max: m.max, core: '', ref: '' };
     }
-    const held = m.held !== false, clip = held && !reads && m.clip !== false;
+    const { held, clip } = meterWords(m);
     const out = {
       meterIndex: k, meterName: m.id, meterKind: METER_KINDS[m.kind], meterFaceKind: FACE_METER_KINDS[m.kind], meterReadCore: row.core, meterReadRef: row.ref,
       meterChannels: row.channels, meterOffset: offset, meterRight: offset + 1, meterMin: cdouble(row.min), meterMax: cdouble(row.max),

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
   "requires": {
-    "omx-contract-schema": ">= 3.9.0"
+    "omx-contract-schema": ">= 3.11.0"
   },
   "origin": "authored",
   "plugin": {
@@ -265,6 +265,8 @@
       "min": -24,
       "max": 0,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#readouts[gainReductionDb]",
@@ -282,6 +284,9 @@
       "min": -60,
       "max": 6,
       "scale": "linear",
+      "measurement": "peak",
+      "held": true,
+      "clip": true,
       "source": {
         "impl": "plugins/omx-deesser/omx_deesser_clap.c#clap_entry"
       }
@@ -296,6 +301,9 @@
       "min": -60,
       "max": 6,
       "scale": "linear",
+      "measurement": "peak",
+      "held": true,
+      "clip": true,
       "source": {
         "impl": "plugins/omx-deesser/omx_deesser_clap.c#clap_entry"
       }

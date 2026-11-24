@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
   "requires": {
-    "omx-contract-schema": ">= 3.9.0"
+    "omx-contract-schema": ">= 3.11.0"
   },
   "origin": "authored",
   "plugin": {
@@ -1842,6 +1842,8 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band1GainDb]",
@@ -1860,6 +1862,8 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band2GainDb]",
@@ -1878,6 +1882,8 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band3GainDb]",
@@ -1896,6 +1902,8 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band4GainDb]",
@@ -1914,6 +1922,8 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band5GainDb]",
@@ -1932,6 +1942,8 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band6GainDb]",

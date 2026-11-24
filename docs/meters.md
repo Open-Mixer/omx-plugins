@@ -15,7 +15,7 @@ the host's idle rate through `get_values()`.
 The LV2 face writes the same values to output control ports, one per channel, after the `latency` port: each
 port's symbol is the one omx-clap derives from the CLAP meter's name (the meter's `id` for one channel,
 `<id>_<channel>` from 0 for more), its range the meter's display range. So a host reads `band2Gr` by the same
-symbol from either face. The plugin's descriptor lists the meters (omx-contract's `meters` word, schema 3.9.0):
+symbol from either face. The plugin's descriptor lists the meters (omx-contract's `meters` word, schema 3.9.0, with its `held`, `clip` and `measurement` words, 3.11.0):
 the id, the symbol, the kind, the channels, the range, and the kernel readout each publishes, linked as
 `data/kernels/<kernel>.json#readouts[<name>]`. A console learns from the descriptor which readouts a linked
 plugin carries. A meter is never also a read-only parameter: CLAP has a word for meters, and omx-clap

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
   "requires": {
-    "omx-contract-schema": ">= 3.9.0"
+    "omx-contract-schema": ">= 3.11.0"
   },
   "origin": "authored",
   "plugin": {
@@ -1016,6 +1016,8 @@
       "min": -60,
       "max": 0,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#readouts[band1GainReductionDb]",
@@ -1034,6 +1036,8 @@
       "min": -60,
       "max": 0,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#readouts[band2GainReductionDb]",
@@ -1052,6 +1056,8 @@
       "min": -60,
       "max": 0,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#readouts[band3GainReductionDb]",
@@ -1070,6 +1076,8 @@
       "min": -60,
       "max": 0,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#readouts[band4GainReductionDb]",
@@ -1088,6 +1096,8 @@
       "min": -60,
       "max": 0,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#readouts[band5GainReductionDb]",
