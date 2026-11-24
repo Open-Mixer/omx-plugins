@@ -92,6 +92,11 @@ const PAIRS = {
   },
   'designation-meaning': {
     lv2: (k, row) => {
+      if (k === 'lv2:designation') {
+        // the field itself: the OpenMixer meaning urns, each declared with its standard meaning (omx-plugins#12)
+        const { item } = ownerItem(...PLUGIN_DB_LV2.slice(0, 2), 'LV2_OPENMIXER_MEANING_IDS', PLUGIN_DB_LV2[2]);
+        return Object.fromEntries((item.oneOf ?? []).map((w) => [w['x-uri'], w.const]));
+      }
       const { item } = ownerItem(...PLUGIN_DB_LV2.slice(0, 2), 'LV2_DESIGNATION_MEANINGS', PLUGIN_DB_LV2[2]);
       return Object.fromEntries(wordsFrom(item, row.term ?? '').map((w) => [k, w.const]));
     },
@@ -212,5 +217,11 @@ export function lv2UnitNames() {
   return Object.fromEntries(Object.entries(lookupValues('lv2', UNIT_WORD)).map(([key, id]) => [id, key.split(/[:#]/).pop()]));
 }
 
-/** The LV2 designation of a meaning, the LV2 table read backwards (gain -> param:gain), or undefined. */
-export const lv2Designation = (meaning) => (meaning ? outboundValue('lv2', MEANING_WORD, meaning) : undefined);
+/** The LV2 designation of a meaning as a TTL writes it, the LV2 table read backwards: param:gain for gain; for a meaning
+ * LV2's param: vocabulary has no term for, the urn plugin-db declares for it (LV2_OPENMIXER_MEANING_IDS, the pairs of
+ * the lv2:designation row: <urn:openmixer:meaning#knee> for knee; omx-plugins#12); none for a meaning no row maps. */
+export function lv2Designation(meaning) {
+  const key = meaning ? outboundValue('lv2', MEANING_WORD, meaning) : undefined;
+  if (!key) return undefined;
+  return key.startsWith('urn:') ? `<${key}>` : key;
+}

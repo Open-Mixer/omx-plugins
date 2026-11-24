@@ -24,6 +24,9 @@
  *   8. the tables are x-kind map items whose unit and meaning rows carry no values: their pairs are the owners'
  *      (sorting rows V19, M5; omx-plugins#182): the CLAP unit row's are omx-clap's OMX_PARAM_CONTRACT_UNIT_IDS, whole,
  *      and a declared unit reaches the same LV2 unit by its symbol or its PARAM_UNITS id (% and percent: units:pc).
+ *   9. a meaning LV2's param: vocabulary has no term for (knee, makeup) is designated by the urn plugin-db declares for
+ *      it (LV2_OPENMIXER_MEANING_IDS, read through plugin-hostd's lv2:designation row; omx-plugins#12), on a copy of the
+ *      contract directory holding both, and the TTL defines each such Property; plugin-db's mapping absent is refused.
  *
  * Its arms, on a copy of the contract directory whose plugin-hostd/lv2 domain (PLUGIN_HOSTD_LV2_MAP) or plugin-db's lv2
  * domain is edited: a meaning's row removed loses its designations, a unit's row removed loses its unit, two pairs
@@ -250,6 +253,55 @@ rmSync(scratch, { recursive: true, force: true });
   }
   r7 = planted ? call({ OMX_INSTALLED_CONTRACTDIR: tmp }) : { status: 1, stdout: '' };
   check('arm: the lv2 domain without dBu, dBu has no LV2 unit (the read is plugin-db\'s)', r7.status === 0 ? JSON.parse(r7.stdout).dbu : 'not planted', 'undefined');
+  rmSync(tmp, { recursive: true, force: true });
+}
+
+// 9. the meanings LV2's param: vocabulary has no term for (omx-plugins#12): their LV2 spelling is plugin-db's, declared
+// with its standard meaning (LV2_OPENMIXER_MEANING_IDS beside LV2_OPENMIXER_UNIT_IDS: x-uri, the exact urn an LV2 file
+// writes, and the meaning it is), read through plugin-hostd's lv2:designation row as units:unit reads the unit urns. On a
+// copy of the contract directory holding both: knee and makeup are designated by their declared urn, gain keeps
+// param:gain, a meaning the mapping does not declare gets none; omx-comp's TTL designates kneeDb and makeupDb by them and
+// defines each Property it names. The arm: the row switched on, plugin-db's mapping absent, refused by name.
+{
+  const FTS = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs')), GEN = JSON.stringify(join(ROOT, 'tools', 'gen.mjs'));
+  const COMP = JSON.stringify(join(ROOT, 'plugins', 'omx-comp'));
+  const DECLARED = { knee: 'urn:openmixer:meaning#knee', makeup: 'urn:openmixer:meaning#makeup' };
+  const tmp = join(ROOT, 'build', 'tmp', 'format-tables-meaning');
+  rmSync(tmp, { recursive: true, force: true });
+  const plant = (withMapping) => {
+    const dir = join(tmp, withMapping ? 'declared' : 'no-mapping');
+    cpSync(installedContractDir(), dir, { recursive: true });
+    const edit = (domain, fn) => {
+      const file = join(dir, domain, `${domain.split('/').pop()}.json`), doc = JSON.parse(readFileSync(file, 'utf8'));
+      fn(doc.components.schemas);
+      writeFileSync(file, JSON.stringify(doc));
+    };
+    edit(LV2_MAP, (s) => {
+      const row = s.PLUGIN_HOSTD_LV2_MAP.oneOf.find((x) => x.const === 'lv2:designation');
+      delete row['x-extension'];
+      row['x-word'] = { word: 'controls[].meaning', transform: 'designation-meaning' };
+    });
+    if (withMapping) {
+      edit('lv2', (s) => {
+        s.LV2_OPENMIXER_MEANING_IDS = { description: 'F1 for the OpenMixer meaning spellings: an LV2 file writes urn:openmixer:meaning#<name> as the designation of a control whose standard meaning LV2\'s param: vocabulary has no term for.', 'x-since': '1.0.0', 'x-kind': 'words', oneOf: Object.entries(DECLARED).map(([m, uri], i) => ({ const: m, title: m.toLowerCase(), description: `${uri} is the standard meaning ${m}`, 'x-code': i, 'x-uri': uri })) };
+      });
+    }
+    return dir;
+  };
+  const call = (dir) => spawnSync(process.execPath, ['--input-type=module', '-e', `
+    import { lv2Designation } from ${FTS};
+    import { loadDecl, emitPluginTtl } from ${GEN};
+    const ttl = emitPluginTtl(loadDecl(${COMP}));
+    console.log(JSON.stringify({ d: ['knee', 'makeup', 'gain', 'lowCut'].map((m) => String(lv2Designation(m))),
+      ports: [...ttl.matchAll(/lv2:symbol "(kneeDb|makeupDb)"[^\\]]*?lv2:designation (\\S+)/g)].map((x) => x[1] + ' ' + x[2]),
+      defined: [...ttl.matchAll(/^<(urn:openmixer:meaning#[^>]+)>\\n    a <http:\\/\\/www\\.w3\\.org\\/1999\\/02\\/22-rdf-syntax-ns#Property>/gm)].map((x) => x[1]) }));`], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, OMX_INSTALLED_CONTRACTDIR: dir } });
+  let r9 = call(plant(true));
+  const g9 = r9.status === 0 ? JSON.parse(r9.stdout) : { error: r9.stderr.trim().split('\n').find((l) => /^\w*Error: /.test(l)) };
+  check('#12: knee and makeup are designated by the urn plugin-db declares for them; gain keeps param:gain; lowCut, undeclared, none', g9.d ?? g9.error, ['<urn:openmixer:meaning#knee>', '<urn:openmixer:meaning#makeup>', 'param:gain', 'undefined']);
+  check("#12: omx-comp's TTL designates kneeDb and makeupDb by their declared urn", g9.ports ?? g9.error, ['kneeDb <urn:openmixer:meaning#knee>', 'makeupDb <urn:openmixer:meaning#makeup>']);
+  check("#12: omx-comp's TTL defines each meaning Property it designates", g9.defined ?? g9.error, ['urn:openmixer:meaning#knee', 'urn:openmixer:meaning#makeup']);
+  r9 = call(plant(false));
+  check("arm: the lv2:designation row reading meanings, plugin-db's LV2_OPENMIXER_MEANING_IDS absent, refused by name", refused(r9, /holds no LV2_OPENMIXER_MEANING_IDS \(plugin-db-contract/), true);
   rmSync(tmp, { recursive: true, force: true });
 }
 

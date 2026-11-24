@@ -114,6 +114,7 @@ publishes (row M5, plugin-hostd `docs/formats.md`, "Lookup values the owners pub
 | `unit-id` | LV2 `units:<unit>` | plugin-db's domain `lv2`, the word of `LV2_UNIT_IDS` whose `x-from` names the row's `x-term` |
 | `unit-id` | LV2 `units:unit` | plugin-db's domain `lv2`, every word of `LV2_OPENMIXER_UNIT_IDS` (`x-uri` -> id) |
 | `designation-meaning` | LV2 `param:<term>`, `lv2:enabled` | plugin-db's domain `lv2`, the word of `LV2_DESIGNATION_MEANINGS` whose `x-from` names the row's `x-term` |
+| `designation-meaning` | LV2 `lv2:designation` | plugin-db's domain `lv2`, every word of `LV2_OPENMIXER_MEANING_IDS` (`x-uri` -> meaning) |
 
 The row whose pair maps a source value to the word's value names what the face writes. A unit's value is a
 `PARAM_UNITS` id (`percent`), and a declaration states the id too: `%` is its `x-symbol`, what a person reads, and no
@@ -127,8 +128,11 @@ no pair for and a value two rows map are each refused by name. No transform is c
   `dBFS`); the OpenMixer units, `dBFS`, `dBu`, `LUFS`, `dBPerOct` and `ratio` (`urn:openmixer:unit#ratio`, gap 4), are
   the `units:unit` row's pairs and are defined in the plugin's TTL.
 - An LV2 port's `lv2:designation` is the LV2 row mapping its control's `meaning`: 186 ports carry a `param:` term
-  (gain 93, frequency 63, wetDryRatio 11, release 5, threshold 4, ratio 4, attack 4, hold 1, delay 1). A meaning with
-  no LV2 term is written nowhere.
+  (gain 93, frequency 63, wetDryRatio 11, release 5, threshold 4, ratio 4, attack 4, hold 1, delay 1). A meaning
+  LV2's `param:` vocabulary has no term for (knee, makeup, lowCut, q, ...) is written as the urn plugin-db declares for
+  it (`<urn:openmixer:meaning#knee>`), the `lv2:designation` row's pairs, and the plugin's TTL defines each such
+  Property (omx-plugins#12). Until plugin-db declares `LV2_OPENMIXER_MEANING_IDS` and plugin-hostd's `lv2:designation`
+  row reads it, that row is an extension with no pairs and such a meaning is written nowhere.
 - A CLAP parameter's `module` is its control's `group`, the labels joined by `/` (the inverse of plugin-hostd's
   `group-path`); a plugin with no descriptor writes `""`.
 - param-contract's unit tokens (`tools/param-contract.mjs`) are the LV2 units a face writes, their values those
