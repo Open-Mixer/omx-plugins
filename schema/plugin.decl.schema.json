@@ -539,6 +539,12 @@
           "title": "Default reference",
           "description": "Where a fresh plugin comes up when the export names no default of its own: for a list, the scalar export naming the value; for a travel, a number inside a sheet (NAME.field, as EQ_BAND_DEFAULTS.gainDb)."
         },
+        "meaning": {
+          "type": "string",
+          "pattern": "^[a-z][A-Za-z]*$",
+          "title": "Meaning",
+          "description": "The control's ROLE, a word of omx-contract's PARAM_MEANINGS (the installed schema's $defs.meaning; docs/descriptors.md \"Meanings\": declare, don't infer), never unknown: the descriptor's `meaning`. A parameter a panel role binds states none, its meaning is its role's (contract/role-meanings.json); tools/descriptor.mjs refuses a control with no meaning and a word the schema does not list."
+        },
         "scale": {
           "enum": [
             "linear",
@@ -958,7 +964,9 @@
             "range",
             "drive",
             "ceiling",
-            "softness"
+            "softness",
+            "speed",
+            "slope"
           ]
         }
       }
