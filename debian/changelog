@@ -10,7 +10,9 @@ omx-plugins (0.20.0) unstable; urgency=medium
     lufs, dbPerOct, dbPerS, dbtp, lu), and a slope is served: dB/oct writes the
     sheet's own token dbPerOct (260) in the param contract, the token a host
     fingerprints, so the balancer, comp, eq8, eq16, eq32 and strip contracts
-    each move to their next version (clap#163, omx-plugins#213).
+    each move on (clap#163, omx-plugins#213); each of the six gained two
+    entries in tools/param-contract-versions.json, the first (lowercased
+    dbperoct) never served, kept because the list is append-only.
   * No shipped pins: the pins.d route (plugin-hostd#42) is retired, and
     tools/gen-pins.sh, the packaged
     /usr/share/plugin-hostd/pins.d/omx-plugins.pins, tools/pins-check.sh and
