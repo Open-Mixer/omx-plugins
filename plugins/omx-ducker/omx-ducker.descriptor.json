@@ -58,6 +58,7 @@
       "group": [
         "Duck"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
@@ -107,6 +108,7 @@
       "group": [
         "Timing"
       ],
+      "meaning": "hold",
       "automatable": true,
       "source": {
         "from": {
@@ -206,6 +208,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "lowCut",
       "automatable": true,
       "source": {
         "from": {
@@ -230,6 +233,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "highCut",
       "automatable": true,
       "source": {
         "from": {
@@ -247,6 +251,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "listen",
       "automatable": true,
       "source": {
         "from": {

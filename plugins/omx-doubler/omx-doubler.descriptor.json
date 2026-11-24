@@ -33,6 +33,7 @@
       "group": [
         "Voices"
       ],
+      "meaning": "number",
       "automatable": true,
       "source": {
         "from": {
@@ -57,6 +58,7 @@
       "group": [
         "Voices"
       ],
+      "meaning": "delay",
       "automatable": true,
       "source": {
         "from": {
@@ -81,6 +83,7 @@
       "group": [
         "Voices"
       ],
+      "meaning": "shift",
       "automatable": true,
       "source": {
         "from": {

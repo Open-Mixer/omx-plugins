@@ -58,6 +58,7 @@
       "group": [
         "Phaser"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -107,6 +108,7 @@
       "group": [
         "Phaser"
       ],
+      "meaning": "number",
       "automatable": true,
       "source": {
         "from": {

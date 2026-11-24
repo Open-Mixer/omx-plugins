@@ -1625,8 +1625,9 @@ static const struct omx_panel_control_row OMX_STRIP_PANEL_CONTROLS[] = {
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_STRIP_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Filters", "Filters", { 4u, 5u, 6u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 1u, 4u, 5u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Input", "Input", { 0u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Filters", "Filters", { 2u, 3u, 6u, 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Gate", "Gate: Gate - Gate Knee End", { 9u, 10u, 11u, 12u, 13u, 14u, 15u, 16u } },
   { "Gate", "Gate: Gate Hold - Gate Hysteresis", { 17u, 18u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "EQ", "EQ: EQ - EQ 1", { 19u, 51u, 20u, 21u, 22u, 23u, 24u, OMX_CLAP_PANEL_INVALID_ID } },
@@ -1665,7 +1666,7 @@ static const struct omx_panel_page_row OMX_STRIP_PANEL_PAGES[] = {
   { "Comp", "Comp: Comp Mix - Comp Detector Oversampling", { 48u, 49u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Order", "Order", { 50u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_STRIP_PANEL_PAGE_COUNT 39u
+#define OMX_STRIP_PANEL_PAGE_COUNT 40u
 static const struct omx_panel_rows OMX_STRIP_PANEL = {
   OMX_STRIP_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
   OMX_STRIP_PANEL_SECTIONS, 6u,

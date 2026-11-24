@@ -213,6 +213,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -245,6 +246,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
@@ -274,6 +276,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -303,6 +306,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
@@ -327,6 +331,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "lowCut",
       "automatable": true,
       "source": {
         "from": {
@@ -351,6 +356,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "highCut",
       "automatable": true,
       "source": {
         "from": {
@@ -375,6 +381,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "tone",
       "automatable": true,
       "source": {
         "from": {
@@ -392,6 +399,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "listen",
       "automatable": true,
       "source": {
         "from": {
@@ -416,6 +424,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "hold",
       "automatable": true,
       "source": {
         "from": {
@@ -451,6 +460,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "link",
       "automatable": true,
       "source": {
         "from": {
@@ -468,6 +478,7 @@
       "group": [
         "Duck"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -492,6 +503,7 @@
       "group": [
         "Duck"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
@@ -524,6 +536,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {

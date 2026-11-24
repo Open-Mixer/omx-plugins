@@ -147,6 +147,7 @@
         lv2:portProperty lv2:integer ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation param:cutoffFrequency ;
         pg:group <urn:openmixer:multiband#split>
     ] ,
     [
@@ -160,6 +161,7 @@
         lv2:portProperty lv2:integer ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation param:cutoffFrequency ;
         pg:group <urn:openmixer:multiband#split>
     ] ,
     [
@@ -173,6 +175,7 @@
         lv2:portProperty lv2:integer ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation param:cutoffFrequency ;
         pg:group <urn:openmixer:multiband#split>
     ] ,
     [
@@ -186,6 +189,7 @@
         lv2:portProperty lv2:integer ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation param:cutoffFrequency ;
         pg:group <urn:openmixer:multiband#split>
     ] ,
     [
@@ -209,6 +213,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:multiband#band2>
     ] ,
     [
@@ -220,6 +225,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:multiband#band3>
     ] ,
     [
@@ -231,6 +237,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:multiband#band4>
     ] ,
     [
@@ -242,6 +249,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:multiband#band5>
     ] ,
     [
@@ -265,6 +273,7 @@
         lv2:minimum 1 ;
         lv2:maximum 20 ;
         units:unit <urn:openmixer:unit#ratio> ;
+        lv2:designation param:ratio ;
         pg:group <urn:openmixer:multiband#band2>
     ] ,
     [
@@ -276,6 +285,7 @@
         lv2:minimum 1 ;
         lv2:maximum 20 ;
         units:unit <urn:openmixer:unit#ratio> ;
+        lv2:designation param:ratio ;
         pg:group <urn:openmixer:multiband#band3>
     ] ,
     [
@@ -287,6 +297,7 @@
         lv2:minimum 1 ;
         lv2:maximum 20 ;
         units:unit <urn:openmixer:unit#ratio> ;
+        lv2:designation param:ratio ;
         pg:group <urn:openmixer:multiband#band4>
     ] ,
     [
@@ -298,6 +309,7 @@
         lv2:minimum 1 ;
         lv2:maximum 20 ;
         units:unit <urn:openmixer:unit#ratio> ;
+        lv2:designation param:ratio ;
         pg:group <urn:openmixer:multiband#band5>
     ] ,
     [
@@ -321,6 +333,7 @@
         lv2:minimum 0.1 ;
         lv2:maximum 200 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:multiband#band2>
     ] ,
     [
@@ -332,6 +345,7 @@
         lv2:minimum 0.1 ;
         lv2:maximum 200 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:multiband#band3>
     ] ,
     [
@@ -343,6 +357,7 @@
         lv2:minimum 0.1 ;
         lv2:maximum 200 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:multiband#band4>
     ] ,
     [
@@ -354,6 +369,7 @@
         lv2:minimum 0.1 ;
         lv2:maximum 200 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:multiband#band5>
     ] ,
     [
@@ -379,6 +395,7 @@
         lv2:maximum 2000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:multiband#band2>
     ] ,
     [
@@ -391,6 +408,7 @@
         lv2:maximum 2000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:multiband#band3>
     ] ,
     [
@@ -403,6 +421,7 @@
         lv2:maximum 2000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:multiband#band4>
     ] ,
     [
@@ -415,6 +434,7 @@
         lv2:maximum 2000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:multiband#band5>
     ] ,
     [
@@ -536,6 +556,7 @@
         lv2:minimum 0 ;
         lv2:maximum 1 ;
         lv2:portProperty lv2:toggled ;
+        lv2:designation param:bypass ;
         pg:group <urn:openmixer:multiband#band1>
     ] ,
     [
@@ -547,6 +568,7 @@
         lv2:minimum 0 ;
         lv2:maximum 1 ;
         lv2:portProperty lv2:toggled ;
+        lv2:designation param:bypass ;
         pg:group <urn:openmixer:multiband#band2>
     ] ,
     [
@@ -558,6 +580,7 @@
         lv2:minimum 0 ;
         lv2:maximum 1 ;
         lv2:portProperty lv2:toggled ;
+        lv2:designation param:bypass ;
         pg:group <urn:openmixer:multiband#band3>
     ] ,
     [
@@ -569,6 +592,7 @@
         lv2:minimum 0 ;
         lv2:maximum 1 ;
         lv2:portProperty lv2:toggled ;
+        lv2:designation param:bypass ;
         pg:group <urn:openmixer:multiband#band4>
     ] ,
     [
@@ -580,6 +604,7 @@
         lv2:minimum 0 ;
         lv2:maximum 1 ;
         lv2:portProperty lv2:toggled ;
+        lv2:designation param:bypass ;
         pg:group <urn:openmixer:multiband#band5>
     ] ,
     [

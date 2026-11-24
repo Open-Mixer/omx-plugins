@@ -74,6 +74,15 @@ const fail = (what) => {
   fails++;
 };
 const expect = (cond, what) => (cond ? pass(what) : fail(what));
+/** The roles of the test chain's parameters (eq, gate, comp), by the control each reads (its symbol after the element id
+ * and a band number, lower case): the answers a person gives the REVIEW marks. */
+const CHAIN_MEANINGS = {
+  hpfon: 'enabled', hpffreq: 'lowCut', hpfslope: 'slope', lpfon: 'enabled', lpffreq: 'highCut', lpfslope: 'slope',
+  bandtype: 'type', freq: 'frequency', gain: 'gain', q: 'q', bandon: 'enabled',
+  thresholddb: 'threshold', rangedb: 'range', kneestartdb: 'knee', kneeenddb: 'knee', kneedb: 'knee', attackms: 'attack', holdms: 'hold',
+  releasems: 'release', hysteresisdb: 'hysteresis', ratio: 'ratio', hphz: 'lowCut', lphz: 'highCut', makeupdb: 'makeup',
+  mixpct: 'wetDryRatio', kind: 'type', detectoroversampling: 'mode', detectortopology: 'type', releasemode: 'mode',
+};
 
 /** A copy of this tree's files (tracked and new, never ignored) at `dst`. */
 function copyTree(dst) {
@@ -187,7 +196,7 @@ async function main() {
     `the draft has one parameter per resolve() argument, named by the contract (${draft.decl?.params.map((p) => `${p.symbol}:${p.name}`).join(' ')})`);
   expect(draft.decl?.params.every((p) => p.ref && !('min' in p) && !('def' in p)), 'the draft is by reference only');
   const marks = reviewMarks(draft.decl);
-  expect(marks.join(' ') === '/description /clap/features/1 /lv2/class /params/3/values/0 /params/3/values/1 /console/placement/group',
+  expect(marks.join(' ') === '/description /clap/features/1 /lv2/class /params/0/meaning /params/1/meaning /params/2/meaning /params/3/meaning /params/3/values/0 /params/3/values/1 /console/placement/group',
     `the draft marks every design choice REVIEW (${marks.join(' ')})`);
   const unsettled = await planPlugin(draft.decl, src, { root: tree, recipe });
   expect(!unsettled.ok && unsettled.refusals.length === marks.length, `a draft with REVIEW marks is refused, each named (${unsettled.refusals.map((r) => r.field).join(' ')})`);
@@ -196,6 +205,8 @@ async function main() {
   settled.clap.features[1] = 'wobble';
   settled.lv2.class = 'lv2:ModulatorPlugin';
   settled.params[3].values = ['Wobble', 'Pan'];
+  // each parameter's role, a person's reading (the draft guesses none)
+  ['rate', 'depth', 'wetDryRatio', 'mode'].forEach((m, i) => { settled.params[i].meaning = m; });
   settled.console.placement = { group: 'plugins' };
   const answers = settled; // what section 5 mutates
   const plan = await planPlugin(settled, src, { root: tree, recipe });
@@ -866,6 +877,8 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     hold(comp, ['keySource', 'keyHpHz', 'keyLpHz', 'keyTiltDb', 'keyListen', 'holdMs', 'detectLink', 'duck', 'rangeDb']);
     // the detector topology's set carries no labels in the contract: the person names them, as omx-comp does
     for (const p of comp.params.filter((x) => x.ref === 'DETECTOR_TOPOLOGY')) p.values = ['Feedforward', 'Feedback'];
+    // each parameter's role, a person's reading (the draft marks every one REVIEW), by the contract control it reads
+    for (const el of settled.chain) for (const p of el.params) p.meaning = CHAIN_MEANINGS[p.symbol.slice(el.id.length).replace(/^\d+/, '').toLowerCase()] ?? p.meaning;
     settled.order = 'permutable';
     settled.panel = defaultPanel(settled); // the settled elements' parameters, one section each
     const plan = await planChain(settled, csrc, { root: ct, recipe });

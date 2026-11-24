@@ -44,6 +44,7 @@
       "group": [
         "Split"
       ],
+      "meaning": "number",
       "automatable": true,
       "source": {
         "from": {
@@ -68,6 +69,7 @@
       "group": [
         "Split"
       ],
+      "meaning": "cutoffFrequency",
       "automatable": true,
       "source": {
         "from": {
@@ -92,6 +94,7 @@
       "group": [
         "Split"
       ],
+      "meaning": "cutoffFrequency",
       "automatable": true,
       "source": {
         "from": {
@@ -116,6 +119,7 @@
       "group": [
         "Split"
       ],
+      "meaning": "cutoffFrequency",
       "automatable": true,
       "source": {
         "from": {
@@ -140,6 +144,7 @@
       "group": [
         "Split"
       ],
+      "meaning": "cutoffFrequency",
       "automatable": true,
       "source": {
         "from": {
@@ -189,6 +194,7 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
@@ -213,6 +219,7 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
@@ -237,6 +244,7 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
@@ -261,6 +269,7 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
@@ -310,6 +319,7 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
@@ -334,6 +344,7 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
@@ -358,6 +369,7 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
@@ -382,6 +394,7 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
@@ -431,6 +444,7 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
@@ -455,6 +469,7 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
@@ -479,6 +494,7 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
@@ -503,6 +519,7 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
@@ -552,6 +569,7 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
@@ -576,6 +594,7 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
@@ -600,6 +619,7 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
@@ -624,6 +644,7 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
@@ -673,6 +694,7 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "makeup",
       "automatable": true,
       "source": {
         "from": {
@@ -697,6 +719,7 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "makeup",
       "automatable": true,
       "source": {
         "from": {
@@ -721,6 +744,7 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "makeup",
       "automatable": true,
       "source": {
         "from": {
@@ -745,6 +769,7 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "makeup",
       "automatable": true,
       "source": {
         "from": {
@@ -762,6 +787,7 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "solo",
       "automatable": true,
       "source": {
         "from": {
@@ -779,6 +805,7 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "solo",
       "automatable": true,
       "source": {
         "from": {
@@ -796,6 +823,7 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "solo",
       "automatable": true,
       "source": {
         "from": {
@@ -813,6 +841,7 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "solo",
       "automatable": true,
       "source": {
         "from": {
@@ -830,6 +859,7 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "solo",
       "automatable": true,
       "source": {
         "from": {
@@ -847,6 +877,7 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "bypass",
       "automatable": true,
       "source": {
         "from": {
@@ -864,6 +895,7 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "bypass",
       "automatable": true,
       "source": {
         "from": {
@@ -881,6 +913,7 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "bypass",
       "automatable": true,
       "source": {
         "from": {
@@ -898,6 +931,7 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "bypass",
       "automatable": true,
       "source": {
         "from": {
@@ -915,6 +949,7 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "bypass",
       "automatable": true,
       "source": {
         "from": {

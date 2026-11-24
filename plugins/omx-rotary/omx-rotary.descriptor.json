@@ -34,6 +34,7 @@
       "group": [
         "Rotary"
       ],
+      "meaning": "rate",
       "automatable": true,
       "source": {
         "from": {
@@ -58,6 +59,7 @@
       "group": [
         "Rotary"
       ],
+      "meaning": "rate",
       "automatable": true,
       "source": {
         "from": {
@@ -82,6 +84,7 @@
       "group": [
         "Rotary"
       ],
+      "meaning": "rate",
       "automatable": true,
       "source": {
         "from": {
@@ -106,6 +109,7 @@
       "group": [
         "Rotary"
       ],
+      "meaning": "rate",
       "automatable": true,
       "source": {
         "from": {
@@ -130,6 +134,7 @@
       "group": [
         "Rotary"
       ],
+      "meaning": "acceleration",
       "automatable": true,
       "source": {
         "from": {
@@ -154,6 +159,7 @@
       "group": [
         "Rotary"
       ],
+      "meaning": "balance",
       "automatable": true,
       "source": {
         "from": {
@@ -211,6 +217,7 @@
       "group": [
         "Rotary"
       ],
+      "meaning": "rate",
       "automatable": true,
       "source": {
         "from": {

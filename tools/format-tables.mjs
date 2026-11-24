@@ -214,3 +214,18 @@ export function lv2UnitNames() {
 
 /** The LV2 designation of a meaning, the LV2 table read backwards (gain -> param:gain), or undefined. */
 export const lv2Designation = (meaning) => (meaning ? outboundValue('lv2', MEANING_WORD, meaning) : undefined);
+
+/** The designation the face's own enable port carries: every LV2 face's first port (contract/plugin-face.json
+ * enabledLv2Index), the plugin's one lv2:enabled, 1 processing and 0 bypassed. */
+export const FACE_ENABLED_DESIGNATION = 'lv2:enabled';
+
+/**
+ * The LV2 designation a declared control's port carries: its meaning's (lv2Designation), except lv2:enabled. LV2 gives a
+ * plugin one enabled port, a host bypasses the plugin through it, and the face's own port holds it; a declared control
+ * whose meaning is `enabled` turns a part of the plugin on (a band, a filter, a chain's stage), so it is designated by
+ * nothing, or a host would bypass through a band's switch (omx-plugins#208).
+ */
+export const declaredDesignation = (meaning) => {
+  const term = lv2Designation(meaning);
+  return term === FACE_ENABLED_DESIGNATION ? undefined : term;
+};

@@ -94,6 +94,7 @@
         lv2:minimum 5 ;
         lv2:maximum 40 ;
         units:unit units:ms ;
+        lv2:designation param:delay ;
         pg:group <urn:openmixer:doubler#voices>
     ] ,
     [

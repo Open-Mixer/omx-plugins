@@ -108,6 +108,7 @@
       "group": [
         "Chorus"
       ],
+      "meaning": "number",
       "automatable": true,
       "source": {
         "from": {

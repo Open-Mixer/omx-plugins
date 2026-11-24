@@ -36,7 +36,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } fr
 import { join } from 'node:path';
 import { loadDecl, pluginDirs, ROOT } from '../gen.mjs';
 import { descriptorFile } from '../descriptor.mjs';
-import { lv2Designation, lv2UnitNames, tablesDir } from '../format-tables.mjs';
+import { FACE_ENABLED_DESIGNATION, declaredDesignation, lv2Designation, lv2UnitNames, tablesDir } from '../format-tables.mjs';
 import { installedContractDir } from '../omx-contract.mjs';
 
 let n = 0, bad = 0;
@@ -81,11 +81,15 @@ function designations(designationOf) {
 }
 
 // 2. the designations
-const { got, want } = designations(lv2Designation);
+const { got, want } = designations(declaredDesignation);
 check('every described control whose meaning the LV2 table maps is designated by it, and no other', got, want);
+// LV2 gives a plugin one enabled port and the face's own holds it: a declared control is never lv2:enabled, though the
+// LV2 table maps enabled to it and controls state enabled (a band's switch); with lv2Designation the same read finds them
+check('no declared control is designated lv2:enabled, the face\'s own port is', got.filter((g) => g.endsWith(` ${FACE_ENABLED_DESIGNATION}`)), []);
+check('arm: read through the LV2 table alone, the controls that state enabled would be lv2:enabled', lv2Designation('enabled'), FACE_ENABLED_DESIGNATION);
 const byTerm = {};
 for (const g of got) byTerm[g.split(' ')[1]] = (byTerm[g.split(' ')[1]] ?? 0) + 1;
-check('the designations of this release, by term', Object.fromEntries(Object.entries(byTerm).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))), { 'param:gain': 93, 'param:frequency': 63, 'param:wetDryRatio': 12, 'param:release': 6, 'param:attack': 5, 'param:ratio': 5, 'param:threshold': 5, 'param:cutoffFrequency': 1, 'param:delay': 1, 'param:hold': 1, 'param:resonance': 1 });
+check('the designations of this release, by term', Object.fromEntries(Object.entries(byTerm).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))), { 'param:gain': 138, 'param:frequency': 101, 'param:threshold': 27, 'param:release': 26, 'param:attack': 20, 'param:ratio': 19, 'param:wetDryRatio': 16, 'param:cutoffFrequency': 6, 'param:delay': 6, 'param:bypass': 5, 'param:hold': 5, 'param:decay': 1, 'param:resonance': 1 });
 
 // 3. the ratio unit
 const ratios = [];

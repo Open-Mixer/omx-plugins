@@ -151,6 +151,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "number",
       "automatable": true,
       "source": {
         "from": {
@@ -175,6 +176,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -199,6 +201,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "balance",
       "automatable": true,
       "source": {
         "from": {
@@ -255,6 +258,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "delay",
       "automatable": true,
       "source": {
         "from": {
@@ -279,6 +283,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -303,6 +308,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "balance",
       "automatable": true,
       "source": {
         "from": {
@@ -359,6 +365,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "delay",
       "automatable": true,
       "source": {
         "from": {
@@ -383,6 +390,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -407,6 +415,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "balance",
       "automatable": true,
       "source": {
         "from": {
@@ -463,6 +472,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "delay",
       "automatable": true,
       "source": {
         "from": {
@@ -487,6 +497,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -511,6 +522,7 @@
       "group": [
         "Taps"
       ],
+      "meaning": "balance",
       "automatable": true,
       "source": {
         "from": {
@@ -541,6 +553,7 @@
       "group": [
         "Tempo"
       ],
+      "meaning": "sync",
       "automatable": true,
       "source": {
         "from": {
@@ -618,6 +631,7 @@
       "group": [
         "Tempo"
       ],
+      "meaning": "division",
       "automatable": true,
       "source": {
         "from": {
@@ -650,6 +664,7 @@
       "group": [
         "Delay"
       ],
+      "meaning": "model",
       "automatable": true,
       "source": {
         "from": {
@@ -674,6 +689,7 @@
       "group": [
         "Duck"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
@@ -698,6 +714,7 @@
       "group": [
         "Duck"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
@@ -722,6 +739,7 @@
       "group": [
         "Duck"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {

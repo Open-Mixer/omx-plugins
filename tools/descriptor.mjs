@@ -57,6 +57,33 @@ export function descriptorFeatures(schema = JSON.parse(readFileSync(descriptorSc
  * refuses a list of them in any tool). */
 export const FEATURES = descriptorFeatures();
 
+/** The words a control's `meaning` takes, the installed schema's `$defs.meaning` (omx-contract's PARAM_MEANINGS, docs/
+ * descriptors.md "Meanings"): never spelled here. */
+export function descriptorMeanings(schema = JSON.parse(readFileSync(descriptorSchemaFile(), 'utf8'))) {
+  const list = schema?.$defs?.meaning?.enum;
+  if (!Array.isArray(list) || !list.length || list.some((w) => typeof w !== 'string')) throw new Error(`${DESCRIPTOR_SCHEMA_FILE}: $defs.meaning.enum is not the descriptor's meaning words`);
+  return list;
+}
+export const MEANINGS = descriptorMeanings();
+/** The meaning of a control that states none: a built or scanned descriptor's word, never an authored one's. */
+export const UNKNOWN_MEANING = 'unknown';
+
+/**
+ * The meaning control `p` (parameter `i` of declaration `d`) declares, or a refusal naming it: the word of the panel role
+ * it plays (`role`, read through contract/role-meanings.json), else the word it states itself (a whole declaration's
+ * parameter, or a described plugin's descriptor control). Our descriptors are `authored`, so the word is one of the
+ * installed schema's and never `unknown` (omx-contract docs/descriptors.md "Meanings": declare, don't infer).
+ */
+export function meaningOfControl(d, p, i, role, words = MEANINGS) {
+  const where = `plugins/${d.stem}: control '${p.symbol}'`;
+  if (role !== undefined && p.meaning !== undefined && p.meaning !== role) throw new Error(`${where} plays a panel role whose meaning is '${role}' and states '${p.meaning}'; a control a role binds states no meaning of its own`);
+  const m = role ?? p.meaning ?? d.descriptor?.controls?.[i]?.meaning;
+  if (m === undefined) throw new Error(`${where} states no meaning; an authored control states its role, a word of omx-contract's PARAM_MEANINGS (the panel role it plays, or "meaning" on its declaration; docs/declaration-as-descriptor.md)`);
+  if (m === UNKNOWN_MEANING) throw new Error(`${where} states meaning '${UNKNOWN_MEANING}'; an authored control states a word (contract.descriptor.unknown-authored)`);
+  if (!words.includes(m)) throw new Error(`${where} states meaning '${m}', no word of the installed schema's $defs.meaning`);
+  return m;
+}
+
 /** The extension bag's source fields our faces write (omx-contract docs/descriptors.md, The extension bag): CLAP's
  * open features, in the face's order, and the LV2 face's types as its .ttl states them. */
 export const CLAP_FEATURES_FIELD = 'clap_plugin_descriptor.features';
@@ -146,7 +173,7 @@ export function portGroupsOf(d) {
  * values a choice (ids the values, as text), any other parameter a travel with the declared unit and
  * scale; its group the label of the panel section listing it (and of its port group within it, where the
  * declaration splits the section: portGroupsOf), its meaning the one its declared role
- * plays; its source the link its travel is read from, or the face for a parameter of the face's own.
+ * plays, else the one it states (meaningOfControl, which refuses a control with none); its source the link its travel is read from, or the face for a parameter of the face's own.
  * `extras` carries what the descriptor has no word for: a choice's unit and the per-kind come-up values.
  */
 export function descriptorOf(d) {
@@ -155,7 +182,7 @@ export function descriptorOf(d) {
   const meaningOf = new Map();
   for (const [role, syms] of Object.entries(d.panel?.roles ?? {})) {
     const m = meaningOfRole(role);
-    if (m) for (const sym of [syms].flat()) if (!meaningOf.has(sym)) meaningOf.set(sym, m);
+    if (m && m !== UNKNOWN_MEANING) for (const sym of [syms].flat()) if (!meaningOf.has(sym)) meaningOf.set(sym, m);
   }
   // the release a link is read from: its owner (the contract directory's manifests, from omx-contract 2.15.0
   // on; omx-contract itself before) at the floor the packaging builds against, else the installed version
@@ -193,7 +220,7 @@ export function descriptorOf(d) {
       c.travel = { min: p.min, max: p.max, step: p.kind === 'integer' ? 1 : 0, unit: travelUnit(p.unit, d.descriptor?.controls[i]?.travel?.unit), default: p.def, scale: p.kind === 'integer' ? integerScale(p) : scaleOf(p) };
     }
     if (groupOf.has(p.symbol)) c.group = groupOf.get(p.symbol);
-    if (meaningOf.has(p.symbol)) c.meaning = meaningOf.get(p.symbol);
+    c.meaning = meaningOfControl(d, p, i, meaningOf.get(p.symbol));
     c.automatable = true;
     c.source = p.from ? { from: atOf(p.from) ? { link: p.from, at: atOf(p.from) } : p.from } : { impl: face };
     if (p.byKind) byKind[p.symbol] = p.byKind;
@@ -249,7 +276,9 @@ export function panelDescription(d) {
   // the units the faces serve beside it (the parameter contract, the declaration's): a ratio travel with no unit of
   // its own is served as ratio (omx-contract's param-contract unit 258, travelUnit), by the LV2 face and the contract
   // alike, so its role is judged on that unit
-  const { descriptor, extras } = descriptorOf({ ...d, descriptor: undefined });
+  // the meanings a described plugin's controls state stay (descriptorOf refuses a control with none), nothing else of it
+  const stated = d.descriptor && { controls: d.descriptor.controls.map((c) => (c.meaning === undefined ? {} : { meaning: c.meaning })) };
+  const { descriptor, extras } = descriptorOf({ ...d, descriptor: stated });
   descriptor.controls.forEach((c, i) => {
     if (c.travel) c.travel.unit = travelUnit(c.travel.unit, d.descriptor?.controls[i]?.travel?.unit);
   });

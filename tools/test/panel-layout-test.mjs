@@ -8,7 +8,9 @@
  *
  *   1. our authored descriptors state no unknown word, and every travel unit of ours is a descriptor unit;
  *   2. the layout with no declared panel finds the declared family and every role a meaning plays, for omx-delay
- *      and omx-comp, so the meanings a declaration's roles render to are the ones the layout reads;
+ *      and omx-comp, from the meanings their roles render to, so those are the ones the layout reads (the other
+ *      controls' meanings are declared on the control, and a duck's threshold, range and release would read as a
+ *      gate; a family is declared, never inferred, omx-contract#61 R1);
  *   3. every unit the param-contract table serves has a token a role reads.
  *
  * `make panel-layout`, part of `make test`. It loads the declarations, so it needs omx-contract and
@@ -44,7 +46,8 @@ for (const stem of ['omx-delay', 'omx-comp']) {
   const d = decls.find((x) => x.stem === stem);
   const { descriptor: desc } = descriptorOf(d);
   const declared = panelLayout(desc, { panel: d.panel, ns: 'fx.x' });
-  const generic = panelLayout(desc);
+  const bound = new Set(Object.values(d.panel.roles ?? {}).flat());
+  const generic = panelLayout({ ...desc, controls: desc.controls.map((c) => (bound.has(c.symbol) ? c : { ...c, meaning: 'unknown' })) });
   // the roles a meaning plays: a role with no meaning word (a delay's pingpong) is bound only by a panel
   const meant = (x) => rolesOf(x).filter(([role]) => meaningOfRole(role)).sort();
   check(`${stem} with no declared panel: the declared family and every published role a meaning plays`, [generic.family, meant(generic)], [declared.family, meant(declared)]);

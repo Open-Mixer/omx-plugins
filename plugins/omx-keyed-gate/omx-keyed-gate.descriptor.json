@@ -38,6 +38,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
@@ -187,6 +188,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "knee",
       "automatable": true,
       "source": {
         "from": {
@@ -211,6 +213,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "knee",
       "automatable": true,
       "source": {
         "from": {
@@ -285,6 +288,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "lowCut",
       "automatable": true,
       "source": {
         "from": {
@@ -309,6 +313,7 @@
       "group": [
         "Key"
       ],
+      "meaning": "highCut",
       "automatable": true,
       "source": {
         "from": {

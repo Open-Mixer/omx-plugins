@@ -33,6 +33,7 @@
       "group": [
         "Balancer"
       ],
+      "meaning": "amount",
       "automatable": true,
       "source": {
         "from": {
@@ -57,6 +58,7 @@
       "group": [
         "Balancer"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
@@ -81,6 +83,7 @@
       "group": [
         "Balancer"
       ],
+      "meaning": "rate",
       "automatable": true,
       "source": {
         "from": {
@@ -105,6 +108,7 @@
       "group": [
         "Balancer"
       ],
+      "meaning": "slope",
       "automatable": true,
       "source": {
         "from": {
