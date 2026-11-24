@@ -21,19 +21,12 @@ on:
     tags: ['v*']
   workflow_dispatch:
     inputs:
-      publish:
-        description: 'Sign and publish; only a run on a tag publishes'
-        type: boolean
-        default: false
       staged:
         description: 'Build fc45 x86_64 and trixie amd64 only and publish them to the staging channel for the next layer; publishes nothing to the real channel'
         type: boolean
         default: false
   workflow_call:
     inputs:
-      publish:
-        type: boolean
-        default: false
       runner:
         type: string
         default: 'ubuntu-latest'
@@ -103,7 +96,7 @@ jobs:
       staged: ${{ inputs.staged == true }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
-      publish: ${{ github.event_name == 'push' || inputs.publish == true }}
+      publish: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
       needs-mod-host: false
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
       arch-matrix: '["x86_64"]'
@@ -118,7 +111,7 @@ jobs:
       staged: ${{ inputs.staged == true }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
-      publish: ${{ github.event_name == 'push' || inputs.publish == true }}
+      publish: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
       dependencies: 'clap-headers'
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
       arch-matrix: '["arm64"]'
@@ -173,7 +166,7 @@ jobs:
   zynthian-release:
     name: Attach the Zynthian tarball to the release
     needs: zynthian
-    if: ${{ !cancelled() && needs.zynthian.result == 'success' && github.ref_type == 'tag' && (github.event_name == 'push' || inputs.publish == true) }}
+    if: ${{ !cancelled() && needs.zynthian.result == 'success' && github.ref_type == 'tag' && (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')) }}
     runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
     timeout-minutes: 10
     permissions:
