@@ -42,7 +42,7 @@ import { fileURLToPath } from 'node:url';
 import { releaseVersion } from './release-version.mjs';
 import { faceBinding } from './instance-face.mjs';
 import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
-import { lv2Designation, lv2UnitNames, lv2UnitRef, ownLv2Units, standardUnitOf } from './format-tables.mjs';
+import { lv2Designation, lv2UnitNames, lv2UnitRef, ownLv2Units, unitSymbol } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
 import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
 import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam, isMain } from './omx-contract.mjs';
@@ -225,14 +225,14 @@ function flattenChain(file, d) {
     if (!/^[a-z][a-z0-9_]*$/.test(el.kernel ?? '')) throw new Error(`${file}: chain element '${el.id}' names no kernel`);
     if (typeof el.on !== 'boolean') throw new Error(`${file}: chain element '${el.id}': "on" (its switch's default) is true or false`);
     if (!Array.isArray(el.params) || !el.params.length) throw new Error(`${file}: chain element '${el.id}' has no "params"`);
-    out.push({ symbol: `${el.id}On`, name: elementName(el), unit: '', min: 0, max: 1, def: el.on ? 1 : 0, kind: 'toggle', own: 'switch', element: el.id });
+    out.push({ symbol: `${el.id}On`, name: elementName(el), unit: 'none', min: 0, max: 1, def: el.on ? 1 : 0, kind: 'toggle', own: 'switch', element: el.id });
     for (const p of el.params) {
       if (p.ref === undefined) throw new Error(`${file}: chain element '${el.id}': '${p.symbol}' has no ref; an element's parameters are its kernel's contract controls`);
       if (p.kernel !== undefined && p.kernel !== el.kernel) throw new Error(`${file}: chain element '${el.id}': '${p.symbol}' names kernel '${p.kernel}', not the element's '${el.kernel}'`);
       out.push({ ...p, kernel: el.kernel, element: el.id });
     }
   }
-  if (d.order === 'permutable') out.push({ symbol: 'order', name: 'Order', unit: '', min: 0, max: factorial(d.chain.length) - 1, def: 0, kind: 'integer', own: 'stage-order' });
+  if (d.order === 'permutable') out.push({ symbol: 'order', name: 'Order', unit: 'none', min: 0, max: factorial(d.chain.length) - 1, def: 0, kind: 'integer', own: 'stage-order' });
   else if (d.order !== undefined) throw new Error(`${file}: "order" is "permutable" or left out (the declared order)`);
   // what an element gained after the plugin shipped comes AFTER every parameter it had, so no id and no LV2 parameter
   // port moves: element by element in chain order, its band count (`bandCount`), then its `appended` parameters
@@ -271,7 +271,7 @@ function bandCountParam(file, d, el) {
   if (!Number.isInteger(def) || def < 1 || def > max) throw new Error(`${file}: chain element '${el.id}': "bandCount" comes up at ${sheet}.${bc.default}.default (${def}), not a count from 1 to ${max}`);
   const gated = controls.find((c) => c.name === bc.gates);
   if (!gated?.count) throw new Error(`${file}: chain element '${el.id}': "bandCount" gates '${bc.gates}', no per-band control of the ${el.kernel} kernel`);
-  return { symbol: bc.symbol, name: bc.name, unit: '', min: 1, max, def, kind: 'integer', own: 'band-count', element: el.id, gates: bc.gates };
+  return { symbol: bc.symbol, name: bc.name, unit: 'none', min: 1, max, def, kind: 'integer', own: 'band-count', element: el.id, gates: bc.gates };
 }
 
 /**
@@ -513,7 +513,7 @@ export function symbolTie(p, control, controls) {
 /** The declaration's plain description for org.openmixer.declaration/1: each parameter's name and
  * travel, in declaration order. */
 export function sourceOf(d) {
-  return `${d.name}: ${d.params.map((p) => `${p.name} ${p.min} to ${p.max}${p.unit ? ` ${p.unit}` : ''}`).join(', ')}`;
+  return `${d.name}: ${d.params.map((p) => `${p.name} ${p.min} to ${p.max}${unitSymbol(p.unit) ? ` ${unitSymbol(p.unit)}` : ''}`).join(', ')}`;
 }
 
 export function digestOf(params) {
@@ -528,7 +528,7 @@ export const LV2_CUSTOM_UNITS = {
   dBFS: { label: 'decibels (full scale)', render: '%f dBFS', symbol: 'dBFS' },
   dBu: { label: 'decibels (unloaded)', render: '%f dBu', symbol: 'dBu' },
   LUFS: { label: 'loudness units (full scale)', render: '%f LUFS', symbol: 'LUFS' },
-  'dB-oct': { label: 'decibels per octave', render: '%f dB/oct', symbol: 'dB/oct' },
+  dBPerOct: { label: 'decibels per octave', render: '%f dB/oct', symbol: 'dB/oct' },
   ratio: { label: 'ratio', render: '%f:1', symbol: ':1' },
 };
 
@@ -697,7 +697,7 @@ ${d.params.map((p, i) => `  ${P}_${macro(p.symbol)} = ${i},`).join('\n')}
 };
 
 static const omx_plugin_param OMX_${K}_PARAMS[${P}_COUNT] = {
-${d.params.map((p) => `  { "${p.symbol}", "${p.name}", "${p.unit}", ${cf(p.min)}, ${cf(p.max)}, ${cf(p.def)}, ${flags(p)} },`).join('\n')}
+${d.params.map((p) => `  { "${p.symbol}", "${p.name}", "${unitSymbol(p.unit)}", ${cf(p.min)}, ${cf(p.max)}, ${cf(p.def)}, ${flags(p)} },`).join('\n')}
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -774,7 +774,7 @@ ${presetsManifest(d.lv2.uri, presets)}`;
 }
 
 /** What a face states of parameter `i` beyond the declaration: its descriptor control's unit (a ratio's `ratio`, which
- * its link resolves to "") and meaning, for a plugin described in omx-contract's words; the declared unit otherwise. */
+ * its link resolves to none) and meaning, for a plugin described in omx-contract's words; the declared unit otherwise. */
 const faceUnit = (d, i) => travelUnit(d.params[i].unit, d.descriptor?.controls[i]?.travel?.unit);
 const faceDesignation = (d, i) => lv2Designation(d.descriptor?.controls[i]?.meaning);
 
@@ -866,7 +866,7 @@ const hintPrefix = (d, pick) => hintPrefixes(d.hintVocabulary, d.hints ?? []).fi
 /** The OpenMixer units this plugin's ports use, `[[<PARAM_UNITS word>, <uri>], ...]` in LV2_CUSTOM_UNITS' order, each
  * URI F1's (ownLv2Units). */
 const customUnitsOf = (d) => {
-  const own = ownLv2Units(), uriOf = Object.fromEntries(Object.entries(own).map(([sym, uri]) => [standardUnitOf(sym), uri]));
+  const uriOf = ownLv2Units();
   return Object.keys(LV2_CUSTOM_UNITS).map((word) => {
     if (!uriOf[word]) throw new Error(`tools/gen.mjs LV2_CUSTOM_UNITS: ${word} is no unit of F1's LV2_OPENMIXER_UNIT_IDS`);
     return [word, uriOf[word]];
@@ -896,7 +896,7 @@ const cfloat = (n) => {
 
 /** How a catalogue row and section read a resolved parameter: its range and its default, in words. */
 export function paramRow(p) {
-  const unit = p.unit ? ` ${p.unit}` : '';
+  const unit = unitSymbol(p.unit) ? ` ${unitSymbol(p.unit)}` : '';
   if (p.kind === 'toggle') return { name: p.name, range: 'off / on', default: p.def ? 'on' : 'off' };
   const choices = choicesOf(p);
   if (choices) return { name: p.name, range: choices.map((c) => c.label).join(' / '), default: choices.find((c) => c.value === p.def)?.label ?? `${p.def}` };

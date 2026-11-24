@@ -287,14 +287,14 @@ static const char *const OMX_MBCOMP_PARAM_MODULES[OMX_MBCOMP_PARAM_COUNT] = {
 #define OMX_MBCOMP_NAME "omx multiband"
 #define OMX_MBCOMP_VENDOR "openmixer"
 #define OMX_MBCOMP_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_MBCOMP_VERSION "0.20.0"
+#define OMX_MBCOMP_VERSION "0.21.0"
 #define OMX_MBCOMP_DESCRIPTION "A multiband compressor: two to five bands split by Linkwitz-Riley crossovers, each band its own compressor with threshold, ratio, attack, release, make-up, solo and bypass, then a mix and an output gain, for in-ear mixes, vocals and playback buses."
 #define OMX_MBCOMP_CLAP_ID "org.openmixer.multiband"
 #define OMX_MBCOMP_CLAP_FEATURES "audio-effect", "compressor", "stereo"
 #define OMX_MBCOMP_LV2_URI "urn:openmixer:multiband"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_MBCOMP_DECL_SOURCE "omx multiband: Bands 2 to 5, Crossover 1 40 to 16000 Hz, Crossover 2 40 to 16000 Hz, Crossover 3 40 to 16000 Hz, Crossover 4 40 to 16000 Hz, Band 1 Threshold -60 to 0 dB, Band 2 Threshold -60 to 0 dB, Band 3 Threshold -60 to 0 dB, Band 4 Threshold -60 to 0 dB, Band 5 Threshold -60 to 0 dB, Band 1 Ratio 1 to 20, Band 2 Ratio 1 to 20, Band 3 Ratio 1 to 20, Band 4 Ratio 1 to 20, Band 5 Ratio 1 to 20, Band 1 Attack 0.1 to 200 ms, Band 2 Attack 0.1 to 200 ms, Band 3 Attack 0.1 to 200 ms, Band 4 Attack 0.1 to 200 ms, Band 5 Attack 0.1 to 200 ms, Band 1 Release 10 to 2000 ms, Band 2 Release 10 to 2000 ms, Band 3 Release 10 to 2000 ms, Band 4 Release 10 to 2000 ms, Band 5 Release 10 to 2000 ms, Band 1 Makeup 0 to 24 dB, Band 2 Makeup 0 to 24 dB, Band 3 Makeup 0 to 24 dB, Band 4 Makeup 0 to 24 dB, Band 5 Makeup 0 to 24 dB, Band 1 Solo 0 to 1, Band 2 Solo 0 to 1, Band 3 Solo 0 to 1, Band 4 Solo 0 to 1, Band 5 Solo 0 to 1, Band 1 Bypass 0 to 1, Band 2 Bypass 0 to 1, Band 3 Bypass 0 to 1, Band 4 Bypass 0 to 1, Band 5 Bypass 0 to 1, Mix 0 to 100 %, Output -24 to 24 dB"
-#define OMX_MBCOMP_DECL_DIGEST "e94249a95a2284f21f484388a13d5ab5e249fd138fc123a063260c19573edd10"
+#define OMX_MBCOMP_DECL_DIGEST "46b37248d8b20c32172c98db60a45a0f7f9bc055c805a33b35b28708d24d7f76"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

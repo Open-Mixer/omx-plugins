@@ -34,7 +34,7 @@ static const omx_plugin_param OMX_ROTARY_PARAMS[OMX_ROTARY_PARAM_COUNT] = {
   { "hornFastHz", "Horn Fast", "Hz", 3.0f, 10.0f, 6.8f, 0u },
   { "drumSlowHz", "Drum Slow", "Hz", 0.1f, 2.0f, 0.7f, 0u },
   { "drumFastHz", "Drum Fast", "Hz", 3.0f, 10.0f, 5.9f, 0u },
-  { "accel", "Accel", "x", 0.25f, 4.0f, 1.0f, 0u },
+  { "accel", "Accel", "coef", 0.25f, 4.0f, 1.0f, 0u },
   { "balance", "Balance", "%", -100.0f, 100.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "mix", "Mix", "%", 0.0f, 100.0f, 100.0f, 0u },
   { "speed", "Speed", "", 0.0f, 2.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER },
@@ -83,14 +83,14 @@ static const char *const OMX_ROTARY_PARAM_MODULES[OMX_ROTARY_PARAM_COUNT] = {
 #define OMX_ROTARY_NAME "omx rotary"
 #define OMX_ROTARY_VENDOR "openmixer"
 #define OMX_ROTARY_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_ROTARY_VERSION "0.20.0"
+#define OMX_ROTARY_VERSION "0.21.0"
 #define OMX_ROTARY_DESCRIPTION "The console's rotary speaker: a drum rotor on the low band and a horn rotor on the high band, with stop, slow and fast speeds, mixed with the dry signal."
 #define OMX_ROTARY_CLAP_ID "org.openmixer.rotary"
 #define OMX_ROTARY_CLAP_FEATURES "audio-effect", "stereo"
 #define OMX_ROTARY_LV2_URI "urn:openmixer:rotary"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
-#define OMX_ROTARY_DECL_SOURCE "omx rotary: Horn Slow 0.1 to 2 Hz, Horn Fast 3 to 10 Hz, Drum Slow 0.1 to 2 Hz, Drum Fast 3 to 10 Hz, Accel 0.25 to 4 x, Balance -100 to 100 %, Mix 0 to 100 %, Speed 0 to 2"
-#define OMX_ROTARY_DECL_DIGEST "0f1ffd01a7af4af40fdfb19f71a56ccec05cd0ed038c21237374b29ea4d347e3"
+#define OMX_ROTARY_DECL_SOURCE "omx rotary: Horn Slow 0.1 to 2 Hz, Horn Fast 3 to 10 Hz, Drum Slow 0.1 to 2 Hz, Drum Fast 3 to 10 Hz, Accel 0.25 to 4 coef, Balance -100 to 100 %, Mix 0 to 100 %, Speed 0 to 2"
+#define OMX_ROTARY_DECL_DIGEST "fde2adbf1fc45edf4f35030de6f95d50e5600dcdf4f108e36e58f208dc470cd7"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

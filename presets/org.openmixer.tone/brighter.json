@@ -19,12 +19,12 @@
     },
     {
       "symbol": "filter",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "resonance",
-      "unit": "",
+      "unit": "none",
       "value": 0.71
     }
   ],

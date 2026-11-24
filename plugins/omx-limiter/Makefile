@@ -22,7 +22,7 @@
 NAME       := omx-limiter
 URI        := urn:openmixer:limiter
 CLAP_ID    := org.openmixer.limiter
-OMXDSP_MIN ?= 0.34.0
+OMXDSP_MIN ?= 0.34.1
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

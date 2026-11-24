@@ -28,7 +28,7 @@ enum {
 static const omx_plugin_param OMX_BALANCER_PARAMS[OMX_BALANCER_PARAM_COUNT] = {
   { "amountPct", "Amount", "%", 0.0f, 100.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "rangeDb", "Range", "dB", 1.0f, 12.0f, 3.0f, 0u },
-  { "speedDbPerS", "Speed", "dB", 0.1f, 6.0f, 0.5f, 0u },
+  { "speedDbPerS", "Speed", "dB/s", 0.1f, 6.0f, 0.5f, 0u },
   { "slopeDbOct", "Slope", "dB/oct", -6.0f, 0.0f, -3.0f, 0u },
 };
 
@@ -59,14 +59,14 @@ static const char *const OMX_BALANCER_PARAM_MODULES[OMX_BALANCER_PARAM_COUNT] = 
 #define OMX_BALANCER_NAME "omx balancer"
 #define OMX_BALANCER_VENDOR "openmixer"
 #define OMX_BALANCER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_BALANCER_VERSION "0.20.0"
+#define OMX_BALANCER_VERSION "0.21.0"
 #define OMX_BALANCER_DESCRIPTION "Walks four bands slowly toward a target tone, so a mix settles toward a pink-noise balance without chasing notes."
 #define OMX_BALANCER_CLAP_ID "org.openmixer.balancer"
 #define OMX_BALANCER_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
 #define OMX_BALANCER_LV2_URI "urn:openmixer:balancer"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
-#define OMX_BALANCER_DECL_SOURCE "omx balancer: Amount 0 to 100 %, Range 1 to 12 dB, Speed 0.1 to 6 dB, Slope -6 to 0 dB/oct"
-#define OMX_BALANCER_DECL_DIGEST "427d243fbeeca3d3a7f7a86bb6f9c0a2a75ff42890268e7e92547d573480a461"
+#define OMX_BALANCER_DECL_SOURCE "omx balancer: Amount 0 to 100 %, Range 1 to 12 dB, Speed 0.1 to 6 dB/s, Slope -6 to 0 dB/oct"
+#define OMX_BALANCER_DECL_DIGEST "e5707c5fae1036378d79cda69ceb17dbf3ec3af2776fe16b2e1c4dcb6e2c17fb"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

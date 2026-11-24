@@ -23,7 +23,7 @@
     doap:name "omx drive" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/FreeMixer/omx-plugins> ;
-    lv2:minorVersion 20 ;
+    lv2:minorVersion 21 ;
     lv2:microVersion 0 ;
     rdfs:comment "The console's drive: one waveshaper (soft, tape, tube or exciter) run inside the console's oversampler, on the full band, the lows, the highs or a tilt, with a wet/dry mix and a trim." ;
     lv2:optionalFeature lv2:hardRTCapable ;

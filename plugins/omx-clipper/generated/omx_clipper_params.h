@@ -53,14 +53,14 @@ static const char *const OMX_CLIPPER_PARAM_MODULES[OMX_CLIPPER_PARAM_COUNT] = {
 #define OMX_CLIPPER_NAME "omx clipper"
 #define OMX_CLIPPER_VENDOR "openmixer"
 #define OMX_CLIPPER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_CLIPPER_VERSION "0.20.0"
+#define OMX_CLIPPER_VERSION "0.21.0"
 #define OMX_CLIPPER_DESCRIPTION "Clips the peaks at a ceiling, with drive in front and an adjustable softness of the bend."
 #define OMX_CLIPPER_CLAP_ID "org.openmixer.clipper"
 #define OMX_CLIPPER_CLAP_FEATURES "audio-effect", "distortion", "stereo"
 #define OMX_CLIPPER_LV2_URI "urn:openmixer:clipper"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_CLIPPER_DECL_SOURCE "omx clipper: Drive 0 to 24 dB, Ceiling -24 to 0 dB, Softness 0 to 100 %"
-#define OMX_CLIPPER_DECL_DIGEST "e77c8f23e4bc2293f2cfad1a340186f5a3021a47cb98d7500d66f000b7f955dd"
+#define OMX_CLIPPER_DECL_DIGEST "a7792eb2482edd2816673afda2cd496625f1d3a401424bdcd7d46ba2886e68de"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

@@ -58,7 +58,7 @@
       "symbol": "hpf_slope",
       "name": "HPF Slope",
       "ref": "FILTER_SLOPES",
-      "unit": "dB/oct"
+      "unit": "dBPerOct"
     },
     {
       "symbol": "lpf_on",
@@ -75,7 +75,7 @@
       "symbol": "lpf_slope",
       "name": "LPF Slope",
       "ref": "FILTER_SLOPES",
-      "unit": "dB/oct"
+      "unit": "dBPerOct"
     },
     {
       "symbol": "type",

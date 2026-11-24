@@ -22,7 +22,7 @@
 NAME       := omx-multiband
 URI        := urn:openmixer:multiband
 CLAP_ID    := org.openmixer.multiband
-OMXDSP_MIN ?= 0.34.0
+OMXDSP_MIN ?= 0.34.1
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

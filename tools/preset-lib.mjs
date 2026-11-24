@@ -3,6 +3,7 @@
 /*
  * preset-lib.mjs — what a preset file is checked against: each shipped plugin's parameters as its
  * generated header declares them (symbol, unit, travel, integer steps) and the labels of its choices,
+ * the unit as the PARAM_UNITS id a preset states (the header's text is the id's x-symbol, value_to_text's; C2),
  * read from the generated LV2 description, and plugin-hostd's preset schema. Shared by tools/gen-presets.mjs (which writes the files)
  * and tools/test/presets-check.mjs (which holds them to the travels).
  */
@@ -10,6 +11,7 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { standardUnitSymbols } from './format-tables.mjs';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const FORMAT = 'org.openmixer.preset/1';
@@ -29,12 +31,17 @@ export function plugins(root = ROOT) {
   return out;
 }
 
-/** The rows of the OMX_<X>_PARAMS table: `{ symbol, name, unit, min, max, def, integer, toggle }`. */
+/** The PARAM_UNITS id whose x-symbol a header's unit text is (`%` -> percent, `` -> none), else the text as written (a
+ * plugin's own unit). The symbols are distinct, so the text names one id. */
+let idBySymbol;
+const unitIdOfText = (text) => (idBySymbol ??= new Map(Object.entries(standardUnitSymbols()).map(([id, symbol]) => [symbol, id]))).get(text) ?? text;
+
+/** The rows of the OMX_<X>_PARAMS table: `{ symbol, name, unit, min, max, def, integer, toggle }`, the unit its id. */
 function paramsOf(text, file) {
   const table = text.match(/OMX_\w+_PARAMS\[[^\]]*\]\s*=\s*\{([\s\S]*?)\n\};/);
   if (!table) throw new Error(`${file}: no parameter table`);
   const rows = [...table[1].matchAll(/\{\s*"([^"]+)",\s*"([^"]*)",\s*"([^"]*)",\s*(-?[\d.]+)f,\s*(-?[\d.]+)f,\s*(-?[\d.]+)f,\s*([^}]+?)\s*\}/g)];
-  return rows.map((m) => ({ symbol: m[1], name: m[2], unit: m[3], min: Number(m[4]), max: Number(m[5]), def: Number(m[6]), integer: /INTEGER|TOGGLE/.test(m[7]), toggle: /TOGGLE/.test(m[7]) }));
+  return rows.map((m) => ({ symbol: m[1], name: m[2], unit: unitIdOfText(m[3]), min: Number(m[4]), max: Number(m[5]), def: Number(m[6]), integer: /INTEGER|TOGGLE/.test(m[7]), toggle: /TOGGLE/.test(m[7]) }));
 }
 
 /** symbol -> labels by value, from the LV2 description's scale points. */

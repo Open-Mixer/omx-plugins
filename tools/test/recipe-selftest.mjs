@@ -106,11 +106,11 @@ function fakeContract(dst, kernels, listed) {
 const travel = (min, max, step, unit, def) => ({ kind: 'travels', shape: 'travel', value: { min, max, step, unit, default: def, defaultFrom: 'desk' } });
 const WOBBLE = {
   WOBBLE_RATE_RANGE: travel(0.1, 20, 0.01, 'Hz', 4),
-  WOBBLE_DEPTH_RANGE: travel(0, 100, 0.1, '%', 50),
-  WOBBLE_MIX_RANGE: travel(0, 100, 0.1, '%', 100),
+  WOBBLE_DEPTH_RANGE: travel(0, 100, 0.1, 'percent', 50),
+  WOBBLE_MIX_RANGE: travel(0, 100, 0.1, 'percent', 100),
   WOBBLE_MODES: { kind: 'set', value: ['wobble', 'pan'], default: 'wobble' },
   // the aggregate: its field names are the controls' names (rateHz, not rate)
-  WOBBLE_TRAVELS: { kind: 'travels', shape: 'table', value: { rateHz: travel(0.1, 20, 0.01, 'Hz', 4).value, depth: travel(0, 100, 0.1, '%', 50).value, mix: travel(0, 100, 0.1, '%', 100).value } },
+  WOBBLE_TRAVELS: { kind: 'travels', shape: 'table', value: { rateHz: travel(0.1, 20, 0.01, 'Hz', 4).value, depth: travel(0, 100, 0.1, 'percent', 50).value, mix: travel(0, 100, 0.1, 'percent', 100).value } },
 };
 
 /** The render's `kernels` entry for wobble: its controls in order, `depth` re-arming when asked. */

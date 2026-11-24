@@ -22,7 +22,7 @@
 NAME       := omx-upward
 URI        := urn:openmixer:upward
 CLAP_ID    := org.openmixer.upward
-OMXDSP_MIN ?= 0.34.0
+OMXDSP_MIN ?= 0.34.1
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build

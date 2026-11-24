@@ -55,7 +55,7 @@ Every plugin, what it does, and its controls; the parameter pages, the factory p
 |---|---|---|
 | Amount | 0 to 100 %, whole steps | 0 % |
 | Range | 1 to 12 dB | 3 dB |
-| Speed | 0.1 to 6 dB | 0.5 dB |
+| Speed | 0.1 to 6 dB/s | 0.5 dB/s |
 | Slope | -6 to 0 dB/oct | -3 dB/oct |
 
 Plus the host's bypass.
@@ -429,7 +429,7 @@ Plus the host's bypass.
 |---|---|---|
 | Target | -40 to -6 dB | -23 dB |
 | Range | 0 to 24 dB | 0 dB |
-| Speed | 0.1 to 6 dB | 1 dB |
+| Speed | 0.1 to 6 dB/s | 1 dB/s |
 | Gate | -70 to -30 dB, whole steps | -50 dB |
 | Window | Momentary / Short-term | Short-term |
 
@@ -560,7 +560,7 @@ Plus the host's bypass.
 | Horn Fast | 3 to 10 Hz | 6.8 Hz |
 | Drum Slow | 0.1 to 2 Hz | 0.7 Hz |
 | Drum Fast | 3 to 10 Hz | 5.9 Hz |
-| Accel | 0.25 to 4 x | 1 x |
+| Accel | 0.25 to 4 coef | 1 coef |
 | Balance | -100 to 100 %, whole steps | 0 % |
 | Mix | 0 to 100 % | 100 % |
 | Speed | Stop / Slow / Fast | Slow |
@@ -713,7 +713,7 @@ copying them: `omx-plugins-devel` on Fedora, `omx-plugins-dev` on Debian (they l
 `/usr/include/omx-plugins`). Each plugin's descriptor, its parameters in omx-contract's words, is in
 `omx-plugins-contract`, which `omx-plugins` and the devel package require: files in omx-contract's
 contract directory (`/usr/share/omx-contract/contract.d/3/omx-plugins/`) that a host reads at run time.
-The code of each unit the param-contract extension serves is omx-contract's (`3/omx-contract/param-contract.json`).
+The code of each unit the param-contract extension serves is omx-clap's (`omx-param-contract/omx-param-contract.json`).
 The devel package carries `libomxplugins.a` (`pkg-config omxplugins`):
 every plugin's CLAP face in one static library, for a host that runs them in its own process
 without loading `.clap` files. `<omx-plugins/omx_clap_static.h>` lists their entries by CLAP id:

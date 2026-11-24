@@ -14,17 +14,17 @@
     },
     {
       "symbol": "depth",
-      "unit": "%",
+      "unit": "percent",
       "value": 80
     },
     {
       "symbol": "mix",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {
       "symbol": "mode",
-      "unit": "",
+      "unit": "none",
       "value": 1,
       "label": "Pan"
     }

@@ -65,14 +65,14 @@ static const char *const OMX_SPRING_PARAM_MODULES[OMX_SPRING_PARAM_COUNT] = {
 #define OMX_SPRING_NAME "omx spring"
 #define OMX_SPRING_VENDOR "openmixer"
 #define OMX_SPRING_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_SPRING_VERSION "0.20.0"
+#define OMX_SPRING_VERSION "0.21.0"
 #define OMX_SPRING_DESCRIPTION "A spring reverb: a delay, a chain of all-passes and a darkening loop, with decay, length, tension and damping."
 #define OMX_SPRING_CLAP_ID "org.openmixer.spring"
 #define OMX_SPRING_CLAP_FEATURES "audio-effect", "reverb", "stereo"
 #define OMX_SPRING_LV2_URI "urn:openmixer:spring"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_SPRING_DECL_SOURCE "omx spring: Decay 0.5 to 8 s, Length 20 to 60 ms, Tension 0 to 100 %, Damping 1000 to 10000 Hz, Mix 0 to 100 %"
-#define OMX_SPRING_DECL_DIGEST "ae132ec37dfeaf6fb16508365b4898dcb7adaaa84715d27b8b1e6784cab73059"
+#define OMX_SPRING_DECL_DIGEST "6cc0db7435e3bb96c28e4e491faf20bcc942d9f03f11b76d854c8f77003c0aee"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

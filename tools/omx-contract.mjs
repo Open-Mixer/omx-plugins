@@ -27,6 +27,7 @@ import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { unitSymbol } from './format-tables.mjs';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /** Where the packaging declares the releases this repository builds against. */
@@ -414,13 +415,13 @@ export function resolveParam(dir, kernel, p) {
       if (p.defaultBand.of !== 'centre') throw new Error(`param '${p.symbol}': a travel's band default is the 'centre'`);
       def = band.freqHz;
     }
-    const out = { min: num(t.min, at), max: num(t.max, at), def: num(def, at), unit: t.unit ?? '', from: at };
+    const out = { min: num(t.min, at), max: num(t.max, at), def: num(def, at), unit: t.unit ?? 'none', from: at };
     // the default a channel kind comes up at instead (a return's wet mix), where the travel names one
     if (t.byKind && !p.forKind) out.byKind = Object.fromEntries(Object.entries(t.byKind).map(([k, v]) => [k, num(v, at)]));
     if (typeof t.step === 'number' && t.step >= 1 && Number.isInteger(out.min) && Number.isInteger(out.max)) out.kind = 'integer';
     return out;
   }
-  if (e.kind === 'scalar' && typeof e.value === 'boolean') return { min: 0, max: 1, def: e.value ? 1 : 0, unit: '', kind: 'toggle', from: at };
+  if (e.kind === 'scalar' && typeof e.value === 'boolean') return { min: 0, max: 1, def: e.value ? 1 : 0, unit: 'none', kind: 'toggle', from: at };
   if (e.kind === 'list' && Array.isArray(e.value)) {
     let def = 0;
     if (p.defaultRef) {
@@ -429,7 +430,7 @@ export function resolveParam(dir, kernel, p) {
       def = e.value.indexOf(d.entry.value);
       if (def < 0) throw new Error(`param '${p.symbol}': ${p.defaultRef}'s value ${JSON.stringify(d.entry.value)} is not one of ${p.ref}'s values`);
     }
-    return { min: 0, max: e.value.length - 1, def, unit: '', kind: 'integer', values: e.value, from: at };
+    return { min: 0, max: e.value.length - 1, def, unit: 'none', kind: 'integer', values: e.value, from: at };
   }
   if (e.kind === 'set' && Array.isArray(e.value)) {
     const ids = e.value;
@@ -444,16 +445,17 @@ export function resolveParam(dir, kernel, p) {
     if (def < 0) throw new Error(`param '${p.symbol}': ${JSON.stringify(defId)} is not one of ${p.ref}'s ids ${JSON.stringify(ids)}`);
     if (numeric) {
       // a set of numbers (the pass filters' slopes) is the travel from its first to its last, labelled at each id
-      const unit = p.unit ?? '';
-      return { min: ids[0], max: ids[ids.length - 1], def: ids[def], unit, kind: 'integer', points: ids.map((v) => ({ value: v, label: unit ? `${v} ${unit}` : `${v}` })), from: at };
+      // the set's unit is the declaration's PARAM_UNITS id (a slope's dBPerOct); a point's label shows its x-symbol (12 dB/oct)
+      const unit = p.unit ?? 'none', shown = unitSymbol(unit);
+      return { min: ids[0], max: ids[ids.length - 1], def: ids[def], unit, kind: 'integer', points: ids.map((v) => ({ value: v, label: shown ? `${v} ${shown}` : `${v}` })), from: at };
     }
     // a switch (ids exactly off, on: DELAY_PINGPONGS, DRIVE_AUTO_GAINS, EQ_BAND_ONS) is a toggle,
     // its value the id's index, so a host draws it as one and keeps the toggled hint
     if (ids.length === 2 && ids[0] === 'off' && ids[1] === 'on' && p.values === undefined)
-      return { min: 0, max: 1, def, unit: '', kind: 'toggle', from: at };
+      return { min: 0, max: 1, def, unit: 'none', kind: 'toggle', from: at };
     const labels = e.labels ?? p.values;
     if (!Array.isArray(labels) || labels.length !== ids.length) throw new Error(`param '${p.symbol}': ${p.ref} has no labels; the declaration's "values" must give one per id (${ids.length})`);
-    return { min: 0, max: ids.length - 1, def, unit: '', kind: 'integer', values: labels, from: at };
+    return { min: 0, max: ids.length - 1, def, unit: 'none', kind: 'integer', values: labels, from: at };
   }
   throw new Error(`param '${p.symbol}': ${at} is a ${e.kind}${e.kind === 'scalar' ? ` of ${JSON.stringify(e.value)}` : ''}, not a travel, a toggle, a list or a set`);
 }

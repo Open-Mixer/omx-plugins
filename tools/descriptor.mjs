@@ -95,7 +95,7 @@ const RATIO = 'ratio';
  * lv2:integer and plugin-hostd's describe reads as log (plugin-hostd#142). */
 const STEPPED = 'stepped';
 const integerScale = (p) => (scaleOf(p) === 'log' ? 'log' : STEPPED);
-export const travelUnit = (unit, authored) => (unit === '' && authored === RATIO ? RATIO : unit);
+export const travelUnit = (unit, authored) => (unit === 'none' && authored === RATIO ? RATIO : unit);
 
 /** A reference link, `<file>#<NAME>[.<field>]`, as its parts. */
 const LINK = /^(data\/[A-Za-z0-9_./-]+\.json)#([A-Za-z0-9_]+)(?:\.([A-Za-z0-9_]+))?$/;
@@ -277,7 +277,7 @@ const SAID = ['name', 'vendor', 'version', 'params', 'description'];
 export function describedOf(raw, prepared) {
   const descriptor = descriptorOf(prepared).descriptor;
   descriptor.controls.forEach((c, i) => {
-    if (c.travel && c.travel.unit === '' && prepared.controls?.[i]?.name === 'ratio') c.travel.unit = RATIO;
+    if (c.travel && c.travel.unit === 'none' && prepared.controls?.[i]?.name === 'ratio') c.travel.unit = RATIO;
   });
   const extras = {};
   for (const [k, v] of Object.entries(raw)) {
@@ -330,7 +330,7 @@ export function viewOf(descriptor, extras, file) {
     } else {
       // a control of the face's own: its travel is typed, the reason kept with it
       if (!x.own) throw new Error(`${file}: '${c.symbol}' has no source link and no "own" reason`);
-      if (c.kind === 'toggle') Object.assign(p, { unit: '', min: 0, max: 1, def: c.default ? 1 : 0, kind: 'toggle' });
+      if (c.kind === 'toggle') Object.assign(p, { unit: 'none', min: 0, max: 1, def: c.default ? 1 : 0, kind: 'toggle' });
       else if (c.kind === 'travel') Object.assign(p, { unit: c.travel.unit, min: c.travel.min, max: c.travel.max, def: c.travel.default, ...(c.travel.step === 1 ? { kind: 'integer' } : {}) });
       else throw new Error(`${file}: '${c.symbol}', a ${c.kind} of the face's own, is not a toggle or a travel`);
     }

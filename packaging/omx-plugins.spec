@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 Name: omx-plugins
-Version: 0.20.0
+Version: 0.21.0
 Release: 1%{?dist}
 License: GPL-3.0-or-later
 Summary: The OpenMixer console's delay, drive, EQ, channel strip, keyed gate and effects, as plugins for your DAW
@@ -14,9 +14,9 @@ BuildRequires: make
 BuildRequires: pkgconf-pkg-config
 # The releases this tree builds against: a floor each and no ceiling (floors only, as 0.8.0 ruled), once here and
 # in debian/control the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
-BuildRequires: omx-dsp-devel >= 0.34.0
+BuildRequires: omx-dsp-devel >= 0.34.1
 BuildRequires: omx-contract-devel >= 3.21.0
-BuildRequires: omx-clap-devel >= 0.34.1
+BuildRequires: omx-clap-devel >= 0.35.0
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
 BuildRequires: plugin-hostd-devel >= 0.21.0
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
@@ -26,9 +26,9 @@ BuildRequires: plugin-hostd-devel >= 0.21.0
 BuildRequires: omx-contract >= 3.21.0
 # the panel layout is omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
 BuildRequires: omx-panel >= 0.16.0
-# omx-clap's domain the generators read (tools/omx-contract.mjs domainDocument): clap, the CLAP feature terms
-# (tools/format-tables.mjs)
-BuildRequires: omx-clap-contract >= 0.34.1
+# omx-clap's domains the generators read (tools/omx-contract.mjs domainDocument): omx-param-contract, the unit codes
+# (tools/param-contract.mjs), and clap, the CLAP feature terms (tools/format-tables.mjs)
+BuildRequires: omx-clap-contract >= 0.35.0
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}
@@ -49,20 +49,31 @@ BuildRequires: tar
 BuildRequires: git-core
 BuildRequires: diffutils
 # the curve kinds the schema's graph enum renders: omx-dsp's CURVE_KINDS (tools/graph-enum.mjs)
-BuildRequires: omx-dsp-contract >= 0.34.0
+BuildRequires: omx-dsp-contract >= 0.34.1
 BuildRequires: lilv
 BuildRequires: lilv-devel
 # the standard units a face publishes, by symbol (omx-contract's param domain, PARAM_UNITS x-symbol), and the OpenMixer
 # unit spellings an LV2 face writes (plugin-db's lv2 domain, LV2_OPENMIXER_UNIT_IDS x-uri): tools/format-tables.mjs
 BuildRequires: omx-contract-data >= 3.21.0
-BuildRequires: plugin-db-contract >= 0.5.0
+BuildRequires: plugin-db-contract >= 0.5.1
 BuildRequires: sord
 BuildRequires: omx-clap-host >= 0.34.1
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
 BuildRequires: plugin-hostd >= 0.21.0
 # plugin-hostd's words the generators read: its domains plugin-hostd/clap and plugin-hostd/lv2, the format tables
 # (tools/format-tables.mjs), and the resource hints, RESOURCE_* (tools/resource-hints.mjs)
-BuildRequires: plugin-hostd-contract >= 0.21.0
+BuildRequires: plugin-hostd-contract >= 0.22.0
+# %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
+# shipped pins.d file to the shipped binaries' hashes (tools/pins-check.sh)
+BuildRequires: plugin-qualify >= 0.21.0
+# the shipped .clap is the stripped one (find-debuginfo runs after %%install), so its pin is measured
+# again once the buildroot is stripped: a pin taken at %%install names bytes the package never ships
+%define __spec_install_post \
+    %{?__debug_package:%{__debug_install_post}}\
+    %{__arch_install_post}\
+    %{__os_install_post}\
+    %{__make} -s install-pins DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir} CLAPDIR=/usr/lib/clap\
+%{nil}
 
 # The name a user installs: both formats.
 Requires: %{name}-clap%{?_isa} = %{version}-%{release}
@@ -128,11 +139,11 @@ Its documentation is on openmixer.org.
 
 %package devel
 Summary: Headers and static library of the OpenMixer plugins, for projects that build on them
-Requires: omx-dsp-devel >= 0.34.0
+Requires: omx-dsp-devel >= 0.34.1
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
 Requires: omx-contract-devel >= 3.21.0
-# include/omx_param_contract.h includes omx-clap's scale codes, <omx-clap-host/omx_param_scales.h>
-Requires: omx-clap-devel >= 0.34.1
+# include/omx_param_contract.h includes omx-clap's unit and scale codes, <omx-clap-host/omx_param_units.h> (0.35.0) and <omx-clap-host/omx_param_scales.h>
+Requires: omx-clap-devel >= 0.35.0
 Requires: %{name}-contract = %{version}-%{release}
 Requires: clap-devel >= 1.2.7
 
@@ -288,6 +299,17 @@ Its documentation is on openmixer.org.
 # END GENERATED lv2-files
 
 %changelog
+* Mon Nov 23 2026 Pau Aliagas <linuxnow@gmail.com> - 0.21.0-1
+- the version moves to 0.21.0 (chain 3)
+- floors: omx-clap-devel and omx-clap-contract >= 0.35.0
+- floors: omx-dsp-devel and omx-dsp-contract >= 0.34.1, the release whose
+  ROTARY_ACCEL_RANGE travels in coef; the rotary's accel is coef
+- V23d: the unit codes are read from omx-clap's domain omx-param-contract and its
+  render; make units refuses an include of omx-contract's old unit header
+- floors: plugin-hostd-contract >= 0.22.0 and plugin-db-contract >= 0.5.1: the
+  format tables are x-kind map items, their unit and meaning pairs read from
+  omx-clap and plugin-db (plugin-hostd V19, M5)
+
 * Sun Nov 22 2026 Pau Aliagas <linuxnow@gmail.com> - 0.20.0-1
 - the version moves to 0.20.0
 - floors: omx-clap-devel, omx-clap-contract and omx-clap-host >= 0.34.1 (0.34.1 carries

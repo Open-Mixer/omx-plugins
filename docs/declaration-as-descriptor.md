@@ -75,7 +75,7 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | resolved `values`, `points` | a `choice`: `ids` (each value as text), `labels`, `values` | |
 | `params[].forKind`, `.defaultRef`, `.defaultId`, `.defaultBand`, `.perBand`, `.values` | the come-up value and the labels they give, stated | kept, by symbol (`controls`): how the value is read, not the value |
 | resolved `byKind` | | kept as the read (gap 2) |
-| a set's `unit` (`dB/oct`) | | kept, by symbol (gap 1) |
+| a set's `unit` (`dBPerOct`) | | kept, by symbol (gap 1) |
 | `params[].own` (a face's switch, a stage order) | the control, its travel typed, `source.impl` naming the face | `own`, the reason, by symbol |
 
 ## The gaps
@@ -101,23 +101,41 @@ What the descriptor has no word for, found laying out our panels, and where each
 One vocabulary, two directions (FreeMixer/omx-plugins#210, ruling B). plugin-hostd installs one mapping table per
 format as a domain of the contract directory, `plugin-hostd/clap` and `plugin-hostd/lv2` (named by their items' prefix,
 `PLUGIN_HOSTD_CLAP_MAP` and `PLUGIN_HOSTD_LV2_MAP`), `<contractdir>/plugin-hostd/<format>/<format>.json`: how each field a
-scan reads becomes a descriptor word. Our generators write a face from the authored descriptor by reading the same
-rows the other way (`tools/format-tables.mjs`), and only the rows whose transform is `identity` or `lookup`: the row
-whose `lookup` maps a source value to the word's value names what the face writes. No transform is code of ours.
-`$OMX_INSTALLED_CONTRACTDIR`, a contract directory holding the two domains, stands in for the installed one.
+scan reads becomes a descriptor word. Each item is omx-contract's mapping-table kind, `x-kind: map` (sorting row V19):
+`x-format` names the format and its `oneOf` holds one row per source field, `const` the field, `x-term` or `x-from` what
+covers it, and one of `x-word`, `x-extension` or `x-dropped` (plugin-hostd `docs/formats.md`). Our generators write a
+face from the authored descriptor by reading the same rows the other way (`tools/format-tables.mjs`), and only the rows
+whose transform carries pairs: `lookup`, whose `values` the row holds, and the two whose pairs the format level's owner
+publishes (row M5, plugin-hostd `docs/formats.md`, "Lookup values the owners publish"):
+
+| Transform | Rows | The owner's mapping read |
+|---|---|---|
+| `unit-id` | CLAP `omx_clap_param_contract_entry.unit` | omx-clap's domain `omx-param-contract`, `OMX_PARAM_CONTRACT_UNIT_IDS` (code -> id) |
+| `unit-id` | LV2 `units:<unit>` | plugin-db's domain `lv2`, the word of `LV2_UNIT_IDS` whose `x-from` names the row's `x-term` |
+| `unit-id` | LV2 `units:unit` | plugin-db's domain `lv2`, every word of `LV2_OPENMIXER_UNIT_IDS` (`x-uri` -> id) |
+| `designation-meaning` | LV2 `param:<term>`, `lv2:enabled` | plugin-db's domain `lv2`, the word of `LV2_DESIGNATION_MEANINGS` whose `x-from` names the row's `x-term` |
+
+The row whose pair maps a source value to the word's value names what the face writes. A unit's value is a
+`PARAM_UNITS` id (`percent`), and a declaration states the id too: `%` is its `x-symbol`, what a person reads, and no
+declared unit. A face writes the id wherever a host reads a word (the descriptor, a TTL's `units:unit`, the parameter
+contract's token, a preset) and the `x-symbol` only where a person reads the value: the CLAP table value_to_text prints
+(`50 %`, `12 dB/oct`), a set's point labels, the manual and the parameter reference. A mapping that is absent, a document that is not its owner's (`info.x-owner`), a row its mapping holds
+no pair for and a value two rows map are each refused by name. No transform is code of ours.
+`$OMX_INSTALLED_CONTRACTDIR`, a contract directory holding the domains, stands in for the installed one.
 
 - An LV2 port's `units:unit` is the LV2 row mapping its unit (`units:db` for `dB`, `<urn:openmixer:unit#dBFS>` for
-  `dBFS`); a unit no row maps is the declaration's own, defined in the plugin's TTL: `dBu`, `dB/oct` and `ratio`
-  (`urn:openmixer:unit#ratio`, gap 4).
+  `dBFS`); the OpenMixer units, `dBFS`, `dBu`, `LUFS`, `dBPerOct` and `ratio` (`urn:openmixer:unit#ratio`, gap 4), are
+  the `units:unit` row's pairs and are defined in the plugin's TTL.
 - An LV2 port's `lv2:designation` is the LV2 row mapping its control's `meaning`: 186 ports carry a `param:` term
   (gain 93, frequency 63, wetDryRatio 11, release 5, threshold 4, ratio 4, attack 4, hold 1, delay 1). A meaning with
   no LV2 term is written nowhere.
 - A CLAP parameter's `module` is its control's `group`, the labels joined by `/` (the inverse of plugin-hostd's
   `group-path`); a plugin with no descriptor writes `""`.
 - param-contract's unit tokens (`tools/param-contract.mjs`) are the LV2 units a face writes, their values those
-  omx-contract declares (the sheet `OMX_PARAM_CONTRACT_UNITS`, `{ <token>: <code> }`, in its `param-contract.json`) and
-  renders to `omxcontract/omx_param_units.h`, which `include/omx_param_contract.h` includes; `make units` refuses a
-  drift between them and a unit code defined in this tree.
+  omx-clap declares (the sheet `OMX_PARAM_CONTRACT_UNITS`, `{ <token>: <code> }`, in its domain
+  `omx-param-contract`, `<contractdir>/omx-param-contract/omx-param-contract.json`) and renders to
+  `omx-clap-host/omx_param_units.h`, which `include/omx_param_contract.h` includes; `make units` refuses a drift between
+  them, a code moved from omx-contract 3.20.2's golden, and a unit code defined in this tree.
 
 `make format-tables` (part of `make test`) holds the faces to the tables, with its sabotage arms.
 

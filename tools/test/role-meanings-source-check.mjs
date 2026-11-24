@@ -98,7 +98,8 @@ let installedSchema;
 try { installedSchema = installedSchemaOf(sources); } catch (e) { console.error(e.message); process.exit(2); }
 
 const tmp = mkdtempSync(join(tmpdir(), 'role-meanings-source-'));
-/** A contract directory holding every installed package but omx-plugins, plus `omxPlugins` files when given. */
+/** A contract directory holding every installed package but omx-plugins and every installed domain (param's PARAM_UNITS,
+ * which omx-panel's layout reads, among them), plus `omxPlugins` files when given. */
 function contractDir(name, omxPlugins) {
   const major = join(tmp, name, '3');
   mirrorContract(roots, join(tmp, name));

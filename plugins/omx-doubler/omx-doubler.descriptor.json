@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:doubler",
     "name": "omx doubler",
     "vendor": "openmixer",
-    "version": "0.20.0",
+    "version": "0.21.0",
     "doc": "Doubles a voice or an instrument with up to four slightly delayed, detuned and drifting copies spread across the stereo field, the double-tracked sound without a second take.",
     "features": [
       "audio-effect"
@@ -26,7 +26,7 @@
         "min": 1,
         "max": 4,
         "step": 1,
-        "unit": "",
+        "unit": "none",
         "default": 2,
         "scale": "stepped"
       },
@@ -37,7 +37,7 @@
       "source": {
         "from": {
           "link": "data/kernels/doubler.json#DOUBLER_VOICES_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -61,7 +61,7 @@
       "source": {
         "from": {
           "link": "data/kernels/doubler.json#DOUBLER_DELAY_MS_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/doubler.json#DOUBLER_DETUNE_CENTS_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -110,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/doubler.json#DOUBLER_MOD_RATE_HZ_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -135,7 +135,7 @@
       "source": {
         "from": {
           "link": "data/kernels/doubler.json#DOUBLER_MOD_DEPTH_MS_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -148,7 +148,7 @@
         "min": 0,
         "max": 100,
         "step": 1,
-        "unit": "%",
+        "unit": "percent",
         "default": 60,
         "scale": "stepped"
       },
@@ -160,7 +160,7 @@
       "source": {
         "from": {
           "link": "data/kernels/doubler.json#DOUBLER_SPREAD_PCT_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -173,7 +173,7 @@
         "min": 0,
         "max": 100,
         "step": 1,
-        "unit": "%",
+        "unit": "percent",
         "default": 50,
         "scale": "stepped"
       },
@@ -185,7 +185,7 @@
       "source": {
         "from": {
           "link": "data/kernels/doubler.json#DOUBLER_MIX_PCT_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     }

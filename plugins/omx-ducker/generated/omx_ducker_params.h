@@ -95,14 +95,14 @@ static const char *const OMX_DUCKER_PARAM_MODULES[OMX_DUCKER_PARAM_COUNT] = {
 #define OMX_DUCKER_NAME "omx ducker"
 #define OMX_DUCKER_VENDOR "openmixer"
 #define OMX_DUCKER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DUCKER_VERSION "0.20.0"
+#define OMX_DUCKER_VERSION "0.21.0"
 #define OMX_DUCKER_DESCRIPTION "Pulls the programme down while a key is heard, music under a voice, by a set depth with attack, hold and release, the console ducker."
 #define OMX_DUCKER_CLAP_ID "org.openmixer.ducker"
 #define OMX_DUCKER_CLAP_FEATURES "audio-effect", "compressor", "stereo"
 #define OMX_DUCKER_LV2_URI "urn:openmixer:ducker"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_DUCKER_DECL_SOURCE "omx ducker: Threshold -60 to 0 dB, Depth -40 to 0 dB, Attack 0.1 to 100 ms, Hold 0 to 2000 ms, Release 5 to 3000 ms, Ratio 1 to 20, Knee 0 to 24 dB, Key High-Pass 0 to 2000 Hz, Key Low-Pass 0 to 20000 Hz, Key Listen 0 to 1"
-#define OMX_DUCKER_DECL_DIGEST "cd2a96de102d23b5c4293c47764f817f2b2e659e7a8a88a01c538731a6e439ed"
+#define OMX_DUCKER_DECL_DIGEST "aaead069200f435c3171f0c3c992e166c50b35f454a19da5e3ff120a636885e6"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

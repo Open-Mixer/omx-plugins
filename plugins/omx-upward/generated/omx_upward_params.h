@@ -65,14 +65,14 @@ static const char *const OMX_UPWARD_PARAM_MODULES[OMX_UPWARD_PARAM_COUNT] = {
 #define OMX_UPWARD_NAME "omx upward"
 #define OMX_UPWARD_VENDOR "openmixer"
 #define OMX_UPWARD_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_UPWARD_VERSION "0.20.0"
+#define OMX_UPWARD_VERSION "0.21.0"
 #define OMX_UPWARD_DESCRIPTION "Lifts what is quiet toward a threshold, by a ratio and up to a limit, and leaves the loud alone."
 #define OMX_UPWARD_CLAP_ID "org.openmixer.upward"
 #define OMX_UPWARD_CLAP_FEATURES "audio-effect", "compressor", "stereo"
 #define OMX_UPWARD_LV2_URI "urn:openmixer:upward"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_UPWARD_DECL_SOURCE "omx upward: Threshold -70 to 0 dB, Ratio 1 to 10, Range 0 to 24 dB, Attack 0.1 to 100 ms, Release 5 to 3000 ms"
-#define OMX_UPWARD_DECL_DIGEST "c3af33da420f6e4fa8933bbd1d4cde26bff717ba1eeb11161ca378aafaffe5df"
+#define OMX_UPWARD_DECL_DIGEST "4218034d9c305c8f318901103adac14d97b07bfd35a1600a5516e2fd69a50c23"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

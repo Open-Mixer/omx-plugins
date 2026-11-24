@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:clipper",
     "name": "omx clipper",
     "vendor": "openmixer",
-    "version": "0.20.0",
+    "version": "0.21.0",
     "doc": "Clips the peaks at a ceiling, with drive in front and an adjustable softness of the bend.",
     "features": [
       "audio-effect"
@@ -37,7 +37,7 @@
       "source": {
         "from": {
           "link": "data/kernels/clipper.json#CLIPPER_DRIVE_DB_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -61,7 +61,7 @@
       "source": {
         "from": {
           "link": "data/kernels/clipper.json#CLIPPER_CEILING_DB_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -74,7 +74,7 @@
         "min": 0,
         "max": 100,
         "step": 1,
-        "unit": "%",
+        "unit": "percent",
         "default": 0,
         "scale": "stepped"
       },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/clipper.json#CLIPPER_SOFTNESS_PCT_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     }

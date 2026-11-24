@@ -4,9 +4,9 @@
  * clap-probe.c — a minimal CLAP host over ANY built omx plugin: it knows no plugin, only CLAP.
  *
  *   clap-probe params <x.clap>
- *       one line per parameter, as clap_plugin_params.get_info reports it:
- *       `id<TAB>name<TAB>min<TAB>max<TAB>default<TAB>flags` — tools/clap-params-check.mjs compares
- *       it with the declaration.
+ *       one line per parameter, as clap_plugin_params.get_info reports it, and its default as
+ *       value_to_text shows it: `id<TAB>name<TAB>min<TAB>max<TAB>default<TAB>flags<TAB>text` —
+ *       tools/clap-params-check.mjs compares it with the declaration.
  *   clap-probe live <x.clap>
  *       every parameter but the host's bypass MOVES the output: a deterministic stereo signal (noise
  *       bursts with quiet gaps) is run
@@ -141,8 +141,10 @@ static int params_dump(const char *path) {
   for (uint32_t i = 0; i < n; i++) {
     clap_param_info_t info;
     if (!c.params->get_info(c.plugin, i, &info)) return fprintf(stderr, "get_info %u\n", i), 1;
-    printf("%u\t%s\t%.17g\t%.17g\t%.17g\t%u\n", info.id, info.name, info.min_value, info.max_value,
-           info.default_value, (unsigned)info.flags);
+    char text[128] = "";
+    if (!c.params->value_to_text(c.plugin, info.id, info.default_value, text, sizeof text)) return fprintf(stderr, "value_to_text %u\n", i), 1;
+    printf("%u\t%s\t%.17g\t%.17g\t%.17g\t%u\t%s\n", info.id, info.name, info.min_value, info.max_value,
+           info.default_value, (unsigned)info.flags, text);
   }
   clap_close(&c);
   return 0;

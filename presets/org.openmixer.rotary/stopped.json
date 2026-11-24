@@ -29,22 +29,22 @@
     },
     {
       "symbol": "accel",
-      "unit": "x",
+      "unit": "coef",
       "value": 1
     },
     {
       "symbol": "balance",
-      "unit": "%",
+      "unit": "percent",
       "value": 0
     },
     {
       "symbol": "mix",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {
       "symbol": "speed",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Stop"
     }

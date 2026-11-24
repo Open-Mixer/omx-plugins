@@ -9,7 +9,7 @@
   "params": [
     {
       "symbol": "bands",
-      "unit": "",
+      "unit": "none",
       "value": 4,
       "label": "4"
     },
@@ -60,27 +60,27 @@
     },
     {
       "symbol": "ratio1",
-      "unit": "",
+      "unit": "none",
       "value": 2
     },
     {
       "symbol": "ratio2",
-      "unit": "",
+      "unit": "none",
       "value": 2
     },
     {
       "symbol": "ratio3",
-      "unit": "",
+      "unit": "none",
       "value": 2
     },
     {
       "symbol": "ratio4",
-      "unit": "",
+      "unit": "none",
       "value": 2
     },
     {
       "symbol": "ratio5",
-      "unit": "",
+      "unit": "none",
       "value": 2
     },
     {
@@ -160,57 +160,57 @@
     },
     {
       "symbol": "solo1",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "solo2",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "solo3",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "solo4",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "solo5",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "bandBypass1",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "bandBypass2",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "bandBypass3",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "bandBypass4",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "bandBypass5",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "mixPct",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {
