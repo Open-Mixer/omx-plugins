@@ -33,6 +33,8 @@ jobs:
         run: |
           tools/test/workflow-fedora-check.sh --self-test
           tools/test/workflow-fedora-check.sh .
+      # ruling D25: no Fedora release written into a job; every job's cells come from check-matrix or release-matrix
+      - uses: Open-Mixer/.github/.github/actions/fedora-cells@openmixer-v1
 
   # The shared checks on what this repository publishes: a pull request's own commits carry no attribution line, no
   # tracked file points into a private repository, and no local copy of these checks is kept.
