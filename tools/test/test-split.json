@@ -37,6 +37,7 @@
       "geq-widgets",
       "summary-numbers",
       "param-tie",
+      "own-units",
       "face-ids",
       "comp-release-mode",
       "strip-visible-when",

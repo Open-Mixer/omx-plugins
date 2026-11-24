@@ -185,10 +185,51 @@ export function standardUnitSymbols() {
  * descriptor's word). */
 export const standardUnitOf = (unit) => (Object.hasOwn(standardUnitSymbols(), unit) ? unit : undefined);
 
+/** The own unit `unit` is of a declaration's `units` block (schema/plugin.decl.schema.json, `$defs.ownUnit`: a word
+ * shaped as PARAM_UNITS' words, `const` its id), or undefined. */
+export const ownUnitOf = (units, unit) => (units ?? []).find((u) => u.const === unit);
+
 /** What a face shows a person for unit `unit`: its PARAM_UNITS id's x-symbol (`percent` -> `%`, `none` -> ``,
- * `dBPerOct` -> `dB/oct`), else the unit as written. A C table's text, a manual page and a summary write this; every
- * word a host reads (a descriptor, a TTL's units:unit, the param-contract token) stays the id. */
-export const unitSymbol = (unit) => standardUnitSymbols()[unit] ?? unit ?? '';
+ * `dBPerOct` -> `dB/oct`), or the x-symbol of the declaration's own unit of that id (`units`, its `units` block), else
+ * the unit as written. A C table's text, a manual page and a summary write this; every word a host reads (a
+ * descriptor, a TTL's units:unit, the param-contract token) stays the id. */
+export const unitSymbol = (unit, units) => standardUnitSymbols()[unit] ?? ownUnitOf(units, unit)?.['x-symbol'] ?? unit ?? '';
+
+/** The words of a words item of omx-contract's param domain (PARAM_UNIT_DIMENSIONS, PARAM_UNIT_SCOPES), as a Set. */
+const paramWords = (item) => {
+  const { file, schemas } = domainDocument('param', 'omx-contract-data >= 3.22.0');
+  const words = schemas[item]?.oneOf;
+  if (!Array.isArray(words)) throw new Error(`${file}: holds no ${item} words`);
+  return new Set(words.map((w) => w.const));
+};
+
+/**
+ * The refusals of a declaration's own units, `units` (its `units` block; Open-Mixer/omx-plugins#172), each `units/<i>:
+ * why`. Units are owned per producer (omx-contract#144), one name one home: an own id that is a PARAM_UNITS id, or an
+ * own x-symbol that is a PARAM_UNITS x-symbol (a face's text names one id), is refused; so is an id or a symbol declared
+ * twice, an `x-code` that is not the word's place (as a PARAM_UNITS word's code is its place), and an `x-dimension` or
+ * `x-group` that is no word of PARAM_UNIT_DIMENSIONS or PARAM_UNIT_SCOPES.
+ */
+export function ownUnitRefusals(units) {
+  const out = [];
+  const std = standardUnitSymbols();
+  const stdBySymbol = new Map(Object.entries(std).map(([id, sym]) => [sym, id]));
+  const ids = new Set(), symbols = new Set();
+  (units ?? []).forEach((u, i) => {
+    const at = `units/${i}`;
+    if (Object.hasOwn(std, u.const)) out.push(`${at}: '${u.const}' is a PARAM_UNITS id; a plugin's own unit takes a name of its own (one name, one home)`);
+    else if (ids.has(u.const)) out.push(`${at}: '${u.const}' is declared twice`);
+    ids.add(u.const);
+    const sym = u['x-symbol'];
+    if (stdBySymbol.has(sym)) out.push(`${at}: x-symbol '${sym}' is PARAM_UNITS' ${stdBySymbol.get(sym)}'s; a face's text names one unit`);
+    else if (symbols.has(sym)) out.push(`${at}: x-symbol '${sym}' is another own unit's`);
+    symbols.add(sym);
+    if (u['x-code'] !== i) out.push(`${at}: x-code ${u['x-code']} is not its place, ${i}`);
+    if (u['x-dimension'] !== undefined && !paramWords('PARAM_UNIT_DIMENSIONS').has(u['x-dimension'])) out.push(`${at}: x-dimension '${u['x-dimension']}' is no word of PARAM_UNIT_DIMENSIONS`);
+    if (u['x-group'] !== undefined && !paramWords('PARAM_UNIT_SCOPES').has(u['x-group'])) out.push(`${at}: x-group '${u['x-group']}' is no word of PARAM_UNIT_SCOPES`);
+  });
+  return out;
+}
 
 /** The OpenMixer units, the pairs of the LV2 table's `units:unit` row (plugin-db's lv2 domain, LV2_OPENMIXER_UNIT_IDS:
  * the exact URI an LV2 file writes, x-uri, and its PARAM_UNITS id; sorting rows M3, M5): `{ <PARAM_UNITS id>: <uri> }`,

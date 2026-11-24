@@ -19,7 +19,7 @@ import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { unitSymbol } from './format-tables.mjs';
 import { faceIds } from './param-contract.mjs';
-import { baseOf } from './variants.mjs';
+import { rawDeclOf } from './variants.mjs';
 import { isMain } from './omx-contract.mjs';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -35,15 +35,8 @@ export function describedStems(root = ROOT) {
   return readdirSync(join(root, 'plugins')).sort().filter((n) => existsSync(join(root, 'plugins', n, `${n}.descriptor.json`)));
 }
 
-/** The declaration (raw) whose panel `stem` draws: its own, or its base's for a variant. */
-function panelOwner(root, stem) {
-  const dir = join(root, 'plugins', stem);
-  const own = join(dir, `${stem}.decl.json`);
-  if (existsSync(own)) return JSON.parse(readFileSync(own, 'utf8'));
-  const base = baseOf(dir);
-  if (!base) throw new Error(`plugins/${stem}: no declaration and no base declaration names it`);
-  return base.decl;
-}
+/** The declaration (raw) whose panel and own units `stem` draws: its own, or its base's for a variant. */
+const panelOwner = (root, stem) => rawDeclOf(join(root, 'plugins', stem));
 
 /** The pages of a descriptor: each distinct group path, with its LV2 symbol and priority, a panel section's pages
  * together where the section's first control comes and, within the section, in the order their first control comes
@@ -100,8 +93,8 @@ export function pluginPage(root, stem) {
     '| Id | Symbol | Name | Unit | Min | Max | Default | Step or values | Flags | Page (priority) |', '|---|---|---|---|---|---|---|---|---|---|'];
   for (const c of descriptor.controls) {
     const v = valueOf(c);
-    // the unit as a person reads it, its PARAM_UNITS id's x-symbol (percent is %)
-    const unit = unitSymbol(c.kind === 'travel' ? c.travel.unit : c.unit);
+    // the unit as a person reads it, its PARAM_UNITS id's x-symbol (percent is %), or its own unit's
+    const unit = unitSymbol(c.kind === 'travel' ? c.travel.unit : c.unit, decl.units);
     const flags = [c.automatable ? 'automatable' : null, c.group ? null : 'hidden'].filter(Boolean).join(', ');
     const page = c.group ? `${c.group.join(' / ')} (${priorityOf.get(c.group.join('/'))})` : '';
     out.push(`| ${c.id} | \`${c.symbol}\` | ${cell(c.name)} | ${cell(unit)} | ${cell(v.min)} | ${cell(v.max)} | ${cell(v.def)} | ${cell(v.step)} | ${flags} | ${cell(page)} |`);

@@ -148,6 +148,28 @@ no pair for and a value two rows map are each refused by name. No transform is c
 
 `make format-tables` (part of `make test`) holds the faces to the tables, with its sabotage arms.
 
+## A plugin's own units
+
+Units are owned by their producer (omx-contract#144): a unit no `PARAM_UNITS` word is, which only this plugin's
+controls measure in, is declared in the declaration's `units` block (`<stem>.decl.json`, the extras file of a
+described plugin), and moves to a shared domain only when a second producer needs it. Each entry is a word shaped as
+`PARAM_UNITS`' words are, omx-contract's domain schema `$defs.word` (`domain.schema.json`, which
+`schema/plugin.decl.schema.json` references by `$id`): `const` the id, `title` its key, `description`, `x-code` its
+place in the block, `x-symbol` its display spelling, and optionally `x-dimension` (a `PARAM_UNIT_DIMENSIONS` word) and
+`x-group` (a `PARAM_UNIT_SCOPES` word). A parameter's `unit` is a `PARAM_UNITS` id or one of these ids.
+
+One name, one home: `tools/gen.mjs` refuses an own id that is a `PARAM_UNITS` id, an own `x-symbol` that is a
+`PARAM_UNITS` one (the text a face shows names one unit), an id or symbol declared twice, an `x-code` off its place, a
+dimension or group that is no word of its list, an own unit no parameter names, and a parameter naming a unit neither
+declares. An own unit flows as a standard one does: the C table and the CLAP face's value_to_text show its `x-symbol`,
+and so do the plain description, the manual and the parameter reference; the LV2 port's `units:unit` is
+`<urn:openmixer:<short>#unit.<id>>`, under the plugin's own URI (a port group's fragment is a section key, which has no
+dot), and the plugin's TTL defines it (`units:Unit`, its `description` the label, `%f <x-symbol>` the render, the
+`x-symbol` the symbol); the descriptor, the panel description and a preset state its id; the parameter contract
+states `none` for it, its text left to value_to_text, as for a standard unit omx-clap has no code for. No shipped
+plugin declares one yet. `make own-units` (part of `make test`) holds all of it over a fixture plugin,
+`tools/test/own-units/omx-ownunit.decl.json`.
+
 ## The round trip
 
 The authored descriptor is also what our built faces must serve, read back as plugin-hostd reads anyone's plugin

@@ -21,7 +21,7 @@ const d = loadDecl(dir);
 const rows = readFileSync(dump, 'utf8').trim().split('\n').map((l) => l.split('\t'));
 const STEPPED = 1, BYPASS = 16, AUTOMATABLE = 32;
 const want = [
-  ...d.params.map((p, i) => [i, p.name, p.min, p.max, p.def, AUTOMATABLE | (p.kind ? STEPPED : 0), unitSymbol(p.unit)]),
+  ...d.params.map((p, i) => [i, p.name, p.min, p.max, p.def, AUTOMATABLE | (p.kind ? STEPPED : 0), unitSymbol(p.unit, d.units)]),
   [faceIds().bypassClapId, 'Bypass', 0, 1, 0, AUTOMATABLE | STEPPED | BYPASS, ''],
 ];
 let bad = 0;

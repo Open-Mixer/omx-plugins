@@ -159,6 +159,15 @@
           "title": "Parameters",
           "description": "The parameters, in order. Append-only once released: the order is the CLAP param id and the LV2 port order. A `binding: chain` declaration has none: its list is generated from `chain`."
         },
+        "units": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ownUnit"
+          },
+          "title": "Units",
+          "description": "The plugin's own units: a unit no PARAM_UNITS word of omx-contract's param domain is, which a parameter of this plugin names in its `unit` (units are owned per producer, omx-contract#144). Each is a word shaped as PARAM_UNITS' words are, in order, `x-code` its place. A parameter's unit is a PARAM_UNITS id or one of these; an own id or x-symbol that is PARAM_UNITS' is refused (one name, one home), and so is an own unit no parameter names. The faces carry it as a standard unit: the C table and the CLAP face's value_to_text show its x-symbol, the LV2 port's units:unit is <lv2 uri>#unit.<id>, defined in the plugin's TTL, the descriptor and the panel description state its id, and the parameter contract states none (omx-clap's codes are standard units'). A unit moves to a shared domain only when a second producer needs it. Left out, every unit is a PARAM_UNITS id."
+        },
         "chain": {
           "type": "array",
           "minItems": 2,
@@ -467,6 +476,32 @@
         }
       ]
     },
+    "ownUnit": {
+      "title": "An own unit",
+      "description": "One of the plugin's own units: a word of omx-contract's domain schema ($defs.word, the shape of a PARAM_UNITS word), `const` its id (the word a descriptor, a TTL and the panel description state), `title` its key, `description` what it measures (the TTL's rdfs:label), `x-code` its place in the block, `x-symbol` its display spelling (what the C table and value_to_text show, the TTL's units:symbol), and, as a PARAM_UNITS word has them, `x-dimension` a PARAM_UNIT_DIMENSIONS word and `x-group` a PARAM_UNIT_SCOPES word.",
+      "allOf": [
+        {
+          "$ref": "https://openmixer.org/schema/omx-contract/v3/domain.schema.json#/$defs/word"
+        },
+        {
+          "required": [
+            "description",
+            "x-symbol"
+          ],
+          "properties": {
+            "const": {
+              "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+            },
+            "description": {
+              "minLength": 1
+            },
+            "x-symbol": {
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
     "param": {
       "type": "object",
       "required": [
@@ -596,7 +631,9 @@
           "type": "number"
         },
         "unit": {
-          "type": "string"
+          "type": "string",
+          "title": "Unit",
+          "description": "The travel's unit by id: a PARAM_UNITS id of omx-contract's param domain (`dB`, `percent`, `none`), or one of the plugin's own `units`. Never a display spelling (`%`): that is the id's x-symbol."
         },
         "kind": {
           "enum": [
