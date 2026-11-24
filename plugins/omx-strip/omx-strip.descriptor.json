@@ -78,6 +78,7 @@
       "group": [
         "Filters"
       ],
+      "response": "highpass",
       "automatable": true,
       "source": {
         "from": {
@@ -102,6 +103,7 @@
       "group": [
         "Filters"
       ],
+      "response": "highpass",
       "automatable": true,
       "source": {
         "from": {
@@ -131,6 +133,7 @@
       "group": [
         "Filters"
       ],
+      "response": "highpass",
       "automatable": true,
       "source": {
         "from": {
@@ -148,6 +151,7 @@
       "group": [
         "Filters"
       ],
+      "response": "lowpass",
       "automatable": true,
       "source": {
         "from": {
@@ -172,6 +176,7 @@
       "group": [
         "Filters"
       ],
+      "response": "lowpass",
       "automatable": true,
       "source": {
         "from": {
@@ -201,6 +206,7 @@
       "group": [
         "Filters"
       ],
+      "response": "lowpass",
       "automatable": true,
       "source": {
         "from": {

@@ -45,34 +45,40 @@
         {
           "symbol": "hpfOn",
           "name": "HPF",
+          "response": "highpass",
           "ref": "EQ_HPF_ONS"
         },
         {
           "symbol": "hpfFreq",
           "name": "HPF Freq",
+          "response": "highpass",
           "ref": "HPF_FREQ_RANGE",
           "defaultRef": "EQ_PASS_FILTER_DEFAULTS.hpfFreqHz"
         },
         {
           "symbol": "hpfSlope",
           "name": "HPF Slope",
+          "response": "highpass",
           "ref": "FILTER_SLOPES",
           "unit": "dB/oct"
         },
         {
           "symbol": "lpfOn",
           "name": "LPF",
+          "response": "lowpass",
           "ref": "EQ_LPF_ONS"
         },
         {
           "symbol": "lpfFreq",
           "name": "LPF Freq",
+          "response": "lowpass",
           "ref": "LPF_FREQ_RANGE",
           "defaultRef": "EQ_PASS_FILTER_DEFAULTS.lpfFreqHz"
         },
         {
           "symbol": "lpfSlope",
           "name": "LPF Slope",
+          "response": "lowpass",
           "ref": "FILTER_SLOPES",
           "unit": "dB/oct"
         }

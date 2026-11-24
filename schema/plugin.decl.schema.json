@@ -589,6 +589,7 @@
         "def": {
           "type": "number"
         },
+        "response": { "type": "string", "minLength": 1, "description": "The response of the filter the control sets, where it is fixed: a word of omx-contract's PARAM_FILTER_RESPONSES (the installed schema's $defs.filterResponse, which tools/descriptor.mjs holds it to). A band whose shape a type choice picks states none." },
         "unit": {
           "type": "string"
         },

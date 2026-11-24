@@ -15,7 +15,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { FILTER_RESPONSES, filterResponses, responseOfControl } from '../descriptor.mjs';
+import { FILTER_RESPONSES, filterResponses, responseOfControl, typedBand } from '../descriptor.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const load = (stem) => JSON.parse(readFileSync(join(root, 'plugins', stem, `${stem}.descriptor.json`), 'utf8'));
@@ -54,6 +54,11 @@ if (process.argv.includes('--self-test')) {
   throws('a schema with no filterResponse', () => filterResponses({ $defs: {} }));
   throws('the generator takes a word the schema does not list', () => responseOfControl({ symbol: 'x', response: 'lowCut' }, 'arm'));
   throws('the generator takes a response on a per-band control beside a type choice', () => responseOfControl({ symbol: 'b1_freq', response: FILTER_RESPONSES[0] }, 'arm', true));
+  for (const [type, on, off] of [['b1_type', 'b1_freq', 'hpf_freq'], ['eq1Type', 'eq1Freq', 'lpfOn'], ['bandType1', 'freq1', 'freq2']]) {
+    const params = [{ symbol: type, ref: 'EQ_BAND_TYPES' }, { symbol: on, ref: 'EQ_FREQ_RANGE' }, { symbol: off, ref: 'EQ_FREQ_RANGE' }];
+    if (!typedBand(params[1], params)) bad.push(`arm: ${on} is not on ${type}'s band`);
+    if (typedBand(params[2], params)) bad.push(`arm: ${off} is on ${type}'s band`);
+  }
   if (responseOfControl({ symbol: 'x' }, 'arm') !== undefined) bad.push('arm: a control with no response was given one');
   if (responseOfControl({ symbol: 'x', response: FILTER_RESPONSES[0] }, 'arm') !== FILTER_RESPONSES[0]) bad.push('arm: a stated word was not kept');
 }

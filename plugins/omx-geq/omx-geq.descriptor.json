@@ -34,6 +34,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -59,6 +60,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -84,6 +86,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -109,6 +112,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -134,6 +138,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -159,6 +164,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -184,6 +190,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -209,6 +216,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -234,6 +242,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -259,6 +268,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -284,6 +294,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -309,6 +320,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -334,6 +346,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -359,6 +372,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -384,6 +398,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -409,6 +424,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -434,6 +450,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -459,6 +476,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -484,6 +502,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -509,6 +528,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -534,6 +554,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -559,6 +580,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -584,6 +606,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -609,6 +632,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -634,6 +658,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -659,6 +684,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -684,6 +710,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -709,6 +736,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -734,6 +762,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -759,6 +788,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
@@ -784,6 +814,7 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
