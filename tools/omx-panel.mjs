@@ -63,7 +63,8 @@ export function roleMeaningFiles() {
 process.env.OMX_ROLE_MEANINGS ||= roleMeaningFiles().join(':');
 
 /** omx-panel's declared lists (schema/panel.schema.json): the widgets a control is drawn with and the roles that repeat by
- * index. A plugin's declaration schema references its `$defs` by this schema's `$id`. */
+ * index. A plugin's declaration schema references its `$defs` by the document's name, `panel.schema.json#/$defs/<name>`
+ * (tools/schema-validate.mjs), never by the address its `$id` prints, which moves with its publisher. */
 export const PANEL_SCHEMA = JSON.parse(readFileSync(at('schema', 'panel.schema.json'), 'utf8'));
 
 /** Runs `omx-panel <args>`: `{ status, stdout, stderr }`. */

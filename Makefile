@@ -54,6 +54,8 @@
 #                   (tools/test/band-port-groups-check.mjs, with its sabotage arms)
 #   make geq-widgets  omx-geq declares the fader for its 31 bands, and its panel description and generated header serve them
 #                   (tools/test/geq-widgets-test.mjs; part of `make test`)
+#   make decl-schema-panel-ref  the declaration schema reaches omx-panel's definitions by panel.schema.json's name, under an
+#                   omx-panel whose schema prints another $id (tools/test/decl-schema-panel-ref-test.mjs; part of `make test`)
 #   make hints      no LV2 face lost a port hint: tools/port-hints.mjs against each declaration's `portHints` pin
 #   make manual     each declaration's manual follows omx-contract: a travel moved in a copy of the release moves
 #                   the catalogue section's range and default (tools/test/manual-perturb.mjs)
@@ -180,12 +182,12 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
+.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base decl-schema-panel-ref
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
 # every fast check, each its own target: `make test` runs them with -k, so one red does not hide the others
-test-checks: entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie own-units face-ids comp-release-mode strip-visible-when strip-pages-follow face-dirty-order core-init-answers meter-words debt-base test-split
+test-checks: entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets decl-schema-panel-ref summary-numbers param-tie own-units face-ids comp-release-mode strip-visible-when strip-pages-follow face-dirty-order core-init-answers meter-words debt-base test-split
 # make test runs every part whatever an earlier part answered, and is red when any part was: the fast checks (-k),
 # then every plugin's test, then the steps that read the built plugins. A red check never hides a plugin's test
 # (tools/test/test-split-check.mjs holds the recipe to that).
@@ -370,6 +372,10 @@ strip-pages-follow:
 	  node tools/test/strip-pages-follow-test.mjs build/strip-pages-follow.txt
 geq-widgets:
 	node tools/test/geq-widgets-test.mjs
+# the declaration schema reaches omx-panel's definitions by the document's name, whatever address its $id prints
+# (tools/test/decl-schema-panel-ref-test.mjs; part of `make test`)
+decl-schema-panel-ref:
+	node tools/test/decl-schema-panel-ref-test.mjs
 # the parameter reference of every plugin, written from the declarations (docs/plugins/)
 params-doc:
 	node tools/params-doc.mjs
