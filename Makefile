@@ -61,6 +61,9 @@
 #     make completeness  every plugin against recipes/plugin.recipe.json, each gap naming its wizard step;
 #                        a gap not in recipes/completeness-debt.json fails, and so does a paid debt entry
 #     make selftest      the recipe's checkers, wizard and commit protocol, each sabotaged (needs git)
+#   make meter-held  a built face (omx-comp) keeps a 10 ms burst of level, gain reduction and clip until the host reads it, at
+#                   every oracle rate and quantum, and each sabotage of the ring goes red (tools/meter-held-check.sh; part of
+#                   `make test`); `make meter-rows` holds the generator's held and clip words
 #   make meters-abi  the clap.meters/1 header omx-clap installs has the id, enums, sizeof and offsetof the
 #                    plugins are built for (tools/test/meters-abi-test.c, compile and run; part of `make test`)
 #   make param-contract-abi  include/omx_param_contract.h's extension table and entry are the layout omx-clap's
@@ -182,7 +185,7 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
+.PHONY: graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
@@ -202,6 +205,8 @@ test: lib entry-symlink units panel-words schema-urls graph-enum oracle-rates fa
 	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
 	@$(MAKE) -s comp-published-scan
+	@$(MAKE) -s meter-held
+	@$(MAKE) -s meter-rows
 	@$(MAKE) -s strip-bands
 	@$(MAKE) -s test-role
 	@$(MAKE) -s package-lists
@@ -231,6 +236,7 @@ test-faces: all lib contract-union eq-probe-race
 	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
 	@$(MAKE) -s comp-published-scan
+	@$(MAKE) -s meter-held
 	@$(MAKE) -s test-role
 	@$(MAKE) -s package-lists
 units:
@@ -450,6 +456,13 @@ dsp-copies:
 meter-ring:
 	tools/meter-ring-check.sh
 	tools/meter-ring-check.sh --self-test
+# a built face holds its meters until the host reads them, through the whole path (omx-comp), and each sabotage goes red
+meter-held:
+	tools/meter-held-check.sh
+	tools/meter-held-check.sh --self-test
+# the meter words held and clip reach the face rows the generator emits
+meter-rows:
+	node tools/test/meter-rows-test.mjs
 strip-crosscheck:
 	sh tools/test/strip-crosscheck.sh
 strip-bands:

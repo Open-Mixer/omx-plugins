@@ -1094,6 +1094,12 @@ export function meterRows(d, face) {
     const at = 'read' in m ? 'read' : 'field';
     const own = m.kind === 'gain_reduction' ? [at, 'readout'] : reads ? ['read', 'readout'] : ['source', 'min', 'max'];
     if ('linear' in m && !(m.kind === 'gain_reduction' && at === 'field' && m.linear === true)) throw new Error(`${where}: 'linear' is true on a gain reduction read from a 'field'`);
+    // the meter words of docs/meters.md (omx-contract's `held` and `clip`): held, true unless the declaration says it is not;
+    // clip, a run of over-full-scale samples carried on the same publication, true for a level the face measures unless the
+    // declaration says `clip: false`, and never for a reading of the kernel's
+    for (const w of ['held', 'clip']) if (w in m && typeof m[w] !== 'boolean') throw new Error(`${where}: '${w}' is true or false`);
+    if (m.clip === true && reads) throw new Error(`${where}: a reading of the kernel's carries no clip word; the face counts samples over full scale only at the inputs or outputs`);
+    if (m.clip === true && m.held === false) throw new Error(`${where}: a clip word is a held meter's; it says since the last read, and 'held: false' has no last read to say it since`);
     for (const key of ['field', 'read', 'readout', 'source', 'min', 'max']) {
       if (own.includes(key) && !(key in m)) throw new Error(`${where}: a ${m.kind} meter names its '${key}'`);
       if (!own.includes(key) && key in m) throw new Error(`${where}: a ${m.kind} meter ${reads && m.kind === 'level' ? 'the kernel reads ' : ''}takes no '${key}'`);
@@ -1126,6 +1132,7 @@ export function meterRows(d, face) {
       if (!(Number.isFinite(m.min) && Number.isFinite(m.max) && m.min < m.max)) throw new Error(`${where}: the range ${m.min}..${m.max} is not a range`);
       row = { channels: 2, min: m.min, max: m.max, core: '', ref: '' };
     }
+    const held = m.held !== false, clip = held && !reads && m.clip !== false;
     const out = {
       meterIndex: k, meterName: m.id, meterKind: METER_KINDS[m.kind], meterFaceKind: FACE_METER_KINDS[m.kind], meterReadCore: row.core, meterReadRef: row.ref,
       meterChannels: row.channels, meterOffset: offset, meterRight: offset + 1, meterMin: cdouble(row.min), meterMax: cdouble(row.max),
@@ -1133,6 +1140,10 @@ export function meterRows(d, face) {
       // where the shared face reads it (include/omx_plugin_face.h); what a bypassed kernel's stale reading
       // publishes: no reduction, or a level's display minimum
       meterSource: reads ? 'OMX_FACE_METER_READ' : m.source === 'input' ? 'OMX_FACE_METER_IN' : 'OMX_FACE_METER_OUT',
+      meterHeld: held ? '1u' : '0u', meterClip: clip ? '1u' : '0u',
+      // the flags clap.meters/1 reports: the draft's coherent bit, and the held and clip bits omx-clap's host reads
+      // (<omx-clap-host/clap_host.h>)
+      meterFlags: `CLAP_METER_IS_COHERENT${held ? ' | OMX_CLAP_METER_IS_HELD' : ''}${clip ? ' | OMX_CLAP_METER_HAS_CLIP' : ''}`,
       meterBypassRef: m.kind === 'gain_reduction' ? '0.0' : `METERS[${k}].min`,
     };
     offset += row.channels;

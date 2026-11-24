@@ -10,7 +10,7 @@
     ],
     "steps": [
       "per-plugin test", "presets-figures", "lib-test", "hints", "manual", "presets", "meters-abi", "lv2-refuse-rate", "param-contract-abi", "panel-abi",
-      "host-contract", "meter-level", "comp-published-scan", "strip-bands", "test-role", "package-lists"
+      "host-contract", "meter-level", "comp-published-scan", "meter-held", "meter-rows", "strip-bands", "test-role", "package-lists"
     ]
   },
   "test-heavy": {

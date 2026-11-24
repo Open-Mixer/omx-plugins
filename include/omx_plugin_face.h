@@ -50,6 +50,12 @@ struct omx_face_meter {
   uint32_t kind, channels, at;
   double min, max;
   uint32_t source; /* enum omx_face_meter_source */
+  /** The declaration's `held` word: 1, the plugin keeps the block's value (the deepest, for a gain reduction)
+   * until the host reads it (docs/meters.md); 0, the meter gives the block's own value. */
+  uint32_t held;
+  /** The declaration's `clip` word: 1, a level the face measures also carries a clip word, the longest run of
+   * samples over full scale since the host's last read, on the same publication; 0, it declares none. */
+  uint32_t clip;
 };
 
 /** The LV2 face's port indices (generated/omx_<kernel>_params.h's OMX_<K>_LV2_PORT_*): `first_meter` is

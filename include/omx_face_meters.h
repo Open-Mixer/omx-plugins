@@ -10,6 +10,7 @@
 #ifndef OMX_FACE_METERS_H
 #define OMX_FACE_METERS_H
 
+#include <math.h>
 #include <stdint.h>
 
 #include "omx_plugin_face.h"
@@ -23,6 +24,42 @@ static inline void omx_face_meter_levels(const struct omx_face *f, uint32_t sour
     if (row->source != source) continue;
     mv[row->at] = omx_meter_level_db(l, frames, row->min);
     mv[row->at + 1] = omx_meter_level_db(r, frames, row->min);
+  }
+}
+
+/** The longest run of consecutive samples over full scale in `x` (a NaN is none). */
+static inline double omx_face_clip_run(const float *x, uint32_t frames) {
+  uint32_t run = 0, longest = 0;
+  for (uint32_t i = 0; i < frames; ++i) {
+    run = fabsf(x[i]) > 1.0f ? run + 1u : 0u;
+    if (run > longest) longest = run;
+  }
+  return (double)longest;
+}
+
+/** The clip words of `source`'s levels that declare one: each leg's longest over-full-scale run of `l` and `r`
+ * into `cv` (laid out as the values; the caller zeroes it first). */
+static inline void omx_face_meter_clips(const struct omx_face *f, uint32_t source, const float *l, const float *r,
+                                        uint32_t frames, double *cv) {
+  for (uint32_t m = 0; m < f->meter_count; ++m) {
+    const struct omx_face_meter *row = &f->meters[m];
+    if (row->source != source || !row->clip) continue;
+    cv[row->at] = omx_face_clip_run(l, frames);
+    cv[row->at + 1] = omx_face_clip_run(r, frames);
+  }
+}
+
+/** The ring's policy for the declaration's meters: a gain reduction holds its deepest, a meter declared
+ * `held: false` holds nothing. */
+static inline void omx_face_meter_masks(const struct omx_face *f, unsigned int *deep, unsigned int *hold) {
+  *deep = 0u;
+  *hold = 0u;
+  for (uint32_t m = 0; m < f->meter_count; ++m) {
+    const struct omx_face_meter *row = &f->meters[m];
+    for (uint32_t c = 0; c < row->channels; ++c) {
+      if (row->kind == OMX_FACE_METER_KIND_GAIN_REDUCTION) *deep |= 1u << (row->at + c);
+      if (row->held) *hold |= 1u << (row->at + c);
+    }
   }
 }
 
