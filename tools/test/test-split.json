@@ -76,7 +76,8 @@
     ],
     "steps": [
       "per-plugin test-heavy",
-      "round-trip"
+      "round-trip",
+      "curve-proof"
     ]
   },
   "plugin": {

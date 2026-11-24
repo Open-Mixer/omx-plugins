@@ -23,6 +23,12 @@
 #   make round-trip  every described plugin generated, both faces built and scanned back by plugin-hostd-probe describe,
 #                   compared with its authored descriptor word by word: equal, lost <format> <word> or differs
 #                   (tools/round-trip.{sh,mjs}, with its two sabotage arms; part of `make test`)
+#   make curve-proof  every display a declaration marks `basis: exact` is measured: omx-comp's transfer curve and
+#                   omx-eq8/16/32's EQ response at three settings each, at 48 and 96 kHz, the curve omx-dsp's
+#                   omx_curve_points draws over the description's roles against the plugin's static response through
+#                   libomx-clap (a level sweep, a sine sweep), within 0.5 dB at every point; a display marked exact and
+#                   not measured, or measured and not marked, refused (tools/test/curve-proof.{mjs,c}, with its
+#                   sabotage arms; part of `make test-heavy`, in its first slice)
 #   make contract-union  parallel make targets render omx-contract's union into private directories and read it whole
 #                   (tools/test/contract-union-race-test.mjs; part of `make test` and `make test-faces`)
 #   make face-header  include/omx_plugin_face_ids.h is contract/plugin-face.json's render, byte for byte with the omx-contract
@@ -182,7 +188,7 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base decl-schema-panel-ref
+.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base decl-schema-panel-ref
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
@@ -226,9 +232,10 @@ HEAVY_ROUND_TRIP = $(if $(OMX_HEAVY_SHARD),$(filter 1,$(HEAVY_I)),all)
 test-heavy: lib
 	@case '$(OMX_HEAVY_SHARD)' in ''|[1-9]/[1-9]|[1-9]/[1-9][0-9]|[1-9][0-9]/[1-9][0-9]) ;; \
 	  *) echo "test-heavy: OMX_HEAVY_SHARD='$(OMX_HEAVY_SHARD)' is not i/n" >&2; exit 2;; esac
-	@echo "test-heavy: $(words $(HEAVY_PLUGINS)) plugins$(if $(HEAVY_ROUND_TRIP), and the round trip)$(if $(OMX_HEAVY_SHARD), (slice $(OMX_HEAVY_SHARD)))"
+	@echo "test-heavy: $(words $(HEAVY_PLUGINS)) plugins$(if $(HEAVY_ROUND_TRIP), plus the round trip and the curve proof)$(if $(OMX_HEAVY_SHARD), (slice $(OMX_HEAVY_SHARD)))"
 	@for p in $(HEAVY_PLUGINS); do $(MAKE) -C $$p test-heavy || exit 1; done
 	@if [ -n '$(HEAVY_ROUND_TRIP)' ]; then $(MAKE) -s round-trip; fi
+	@if [ -n '$(HEAVY_ROUND_TRIP)' ]; then $(MAKE) -s curve-proof; fi
 # what runs with no omx-contract command (debian/rules: no .deb ships the command yet): the built faces, the static
 # table and the ABI checks; nothing here reads the contract directory (the round trip generates, so it runs in make test)
 test-faces: all lib contract-union eq-probe-race
@@ -438,6 +445,13 @@ panel-abi:
 	$(CC) -std=gnu11 -Wall -Wextra -Werror -Iinclude $(shell $(PKG_CONFIG) --cflags omx-clap clap) -o build/panel-abi-test tools/test/panel-abi-test.c
 	build/panel-abi-test
 	@echo "ok   org.openmixer.panel-description/1 as omx-clap declares it: id, codes, sizeof, offsetof and the omx_panel_get read-back"
+# the displays marked `basis: exact` against the measured plugins: the sabotage arms, then the guard and every case
+curve-proof:
+	@for p in $$(node tools/test/curve-proof.mjs --stems); do $(MAKE) -s -C plugins/$$p build/$$p.clap || exit 1; done
+	@mkdir -p build
+	$(CC) -std=gnu11 -O2 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap clap omxdsp omx-contract) -o build/curve-proof tools/test/curve-proof.c $(shell $(PKG_CONFIG) --libs omx-clap omxdsp) -lm
+	node tools/test/curve-proof.mjs build/curve-proof --self-test
+	node tools/test/curve-proof.mjs build/curve-proof
 host-contract: all
 	@mkdir -p build
 	$(CC) -std=gnu11 -Wall -Wextra -Werror $(shell $(PKG_CONFIG) --cflags omx-clap clap) -o build/host-contract-accept tools/test/host-contract-accept.c $(shell $(PKG_CONFIG) --libs omx-clap)
