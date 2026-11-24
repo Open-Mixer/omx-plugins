@@ -1,6 +1,12 @@
 omx-plugins (0.21.0) unstable; urgency=medium
 
   * The version moves to 0.21.0 (chain 3).
+  * Section titles, choice labels and preset names are translatable: the
+    omx-plugin-labels domain in omx-plugins-contract, generated from the
+    declarations (each a key and its English source sentence; parameter
+    names stay English), and one language pack per listed language,
+    omx-plugins-l10n-<lang>, each /usr/share/omx-plugins/catalogs/<lang>.json
+    (#18).
   * Floors: omx-clap-devel and omx-clap-contract >= 0.35.0 (Debian:
     libomx-clap-dev, omx-clap-contract).
   * Floors: omx-dsp-devel and omx-dsp-contract >= 0.34.1 (Debian:

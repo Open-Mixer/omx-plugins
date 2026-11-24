@@ -157,6 +157,19 @@ jobs:
         id: handback-completeness
         run: make completeness
 
+      # one pack per listed language from the spec and debian/control, and the labels' catalogs (catalogs/) through
+      # omx-contract's release gate (tools/catalogs-gate.sh, translate --check): a listed language with no catalog, a
+      # missing key or a stale entry is red (#18). Check only: the fill job below makes the entries
+      - name: The language packs
+        id: handback-langpacks
+        uses: Open-Mixer/.github/.github/actions/langpacks@openmixer-v1
+        with:
+          name: omx-plugins
+          owner: omx-plugins
+          spec: packaging/omx-plugins.spec
+          gate: tools/catalogs-gate.sh
+          fill: 'false'
+
       - name: include/omx_meter_ring.h never hands a reader two blocks at once, and each sabotage goes red
         id: handback-meter-ring
         run: |
@@ -164,6 +177,26 @@ jobs:
           # gcc only when absent: the cluster's worker image carries it and its verify runs unprivileged
           command -v gcc >/dev/null || dnf install -y --setopt=install_weak_deps=False gcc
           make meter-ring
+
+  # the catalogs' gaps fill themselves on the organisation's own pool, where the router answers (owner ruling
+  # 2026-11-20): dispatched on a lane branch that heads one open pull request of this repository, the shared workflow
+  # makes the missing entries through the router, signs them and pushes them to that branch only. The gate installs the
+  # labels domain into a scratch contract directory (make install-labels-domain), so it needs make, pkg-config and
+  # omx-contract-devel's install script
+  fill:
+    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+    uses: Open-Mixer/.github/.github/workflows/langpacks-fill.yml@openmixer-v1
+    with:
+      name: omx-plugins
+      owner: omx-plugins
+      spec: packaging/omx-plugins.spec
+      gate: tools/catalogs-gate.sh
+      # the keys are the labels domain's: the gate script installs it into a scratch contract directory, for a language too
+      fill-command: tools/catalogs-gate.sh
+      packages: make pkgconf-pkg-config omx-contract-devel
+    secrets: inherit
 
   test-heavy:
     # Beside make test: the set that runs the built plugins through a host (each plugin's oracles on both faces, host-check.sh, the round trip), in four slices of the plugins in parallel, the round trip in the

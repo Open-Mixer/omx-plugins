@@ -196,7 +196,15 @@ missing from omx-contract, or without a face of that shape, is refused with the 
 `node tools/gen.mjs` also refills the shared files' generated regions from every plugin folder: the
 README's catalogue and sections (a declaration's `summary` and `manual`, else its description and
 parameters), the RPM `%files` lists, CI's installed-file lists and libomxplugins' table of CLAP
-entries. The package descriptions are
+entries; and the labels domain, `contract.d/omx-plugin-labels/omx-plugin-labels.json`
+(`tools/plugin-labels.mjs`): every shipped plugin's section titles, choice labels and preset names,
+each a key `<ITEM>.<word>` with its English source sentence, which the catalogs,
+`catalogs/<lang>.json`, translate (installed with the domain, as its `catalogs/`, and to
+`/usr/share/omx-plugins/catalogs/`, one language pack each). CI's `fill` job (Open-Mixer/.github's
+langpacks-fill.yml) makes their missing entries when ci.yml is dispatched on a branch that heads an open pull request. A parameter's name stays English and
+has no key. `make plugin-labels` holds the domain to the declarations; `make catalogs-gate` is
+omx-contract's release gate over the catalogs (`omx-contract translate --check`), and
+`tools/catalogs-gate.sh --lang <xx> --model <alias>` makes a language's missing entries. The package descriptions are
 prose; the completeness test checks they name every shipped plugin. The older plugins (delay,
 drive, the EQs, strip, keyed gate) keep their hand-written faces and bindings.
 

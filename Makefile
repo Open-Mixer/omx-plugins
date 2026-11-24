@@ -111,7 +111,17 @@
 #   make install    DESTDIR, PREFIX, LIBDIR, CLAPDIR, DATADIR: $(CLAPDIR)/<name>.clap, $(LIBDIR)/lv2/<name>.lv2/ and the
 #                   factory presets in $(DATADIR)/omx/presets/<plugin id>/<preset id>.json
 #   make install-contract  DESTDIR, CONTRACTDIR: each shipped plugin's descriptor into omx-contract's contract directory,
-#                   $(CONTRACTDIR)/3/omx-plugins/plugins/<stem>.json and its MANIFEST.json (run by install-devel)
+#                   $(CONTRACTDIR)/3/omx-plugins/plugins/<stem>.json and its MANIFEST.json, and the labels domain,
+#                   $(CONTRACTDIR)/omx-plugin-labels/ with the catalogs (run by install-devel; alone: install-labels-domain)
+#   make install-catalogs  DESTDIR, DATADIR: the labels' catalogs, $(DATADIR)/omx-plugins/catalogs/<lang>.json, one per
+#                   listed language (run by install; each is its language pack's)
+#   make plugin-labels  every shipped plugin's section titles, choice labels and preset names are each a key of the
+#                   labels domain (contract.d/omx-plugin-labels, written by tools/gen.mjs) with its English source
+#                   sentence, no parameter name is a key, every listed language has its catalog, and omx-contract
+#                   validate reads the domain with its catalogs (tools/test/plugin-labels-check.mjs and
+#                   plugin-labels-validate.sh, with their sabotage arms; part of `make test`)
+#   make catalogs-gate  the catalogs through omx-contract's release gate, translate --check: a listed language with no
+#                   catalog, a key a catalog lacks or a stale entry is red (tools/catalogs-gate.sh; CI's language packs step)
 #   make contract-dir  the installed tree carries one descriptor per shipped plugin that has one, byte for byte, and
 #                   omx-contract's reader reads it (tools/test/contract-dir-check.sh, with its sabotage arms; part of `make test`)
 #   make lib        build/lib/libomxplugins.a: every shipped plugin's CLAP face and the table of their
@@ -188,12 +198,12 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base decl-schema-panel-ref
+.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dirmeter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base decl-schema-panel-ref
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
 # every fast check, each its own target: `make test` runs them with -k, so one red does not hide the others
-test-checks: entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets decl-schema-panel-ref summary-numbers param-tie own-units face-ids comp-release-mode strip-visible-when strip-pages-follow face-dirty-order core-init-answers meter-words debt-base test-split
+test-checks: entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings plugin-labels meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets decl-schema-panel-ref summary-numbers param-tie own-units face-ids comp-release-mode strip-visible-when strip-pages-follow face-dirty-order core-init-answers meter-words debt-base test-split
 # make test runs every part whatever an earlier part answered, and is red when any part was: the fast checks (-k),
 # then every plugin's test, then the steps that read the built plugins. A red check never hides a plugin's test
 # (tools/test/test-split-check.mjs holds the recipe to that).
@@ -267,6 +277,17 @@ face-header:
 # renderer refuses one that states none (tools/test/meanings-check.mjs; omx-contract docs/descriptors.md "Meanings")
 meanings:
 	node tools/test/meanings-check.mjs --self-test
+# every section title, choice label and preset name is a key with its English sentence, no parameter name is one, and
+# omx-contract validate reads the domain with its catalogs (tools/test/plugin-labels-check.mjs, plugin-labels-validate.sh)
+plugin-labels:
+	node tools/test/plugin-labels-check.mjs
+	node tools/test/plugin-labels-check.mjs --self-test
+	tools/test/plugin-labels-validate.sh
+	tools/test/plugin-labels-validate.sh --self-test
+# the catalogs whole and none stale: omx-contract's release gate (not part of `make test`: the entries are made at
+# release preparation, or by CI's language packs step)
+catalogs-gate:
+	tools/catalogs-gate.sh
 role-meanings:
 	node tools/test/role-meanings-check.mjs
 	node tools/test/role-meanings-check.mjs --self-test
@@ -518,9 +539,15 @@ strip-bands-bench:
 install:
 	@for p in $(SHIP_PLUGINS); do $(MAKE) -C $$p install || exit 1; done
 	$(MAKE) -s install-presets
+	$(MAKE) -s install-catalogs
 # the factory presets, where every plugin's preset-discovery factory declares them
 install-presets:
 	find presets -type f -name '*.json' | while read -r f; do install -D -m644 "$$f" "$(DESTDIR)$(DATADIR)/omx/$$f"; done
+# the labels' catalogs, where a surface reads them (omx-contract's catalog.mjs catalogPathOf): each is its language pack's
+LABELS_CATALOGS := catalogs
+install-catalogs:
+	install -d $(DESTDIR)$(DATADIR)/omx-plugins/catalogs
+	install -m644 $(wildcard $(LABELS_CATALOGS)/*.json) $(DESTDIR)$(DATADIR)/omx-plugins/catalogs/
 install-test:
 	@for p in $(TEST_PLUGINS); do $(MAKE) -C $$p all || exit 1; \
 	  n=$$(basename $$p); install -Dm755 $$p/build/$$n.clap $(DESTDIR)$(TESTCLAPDIR)/$$n.clap || exit 1; done
@@ -549,6 +576,18 @@ install-contract:
 	  for f in $(DESCRIPTORS); do cp "$$f" "$$stage/plugins/$$(basename "$$f" .descriptor.json).json" || exit 1; done && \
 	  for f in $(CONTRACT_FILES); do cp "$$f" "$$stage/" || exit 1; done && \
 	  sh $(INSTALL_CONTRACT_DIR) omx-plugins $(VERSION) $(CONTRACT_SCHEMA_MAJOR) "$$stage" $(DESTDIR)$(CONTRACTDIR)
+	$(MAKE) -s install-labels-domain
+# the labels domain: its document (contract.d/omx-plugin-labels, tools/gen.mjs) and the tree's catalogs/ beside it, staged
+# as omx-contract's domain layout (<domain>/<domain>.json, <domain>/catalogs/<lang>.json) and installed by its script
+install-labels-domain:
+	@test -n "$(INSTALL_CONTRACT_DIR)" || { echo "install-labels-domain: no install-contract-dir.sh: install omx-contract-devel, or set OMX_CONTRACT_DIR to a checkout" >&2; exit 1; }
+	@stage=$$(mktemp -d) && trap 'rm -rf "$$stage"' EXIT && mkdir -p "$$stage/contract.d/omx-plugin-labels/catalogs" && \
+	  cp contract.d/omx-plugin-labels/omx-plugin-labels.json "$$stage/contract.d/omx-plugin-labels/" && \
+	  cp $(wildcard $(LABELS_CATALOGS)/*.json) "$$stage/contract.d/omx-plugin-labels/catalogs/" && \
+	  sh $(INSTALL_CONTRACT_DIR) --domain "$$stage/contract.d/omx-plugin-labels" $(DESTDIR)$(CONTRACTDIR)
+# the install script the targets above run, for the checks that stage a contract directory the same way
+print-install-contract-dir:
+	@echo $(INSTALL_CONTRACT_DIR)
 # lv2bench's two output shapes (Debian, Fedora lilv 0.26.4) are both read by the Zynthian bundle probe, with its refusals
 lv2bench-ran:
 	tools/test/lv2bench-ran-check.sh
