@@ -198,9 +198,10 @@ README's catalogue and sections (a declaration's `summary` and `manual`, else it
 parameters), the RPM `%files` lists, CI's installed-file lists and libomxplugins' table of CLAP
 entries; and the labels domain, `contract.d/omx-plugin-labels/omx-plugin-labels.json`
 (`tools/plugin-labels.mjs`): every shipped plugin's section titles, choice labels and preset names,
-each a key `<ITEM>.<word>` with its English source sentence, which the catalogs beside it,
-`contract.d/omx-plugin-labels/catalogs/<lang>.json`, translate (installed with the domain and to
-`/usr/share/omx-plugins/catalogs/`, one language pack each). A parameter's name stays English and
+each a key `<ITEM>.<word>` with its English source sentence, which the catalogs,
+`catalogs/<lang>.json`, translate (installed with the domain, as its `catalogs/`, and to
+`/usr/share/omx-plugins/catalogs/`, one language pack each). CI's `fill` job (Open-Mixer/.github's
+langpacks-fill.yml) makes their missing entries when ci.yml is dispatched on a branch that heads an open pull request. A parameter's name stays English and
 has no key. `make plugin-labels` holds the domain to the declarations; `make catalogs-gate` is
 omx-contract's release gate over the catalogs (`omx-contract translate --check`), and
 `tools/catalogs-gate.sh --lang <xx> --model <alias>` makes a language's missing entries. The package descriptions are

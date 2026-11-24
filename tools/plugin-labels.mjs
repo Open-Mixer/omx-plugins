@@ -8,8 +8,8 @@
  * (omx-contract docs/contract-dir.md, "Domains"). A parameter's name stays English: it is no word here.
  *
  *   contract.d/omx-plugin-labels/omx-plugin-labels.json       the domain, written by tools/gen.mjs, never by hand
- *   contract.d/omx-plugin-labels/catalogs/<lang>.json         its translations, one per listed language, installed with
- *                                                              the domain and to /usr/share/omx-plugins/catalogs/
+ *   catalogs/<lang>.json                                      its translations, one per listed language, installed with
+ *                                                              the domain (its catalogs/) and to /usr/share/omx-plugins/catalogs/
  *
  * One item per shipped plugin, OMX_PLUGIN_LABELS_<STEM> (omx-keyed-gate: OMX_PLUGIN_LABELS_KEYED_GATE), so a plugin
  * added, or a preset added to one, moves no other plugin's codes (a word's x-code is its place in its item). A word is
@@ -22,7 +22,7 @@ import { join } from 'node:path';
 
 export const LABELS_DOMAIN = 'omx-plugin-labels';
 export const LABELS_FILE = `contract.d/${LABELS_DOMAIN}/${LABELS_DOMAIN}.json`;
-export const LABELS_CATALOGS = `contract.d/${LABELS_DOMAIN}/catalogs`;
+export const LABELS_CATALOGS = 'catalogs';
 export const LABELS_OWNER = 'omx-plugins';
 const PREFIX = 'OMX_PLUGIN_LABELS_';
 

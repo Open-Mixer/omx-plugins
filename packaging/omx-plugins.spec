@@ -198,6 +198,9 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 # the directory is plugin-hostd's, co-owned here so the package stands on its own at %%files time
 %dir %{_datadir}/plugin-hostd/pins.d
 %{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
+# the directory of the labels' catalogs; each catalog is its language pack's
+%dir %{_datadir}/omx-plugins
+%dir %{_datadir}/omx-plugins/catalogs
 
 %files clap
 %license LICENSE
@@ -265,11 +268,9 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 # each plugin's descriptor and the manifest, in omx-contract's contract directory (the directory itself is omx-contract-data's)
 %{_datadir}/omx-contract/contract.d/3/omx-plugins/
 # the labels domain (contract.d/omx-plugin-labels: section titles, choice labels and preset names, each a key with its
-# English source sentence) and its catalogs, beside the other domains; the same catalogs at /usr/share/omx-plugins/catalogs
+# English source sentence) and the catalogs, beside the other domains; the same catalogs at /usr/share/omx-plugins/catalogs
 # are the language packs'
 %{_datadir}/omx-contract/contract.d/omx-plugin-labels/
-%dir %{_datadir}/omx-plugins
-%dir %{_datadir}/omx-plugins/catalogs
 
 %files lv2
 %license LICENSE
@@ -315,8 +316,8 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 %package langpack-ca
 Summary: The ca catalog of omx-plugins's codes
 BuildArch: noarch
-Requires: omx-plugins-contract = %{version}-%{release}
-Supplements: (omx-plugins-contract and langpacks-ca)
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-ca)
 
 %description langpack-ca
 The sentences of omx-plugins's codes in the language ca, read by every surface
@@ -329,8 +330,8 @@ English source sentence.
 %package langpack-es
 Summary: The es catalog of omx-plugins's codes
 BuildArch: noarch
-Requires: omx-plugins-contract = %{version}-%{release}
-Supplements: (omx-plugins-contract and langpacks-es)
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-es)
 
 %description langpack-es
 The sentences of omx-plugins's codes in the language es, read by every surface
@@ -343,8 +344,8 @@ English source sentence.
 %package langpack-fr
 Summary: The fr catalog of omx-plugins's codes
 BuildArch: noarch
-Requires: omx-plugins-contract = %{version}-%{release}
-Supplements: (omx-plugins-contract and langpacks-fr)
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-fr)
 
 %description langpack-fr
 The sentences of omx-plugins's codes in the language fr, read by every surface
@@ -357,8 +358,8 @@ English source sentence.
 %package langpack-de
 Summary: The de catalog of omx-plugins's codes
 BuildArch: noarch
-Requires: omx-plugins-contract = %{version}-%{release}
-Supplements: (omx-plugins-contract and langpacks-de)
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-de)
 
 %description langpack-de
 The sentences of omx-plugins's codes in the language de, read by every surface
@@ -371,8 +372,8 @@ English source sentence.
 %package langpack-it
 Summary: The it catalog of omx-plugins's codes
 BuildArch: noarch
-Requires: omx-plugins-contract = %{version}-%{release}
-Supplements: (omx-plugins-contract and langpacks-it)
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-it)
 
 %description langpack-it
 The sentences of omx-plugins's codes in the language it, read by every surface
@@ -385,8 +386,8 @@ English source sentence.
 %package langpack-pt
 Summary: The pt catalog of omx-plugins's codes
 BuildArch: noarch
-Requires: omx-plugins-contract = %{version}-%{release}
-Supplements: (omx-plugins-contract and langpacks-pt)
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-pt)
 
 %description langpack-pt
 The sentences of omx-plugins's codes in the language pt, read by every surface

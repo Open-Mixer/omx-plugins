@@ -7,7 +7,7 @@
 // enumerated parameters' values and its factory presets' names are each a word of the committed domain
 // contract.d/omx-plugin-labels/omx-plugin-labels.json (tools/plugin-labels.mjs), its x-text the text as declared, and
 // the domain holds no other word; a parameter's name stays English, so no word is a parameter. Each listed language
-// (omx-contract's languages.json) has its catalog beside the domain, owned by omx-plugins, its every key a word of the
+// (omx-contract's languages.json) has its catalog in catalogs/, owned by omx-plugins, its every key a word of the
 // domain; that each entry's placeholders and the catalog's shape pass is omx-contract validate's (plugin-labels-validate.sh).
 //
 //   node tools/test/plugin-labels-check.mjs              the check
@@ -31,7 +31,7 @@ function listedLanguages() {
   return JSON.parse(readFileSync(file, 'utf8')).languages;
 }
 
-/** The catalogs beside the domain, by language (undefined when absent). */
+/** The tree's catalogs, catalogs/<lang>.json, by language (undefined when absent). */
 function readCatalogs(langs) {
   const dir = join(ROOT, LABELS_CATALOGS);
   const have = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.json')) : [];

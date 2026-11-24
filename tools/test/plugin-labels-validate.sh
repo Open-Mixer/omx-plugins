@@ -3,8 +3,8 @@
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 #
 # tools/test/plugin-labels-validate.sh — the labels domain, contract.d/omx-plugin-labels (tools/plugin-labels.mjs),
-# installed as `make install-contract` installs it (omx-contract's install-contract-dir.sh --domain) into a scratch
-# contract directory, is read by omx-contract's own reader with its catalogs: `omx-contract validate` over the domain
+# with the tree's catalogs/, installed as `make install-contract` installs it (make install-labels-domain: omx-contract's
+# install-contract-dir.sh --domain) into a scratch contract directory, is read by omx-contract's own reader with its catalogs: `omx-contract validate` over the domain
 # alone, then beside the installed contract directory (OMX_CONTRACT_PATH, so the prefix rule meets every other domain).
 # The reader holds each catalog to its schema, each key to a word of the domain and each placeholder to its args.
 #
@@ -18,7 +18,7 @@
 set -euo pipefail
 HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 DOMAIN=omx-plugin-labels
-SRC=$HERE/contract.d/$DOMAIN
+SRC=$HERE/contract.d/$DOMAIN/$DOMAIN.json
 
 cli() {
   if [ -n "${OMX_CONTRACT_CLI:-}" ]; then
@@ -35,22 +35,30 @@ INSTALLED=$(pkg-config --variable=contractdir omx-contract 2>/dev/null || true)
 SCRATCH=$(mktemp -d)
 trap 'rm -r "$SCRATCH"' EXIT
 
-# validate <domain dir> <tag>: install it into a fresh contract directory and read it, alone and beside the installed one
-validate() {
-  local from=$1 dir=$SCRATCH/$2/contract.d
-  mkdir -p "$dir"
-  sh "$INSTALLER" --domain "$from" "$dir" >/dev/null || return 1
+# read <contract dir>: the domain read there, alone and beside the installed contract directory
+read_dir() {
+  local dir=$1
   $CLI validate --contract-dir "$dir" || return 1
   if [ -n "$INSTALLED" ] && [ -d "$INSTALLED" ]; then
     OMX_CONTRACT_PATH="$dir:$INSTALLED" $CLI validate --installed || return 1
   fi
 }
 
-# a copy of the domain directory, under a contract.d/ (the installer names the domain from the path), then edited
+# validate <domain dir> <tag>: install a staged domain into a fresh contract directory and read it
+validate() {
+  local from=$1 dir=$SCRATCH/$2/contract.d
+  mkdir -p "$dir"
+  sh "$INSTALLER" --domain "$from" "$dir" >/dev/null || return 1
+  read_dir "$dir"
+}
+
+# the domain staged as make install-labels-domain stages it (its document and the tree's catalogs/), under a
+# contract.d/ (the installer names the domain from the path), for an arm to edit
 copy() {
   local to=$SCRATCH/src-$1/contract.d/$DOMAIN
-  mkdir -p "$(dirname "$to")"
-  cp -r "$SRC" "$to"
+  mkdir -p "$to/catalogs"
+  cp "$SRC" "$to/"
+  cp "$HERE"/catalogs/*.json "$to/catalogs/"
   echo "$to"
 }
 
@@ -81,6 +89,7 @@ if [ "${1:-}" = --self-test ]; then
   exit 0
 fi
 
-[ -f "$SRC/$DOMAIN.json" ] || { echo "plugin-labels-validate: no $SRC/$DOMAIN.json (run \`node tools/gen.mjs\`)" >&2; exit 1; }
-validate "$SRC" tree
+[ -f "$SRC" ] || { echo "plugin-labels-validate: no $SRC (run \`node tools/gen.mjs\`)" >&2; exit 1; }
+make -s --no-print-directory -C "$HERE" install-labels-domain DESTDIR= CONTRACTDIR="$SCRATCH/tree/contract.d" >/dev/null
+read_dir "$SCRATCH/tree/contract.d"
 echo "plugin-labels-validate: the $DOMAIN domain and its catalogs read through omx-contract validate"

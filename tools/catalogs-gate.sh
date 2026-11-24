@@ -4,8 +4,8 @@
 #
 # The labels' catalogs through omx-contract's release gate (translate --check): every listed language has its
 # catalog, no key of the omx-plugin-labels domain is missing from one and no entry is stale. The gate reads the keys
-# from a contract directory, so the domain is installed into a scratch one first (install-contract-dir.sh --domain);
-# the catalogs read and written are the tree's, contract.d/omx-plugin-labels/catalogs.
+# from a contract directory, so the domain is installed into a scratch one first (make install-labels-domain); the
+# catalogs read and written are the tree's, catalogs/.
 #
 #   tools/catalogs-gate.sh [translate options]   (default --check; e.g. --lang es --model <alias> to make a language)
 #
@@ -15,10 +15,8 @@
 set -eu
 cd "$(dirname "$0")/.."
 domain=omx-plugin-labels
-installer=$(make -s --no-print-directory print-install-contract-dir)
-[ -n "$installer" ] || { echo "catalogs-gate: no install-contract-dir.sh (omx-contract-devel, or OMX_CONTRACT_DIR)" >&2; exit 2; }
 dir=$(mktemp -d)
 trap 'rm -r "$dir"' EXIT
-sh "$installer" --domain "contract.d/$domain" "$dir" >/dev/null
+make -s --no-print-directory install-labels-domain DESTDIR= CONTRACTDIR="$dir" >/dev/null
 [ "$#" -gt 0 ] || set -- --check
-exec omx-contract translate "$@" --contract-dir "$dir" --catalogs "contract.d/$domain/catalogs" --package "$domain"
+omx-contract translate "$@" --contract-dir "$dir" --catalogs catalogs --package "$domain"
