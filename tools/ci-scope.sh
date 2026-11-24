@@ -5,7 +5,7 @@
 # tools/ci-scope.sh < changed-paths — whether a pull request changes what `make selftest` (the recipe machinery,
 # sabotaged arm by arm, over copies of the tree) exercises. Prints machinery=true or machinery=false.
 #
-# The selftest takes about 80 minutes because it sabotages the tool chain and the tree-wide checks. A change that is
+# The selftest takes 15 to 25 minutes in CI because it sabotages the tool chain and the tree-wide checks. A change that is
 # confined to the folders of plugins it never reads cannot move it, so it need not run again: false only when EVERY changed
 # path is under plugins/<name>/ and <name> is not one of SELFTEST_PLUGINS, the plugins tools/test/recipe-selftest.mjs copies,
 # drives or names (tools/test/ci-scope-check.sh keeps this list whole). Anything else, and an empty list, is true:

@@ -51,7 +51,7 @@ jobs:
             exit 0
           fi
           printf '%s\n' "$changed"
-          # the recipe selftest (about 80 minutes) runs when the change can move it: tools/ci-scope.sh
+          # the recipe selftest (15 to 25 minutes in CI) runs when the change can move it: tools/ci-scope.sh
           tools/ci-scope.sh <<<"$changed" >> "$GITHUB_OUTPUT"
 
   test:
@@ -189,13 +189,23 @@ jobs:
           if grep -E '^SKIP' test-heavy.log; then echo "::error::a test was skipped"; exit 1; fi
 
   selftest:
-    # Its own job, beside make test: the two together outgrew one job's 30 minutes once the chain and the
-    # compressor landed. Same container and dependencies; nothing is dropped.
-    name: make selftest (fedora:45, amd64)
+    # Its own jobs, beside make test: the two together outgrew one job's 30 minutes once the chain and the
+    # compressor landed, and the selftest alone once took 82 to 115 minutes against this 120-minute guard. Its parts
+    # run in the shards of tools/test/selftest-shards.json, packed by measured time so each is estimated under 45
+    # minutes with its setup, the fewest that fit (tools/test/selftest-shards-check.mjs holds this matrix to it). Same
+    # container and dependencies; nothing is dropped. The step is plain `make selftest`, the shard from the job's environment.
+    name: make selftest ${{ matrix.shard }} (fedora:45, amd64)
     needs: changes
     if: needs.changes.outputs.machinery == 'true'
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        shard:
+          - 1/1
+    env:
+      OMX_SELFTEST_SHARD: ${{ matrix.shard }}
     container:
       image: fedora:45
     steps:
