@@ -18,6 +18,7 @@
 #   no-deep      a gain reduction holds its largest, not its deepest
 #   no-clip-hold the clip word is the block's own run, not the longest since the read
 #   no-count     a take does not count
+#   no-clear     a clear leaves the holds: a burst before a deactivation is read after the next activation
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 CC="${CC:-cc}"
@@ -41,8 +42,9 @@ if [ "${1:-}" = --self-test ]; then
   sed 's/((r->deep_mask >> i) \& 1u) ?/0 ?/' "$h" > "$scratch/no-deep.h"
   sed 's/^      if (k > r->clip_acc\[i\]) r->clip_acc\[i\] = k;$/      r->clip_acc[i] = k;/' "$h" > "$scratch/no-clip-hold.h"
   sed '/atomic_fetch_add_explicit(&r->reads/d' "$h" > "$scratch/no-count.h"
+  sed '/atomic_store_explicit(&r->taken\[i\], r->count, memory_order_relaxed);$/d' "$h" > "$scratch/no-clear.h"
   fail=0
-  for s in two-copies no-recheck word-first no-hold no-restart no-deep no-clip-hold no-count; do
+  for s in two-copies no-recheck word-first no-hold no-restart no-deep no-clip-hold no-count no-clear; do
     if cmp -s "$h" "$scratch/$s.h"; then echo "SABOTAGE $s: did not change the header"; fail=1; continue; fi
     build "$scratch/$s.h" "$scratch/$s"
     # up to five tries of SECONDS_PER_PHASE * 2 each: a torn read is a race, it is not on the clock

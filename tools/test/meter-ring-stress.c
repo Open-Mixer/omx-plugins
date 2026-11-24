@@ -260,7 +260,14 @@ static int held_deterministic(void) {
   omx_meter_ring_publish(&r, q, 3);
   EXPECT(omx_meter_ring_take(&r, 1, v, h, NULL, 1) == 1 && h[0] == -1.0, "the second meter still holds its burst");
   EXPECT(omx_meter_ring_take(&r, 0, v, h, NULL, 1) == 1 && h[0] == 0.0, "the first meter recovered");
-  printf("PASS held: burst, deepest, clip run, recovery, unconfirmed take, unheld value, one meter at a time\n");
+  /* a clear (a deactivation, an activation) ends every hold: a burst before it is in no take after it */
+  omx_meter_ring_publish_clip(&r, b, bc, 3);
+  omx_meter_ring_clear(&r);
+  EXPECT(omx_meter_ring_take(&r, 0, v, h, c, 3) == 0, "a take after a clear reads nothing");
+  omx_meter_ring_publish(&r, q, 3);
+  EXPECT(omx_meter_ring_take(&r, 0, v, h, c, 3) == 3 && h[0] == 0.0 && h[1] == 0.0 && c[0] == 0.0,
+         "a clear ends the hold: the block before it is not held over");
+  printf("PASS held: burst, deepest, clip run, recovery, unconfirmed take, unheld value, one meter at a time, clear\n");
   return 0;
 }
 

@@ -91,9 +91,11 @@ static inline void omx_meter_ring_policy(struct omx_meter_ring *r, unsigned int 
   r->hold_mask = hold_mask;
 }
 
-/** Nothing published: readers get no values until the next publish(). [main thread, audio thread stopped]
- * The count and the copy in turn go on, so a reader that straddles a clear() is still judged right. */
+/** Nothing published: readers get no values until the next publish(), and every hold ends: the next block starts
+ * each accumulator again, as a take would, so nothing before the clear is held over it. [main thread, audio thread
+ * stopped] The count and the copy in turn go on, so a reader that straddles a clear() is still judged right. */
 static inline void omx_meter_ring_clear(struct omx_meter_ring *r) {
+  for (unsigned int i = 0; i < OMX_METER_RING_MAX; i++) atomic_store_explicit(&r->taken[i], r->count, memory_order_relaxed);
   atomic_store_explicit(&r->word, 0u, memory_order_release);
 }
 
