@@ -42,7 +42,7 @@ import { fileURLToPath } from 'node:url';
 import { releaseVersion } from './release-version.mjs';
 import { faceBinding } from './instance-face.mjs';
 import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
-import { lv2Designation, lv2UnitNames, lv2UnitRef, ownLv2Units, unitSymbol } from './format-tables.mjs';
+import { lv2Designation, lv2UnitNames, lv2UnitRef, ownLv2Units, ownUnitOf, ownUnitRefusals, standardUnitOf, unitSymbol } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
 import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
 import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam, isMain } from './omx-contract.mjs';
@@ -120,6 +120,7 @@ export function prepareDecl(file, d, stem, dir = dirname(file)) {
     d.subgroups = chainSubgroups(file, d, banded);
     d.panel = { ...d.panel, sections: d.panel.sections.map(({ subgroups: _subgroups, ...s }) => s) };
   }
+  unitsCheck(file, d);
   const seen = new Set();
   for (const p of d.params) {
     if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(p.symbol)) throw new Error(`${file}: symbol '${p.symbol}' is not an LV2 symbol`);
@@ -145,6 +146,20 @@ export function prepareDecl(file, d, stem, dir = dirname(file)) {
     if (!existsSync(join(dir, 'test', `${o}.c`))) throw new Error(`${file}: oracle '${o}' names test/${o}.c, which does not exist`);
   }
   return { ...d, dir: resolve(dir), tree: treeOf(file) };
+}
+
+/** The plugin's own units (`units`, Open-Mixer/omx-plugins#172): each declared once, no PARAM_UNITS word's name
+ * (tools/format-tables.mjs ownUnitRefusals) and named by a parameter; and every parameter's unit, resolved, is a
+ * PARAM_UNITS id or one of them. Refused by name, every refusal at once. */
+function unitsCheck(file, d) {
+  const errs = ownUnitRefusals(d.units);
+  for (const p of d.params) {
+    if (p.unit !== undefined && standardUnitOf(p.unit) === undefined && !ownUnitOf(d.units, p.unit)) errs.push(`'${p.symbol}' names unit '${p.unit}', neither a PARAM_UNITS id nor one of its own "units"`);
+  }
+  (d.units ?? []).forEach((u, i) => {
+    if (!d.params.some((p) => p.unit === u.const)) errs.push(`units/${i}: '${u.const}' is named by no parameter`);
+  });
+  if (errs.length) throw new Error(`${file}: ${errs.join('; ')}`);
 }
 
 /** The panel family (schema `$defs.family`, the console's closed set) of a kernel whose own name is
@@ -513,7 +528,7 @@ export function symbolTie(p, control, controls) {
 /** The declaration's plain description for org.openmixer.declaration/1: each parameter's name and
  * travel, in declaration order. */
 export function sourceOf(d) {
-  return `${d.name}: ${d.params.map((p) => `${p.name} ${p.min} to ${p.max}${unitSymbol(p.unit) ? ` ${unitSymbol(p.unit)}` : ''}`).join(', ')}`;
+  return `${d.name}: ${d.params.map((p) => `${p.name} ${p.min} to ${p.max}${unitSymbol(p.unit, d.units) ? ` ${unitSymbol(p.unit, d.units)}` : ''}`).join(', ')}`;
 }
 
 export function digestOf(params) {
@@ -533,6 +548,14 @@ export const LV2_CUSTOM_UNITS = {
 };
 
 export { lv2Designation, lv2UnitNames, lv2UnitRef };
+
+/** The URI of the plugin's own unit `unit` (its `units` block): under the plugin's LV2 URI, `<uri>#unit.<id>`, the
+ * plugin's as the unit is (a port group's fragment is a section key, which holds no dot). */
+export const ownUnitUri = (d, unit) => `${d.lv2.uri}#unit.${unit}`;
+
+/** The `units:unit` value a TTL writes for unit `unit` of plugin `d`: a PARAM_UNITS id's (lv2UnitRef), else the
+ * plugin's own unit's URI, else undefined. */
+export const unitRefOf = (d, unit) => lv2UnitRef(unit) ?? (ownUnitOf(d.units, unit) ? `<${ownUnitUri(d, unit)}>` : undefined);
 
 /** How a host draws a travel: as declared, else a frequency logarithmic (the console's every
  * frequency control is) when its travel is positive (a key filter whose 0 is off is not), else linear. */
@@ -662,10 +685,16 @@ ${tables.map((t) => `  ${ref(t)},`).join('\n')}
 `;
 }
 
+/** Parameter `p`'s row of plugin `d`'s C table (OMX_<K>_PARAMS): its unit text the x-symbol, what the CLAP face's
+ * value_to_text shows. */
+export function paramTableRow(d, p) {
+  const flags = p.kind === 'integer' ? 'OMX_PLUGIN_PARAM_INTEGER' : p.kind === 'toggle' ? 'OMX_PLUGIN_PARAM_TOGGLE' : '0u';
+  return `{ "${p.symbol}", "${p.name}", "${unitSymbol(p.unit, d.units)}", ${cf(p.min)}, ${cf(p.max)}, ${cf(p.def)}, ${flags} },`;
+}
+
 export function emitParamsHeader(d) {
   const K = d.kernel.toUpperCase();
   const P = `OMX_${K}_PARAM`;
-  const flags = (p) => (p.kind === 'integer' ? 'OMX_PLUGIN_PARAM_INTEGER' : p.kind === 'toggle' ? 'OMX_PLUGIN_PARAM_TOGGLE' : '0u');
   const ports = lv2Ports(d);
   const firstParam = ports.find((p) => p.param).index;
   return `${BANNER}#ifndef OMX_${K}_PARAMS_H
@@ -697,7 +726,7 @@ ${d.params.map((p, i) => `  ${P}_${macro(p.symbol)} = ${i},`).join('\n')}
 };
 
 static const omx_plugin_param OMX_${K}_PARAMS[${P}_COUNT] = {
-${d.params.map((p) => `  { "${p.symbol}", "${p.name}", "${unitSymbol(p.unit)}", ${cf(p.min)}, ${cf(p.max)}, ${cf(p.def)}, ${flags(p)} },`).join('\n')}
+${d.params.map((p) => `  ${paramTableRow(d, p)}`).join('\n')}
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -789,7 +818,7 @@ export function emitPluginTtl(d) {
       if (scaleOf(q) === 'log') lines.push('        lv2:portProperty pprops:logarithmic ;');
       if (q.kind === 'toggle') lines.push('        lv2:portProperty lv2:toggled ;');
       const i = d.params.indexOf(q);
-      if (lv2UnitRef(faceUnit(d, i))) lines.push(`        units:unit ${lv2UnitRef(faceUnit(d, i))} ;`);
+      if (unitRefOf(d, faceUnit(d, i))) lines.push(`        units:unit ${unitRefOf(d, faceUnit(d, i))} ;`);
       if (faceDesignation(d, i)) lines.push(`        lv2:designation ${faceDesignation(d, i)} ;`);
       if (choices) {
         const points = choices.map((c) => `            [ rdfs:label ${ttlStr(c.label)} ; rdf:value ${c.value} ]`);
@@ -806,7 +835,7 @@ export function emitPluginTtl(d) {
       lines.push('        lv2:designation lv2:latency ;', '        lv2:portProperty lv2:integer ;', '        units:unit units:frame ;');
     } else if (p.meter) {
       lines.push(`        lv2:minimum ${ttlNum(p.meter.min)} ;`, `        lv2:maximum ${ttlNum(p.meter.max)} ;`);
-      if (lv2UnitRef(p.meter.unit)) lines.push(`        units:unit ${lv2UnitRef(p.meter.unit)} ;`);
+      if (unitRefOf(d, p.meter.unit)) lines.push(`        units:unit ${unitRefOf(d, p.meter.unit)} ;`);
     } else if (p.time) {
       // the host's transport: time:Position objects, read for their time:beatsPerMinute; optional, no tempo without it
       lines.push('        atom:bufferType atom:Sequence ;', '        atom:supports time:Position ;', '        lv2:designation lv2:control ;', '        lv2:portProperty lv2:connectionOptional ;');
@@ -857,6 +886,12 @@ lv2:displayPriority
     rdfs:label ${ttlStr(LV2_CUSTOM_UNITS[word].label)} ;
     units:render ${ttlStr(LV2_CUSTOM_UNITS[word].render)} ;
     units:symbol ${ttlStr(LV2_CUSTOM_UNITS[word].symbol)} .
+`).join('')}${(d.units ?? []).map((u) => `
+<${ownUnitUri(d, u.const)}>
+    a units:Unit ;
+    rdfs:label ${ttlStr(u.description)} ;
+    units:render ${ttlStr(`%f ${u['x-symbol']}`)} ;
+    units:symbol ${ttlStr(u['x-symbol'])} .
 `).join('')}`;
 }
 
@@ -894,9 +929,10 @@ const cfloat = (n) => {
   return `${/[.e]/.test(t) ? t : `${t}.0`}f`;
 };
 
-/** How a catalogue row and section read a resolved parameter: its range and its default, in words. */
-export function paramRow(p) {
-  const unit = unitSymbol(p.unit) ? ` ${unitSymbol(p.unit)}` : '';
+/** How a catalogue row and section read a resolved parameter: its range and its default, in words, its unit shown by
+ * its x-symbol (`units`: the declaration's own units, its `units` block). */
+export function paramRow(p, units) {
+  const unit = unitSymbol(p.unit, units) ? ` ${unitSymbol(p.unit, units)}` : '';
   if (p.kind === 'toggle') return { name: p.name, range: 'off / on', default: p.def ? 'on' : 'off' };
   const choices = choicesOf(p);
   if (choices) return { name: p.name, range: choices.map((c) => c.label).join(' / '), default: choices.find((c) => c.value === p.def)?.label ?? `${p.def}` };
@@ -912,7 +948,7 @@ export function fillManual(d, line, what = 'manual') {
   const out = line.replace(/\{(range|default|min|max):([A-Za-z][A-Za-z0-9_]*)\}/g, (_m, what, symbol) => {
     const p = d.params.find((q) => q.symbol === symbol);
     if (!p) throw new Error(`plugins/${d.stem}: its ${what} reads '${symbol}', which is none of its parameters`);
-    return what === 'min' || what === 'max' ? `${p[what]}` : paramRow(p)[what];
+    return what === 'min' || what === 'max' ? `${p[what]}` : paramRow(p, d.units)[what];
   });
   const left = out.match(/\{[a-z]+:[^}]*\}/);
   if (left) throw new Error(`plugins/${d.stem}: its ${what}'s ${left[0]} is none of {range|default|min|max:<symbol>}`);
@@ -930,7 +966,7 @@ export function templateView(d) {
   return {
     stem: d.stem, kernel: d.kernel, face: d.face ?? d.kernel, K: d.kernel.toUpperCase(), Kernel: d.kernel.replace(/(^|_)([a-z])/g, (_m, _u, c) => c.toUpperCase()),
     name: d.name, uri: d.lv2.uri, clapId: d.clap.id, description: d.description,
-    omxdspMin: packagingRange('omx-dsp-devel', d.tree ?? ROOT).floor, panel: Boolean(d.panel), params: d.params.map(paramRow),
+    omxdspMin: packagingRange('omx-dsp-devel', d.tree ?? ROOT).floor, panel: Boolean(d.panel), params: d.params.map((p) => paramRow(p, d.units)),
     oracles: (d.oracles ?? []).map((oracle) => ({ oracle })),
   };
 }
@@ -1504,7 +1540,7 @@ export const SHARED = {
       '',
       `### ${d.name}`,
       '',
-      ...(d.manual?.map((l) => fillManual(d, l)) ?? ['| Parameter | Range | Default |', '|---|---|---|', ...d.params.map(paramRow).map((r) => `| ${r.name} | ${r.range} | ${r.default} |`), '', "Plus the host's bypass."]),
+      ...(d.manual?.map((l) => fillManual(d, l)) ?? ['| Parameter | Range | Default |', '|---|---|---|', ...d.params.map((p) => paramRow(p, d.units)).map((r) => `| ${r.name} | ${r.range} | ${r.default} |`), '', "Plus the host's bypass."]),
     ]).concat(['']),
   },
   'packaging/omx-plugins.spec': {
