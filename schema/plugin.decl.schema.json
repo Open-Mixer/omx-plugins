@@ -711,6 +711,10 @@
         "graph": {
           "$ref": "#/$defs/graph"
         },
+        "basis": {
+          "$ref": "https://openmixer.org/schema/omx-panel/panel.schema.json#/$defs/basis",
+          "description": "The basis of the section's `graph`: `exact` when the plugin's own audio runs the closed form the curve draws, which tools/test/curve-proof.mjs measures for every display marked so (and refuses a measured one left out), else `modelled`, the default. The word and its values are omx-panel's (schema/panel.schema.json), the one place they are written."
+        },
         "subgroups": {
           "enum": [
             "band"

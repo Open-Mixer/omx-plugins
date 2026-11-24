@@ -15,7 +15,7 @@
   },
   "test-heavy": {
     "prerequisites": ["lib"],
-    "steps": ["per-plugin test-heavy", "round-trip"]
+    "steps": ["per-plugin test-heavy", "round-trip", "curve-proof"]
   },
   "plugin": {
     "test": [

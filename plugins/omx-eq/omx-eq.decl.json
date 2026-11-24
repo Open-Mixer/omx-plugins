@@ -234,6 +234,7 @@
           "q"
         ],
         "graph": "eq-curve",
+        "basis": "exact",
         "subgroups": "band"
       },
       {
