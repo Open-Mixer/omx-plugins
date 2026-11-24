@@ -17,6 +17,7 @@
       "descriptor-features",
       "placement-strips",
       "lv2-units",
+      "round-trip-loss-units",
       "lv2-deprecated",
       "lv2-maintainer",
       "no-modgui",

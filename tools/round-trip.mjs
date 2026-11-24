@@ -96,12 +96,14 @@ export const LOSSES_COUNTED = Object.freeze({
 export const LOSSES = {
   // OR2: a meaning has a CLAP word for the bypass and, with plugin-hostd 0.20.8's tables, the few more that table rows read (10
   // before 0.20.8, 4 now); an LV2 term only for some (lv2:designation); LV2 has no unit
-  // for "" (a plain number)
+  // for none (a plain number). A unit is keyed by its PARAM_UNITS id, the word the descriptor states (C2), never its
+  // symbol (tools/test/round-trip-loss-units-check.mjs)
   'clap controls[].meaning': 4,
   'lv2 controls[].meaning': 116,
-  'lv2 controls[].travel.unit ""': 123,
-  // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt (dB/oct, omx-contract 3.1.0)
-  'lv2 controls[].travel.unit "dB/oct"': 2,
+  'lv2 controls[].travel.unit "none"': 123,
+  // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt and the balancer's slope (dBPerOct, shown
+  // dB/oct; omx-contract 3.1.0)
+  'lv2 controls[].travel.unit "dBPerOct"': 2,
   // CLAP: plugin-hostd 0.20.3 reads a control's scale and, through the parameter contract, most units and steps; no
   // row reads the rest of the units and steps, a choice (our faces set no CLAP_PARAM_IS_ENUM), the session symbol, the
   // LV2 URI, a side-chain's role or what an LV2 host may lend
