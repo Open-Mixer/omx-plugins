@@ -54,6 +54,22 @@ jobs:
           # the recipe selftest (about 80 minutes) runs when the change can move it: tools/ci-scope.sh
           tools/ci-scope.sh <<<"$changed" >> "$GITHUB_OUTPUT"
 
+  # the lints run in a job of their own: a lint red never skips a step of the suite, which runs and reports whatever the
+  # lint says (a lint step before make test in the same job skipped the suite on its red, and hid every red behind it)
+  lint:
+    name: the licence headers and no private reference
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every file a comment can be written in opens with its licence
+        id: handback-spdx
+        uses: Open-Mixer/.github/.github/actions/spdx-check@main
+
+      - name: No tracked file points into a private repository
+        id: handback-private-refs
+        uses: Open-Mixer/.github/.github/actions/private-refs-check@openmixer-v1
+
   test:
     name: make test (fedora:45, amd64)
     runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
@@ -96,15 +112,6 @@ jobs:
           set -euo pipefail
           tools/deps-check.sh
           tools/deps-check.sh --self-test
-
-      - name: Every file a comment can be written in opens with its licence
-        id: handback-spdx
-        uses: Open-Mixer/.github/.github/actions/spdx-check@main
-
-      - name: No tracked file points into a private repository
-        id: handback-private-refs
-        uses: Open-Mixer/.github/.github/actions/private-refs-check@openmixer-v1
-
 
       - name: No source carries a copy of a function omx-dsp exports, and a planted copy goes red
         id: handback-dsp-copies
