@@ -45,6 +45,8 @@ BuildRequires: nodejs >= 20.19
 BuildRequires: python3
 # make selftest copies the tree with tar
 BuildRequires: tar
+# %%check: make debt-base runs git (tools/test/debt-base-test.mjs builds its fixture repositories with it)
+BuildRequires: git-core
 BuildRequires: diffutils
 # the curve kinds the schema's graph enum renders: omx-dsp's CURVE_KINDS (tools/graph-enum.mjs)
 BuildRequires: omx-dsp-contract >= 0.34.0
@@ -298,6 +300,9 @@ Its documentation is on openmixer.org.
   /usr/share/plugin-hostd/pins.d/omx-plugins.pins, tools/pins-check.sh and the build dependency on
   plugin-qualify go; our plugins are qualified like any plugin, plugin-qualify measuring them into the
   qualification records once the release is served (omx-plugins#211)
+- CLAP remote controls: a page whose every slot the governing values hide is not served (omx-panel's page
+  rule, no screen has zero visible items), so omx-strip at 4 bands serves 11 pages, not 39 (omx-plugins#212)
+- make test runs every part whatever an earlier part answered, and runs strip-pages-follow; %%check needs git-core
 
 * Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
 - omx-plugins-contract installs role-meanings.json (the meaning each panel

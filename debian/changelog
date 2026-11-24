@@ -16,6 +16,11 @@ omx-plugins (0.20.0) unstable; urgency=medium
     the build dependency on plugin-qualify go; our plugins are qualified like
     any plugin, plugin-qualify measuring them into the qualification records
     once the release is served (omx-plugins#211).
+  * CLAP remote controls: a page whose every slot the governing values hide is
+    not served (omx-panel's page rule, no screen has zero visible items), so
+    omx-strip at 4 bands serves 11 pages, not 39 (omx-plugins#212).
+  * make test runs every part whatever an earlier part answered, and runs
+    strip-pages-follow; git is a build dependency of the checks.
 
  -- Pau Aliagas <linuxnow@gmail.com>  Sun, 22 Nov 2026 12:00:00 +0100
 
