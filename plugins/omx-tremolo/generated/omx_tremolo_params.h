@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-tremolo/omx-tremolo.decl.json.
- * Regenerate: `make -C plugins/omx-tremolo gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-tremolo gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_tremolo_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -70,7 +70,7 @@ static const char *const OMX_TREMOLO_PARAM_MODULES[OMX_TREMOLO_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_TREMOLO_PARAM_CONTRACT_VERSION 2u
+#define OMX_TREMOLO_PARAM_CONTRACT_VERSION 1u
 #define OMX_TREMOLO_PARAM_CONTRACT_FINGERPRINT "4869e2dd250aba1dafcc6dd592d8caab74e279f7caedc68c68a1a2f92432ce05"
 static const struct omx_param_contract_row OMX_TREMOLO_PARAM_CONTRACT[OMX_TREMOLO_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* rateHz hz */

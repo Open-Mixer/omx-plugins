@@ -181,20 +181,6 @@
           "title": "Key",
           "description": "For `binding: chain`: the id of the one element whose keyed face takes the plugin's `sidechain`. The other keyed elements run self-keyed."
         },
-        "shipped": {
-          "type": "string",
-          "pattern": "^v\\d+\\.\\d+\\.\\d+$",
-          "title": "Shipped",
-          "description": "For a chain converted from a released plugin: the release tag whose parameter list it replaces. tools/gen.mjs reads that release's symbols with git and refuses a flattened list that differs, unless `shippedDiff` names exactly every difference."
-        },
-        "shippedDiff": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "title": "Shipped difference",
-          "description": "Every index at which the flattened list differs from the `shipped` release's, as tools/gen.mjs prints them (`<index> <was> -> <now>`, `+<index> <added>`, `-<index> <removed>`): the decision, written down."
-        },
         "sidechain": {
           "type": "object",
           "required": [

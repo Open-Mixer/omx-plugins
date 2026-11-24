@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-deesser/omx-deesser.decl.json.
- * Regenerate: `make -C plugins/omx-deesser gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-deesser gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_deesser_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -94,7 +94,7 @@ static const char *const OMX_DEESSER_PARAM_MODULES[OMX_DEESSER_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_DEESSER_PARAM_CONTRACT_VERSION 3u
+#define OMX_DEESSER_PARAM_CONTRACT_VERSION 1u
 #define OMX_DEESSER_PARAM_CONTRACT_FINGERPRINT "6e8f9ba1730c2a1430be5992c8744d81ee7b89a76d34a78fc63c27422df47e5c"
 static const struct omx_param_contract_row OMX_DEESSER_PARAM_CONTRACT[OMX_DEESSER_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* deessFreq hz */

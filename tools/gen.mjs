@@ -34,7 +34,6 @@
  * stale, missing or changed file. Named plugins are generated alone; with none, every plugin and
  * the shared files. No clock and no absolute path reach the output.
  */
-import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
@@ -137,7 +136,6 @@ export function prepareDecl(file, d, stem, dir = dirname(file)) {
     }
   }
   if (d.sidechain && (seen.has(d.sidechain.symbol) || FIXED_PORTS.includes(d.sidechain.symbol))) throw new Error(`${file}: sidechain symbol '${d.sidechain.symbol}' is taken`);
-  if (d.binding === 'chain') checkShipped(file, d);
   if (d.meters && d.binding !== 'instance') throw new Error(`${file}: "meters" are read from an instance face; this declaration's binding is ${d.binding ?? 'its own'}`);
   d.meterReadouts = meterReadoutsOf(file, d);
   for (const o of d.oracles ?? []) {
@@ -234,8 +232,8 @@ function flattenChain(file, d) {
   }
   if (d.order === 'permutable') out.push({ symbol: 'order', name: 'Order', unit: '', min: 0, max: factorial(d.chain.length) - 1, def: 0, kind: 'integer', own: 'stage-order' });
   else if (d.order !== undefined) throw new Error(`${file}: "order" is "permutable" or left out (the declared order)`);
-  // what an element gained after the plugin shipped comes AFTER every parameter it had, so no id and no LV2 parameter
-  // port moves: element by element in chain order, its band count (`bandCount`), then its `appended` parameters
+  // after the elements' own parameters: element by element in chain order, its band count (`bandCount`), then its
+  // `appended` parameters
   for (const el of d.chain) {
     if (el.bandCount !== undefined) out.push(bandCountParam(file, d, el));
     for (const p of el.appended ?? []) {
@@ -360,46 +358,6 @@ function chainKernels(file, d) {
   const ks = [...new Set(d.chain.map((el) => el.kernel))];
   if (d.kernels !== undefined && JSON.stringify(d.kernels) !== JSON.stringify(ks)) throw new Error(`${file}: "kernels" is ${JSON.stringify(d.kernels)}, the chain's are ${JSON.stringify(ks)}; leave it out`);
   return ks;
-}
-
-/** The parameter symbols a released plugin shipped: its generated header at the git tag `tag`, or
- * undefined where the tree has no git or no such tag (a tarball build). */
-function shippedSymbols(d, tag) {
-  try {
-    const text = execFileSync('git', ['-C', d.tree, 'show', `${tag}:plugins/${d.stem}/generated/omx_${d.kernel}_params.h`], { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] });
-    // the rows of the parameter table alone: the header holds other tables of strings after it
-    const table = text.slice(text.indexOf(`OMX_${d.kernel.toUpperCase()}_PARAMS[`)).split('\n};')[0];
-    return [...table.matchAll(/^\s*\{ "([A-Za-z0-9_]+)", "/gm)].map((m) => m[1]);
-  } catch {
-    return undefined;
-  }
-}
-
-/** The differences between a released list of symbols and the flattened one, index by index. */
-export function symbolDiff(was, now) {
-  const out = [];
-  for (let i = 0; i < Math.max(was.length, now.length); i++) {
-    if (was[i] === now[i]) continue;
-    out.push(i >= was.length ? `+${i} ${now[i]}` : i >= now.length ? `-${i} ${was[i]}` : `${i} ${was[i]} -> ${now[i]}`);
-  }
-  return out;
-}
-
-/** A chain converted from a released plugin (`shipped`: its release tag) keeps that plugin's ids
- * and symbols, or names every difference in `shippedDiff`: CLAP ids are indices and LV2
- * symbols are saved state, so a difference is a decision, never a side effect. */
-function checkShipped(file, d) {
-  if (d.shipped === undefined) return;
-  const was = shippedSymbols({ ...d, tree: treeOf(file) }, d.shipped);
-  if (!was) {
-    // a tarball or shallow build has no tag to read: said, never silent
-    console.error(`gen: NOTE ${d.stem}: ${d.shipped} is not readable here (no git or no such tag); its parameter list is not checked against that release`);
-    return;
-  }
-  const diff = symbolDiff(was, d.params.map((p) => p.symbol));
-  const named = d.shippedDiff ?? [];
-  if (JSON.stringify(diff) !== JSON.stringify(named))
-    throw new Error(`${file}: the flattened parameters differ from ${d.stem} ${d.shipped}'s, and "shippedDiff" does not name exactly the differences; they are:\n  ${diff.join('\n  ') || '(none: drop "shippedDiff")'}`);
 }
 
 /** The tree a declaration sits in; a declaration copied out of its tree (a test's scratch copy)
@@ -672,7 +630,7 @@ export function emitParamsHeader(d) {
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/${d.stem}/${d.stem}.decl.json.
- * Regenerate: \`make -C plugins/${d.stem} gen\`, then commit the result. Order is append-only.
+ * Regenerate: \`make -C plugins/${d.stem} gen\`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_${d.kernel}_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */

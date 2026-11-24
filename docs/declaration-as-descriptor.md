@@ -55,7 +55,7 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | `lv2.class` | the extension bag, `extensions.lv2["rdf:type"]`: the face's types as its `.ttl` states them, `["lv2:Plugin", <class>]` (`"lv2:Plugin"` alone when that is the class) | |
 | `description` | `plugin.doc`: the one-line description, CLAP `description` and LV2 `rdfs:comment` | |
 | `summary`, `noun`, `manual`, `url` | | kept: what a host and the README show |
-| `stem`, `kernel`, `kernels`, `binding`, `face`, `variants`, `variantOf`, `chain`, `order`, `key`, `shipped`, `shippedDiff`, `role` | | kept: the kind of face and how it is built |
+| `stem`, `kernel`, `kernels`, `binding`, `face`, `variants`, `variantOf`, `chain`, `order`, `key`, `role` | | kept: the kind of face and how it is built |
 | `sidechain` (`symbol`, `name`) | a `ports[]` entry: `kind: audio`, `direction: in`, `role: sidechain`, `channels: 1`, `layout: mono`, named as the CLAP face names it (the symbol) | `sidechain`, whole: the LV2 port's symbol and name |
 | the audio pair | `ports[]`: `in` and `out` (the CLAP face's names), `role: main`, `channels: 2`, `layout: stereo` | |
 | `latencyChecks` | `latency.reports: true`; `latency.frames` when every check reports one constant | kept: the checks the oracles run |

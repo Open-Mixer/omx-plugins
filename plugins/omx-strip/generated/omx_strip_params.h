@@ -5,7 +5,7 @@
 /*
  * GENERATED — DO NOT EDIT BY HAND.
  * Produced by tools/gen.mjs from plugins/omx-strip/omx-strip.decl.json.
- * Regenerate: `make -C plugins/omx-strip gen`, then commit the result. Order is append-only.
+ * Regenerate: `make -C plugins/omx-strip gen`, then commit the result.
  * The include guard is omx-dsp's own <omxdsp/params/omx_strip_params.h>: included first, this
  * table is the one the kernel's instance header reads.
  */
@@ -1211,7 +1211,7 @@ static inline uint32_t omx_strip_eq_band_count(const float *values) {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_STRIP_PARAM_CONTRACT_VERSION 2u
+#define OMX_STRIP_PARAM_CONTRACT_VERSION 1u
 #define OMX_STRIP_PARAM_CONTRACT_FINGERPRINT "b8832cb75b74bcad0b515527e218b6b7fc6d4d8d61447877be9073a52b5e7b76"
 static const struct omx_param_contract_row OMX_STRIP_PARAM_CONTRACT[OMX_STRIP_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* trimOn none */

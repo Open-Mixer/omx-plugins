@@ -435,7 +435,7 @@ const CONTRACT_VERSIONS = 'tools/param-contract-versions.json';
 
 /** A plugin the tree has never published takes contract version 1: its fingerprint, from the declaration just written,
  * goes into tools/param-contract-versions.json before tools/gen.mjs reads its version there. Returns the file when it
- * was written; a plugin already listed is not touched, and a change to its contract is appended by hand. */
+ * was written; a plugin already listed is not touched, and a change to its contract is written by hand. */
 function registerContract(root, stem) {
   const fingerprint = contractFingerprint(contractOf(loadDecl(join(root, 'plugins', stem)), scaleOf));
   return registerFirstContract(root, stem, fingerprint) ? [CONTRACT_VERSIONS] : [];

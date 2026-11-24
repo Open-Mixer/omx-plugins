@@ -186,9 +186,6 @@ a strip, has its key source fixed at `self`.
 The generated binding copies in to out once and runs each element's face in place in the chosen
 order; an element's bypass is its switch off or the host's bypass; the latency is the sum. The
 oracle's reference is the same chain of faces called directly, its order computed in the test.
-A chain converted from a released plugin names that release in `shipped`; `tools/gen.mjs` then
-refuses a parameter list that differs from the release's, unless `shippedDiff` names every
-difference; where the tag cannot be read (a tarball build) gen says the list went unchecked.
 `make strip-crosscheck` (`tools/test/strip-crosscheck.sh`) holds omx-strip, so converted, to the hand-ported
 plugin it replaced, bit for bit at that plugin's settings.
 
