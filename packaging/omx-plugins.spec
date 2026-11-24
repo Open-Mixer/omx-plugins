@@ -13,31 +13,31 @@ BuildRequires: gcc
 BuildRequires: make
 BuildRequires: pkgconf-pkg-config
 # The releases this tree builds against: a floor each and no ceiling (floors only, as 0.8.0 ruled), once here and
-# in debian/control the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
-BuildRequires: omx-dsp-devel >= 0.34.1
-BuildRequires: omx-contract-devel >= 3.21.0
-BuildRequires: omx-clap-devel >= 0.35.0
+# in debian/control the same (tools/deps-check.sh).
+BuildRequires: omx-dsp-devel
+BuildRequires: omx-contract-devel
+BuildRequires: omx-clap-devel
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
-BuildRequires: plugin-hostd-devel >= 0.21.0
+BuildRequires: plugin-hostd-devel
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
 # (3.3.0: the directory and its schema are omx-contract-data's, the definitions each owner's -contract package's)
 # (3.20.2: the tools decide "run, not imported" with its isMain, <clidir>/lib/entry.mjs, read through pkg-config)
 # (3.21.0: the descriptor word latency.sweep, which omx-rotary states)
-BuildRequires: omx-contract >= 3.21.0
+BuildRequires: omx-contract
 # the panel layout is omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
-BuildRequires: omx-panel >= 0.16.0
+BuildRequires: omx-panel
 # omx-clap's domains the generators read (tools/omx-contract.mjs domainDocument): omx-param-contract, the unit codes
 # (tools/param-contract.mjs), and clap, the CLAP feature terms (tools/format-tables.mjs)
-BuildRequires: omx-clap-contract >= 0.35.0
+BuildRequires: omx-clap-contract
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}
 # the panel words: omx-panel's panel domain and its render <omxdomain/panel_codes.h>, which include/omx_panel_description.h
 # expands (tools/test/panel-words-check.mjs)
-BuildRequires: omx-panel-contract >= 0.16.0
+BuildRequires: omx-panel-contract
 BuildRequires: clap-devel >= 1.2.7
 # include/omx_panel_description.h includes omx-panel's <omxdomain/panel_codes.h>
-Requires: omx-panel-contract >= 0.16.0
+Requires: omx-panel-contract
 BuildRequires: lv2-devel
 # %%check: the generators and checks are Node scripts; the hosts that load the built plugins
 # (20.19: tools/omx-contract.mjs require()s omx-contract's entry.mjs, an ES module, unflagged from 20.19 / 22.12)
@@ -49,27 +49,27 @@ BuildRequires: tar
 BuildRequires: git-core
 BuildRequires: diffutils
 # the curve kinds the schema's graph enum renders: omx-dsp's CURVE_KINDS (tools/graph-enum.mjs)
-BuildRequires: omx-dsp-contract >= 0.34.1
+BuildRequires: omx-dsp-contract
 BuildRequires: lilv
 BuildRequires: lilv-devel
 # the standard units a face publishes, by symbol (omx-contract's param domain, PARAM_UNITS x-symbol), and the OpenMixer
 # unit spellings an LV2 face writes (plugin-db's lv2 domain, LV2_OPENMIXER_UNIT_IDS x-uri): tools/format-tables.mjs
-BuildRequires: omx-contract-data >= 3.21.0
-BuildRequires: plugin-db-contract >= 0.5.1
+BuildRequires: omx-contract-data
+BuildRequires: plugin-db-contract
 BuildRequires: sord
-BuildRequires: omx-clap-host >= 0.34.1
+BuildRequires: omx-clap-host
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
-BuildRequires: plugin-hostd >= 0.21.0
+BuildRequires: plugin-hostd
 # plugin-hostd's words the generators read: its domains plugin-hostd/clap and plugin-hostd/lv2, the format tables
 # (tools/format-tables.mjs), and the resource hints, RESOURCE_* (tools/resource-hints.mjs)
-BuildRequires: plugin-hostd-contract >= 0.22.0
+BuildRequires: plugin-hostd-contract
 
 # The name a user installs: both formats.
 Requires: %{name}-clap%{?_isa} = %{version}-%{release}
 Requires: %{name}-lv2%{?_isa} = %{version}-%{release}
 # each plugin's descriptor, which a host and the console read at run time
 Requires: %{name}-contract = %{version}-%{release}
-Recommends: plugin-hostd >= 0.21.0
+Recommends: plugin-hostd
 
 %description
 Take the sound of the OpenMixer console into your DAW or onto your own rig:
@@ -103,7 +103,7 @@ Its documentation is on openmixer.org.
 %package lv2
 Summary: OpenMixer delay, drive, EQ, strip, gate and effects as LV2 plugins
 Requires: lv2
-Recommends: omx-panel >= 0.16.0
+Recommends: omx-panel
 
 %description lv2
 The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
@@ -128,11 +128,11 @@ Its documentation is on openmixer.org.
 
 %package devel
 Summary: Headers and static library of the OpenMixer plugins, for projects that build on them
-Requires: omx-dsp-devel >= 0.34.1
+Requires: omx-dsp-devel
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
-Requires: omx-contract-devel >= 3.21.0
+Requires: omx-contract-devel
 # include/omx_param_contract.h includes omx-clap's unit and scale codes, <omx-clap-host/omx_param_units.h> (0.35.0) and <omx-clap-host/omx_param_scales.h>
-Requires: omx-clap-devel >= 0.35.0
+Requires: omx-clap-devel
 Requires: %{name}-contract = %{version}-%{release}
 Requires: clap-devel >= 1.2.7
 
@@ -151,7 +151,7 @@ BuildArch: noarch
 # the contract directory, its schema and its reader's own package
 # 3.19.1: its install-contract-dir.sh rewrites the relative $schema of contract/*.json and the descriptors to the
 # major's URL, and its reader requires that URL (3.13.0 brought the roleMeanings kind of contract/role-meanings.json)
-Requires: omx-contract-data >= 3.21.0
+Requires: omx-contract-data
 
 %description contract
 Each OpenMixer plugin's descriptor, its parameters in omx-contract's words,

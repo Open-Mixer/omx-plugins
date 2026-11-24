@@ -17,7 +17,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { choicesOf, metersOf, scaleOf } from './gen.mjs';
 import { clapFeatureField, clapFeatureValue } from './format-tables.mjs';
-import { installedDataDir, locateContract, OWNERS, ownersOf, packagingRange } from './omx-contract.mjs';
+import { installedDataDir, locateContract, OWNERS, ownersOf } from './omx-contract.mjs';
 import { meaningOfRole, panelLayout } from './omx-panel.mjs';
 
 /** The descriptor file of a plugin folder. */
@@ -25,12 +25,6 @@ export const descriptorFile = (stem) => `${stem}.descriptor.json`;
 
 /** The schema the descriptor words are in, and the release that added them. */
 export const DESCRIPTOR_SCHEMA = '../schema/omx-contract.schema.json';
-export const DESCRIPTOR_SCHEMA_FLOOR = '3.7.0';
-/** The release that added the meter words `held`, `clip` and `measurement` beside `meters` (3.9.0): the floor of a
- * descriptor that states meters, which always carry them. */
-export const DESCRIPTOR_METERS_FLOOR = '3.11.0';
-/** The release that added `latency.sweep` (omx-contract docs/descriptors.md): the floor of a descriptor that states one. */
-export const DESCRIPTOR_SWEEP_FLOOR = '3.21.0';
 /** The descriptor's word for each meter kind a declaration names. */
 const METER_KIND_WORDS = { gain_reduction: 'gain-reduction', level: 'level' };
 
@@ -42,7 +36,7 @@ export const DESCRIPTOR_SCHEMA_FILE = 'omx-contract.schema.json';
  * it, else the data directory's (`pkg-config --variable=datadir omx-contract`). */
 export function descriptorSchemaFile() {
   const file = [process.env.OMX_CONTRACT_SCHEMA, ...[process.env.OMX_CONTRACT_DIR, installedDataDir()].filter(Boolean).map((d) => join(d, DESCRIPTOR_SCHEMA_FILE))].filter(Boolean).find((f) => existsSync(f));
-  if (!file) throw new Error(`${DESCRIPTOR_SCHEMA_FILE}: not in the installed omx-contract's data directory; install omx-contract-devel >= ${DESCRIPTOR_SCHEMA_FLOOR} (BUILDING.md)`);
+  if (!file) throw new Error(`${DESCRIPTOR_SCHEMA_FILE}: not in the installed omx-contract's data directory; install omx-contract-devel (BUILDING.md)`);
   return file;
 }
 
@@ -186,7 +180,7 @@ export function descriptorOf(d) {
     if (m && m !== UNKNOWN_MEANING) for (const sym of [syms].flat()) if (!meaningOf.has(sym)) meaningOf.set(sym, m);
   }
   // the release a link is read from: its owner (the contract directory's manifests, from omx-contract 2.15.0
-  // on; omx-contract itself before) at the floor the packaging builds against, else the installed version
+  // on; omx-contract itself before) at the version the render read was installed at
   let owners;
   const atOf = (rel) => {
     if (owners === undefined) {
@@ -198,11 +192,7 @@ export function descriptorOf(d) {
       if (!owners.size) throw new Error(`${where.at ?? where.dir}: the render read carries no ${OWNERS}, so a link's owner is unknown; a build reads the owners of the render it is handed, never the installed contract directory's`);
     }
     const owner = owners.get(rel.split('#')[0]) ?? { package: 'omx-contract' };
-    try {
-      return `${owner.package}@${packagingRange(`${owner.package}-devel`, d.tree).floor}`;
-    } catch {
-      return owner.version ? `${owner.package}@${owner.version}` : null;
-    }
+    return owner.version ? `${owner.package}@${owner.version}` : null;
   };
   const face = `plugins/${d.stem}/omx_${d.kernel}_clap.c#clap_entry`;
   const choiceUnits = {}, byKind = {};
@@ -246,13 +236,13 @@ export function descriptorOf(d) {
     };
   });
   // a modulated delay's sweep (the rotary's), as its descriptor states it: each end a frame count or a ref to a kernel
-  // scalar in frames or ms; a ref names the kernel's package, at the floor the packaging builds against
+  // scalar in frames or ms; a ref names the kernel's package
   const sweep = d.descriptor?.latency?.sweep;
   const sweepRefs = sweep ? [sweep.min, sweep.max].some((e) => typeof e === 'object' && e !== null) : false;
-  const schemaFloor = sweep ? DESCRIPTOR_SWEEP_FLOOR : meters.length ? DESCRIPTOR_METERS_FLOOR : DESCRIPTOR_SCHEMA_FLOOR;
   const descriptor = {
     $schema: DESCRIPTOR_SCHEMA,
-    requires: { 'omx-contract-schema': `>= ${schemaFloor}`, ...(sweepRefs ? { 'omx-dsp': `>= ${packagingRange('omx-dsp-devel', d.tree).floor}` } : {}) },
+    // the packages whose items the file refers to by name, in order; a file that refers to none has no requires
+    ...(sweepRefs ? { requires: ['omx-dsp'] } : {}),
     origin: 'authored',
     plugin: { id: d.clap.id, format: 'clap', uri: d.lv2.uri, name: d.name, vendor: d.vendor, version: d.version, doc: d.description, features: d.clap.features.filter((f) => FEATURES.includes(f)) },
     controls,

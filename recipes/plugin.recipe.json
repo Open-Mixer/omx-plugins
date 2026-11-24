@@ -12,8 +12,7 @@
     }
   },
   "contract": {
-    "range": "packaging/omx-plugins.spec: BuildRequires omx-contract-devel >= floor",
-    "byReferenceSince": "1.1.0"
+    "range": "packaging/omx-plugins.spec: BuildRequires omx-contract-devel >= floor"
   },
   "derived": {
     "/name": "'omx ' + the stem's short name",
@@ -27,7 +26,7 @@
   "rules": {
     "always": "every plugin",
     "panel": "the declaration carries a panel block, or the plugin is generated from its instance face (which draws every parameter when it declares none); a hand-written plugin with no panel yet owes no MOD GUI",
-    "byReference": "the omx-contract floor the packaging declares is at or past contract.byReferenceSince, the release that carries plugin parameters by reference; before it, a declaration still types its travels",
+    "byReference": "always: the parameters are by reference to the contract",
     "instance": "the declaration says \"binding\": \"instance\": tools/gen.mjs generates the plugin's binding, identity test, faces and Makefile from it and omx-dsp's instance face"
   },
   "steps": {
@@ -193,9 +192,6 @@
       "target": "plugins/{stem}/Makefile",
       "paths": [
         "plugins/{stem}/Makefile"
-      ],
-      "questions": [
-        "#/questions/omxdspMin"
       ],
       "template": "Makefile.tmpl",
       "when": "always",

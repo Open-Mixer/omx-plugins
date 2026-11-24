@@ -48,7 +48,7 @@ import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription
 import { declaredDesignation, lv2Designation, lv2UnitNames, lv2UnitRef, ownLv2Units, ownUnitOf, ownUnitRefusals, standardUnitOf, unitSymbol } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
 import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
-import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam, isMain } from './omx-contract.mjs';
+import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, paramKernel, renderKernels, resolveParam, isMain } from './omx-contract.mjs';
 import { bandsMacro, baseOf, expandVariant, variantStems } from './variants.mjs';
 import { omxdspInclude, render } from './template.mjs';
 import { generateTest, isTestDir, loadTestDecl, testPluginDirs } from './test-plugins.mjs';
@@ -1001,7 +1001,7 @@ export function templateView(d) {
   return {
     stem: d.stem, kernel: d.kernel, face: d.face ?? d.kernel, K: d.kernel.toUpperCase(), Kernel: d.kernel.replace(/(^|_)([a-z])/g, (_m, _u, c) => c.toUpperCase()),
     name: d.name, uri: d.lv2.uri, clapId: d.clap.id, description: d.description,
-    omxdspMin: packagingRange('omx-dsp-devel', d.tree ?? ROOT).floor, panel: Boolean(d.panel), params: d.params.map((p) => paramRow(p, d.units)),
+    panel: Boolean(d.panel), params: d.params.map((p) => paramRow(p, d.units)),
     oracles: (d.oracles ?? []).map((oracle) => ({ oracle })),
   };
 }

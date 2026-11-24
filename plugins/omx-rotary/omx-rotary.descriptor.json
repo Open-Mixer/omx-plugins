@@ -1,9 +1,8 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.21.0",
-    "omx-dsp": ">= 0.34.1"
-  },
+  "requires": [
+    "omx-dsp"
+  ],
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.rotary",

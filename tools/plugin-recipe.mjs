@@ -26,7 +26,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { descriptorFile, isWhole, viewOf } from './descriptor.mjs';
-import { compareVersions, declKernels, declParams, findName, kernelExists, locateContract, packagingRange, paramKernel, isMain } from './omx-contract.mjs';
+import { compareVersions, declKernels, declParams, findName, kernelExists, locateContract, paramKernel, isMain } from './omx-contract.mjs';
 import { INDEXED_ROLES, ROLES } from './omx-panel.mjs';
 import { validate } from './schema-validate.mjs';
 import { omxdspInclude, render } from './template.mjs';
@@ -113,7 +113,7 @@ export const RULES = {
   // a chain is generated whole, as an instance plugin is
   instance: (_root, _recipe, facts) => facts.decl?.binding === 'instance' || facts.decl?.binding === 'chain',
   panel: (_root, _recipe, facts) => Boolean(facts.decl?.panel) || facts.decl?.binding === 'instance' || facts.decl?.binding === 'chain',
-  byReference: (root, recipe) => compareVersions(packagingRange('omx-contract-devel', root).floor, recipe.contract.byReferenceSince) >= 0,
+  byReference: () => true,
 };
 
 // ---- the checkers: one per artifact kind ---------------------------------------------------------

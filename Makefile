@@ -171,24 +171,18 @@ HEADERS := include/omx_plugin_param.h include/omx_panel_description.h include/om
 # libomxplugins.a: each shipped plugin's CLAP face built with -DOMX_CLAP_STATIC (no `clap_entry`;
 # its `omx_clap_entry_<kernel>` stays) and lib/omx_clap_static.c, the table of those entries by CLAP
 # id that tools/gen.mjs fills. Position-independent, so a shared object (the console's engine) can
-# link it. omxplugins.pc requires the omx-dsp floor the packaging declares, whose archive the faces call.
+# link it. omxplugins.pc requires omx-dsp, whose archive the faces call.
 B          := build
 LIB_B      := $(B)/lib
 LIB        := $(LIB_B)/libomxplugins.a
 LIB_PC     := $(LIB_B)/omxplugins.pc
 CLAP_FACES := $(foreach p,$(PLUGINS),$(wildcard $(p)omx_*_clap.c))
 LIB_OBJS   := $(LIB_B)/omx_clap_static.o $(LIB_B)/omx_clap_face.o $(patsubst %.c,$(LIB_B)/%.o,$(notdir $(CLAP_FACES)))
-# The releases this tree builds against are declared once, in the packaging: packaging/omx-plugins.spec's
-# BuildRequires, a floor per dependency and no ceiling (`BuildRequires: pkg >= F`); debian/control says the same
-# (tools/deps-check.sh). Building the archive stops first, naming the dependency, the floor and what is
-# installed, when pkg-config finds a release below it.
+# What this tree builds against is what is installed: the packaging names each dependency with no version
+# (tools/deps-check.sh). Building the archive stops first, naming what pkg-config does not find.
 SPEC       := packaging/omx-plugins.spec
-spec_floor   = $(shell sed -n 's/^BuildRequires: $(1) >= \([0-9.]*\)$$/\1/p' $(SPEC))
-OMXDSP_MIN        := $(call spec_floor,omx-dsp-devel)
-CONTRACT_MIN      := $(call spec_floor,omx-contract-devel)
-CLAPCORE_MIN      := $(call spec_floor,omx-clap-devel)
-# $(call dep_check,<pkg-config name>,<floor>): nothing, or a stop naming what is installed
-dep_check = $(if $(shell $(PKG_CONFIG) --atleast-version=$(2) $(1) && echo y),,$(error $(1) >= $(2) is required ($(SPEC)); installed: $(or $(shell $(PKG_CONFIG) --modversion $(1) 2>/dev/null),none). Install omx-dsp-devel and omx-contract-devel (or libomxdsp-dev and libomx-contract-dev) from the channel: BUILDING.md))
+# $(call dep_check,<pkg-config name>): nothing, or a stop naming the package
+dep_check = $(if $(shell $(PKG_CONFIG) --exists $(1) && echo y),,$(error $(1) is not installed. Install omx-dsp-devel and omx-contract-devel (or libomxdsp-dev and libomx-contract-dev) from the channel (BUILDING.md)))
 PKG_CONFIG ?= pkg-config
 CC         ?= cc
 AR         ?= ar
@@ -196,9 +190,9 @@ CFLAGS     ?= -O2 -g
 LIB_WARN   := -std=gnu11 -Wall -Wextra -Werror
 LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
-lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
+lib_cflags = $(call dep_check,omxdsp)$(call dep_check,omx-contract)$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dirmeter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features choice-units placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base selftest-shards decl-schema-panel-ref
+.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dir meter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features choice-units placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base selftest-shards decl-schema-panel-ref
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
@@ -646,9 +640,9 @@ $(LIB_B)/$(notdir $(1:.c=.o)): $(1) $(wildcard $(dir $(1))*.h $(dir $(1))generat
 endef
 $(foreach f,$(CLAP_FACES),$(eval $(call face_rule,$(f))))
 
-# The prefix, libdir and includedir are filled at install; the version and the omx-dsp and omx-contract floors here.
+# The prefix, libdir and includedir are filled at install; the version here.
 $(LIB_PC): lib/omxplugins.pc.in Makefile $(SPEC) | $(LIB_B)
-	sed -e 's,@VERSION@,$(VERSION),' -e 's,@OMXDSP_MIN@,$(OMXDSP_MIN),' -e 's,@CONTRACT_MIN@,$(CONTRACT_MIN),' -e 's,@CLAPCORE_MIN@,$(CLAPCORE_MIN),' $< > $@
+	sed -e 's,@VERSION@,$(VERSION),' $< > $@
 
 $(LIB_B):
 	@mkdir -p $@

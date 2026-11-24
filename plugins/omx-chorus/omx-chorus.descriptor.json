@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.chorus",
