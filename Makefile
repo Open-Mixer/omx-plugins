@@ -5,7 +5,8 @@
 # `install` and `clean`.
 #
 #   make            build every plugin
-#   make test       the fast set (what the package builds run): declaration checks, in-process probes, hints, manual
+#   make test       the fast set (what the package builds run): declaration checks, in-process probes, hints, manual;
+#                   every part runs whatever an earlier part answered (the fast checks with -k, every plugin, each step)
 #   make test-heavy the built plugins through a host: oracles, host-check.sh, the round trip; CI runs
 #                   it on every pull request in slices (OMX_HEAVY_SHARD=i/n); tools/test/test-split.json lists both
 #   make units      the declared units' contract codes (tools/param-contract.mjs) are omx-contract's header's
@@ -172,29 +173,37 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
+.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
+# every fast check, each its own target: `make test` runs them with -k, so one red does not hide the others
+test-checks: entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when strip-pages-follow face-dirty-order core-init-answers debt-base test-split
+# make test runs every part whatever an earlier part answered, and is red when any part was: the fast checks (-k),
+# then every plugin's test, then the steps that read the built plugins. A red check never hides a plugin's test
+# (tools/test/test-split-check.mjs holds the recipe to that).
+test: lib
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
-	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
-	@$(MAKE) -s presets-figures
-	@$(MAKE) -s lib-test
-	@$(MAKE) -s hints
-	@$(MAKE) -s manual
-	@$(MAKE) -s presets
-	@$(MAKE) -s presets-figures
-	@$(MAKE) -s meters-abi
-	@$(MAKE) -s lv2-refuse-rate
-	@$(MAKE) -s param-contract-abi
-	@$(MAKE) -s panel-abi
-	@$(MAKE) -s host-contract
-	@$(MAKE) -s meter-level
-	@$(MAKE) -s comp-published-scan
-	@$(MAKE) -s strip-bands
-	@$(MAKE) -s test-role
-	@$(MAKE) -s package-lists
+	@rc=0; red=; \
+	$(MAKE) -k test-checks || { rc=1; red="$$red test-checks"; }; \
+	for p in $(PLUGINS); do $(MAKE) -C $$p test || { rc=1; red="$$red $$p"; }; done; \
+	$(MAKE) -s presets-figures || { rc=1; red="$$red presets-figures"; }; \
+	$(MAKE) -s lib-test || { rc=1; red="$$red lib-test"; }; \
+	$(MAKE) -s hints || { rc=1; red="$$red hints"; }; \
+	$(MAKE) -s manual || { rc=1; red="$$red manual"; }; \
+	$(MAKE) -s presets || { rc=1; red="$$red presets"; }; \
+	$(MAKE) -s presets-figures || { rc=1; red="$$red presets-figures"; }; \
+	$(MAKE) -s meters-abi || { rc=1; red="$$red meters-abi"; }; \
+	$(MAKE) -s lv2-refuse-rate || { rc=1; red="$$red lv2-refuse-rate"; }; \
+	$(MAKE) -s param-contract-abi || { rc=1; red="$$red param-contract-abi"; }; \
+	$(MAKE) -s panel-abi || { rc=1; red="$$red panel-abi"; }; \
+	$(MAKE) -s host-contract || { rc=1; red="$$red host-contract"; }; \
+	$(MAKE) -s meter-level || { rc=1; red="$$red meter-level"; }; \
+	$(MAKE) -s comp-published-scan || { rc=1; red="$$red comp-published-scan"; }; \
+	$(MAKE) -s strip-bands || { rc=1; red="$$red strip-bands"; }; \
+	$(MAKE) -s test-role || { rc=1; red="$$red test-role"; }; \
+	$(MAKE) -s package-lists || { rc=1; red="$$red package-lists"; }; \
+	if [ $$rc -ne 0 ]; then echo "make test: red:$$red" >&2; fi; exit $$rc
 # the set that runs the built plugins through a host: each plugin's kernel-identity and hand-written oracles on both
 # faces, host-check.sh's external scanners, then the round trip through plugin-hostd. It runs on
 # every pull request in its own CI jobs, not in the package build. OMX_HEAVY_SHARD=i/n runs the i-th of n slices of

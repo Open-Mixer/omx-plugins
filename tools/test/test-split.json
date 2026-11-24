@@ -1,30 +1,101 @@
 {
-  "comment": "Every check the repository runs from make test or make test-heavy, once: tools/test/test-split-check.mjs holds the Makefile, the plugin Makefile template and the CI workflow to it. make test is the fast set the package %check runs; make test-heavy is the set that loads the built plugins into a host, run on every pull request in its own CI jobs. A check moves from one list to the other; it never leaves both.",
+  "comment": "Every check the repository runs from make test or make test-heavy, once: tools/test/test-split-check.mjs holds the Makefile, the plugin Makefile template and the CI workflow to it. make test is the fast set the package %check runs: test.prerequisites are the prerequisites of test-checks, which make test runs with -k, then every plugin's test, then test.steps, each whatever the others answered. make test-heavy is the set that loads the built plugins into a host, run on every pull request in its own CI jobs. A check moves from one list to the other; it never leaves both. A Makefile target that runs a tools/test/ script and is in neither set is under elsewhere, with where it runs.",
   "test": {
     "prerequisites": [
-      "lib", "entry-symlink", "units", "panel-words", "schema-urls", "graph-enum", "oracle-rates", "face-header", "role-meanings", "meter-binding", "panel-layout", "descriptor-view",
-      "descriptor-features", "placement-strips", "lv2-units", "lv2-deprecated", "lv2-maintainer", "no-modgui",
-      "release-version", "resource-hints", "format-tables", "contract-union", "contract-dir", "lv2bench-ran",
-      "ci-scope", "no-ci-bridge", "deb-cells", "probe-checks", "eq-probe-race", "band-groups", "phaser-depth", "geq-widgets", "summary-numbers",
-      "param-tie", "face-ids", "comp-release-mode", "strip-visible-when", "face-dirty-order", "core-init-answers", "debt-base", "test-split"
+      "entry-symlink",
+      "units",
+      "panel-words",
+      "schema-urls",
+      "graph-enum",
+      "oracle-rates",
+      "face-header",
+      "role-meanings",
+      "meter-binding",
+      "panel-layout",
+      "descriptor-view",
+      "descriptor-features",
+      "placement-strips",
+      "lv2-units",
+      "lv2-deprecated",
+      "lv2-maintainer",
+      "no-modgui",
+      "release-version",
+      "resource-hints",
+      "format-tables",
+      "contract-union",
+      "contract-dir",
+      "lv2bench-ran",
+      "ci-scope",
+      "no-ci-bridge",
+      "deb-cells",
+      "probe-checks",
+      "eq-probe-race",
+      "band-groups",
+      "phaser-depth",
+      "geq-widgets",
+      "summary-numbers",
+      "param-tie",
+      "face-ids",
+      "comp-release-mode",
+      "strip-visible-when",
+      "strip-pages-follow",
+      "face-dirty-order",
+      "core-init-answers",
+      "debt-base",
+      "test-split"
     ],
     "steps": [
-      "per-plugin test", "presets-figures", "lib-test", "hints", "manual", "presets", "meters-abi", "lv2-refuse-rate", "param-contract-abi", "panel-abi",
-      "host-contract", "meter-level", "comp-published-scan", "strip-bands", "test-role", "package-lists"
+      "per-plugin test",
+      "presets-figures",
+      "lib-test",
+      "hints",
+      "manual",
+      "presets",
+      "meters-abi",
+      "lv2-refuse-rate",
+      "param-contract-abi",
+      "panel-abi",
+      "host-contract",
+      "meter-level",
+      "comp-published-scan",
+      "strip-bands",
+      "test-role",
+      "package-lists"
     ]
   },
   "test-heavy": {
-    "prerequisites": ["lib"],
-    "steps": ["per-plugin test-heavy", "round-trip"]
+    "prerequisites": [
+      "lib"
+    ],
+    "steps": [
+      "per-plugin test-heavy",
+      "round-trip"
+    ]
   },
   "plugin": {
     "test": [
-      "clap-probe params", "clap-probe live", "clap-probe state", "panel-probe clap", "panel-probe lv2",
-      "clap-ext-probe", "resource-hints-check.mjs --binaries", "port-groups-probe", "presets-host-check.mjs"
+      "clap-probe params",
+      "clap-probe live",
+      "clap-probe state",
+      "panel-probe clap",
+      "panel-probe lv2",
+      "clap-ext-probe",
+      "resource-hints-check.mjs --binaries",
+      "port-groups-probe",
+      "presets-host-check.mjs"
     ],
     "test-heavy": [
-      "{{kernel}}-oracle clap", "{{kernel}}-oracle lv2", "{{oracle}} clap", "{{oracle}} lv2",
+      "{{kernel}}-oracle clap",
+      "{{kernel}}-oracle lv2",
+      "{{oracle}} clap",
+      "{{oracle}} lv2",
       "host-check.sh"
     ]
+  },
+  "elsewhere": {
+    "check-params-doc": "ci.yml's make test job, beside gen --check",
+    "selftest": "ci.yml's selftest job (about 80 minutes), when tools/ci-scope.sh says the change can move it",
+    "strip-crosscheck": "by hand: needs the git history and the old commit's omx-contract and omx-dsp releases",
+    "strip-bands-bench": "by hand: a CPU measurement, not a check"
   }
 }
