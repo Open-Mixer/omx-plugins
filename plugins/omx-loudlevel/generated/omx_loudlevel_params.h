@@ -29,7 +29,7 @@ enum {
 static const omx_plugin_param OMX_LOUDLEVEL_PARAMS[OMX_LOUDLEVEL_PARAM_COUNT] = {
   { "targetLufs", "Target", "dB", -40.0f, -6.0f, -23.0f, 0u },
   { "rangeDb", "Range", "dB", 0.0f, 24.0f, 0.0f, 0u },
-  { "speedDbPerS", "Speed", "dB", 0.1f, 6.0f, 1.0f, 0u },
+  { "speedDbPerS", "Speed", "dB/s", 0.1f, 6.0f, 1.0f, 0u },
   { "gateLufs", "Gate", "dB", -70.0f, -30.0f, -50.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "window", "Window", "", 0.0f, 1.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER },
 };
@@ -71,17 +71,17 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
 #define OMX_LOUDLEVEL_CLAP_FEATURES "audio-effect", "utility", "stereo"
 #define OMX_LOUDLEVEL_LV2_URI "urn:openmixer:loudlevel"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
-#define OMX_LOUDLEVEL_DECL_SOURCE "omx loudlevel: Target -40 to -6 dB, Range 0 to 24 dB, Speed 0.1 to 6 dB, Gate -70 to -30 dB, Window 0 to 1"
-#define OMX_LOUDLEVEL_DECL_DIGEST "c87ae980de51a6b82a3965a255349cdf70b7d0f0ecc64ef676cc210393c9ba4f"
+#define OMX_LOUDLEVEL_DECL_SOURCE "omx loudlevel: Target -40 to -6 dB, Range 0 to 24 dB, Speed 0.1 to 6 dB/s, Gate -70 to -30 dB, Window 0 to 1"
+#define OMX_LOUDLEVEL_DECL_DIGEST "06e25f555534986abb233e73a6c3340719e7eec0b5f0dc7a1d29bbcbb73be71b"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 2u
-#define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "b43277adac9dfb0ebce25ca154ca1701bfcb0d071bd937c3c157108b29285c52"
+#define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 3u
+#define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "be44f8132ba0986b8a0062c136a6c2eb904a7039f306831160c22433b9f7c443"
 static const struct omx_param_contract_row OMX_LOUDLEVEL_PARAM_CONTRACT[OMX_LOUDLEVEL_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* targetLufs db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* rangeDb db */
-  { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* speedDbPerS db */
+  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* speedDbPerS none */
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* gateLufs db */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* window none */
 };

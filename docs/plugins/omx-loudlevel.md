@@ -33,7 +33,7 @@ Ids are the order below, 0 to 4; a parameter appended later takes the next id. T
 |---|---|---|---|---|---|---|---|---|---|
 | 0 | `targetLufs` | Target | dB | -40 | -6 | -23 | continuous, linear | automatable | Loudlevel (1) |
 | 1 | `rangeDb` | Range | dB | 0 | 24 | 0 | continuous, linear | automatable | Loudlevel (1) |
-| 2 | `speedDbPerS` | Speed | dB | 0.1 | 6 | 1 | continuous, linear | automatable | Loudlevel (1) |
+| 2 | `speedDbPerS` | Speed | dB/s | 0.1 | 6 | 1 | continuous, linear | automatable | Loudlevel (1) |
 | 3 | `gateLufs` | Gate | dB | -70 | -30 | -50 | whole steps | automatable | Loudlevel (1) |
 | 4 | `window` | Window |  | 0 | 1 | Short-term (1) | 0 Momentary, 1 Short-term | automatable | Loudlevel (1) |
 

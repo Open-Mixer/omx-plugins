@@ -33,7 +33,7 @@ Ids are the order below, 0 to 3; a parameter appended later takes the next id. T
 |---|---|---|---|---|---|---|---|---|---|
 | 0 | `amountPct` | Amount | % | 0 | 100 | 0 | whole steps | automatable | Balancer (1) |
 | 1 | `rangeDb` | Range | dB | 1 | 12 | 3 | continuous, linear | automatable | Balancer (1) |
-| 2 | `speedDbPerS` | Speed | dB | 0.1 | 6 | 0.5 | continuous, linear | automatable | Balancer (1) |
+| 2 | `speedDbPerS` | Speed | dB/s | 0.1 | 6 | 0.5 | continuous, linear | automatable | Balancer (1) |
 | 3 | `slopeDbOct` | Slope | dB/oct | -6 | 0 | -3 | continuous, linear | automatable | Balancer (1) |
 
 ## Bypass

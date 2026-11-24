@@ -55,7 +55,7 @@ Every plugin, what it does, and its controls; the parameter pages, the factory p
 |---|---|---|
 | Amount | 0 to 100 %, whole steps | 0 % |
 | Range | 1 to 12 dB | 3 dB |
-| Speed | 0.1 to 6 dB | 0.5 dB |
+| Speed | 0.1 to 6 dB/s | 0.5 dB/s |
 | Slope | -6 to 0 dB/oct | -3 dB/oct |
 
 Plus the host's bypass.
@@ -429,7 +429,7 @@ Plus the host's bypass.
 |---|---|---|
 | Target | -40 to -6 dB | -23 dB |
 | Range | 0 to 24 dB | 0 dB |
-| Speed | 0.1 to 6 dB | 1 dB |
+| Speed | 0.1 to 6 dB/s | 1 dB/s |
 | Gate | -70 to -30 dB, whole steps | -50 dB |
 | Window | Momentary / Short-term | Short-term |
 
