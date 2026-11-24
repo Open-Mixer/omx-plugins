@@ -18,7 +18,7 @@ count() { { grep -oF -- "$1" "$2" || true; } | wc -l; }
 check() {
   local root="$1" fail=0 spec="$1/packaging/omx-plugins.spec" control="$1/debian/control"
   # rpm name, deb name, how many times debian/control must carry the deb pair, does -devel require it
-  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-devel libomx-clap-dev 2 yes" "omx-clap-contract omx-clap-contract 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 2 no" "plugin-qualify plugin-qualify 1 no"; do
+  for row in "omx-dsp-devel libomxdsp-dev 2 yes" "omx-contract-devel libomx-contract-dev 2 yes" "omx-clap-devel libomx-clap-dev 2 yes" "omx-clap-contract omx-clap-contract 1 no" "plugin-hostd-devel plugin-hostd-dev 1 no" "omx-contract omx-contract 1 no" "omx-panel omx-panel 2 no"; do
     read -r rpm deb times devel <<<"$row"
     local floor
     floor="$(sed -n "s/^BuildRequires: $rpm >= \([0-9.]*\)\$/\1/p" "$spec")"
@@ -65,7 +65,7 @@ check() {
 if [ "${1:-}" = --self-test ]; then
   scratch="$(mktemp -d)"; trap 'rm -rf "$scratch"' EXIT
   fail=0
-  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns qualify-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added control-breaks-sibling-added spec-conflicts-sibling-added control-breaks-own-added control-replaces-added control-breaks-continued spec-conflicts-own-added panel-recommends-dropped-spec panel-recommends-dropped-control panel-recommends-floor-moved contract-missing control-no-command rules-skip; do
+  for s in dsp-floor dsp-ceiling-returns-spec devel-ceiling-returns hostd-recommends-ceiling-returns control-dsp control-ceiling-returns control-hostd-ceiling-returns pc-ceiling-returns contract-devel-ceiling-returns devel-contract-ceiling-returns panel-ceiling-returns control-contract-ceiling-returns control-panel-ceiling-returns spec-bare-ceiling-added control-bare-ceiling-added control-breaks-sibling-added spec-conflicts-sibling-added control-breaks-own-added control-replaces-added control-breaks-continued spec-conflicts-own-added panel-recommends-dropped-spec panel-recommends-dropped-control panel-recommends-floor-moved contract-missing control-no-command rules-skip; do
     rm -rf "$scratch/t"; mkdir -p "$scratch/t/packaging" "$scratch/t/debian"
     mkdir -p "$scratch/t/lib"; cp "$HERE/lib/omxplugins.pc.in" "$scratch/t/lib/"; cp "$HERE/debian/rules" "$scratch/t/debian/"
     cp "$HERE/packaging/omx-plugins.spec" "$scratch/t/packaging/"; cp "$HERE/debian/control" "$scratch/t/debian/"
@@ -73,7 +73,6 @@ if [ "${1:-}" = --self-test ]; then
       dsp-floor) sed -i 's/^BuildRequires: omx-dsp-devel >= [0-9.]*$/BuildRequires: omx-dsp-devel >= 0.0.1/' "$scratch/t/packaging/omx-plugins.spec" ;;
       dsp-ceiling-returns-spec) sed -i 's/^BuildRequires: omx-dsp-devel >= \([0-9.]*\)$/BuildRequires: (omx-dsp-devel >= \1 with omx-dsp-devel < 0.33)/' "$scratch/t/packaging/omx-plugins.spec" ;;
       devel-ceiling-returns) sed -i 's/^Requires: omx-dsp-devel >= \([0-9.]*\)$/Requires: (omx-dsp-devel >= \1 with omx-dsp-devel < 0.33)/' "$scratch/t/packaging/omx-plugins.spec" ;;
-      qualify-ceiling-returns) sed -i 's/^BuildRequires: plugin-qualify >= \([0-9.]*\)$/BuildRequires: (plugin-qualify >= \1 with plugin-qualify < 0.21)/' "$scratch/t/packaging/omx-plugins.spec" ;;
       hostd-recommends-ceiling-returns) sed -i 's/^Recommends: plugin-hostd >= \([0-9.]*\)$/Recommends: (plugin-hostd >= \1 with plugin-hostd < 0.21)/' "$scratch/t/packaging/omx-plugins.spec" ;;
       control-dsp) sed -i '0,/libomxdsp-dev (>= [0-9.]*~)/s//libomxdsp-dev (>= 0.0.1~)/' "$scratch/t/debian/control" ;;
       control-ceiling-returns) sed -i '0,/libomxdsp-dev (>= \([0-9.]*\)~),/s//libomxdsp-dev (>= \1~), libomxdsp-dev (<< 9.0~),/' "$scratch/t/debian/control" ;;

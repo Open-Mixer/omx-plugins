@@ -61,24 +61,12 @@ BuildRequires: plugin-hostd >= 0.21.0
 # plugin-hostd's words the generators read: its domains plugin-hostd/clap and plugin-hostd/lv2, the format tables
 # (tools/format-tables.mjs), and the resource hints, RESOURCE_* (tools/resource-hints.mjs)
 BuildRequires: plugin-hostd-contract >= 0.21.0
-# %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
-# shipped pins.d file to the shipped binaries' hashes (tools/pins-check.sh)
-BuildRequires: plugin-qualify >= 0.21.0
-# the shipped .clap is the stripped one (find-debuginfo runs after %%install), so its pin is measured
-# again once the buildroot is stripped: a pin taken at %%install names bytes the package never ships
-%define __spec_install_post \
-    %{?__debug_package:%{__debug_install_post}}\
-    %{__arch_install_post}\
-    %{__os_install_post}\
-    %{__make} -s install-pins DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir} CLAPDIR=/usr/lib/clap\
-%{nil}
 
 # The name a user installs: both formats.
 Requires: %{name}-clap%{?_isa} = %{version}-%{release}
 Requires: %{name}-lv2%{?_isa} = %{version}-%{release}
 # each plugin's descriptor, which a host and the console read at run time
 Requires: %{name}-contract = %{version}-%{release}
-# the first plugin-hostd release that reads pins.d (plugin-hostd issue #42)
 Recommends: plugin-hostd >= 0.21.0
 
 %description
@@ -184,18 +172,12 @@ Its documentation is on openmixer.org.
 
 %check
 %make_build test
-# the shipped pins.d file still names the shipped binaries' own hashes (sabotage: a changed binary goes red)
-tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins %{buildroot}/usr/lib/clap
 
 %files
 %license LICENSE
 %doc README.md
 # the factory presets of every plugin, read only data the console's preset library lists (presets/)
 %{_datadir}/omx/presets/
-# our own plugins' pins, known at build time (plugin-hostd issue #42's pins.d, a floor-only Recommends above);
-# the directory is plugin-hostd's, co-owned here so the package stands on its own at %%files time
-%dir %{_datadir}/plugin-hostd/pins.d
-%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 
 %files clap
 %license LICENSE
@@ -312,6 +294,10 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 - units: the vendor block is omx-contract 3.21.0's eight (dbfs, dbu, ratio, lufs, dbperoct, dbpers, dbtp, lu), and a
   slope is served as omx-panel serves it: dB/oct writes dbperoct (260) in the param contract, so the balancer, comp,
   eq8, eq16, eq32 and strip contracts each move to their next version (clap#163)
+- no shipped pins: the pins.d route (plugin-hostd#42) is retired, and tools/gen-pins.sh, the packaged
+  /usr/share/plugin-hostd/pins.d/omx-plugins.pins, tools/pins-check.sh and the build dependency on
+  plugin-qualify go; our plugins are qualified like any plugin, plugin-qualify measuring them into the
+  qualification records once the release is served (omx-plugins#211)
 
 * Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
 - omx-plugins-contract installs role-meanings.json (the meaning each panel

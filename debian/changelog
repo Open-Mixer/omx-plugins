@@ -10,6 +10,12 @@ omx-plugins (0.20.0) unstable; urgency=medium
     it: dB/oct writes dbperoct (260) in the param contract, so the balancer,
     comp, eq8, eq16, eq32 and strip contracts each move to their next version
     (clap#163).
+  * No shipped pins: the pins.d route (plugin-hostd#42) is retired, and
+    tools/gen-pins.sh, the packaged
+    /usr/share/plugin-hostd/pins.d/omx-plugins.pins, tools/pins-check.sh and
+    the build dependency on plugin-qualify go; our plugins are qualified like
+    any plugin, plugin-qualify measuring them into the qualification records
+    once the release is served (omx-plugins#211).
 
  -- Pau Aliagas <linuxnow@gmail.com>  Sun, 22 Nov 2026 12:00:00 +0100
 
