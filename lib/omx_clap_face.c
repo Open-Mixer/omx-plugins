@@ -561,8 +561,10 @@ static bool g_shown(const G *g, const struct omx_panel_control_row *c) {
 }
 
 /** Whether the control of parameter `param` is shown at the governing values now: a slot of a hidden control is blank. The
- * page rule is omx-panel's pagesOf: the pages and their boundaries are fixed (the generated table holds every control's
- * id), and a control the governing values hide keeps its slot, blank, so the slots after it do not move. */
+ * page rule is omx-panel's pagesOf: the page boundaries are fixed (the generated table holds every control's id), a
+ * control the governing values hide keeps its slot, blank, so the slots after it do not move, and a page whose every
+ * slot is blank is not served (no screen has zero visible items, omx-panel docs/panel-layout.md): a section the values
+ * empty has no page, and the host is told when that changes (g_publish). */
 static bool g_slot_shown(const G *g, clap_id param) {
   const struct omx_panel_rows *r = g->face->panel;
   for (uint32_t c = 0; c < r->control_count; ++c)
@@ -570,22 +572,40 @@ static bool g_slot_shown(const G *g, clap_id param) {
   return true;
 }
 
+/* The id a slot of table page `r` serves now: the control's, or CLAP_INVALID_ID when the slot is empty or hidden. */
+static clap_id g_slot_id(const G *g, const struct omx_panel_page_row *r, uint32_t k) {
+  return r->ids[k] != OMX_CLAP_PANEL_INVALID_ID && g->gov_count && !g_slot_shown(g, r->ids[k]) ? OMX_CLAP_PANEL_INVALID_ID : r->ids[k];
+}
+
+/* Whether table page `r` holds a control the governing values show: a page of blank slots alone is not served. */
+static bool g_page_served(const G *g, const struct omx_panel_page_row *r) {
+  for (uint32_t k = 0; k < CLAP_REMOTE_CONTROLS_COUNT; ++k)
+    if (g_slot_id(g, r, k) != OMX_CLAP_PANEL_INVALID_ID) return true;
+  return false;
+}
+
 static uint32_t g_pages_count(const clap_plugin_t *p) {
   const G *g = G_OF(p);
-  return g->face->page_count;
+  uint32_t n = 0;
+  for (uint32_t t = 0; t < g->face->page_count; ++t) n += g_page_served(g, &g->face->pages[t]);
+  return n;
 }
 
 static bool g_pages_get(const clap_plugin_t *p, uint32_t index, clap_remote_controls_page_t *page) {
   const G *g = G_OF(p);
   const struct omx_face *f = g->face;
-  if (index >= f->page_count) return false;
-  const struct omx_panel_page_row *r = &f->pages[index];
+  /* the index-th served page of the table, the pages of blank slots alone skipped */
+  uint32_t t = 0;
+  for (uint32_t seen = 0; t < f->page_count; ++t)
+    if (g_page_served(g, &f->pages[t]) && seen++ == index) break;
+  if (t >= f->page_count) return false;
+  const struct omx_panel_page_row *r = &f->pages[t];
   memset(page, 0, sizeof *page);
   snprintf(page->section_name, sizeof page->section_name, "%s", r->section_name);
   page->page_id = index;
   snprintf(page->page_name, sizeof page->page_name, "%s", r->page_name);
   for (uint32_t k = 0; k < CLAP_REMOTE_CONTROLS_COUNT; ++k)
-    page->param_ids[k] = r->ids[k] != OMX_CLAP_PANEL_INVALID_ID && g->gov_count && !g_slot_shown(g, r->ids[k]) ? OMX_CLAP_PANEL_INVALID_ID : r->ids[k];
+    page->param_ids[k] = g_slot_id(g, r, k);
   page->is_for_preset = false;
   return true;
 }
