@@ -25,6 +25,9 @@
  * entries (include/omx_clap_static.h, lib/omx_clap_static.c). Adding a plugin touches only its
  * folder; two plugins' changes merge in either order.
  *
+ * and the labels domain contract.d/omx-plugin-labels/omx-plugin-labels.json (tools/plugin-labels.mjs): every shipped
+ * plugin's section titles, choice labels and preset names, each a key with its English source sentence;
+ *
  * and the hint view tools/test/port-hints.json (git-ignored), assembled from every declaration's
  * `portHints` (the pin of its LV2 port hints) for tools/port-hints.mjs.
  *
@@ -51,6 +54,7 @@ import { omxdspInclude, render } from './template.mjs';
 import { generateTest, isTestDir, loadTestDecl, testPluginDirs } from './test-plugins.mjs';
 import { emitHintsC, hintPrefixes, hintTriples, statedHints } from './resource-hints.mjs';
 import { presetsManifest, presetsOf } from './preset-lib.mjs';
+import { LABELS_FILE, committedLabels, labelsDomain, labelsText } from './plugin-labels.mjs';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -1566,6 +1570,12 @@ export function generateShared(root = ROOT, decls = pluginDirs(root).map((p) => 
   return Object.fromEntries(Object.entries(SHARED).map(([file, producers]) => [file, fillRegions(file, readFileSync(join(root, file), 'utf8'), producers, ds, ts)]));
 }
 
+/** The labels domain's text (tools/plugin-labels.mjs) for the shipped declarations among `decls`, in plugin order. */
+export function labelsDocText(root = ROOT, decls = pluginDirs(root).map((p) => loadDecl(p))) {
+  const ds = decls.filter(ships).sort(byStem);
+  return labelsText(labelsDomain(ds, { presetsOf: (d) => presetsOf(d.clap.id, root), choicesOf, version: releaseVersion(root), committed: committedLabels(root) }));
+}
+
 /** A declaration's pinned port hints (its `portHints`, tools/port-hints.mjs) in the view's shape,
  * `{props, unit, points}` by port symbol in LV2 port order, then any symbol no port has (which the
  * hint check names as gone); undefined when it pins none. */
@@ -1621,6 +1631,7 @@ function main(argv) {
     for (const [rel, text] of Object.entries(generateTest(d))) put(join(d.dir, rel), join('plugins', d.stem, rel), text, 'node tools/gen.mjs');
   }
   if (!dirs.length) for (const [rel, text] of Object.entries(generateShared(ROOT, decls, tests))) put(join(ROOT, rel), rel, text, 'node tools/gen.mjs');
+  if (!dirs.length) put(join(ROOT, LABELS_FILE), LABELS_FILE, labelsDocText(ROOT, decls), 'node tools/gen.mjs');
   if (!dirs.length) {
     // the pin is the declaration's `portHints`: a pin file beside it would be a second home
     for (const n of readdirSync(join(ROOT, 'plugins')).sort()) {

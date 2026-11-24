@@ -100,7 +100,17 @@
 #                   checks the shipped pins against the shipped binaries' hashes (with its --self-test, part of
 #                   `make selftest`), run by a package's own build (%check / dh_auto_install), not by this Makefile
 #   make install-contract  DESTDIR, CONTRACTDIR: each shipped plugin's descriptor into omx-contract's contract directory,
-#                   $(CONTRACTDIR)/3/omx-plugins/plugins/<stem>.json and its MANIFEST.json (run by install-devel)
+#                   $(CONTRACTDIR)/3/omx-plugins/plugins/<stem>.json and its MANIFEST.json, and the labels domain,
+#                   $(CONTRACTDIR)/omx-plugin-labels/ with its catalogs (run by install-devel)
+#   make install-catalogs  DESTDIR, DATADIR: the labels' catalogs, $(DATADIR)/omx-plugins/catalogs/<lang>.json, one per
+#                   listed language (run by install; each is its language pack's)
+#   make plugin-labels  every shipped plugin's section titles, choice labels and preset names are each a key of the
+#                   labels domain (contract.d/omx-plugin-labels, written by tools/gen.mjs) with its English source
+#                   sentence, no parameter name is a key, every listed language has its catalog, and omx-contract
+#                   validate reads the domain with its catalogs (tools/test/plugin-labels-check.mjs and
+#                   plugin-labels-validate.sh, with their sabotage arms; part of `make test`)
+#   make catalogs-gate  the catalogs through omx-contract's release gate, translate --check: a listed language with no
+#                   catalog, a key a catalog lacks or a stale entry is red (tools/catalogs-gate.sh; CI's language packs step)
 #   make contract-dir  the installed tree carries one descriptor per shipped plugin that has one, byte for byte, and
 #                   omx-contract's reader reads it (tools/test/contract-dir-check.sh, with its sabotage arms; part of `make test`)
 #   make lib        build/lib/libomxplugins.a: every shipped plugin's CLAP face and the table of their
@@ -182,11 +192,11 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp,$(OMXDSP_MIN))$(call dep_check,omx-contract,$(CONTRACT_MIN))$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
+.PHONY: graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs print-install-contract-dir meter-binding summary-numbers param-tie presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-pins install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract test-split test-heavy debt-base
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
-test: lib entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
+test: lib entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings plugin-labels meter-binding panel-layout descriptor-view descriptor-features placement-strips lv2-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets summary-numbers param-tie face-ids comp-release-mode strip-visible-when face-dirty-order core-init-answers debt-base test-split
 	@if [ -z "$(PLUGINS)" ]; then echo "no plugins yet"; fi
 	@for p in $(PLUGINS); do $(MAKE) -C $$p test || exit 1; done
 	@$(MAKE) -s presets-figures
@@ -246,6 +256,17 @@ face-header:
 	node tools/test/face-header-check.mjs --self-test
 # contract/role-meanings.json holds every role of every family once, and none other (tools/test/role-meanings-check.mjs),
 # and it is the file the tools read, never an installed omx-plugins-contract (tools/test/role-meanings-source-check.mjs)
+# every section title, choice label and preset name is a key with its English sentence, no parameter name is one, and
+# omx-contract validate reads the domain with its catalogs (tools/test/plugin-labels-check.mjs, plugin-labels-validate.sh)
+plugin-labels:
+	node tools/test/plugin-labels-check.mjs
+	node tools/test/plugin-labels-check.mjs --self-test
+	tools/test/plugin-labels-validate.sh
+	tools/test/plugin-labels-validate.sh --self-test
+# the catalogs whole and none stale: omx-contract's release gate (not part of `make test`: the entries are made at
+# release preparation, or by CI's language packs step)
+catalogs-gate:
+	tools/catalogs-gate.sh
 role-meanings:
 	node tools/test/role-meanings-check.mjs
 	node tools/test/role-meanings-check.mjs --self-test
@@ -462,10 +483,16 @@ strip-bands-bench:
 install:
 	@for p in $(SHIP_PLUGINS); do $(MAKE) -C $$p install || exit 1; done
 	$(MAKE) -s install-presets
+	$(MAKE) -s install-catalogs
 	$(MAKE) -s install-pins
 # the factory presets, where every plugin's preset-discovery factory declares them
 install-presets:
 	find presets -type f -name '*.json' | while read -r f; do install -D -m644 "$$f" "$(DESTDIR)$(DATADIR)/omx/$$f"; done
+# the labels' catalogs, where a surface reads them (omx-contract's catalog.mjs catalogPathOf): each is its language pack's
+LABELS_CATALOGS := contract.d/omx-plugin-labels/catalogs
+install-catalogs:
+	install -d $(DESTDIR)$(DATADIR)/omx-plugins/catalogs
+	install -m644 $(wildcard $(LABELS_CATALOGS)/*.json) $(DESTDIR)$(DATADIR)/omx-plugins/catalogs/
 # every shipped plugin's pin, known at build time: scans the .clap files the step above just installed,
 # so the pins ship beside the binaries they were measured from (tools/gen-pins.sh, which needs
 # plugin-qualify >= 0.9.0; run on its own once the plugins are already installed, e.g. in a package's
@@ -500,6 +527,10 @@ install-contract:
 	  for f in $(DESCRIPTORS); do cp "$$f" "$$stage/plugins/$$(basename "$$f" .descriptor.json).json" || exit 1; done && \
 	  for f in $(CONTRACT_FILES); do cp "$$f" "$$stage/" || exit 1; done && \
 	  sh $(INSTALL_CONTRACT_DIR) omx-plugins $(VERSION) $(CONTRACT_SCHEMA_MAJOR) "$$stage" $(DESTDIR)$(CONTRACTDIR)
+	sh $(INSTALL_CONTRACT_DIR) --domain contract.d/omx-plugin-labels $(DESTDIR)$(CONTRACTDIR)
+# the install script the targets above run, for the checks that stage a contract directory the same way
+print-install-contract-dir:
+	@echo $(INSTALL_CONTRACT_DIR)
 # lv2bench's two output shapes (Debian, Fedora lilv 0.26.4) are both read by the Zynthian bundle probe, with its refusals
 lv2bench-ran:
 	tools/test/lv2bench-ran-check.sh

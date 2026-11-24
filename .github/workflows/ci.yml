@@ -133,6 +133,21 @@ jobs:
         id: handback-completeness
         run: make completeness
 
+      # one pack per listed language from the spec and debian/control, and the labels' catalogs through omx-contract's
+      # release gate (tools/catalogs-gate.sh, translate --check): a listed language with no catalog, a missing key or a
+      # stale entry is red (#18)
+      - name: The language packs
+        id: handback-langpacks
+        uses: Open-Mixer/.github/.github/actions/langpacks@openmixer-v1
+        with:
+          name: omx-plugins
+          base: omx-plugins-contract
+          owner: omx-plugins
+          catalogs: contract.d/omx-plugin-labels/catalogs
+          spec: packaging/omx-plugins.spec
+          gate: tools/catalogs-gate.sh
+          fill-command: tools/catalogs-gate.sh
+
       - name: include/omx_meter_ring.h never hands a reader two blocks at once, and each sabotage goes red
         id: handback-meter-ring
         run: |
