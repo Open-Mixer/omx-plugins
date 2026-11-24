@@ -66,12 +66,13 @@
 
 _Static_assert(ATOMIC_INT_LOCK_FREE == 2 && ATOMIC_LLONG_LOCK_FREE == 2, "the ring needs lock-free atomics");
 _Static_assert(sizeof(double) == sizeof(unsigned long long), "a value travels as its 64 bits");
+_Static_assert(OMX_METER_RING_MAX <= 64u, "a policy mask has one bit per value");
 
 struct omx_meter_ring {
   _Atomic unsigned int word;  /* (count << 2) | copy of the last publication; 0: none since clear() */
   unsigned int count, next;   /* the audio thread's: the last count it published, the copy it fills next */
-  unsigned int deep_mask;     /* bit i: value i holds its smallest (a gain reduction), else its largest */
-  unsigned int hold_mask;     /* bit i: value i is held until read; clear: the held word is the block's value */
+  unsigned long long deep_mask; /* bit i: value i holds its smallest (a gain reduction), else its largest */
+  unsigned long long hold_mask; /* bit i: value i is held until read; clear: the held word is the block's value */
   double acc[OMX_METER_RING_MAX], clip_acc[OMX_METER_RING_MAX]; /* the audio thread's accumulators */
   _Atomic unsigned int taken[OMX_METER_RING_MAX]; /* per value: the count of the copy the reader last took it from */
   _Atomic unsigned int reads; /* how many takes succeeded; the reader's */
@@ -81,12 +82,13 @@ struct omx_meter_ring {
 /** Before any other call, with no reader yet. */
 static inline void omx_meter_ring_init(struct omx_meter_ring *r) {
   memset(r, 0, sizeof *r);
-  r->hold_mask = ~0u;
+  r->hold_mask = ~0ull;
 }
 
 /** Which values hold their smallest (`deep_mask`) and which are held at all (`hold_mask`; the rest give the
  * block's value). After init(), before the first publish(). [main thread, audio thread stopped] */
-static inline void omx_meter_ring_policy(struct omx_meter_ring *r, unsigned int deep_mask, unsigned int hold_mask) {
+static inline void omx_meter_ring_policy(struct omx_meter_ring *r, unsigned long long deep_mask,
+                                         unsigned long long hold_mask) {
   r->deep_mask = deep_mask;
   r->hold_mask = hold_mask;
 }

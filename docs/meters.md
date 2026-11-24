@@ -143,8 +143,9 @@ two copies instead of three, no second load of the word, and the word stored bef
 filled. The held accumulator has its own proof there: a burst held until the take and gone at the
 one after, a gain reduction's deepest, a clip word's longest run, a take that is not yet noted,
 one meter taken at a time, and a clear that ends every hold; then one taker beside plain readers
-that outnumber the cores, every burst between two takes in the later one. Its arms (no hold, no
-restart, no deepest, no clip hold, no count, no clear) each go red.
+that outnumber the cores, every burst between two takes in the later one. It is built under
+UndefinedBehaviorSanitizer. Its arms (no hold, no restart, no deepest, no clip hold, no count, no
+clear, a 32-bit hold mask) each go red.
 
 `make meter-held` (`tools/meter-held-check.sh`) holds the same through a built face, omx-comp, at
 each of omx-dsp's nine ORACLE_FULL_RATES and each quantum from 32 to 1024 frames: 20 ms of silence,

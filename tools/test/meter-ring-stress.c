@@ -188,7 +188,7 @@ static void *taker(void *arg) {
 
 static int burst_phase(double seconds, unsigned nreaders) {
   omx_meter_ring_init(&ring);
-  omx_meter_ring_policy(&ring, 1u << 1, ~0u);
+  omx_meter_ring_policy(&ring, 1ull << 1, ~0ull);
   atomic_store(&stop, 0);
   atomic_store(&bursts_started, 0);
   atomic_store(&bursts_done, 0);
@@ -226,7 +226,7 @@ static int held_deterministic(void) {
   struct omx_meter_ring r;
   double q[3] = {0, 0, 0}, b[3] = {1, -1, 1}, bc[3] = {7, 0, 7}, v[3], h[3], c[3];
   omx_meter_ring_init(&r);
-  omx_meter_ring_policy(&r, 1u << 1, ~0u);
+  omx_meter_ring_policy(&r, 1ull << 1, ~0ull);
   EXPECT(omx_meter_ring_take(&r, 0, v, h, c, 3) == 0, "a take before any block reads nothing");
   omx_meter_ring_publish(&r, q, 3);
   omx_meter_ring_publish_clip(&r, b, bc, 3); /* the burst */
@@ -248,13 +248,13 @@ static int held_deterministic(void) {
   EXPECT(omx_meter_ring_take(&r, 0, v, h, c, 3) == 3 && h[0] == 1.0, "an unconfirmed take keeps the burst");
   EXPECT(omx_meter_ring_reads(&r) == 3u, "three takes counted");
   /* a value outside the hold gives the block's own */
-  omx_meter_ring_policy(&r, 1u << 1, ~1u);
+  omx_meter_ring_policy(&r, 1ull << 1, ~1ull);
   omx_meter_ring_publish(&r, b, 3);
   omx_meter_ring_publish(&r, q, 3);
   EXPECT(omx_meter_ring_take(&r, 0, v, h, NULL, 3) == 3 && h[0] == 0.0 && h[2] == 1.0, "an unheld value is the block's own");
   /* a meter taken restarts its own values only: the next meter's burst waits for its own take */
   omx_meter_ring_init(&r);
-  omx_meter_ring_policy(&r, 1u << 1, ~0u);
+  omx_meter_ring_policy(&r, 1ull << 1, ~0ull);
   omx_meter_ring_publish(&r, b, 3);
   EXPECT(omx_meter_ring_take(&r, 0, v, h, NULL, 1) == 1 && h[0] == 1.0, "the first meter is taken");
   omx_meter_ring_publish(&r, q, 3);

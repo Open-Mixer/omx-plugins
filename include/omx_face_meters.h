@@ -51,14 +51,14 @@ static inline void omx_face_meter_clips(const struct omx_face *f, uint32_t sourc
 
 /** The ring's policy for the declaration's meters: a gain reduction holds its deepest, a meter declared
  * `held: false` holds nothing. */
-static inline void omx_face_meter_masks(const struct omx_face *f, unsigned int *deep, unsigned int *hold) {
-  *deep = 0u;
-  *hold = 0u;
+static inline void omx_face_meter_masks(const struct omx_face *f, unsigned long long *deep, unsigned long long *hold) {
+  *deep = 0ull;
+  *hold = 0ull;
   for (uint32_t m = 0; m < f->meter_count; ++m) {
     const struct omx_face_meter *row = &f->meters[m];
     for (uint32_t c = 0; c < row->channels; ++c) {
-      if (row->kind == OMX_FACE_METER_KIND_GAIN_REDUCTION) *deep |= 1u << (row->at + c);
-      if (row->held) *hold |= 1u << (row->at + c);
+      if (row->kind == OMX_FACE_METER_KIND_GAIN_REDUCTION) *deep |= 1ull << (row->at + c);
+      if (row->held) *hold |= 1ull << (row->at + c);
     }
   }
 }

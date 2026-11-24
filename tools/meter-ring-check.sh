@@ -4,7 +4,8 @@
 #
 # meter-ring-check.sh — include/omx_meter_ring.h, the copies behind every coherent meter, under
 # tools/test/meter-ring-stress.c: an audio thread publishing against readers copying, no read may
-# mix two blocks.
+# mix two blocks. It is built under UndefinedBehaviorSanitizer, which stops it at the first undefined
+# operation (a shift past a policy mask's width, with every value of the 64 the stress test publishes).
 #
 #   tools/meter-ring-check.sh              the stress test and the held-accumulator proof, SECONDS (default 1) per phase
 #   tools/meter-ring-check.sh --self-test  each sabotage of the header must make it go red
@@ -19,6 +20,7 @@
 #   no-clip-hold the clip word is the block's own run, not the longest since the read
 #   no-count     a take does not count
 #   no-clear     a clear leaves the holds: a burst before a deactivation is read after the next activation
+#   narrow-mask  the hold mask is 32 bits: a value past the 32nd is shifted past its width (UBSan stops it)
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")/.." && pwd)"
 CC="${CC:-cc}"
@@ -26,7 +28,7 @@ SECONDS_PER_PHASE="${SECONDS_PER_PHASE:-1}"
 scratch="$(mktemp -d)"; trap 'rm -rf "$scratch"' EXIT
 
 build() { # <header> <out>
-  $CC -std=gnu11 -O2 -Wall -Wextra -Werror -pthread -DOMX_METER_RING_H_PATH="\"$1\"" \
+  $CC -std=gnu11 -O2 -Wall -Wextra -Werror -pthread -fsanitize=undefined -fno-sanitize-recover=all -DOMX_METER_RING_H_PATH="\"$1\"" \
     -o "$2" "$HERE/tools/test/meter-ring-stress.c"
 }
 
@@ -44,15 +46,16 @@ if [ "${1:-}" = --self-test ]; then
   sed '/atomic_fetch_add_explicit(&r->reads/d' "$h" > "$scratch/no-count.h"
   sed '/atomic_store_explicit(&r->taken\[i\], r->count, memory_order_relaxed);$/d' "$h" > "$scratch/no-clear.h"
   fail=0
-  for s in two-copies no-recheck word-first no-hold no-restart no-deep no-clip-hold no-count no-clear; do
+  sed 's/^  unsigned long long hold_mask; /  unsigned int hold_mask; /; s/^  r->hold_mask = ~0ull;$/  r->hold_mask = ~0u;/' "$h" > "$scratch/narrow-mask.h"
+  for s in two-copies no-recheck word-first no-hold no-restart no-deep no-clip-hold no-count no-clear narrow-mask; do
     if cmp -s "$h" "$scratch/$s.h"; then echo "SABOTAGE $s: did not change the header"; fail=1; continue; fi
     build "$scratch/$s.h" "$scratch/$s"
     # up to five tries of SECONDS_PER_PHASE * 2 each: a torn read is a race, it is not on the clock
     red=0
     for _ in 1 2 3 4 5; do
-      if ! "$scratch/$s" "$SECONDS_PER_PHASE" > "$scratch/$s.log"; then red=1; break; fi
+      if ! "$scratch/$s" "$SECONDS_PER_PHASE" > "$scratch/$s.log" 2>&1; then red=1; break; fi
     done
-    if [ "$red" = 1 ]; then echo "SABOTAGE $s: red ($(grep -m1 '^FAIL' "$scratch/$s.log"))"
+    if [ "$red" = 1 ]; then echo "SABOTAGE $s: red ($(grep -m1 -E '^FAIL|runtime error' "$scratch/$s.log"))"
     else echo "SABOTAGE $s: STAYED GREEN"; cat "$scratch/$s.log"; fail=1; fi
   done
   [ "$fail" = 0 ] || exit 1

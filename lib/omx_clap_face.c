@@ -196,7 +196,7 @@ static bool g_init(const clap_plugin_t *p) {
   g_place(g, g_placement(g));
   g_publish(g);
   if (g->face->meter_count) {
-    unsigned int deep, hold;
+    unsigned long long deep, hold;
     omx_meter_ring_init(&g->meters);
     omx_face_meter_masks(g->face, &deep, &hold);
     omx_meter_ring_policy(&g->meters, deep, hold);
