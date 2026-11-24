@@ -293,9 +293,10 @@ Its documentation is on openmixer.org.
 - floors: omx-clap-devel and omx-clap-contract >= 0.34.0, omx-contract >= 3.21.0,
   omx-dsp >= 0.34.0
 - the sorting pass: the moves into the owner domains
-- units: the vendor block is omx-contract 3.21.0's eight (dbfs, dbu, ratio, lufs, dbperoct, dbpers, dbtp, lu), and a
-  slope is served as omx-panel serves it: dB/oct writes dbperoct (260) in the param contract, so the balancer, comp,
-  eq8, eq16, eq32 and strip contracts each move to their next version (clap#163)
+- units: the vendor block is omx-contract 3.21.0's eight (dbfs, dbu, ratio, lufs, dbPerOct, dbPerS, dbtp, lu), and a
+  slope is served: dB/oct writes the sheet's own token dbPerOct (260) in the param contract, the token a host
+  fingerprints, so the balancer, comp, eq8, eq16, eq32 and strip contracts each move to their next version (clap#163,
+  omx-plugins#213)
 - no shipped pins: the pins.d route (plugin-hostd#42) is retired, and tools/gen-pins.sh, the packaged
   /usr/share/plugin-hostd/pins.d/omx-plugins.pins, tools/pins-check.sh and the build dependency on
   plugin-qualify go; our plugins are qualified like any plugin, plugin-qualify measuring them into the

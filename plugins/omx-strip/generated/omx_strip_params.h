@@ -1211,18 +1211,18 @@ static inline uint32_t omx_strip_eq_band_count(const float *values) {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_STRIP_PARAM_CONTRACT_VERSION 3u
-#define OMX_STRIP_PARAM_CONTRACT_FINGERPRINT "82bf4edc1e5d25cb602daca8af4ec91a76680b544babaddac2ec7cd77019ac5c"
+#define OMX_STRIP_PARAM_CONTRACT_VERSION 4u
+#define OMX_STRIP_PARAM_CONTRACT_FINGERPRINT "bc023787b6f643ee554120951c62f01bd8f09ae5581992a37d495567d33ae764"
 static const struct omx_param_contract_row OMX_STRIP_PARAM_CONTRACT[OMX_STRIP_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* trimOn none */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* trimDb db */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* filterOn none */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpfOn none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* hpfFreq hz */
-  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpfSlope dbperoct */
+  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpfSlope dbPerOct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpfOn none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* lpfFreq hz */
-  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpfSlope dbperoct */
+  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpfSlope dbPerOct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* gateOn none */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* gateThreshold db */
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* gateRatio none */

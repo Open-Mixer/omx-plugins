@@ -101,10 +101,14 @@ export function headerUnits(text) {
  * value for, and "", is NONE, its text left to value_to_text. */
 export function contractUnit(unit) {
   const ref = lv2UnitRef(unit);
-  // a unit of the vendor block takes its PARAM_UNITS id's name, `-` read "per" as omx-contract 3.21.0's sheet spells it (dB-oct -> dbperoct)
-  const token = ref && (ref.startsWith('units:') ? ref.slice('units:'.length) : String(standardUnitOf(unit) ?? ref.replace(/^<|>$/g, '').split('#').pop()).replaceAll('-', 'per').toLowerCase());
-  const value = token && headerUnits().get(token.toUpperCase());
-  return value === undefined ? ['none', 0] : [token, value];
+  // a unit of the vendor block is found by its PARAM_UNITS id, `-` read "per" (dB-oct -> DBPEROCT), and served by the sheet's own
+  // token (dbPerOct, 260): the token a host names it by when it computes the fingerprint (omx-clap's pc_unit_name reads the same
+  // sheet), never a case of our own (#213)
+  const found = ref && (ref.startsWith('units:') ? ref.slice('units:'.length) : String(standardUnitOf(unit) ?? ref.replace(/^<|>$/g, '').split('#').pop()).replaceAll('-', 'per'));
+  const value = found && headerUnits().get(found.toUpperCase());
+  if (value === undefined) return ['none', 0];
+  const token = Object.entries(declaredUnits()).find(([t, v]) => v === value && t.toUpperCase() === found.toUpperCase())?.[0] ?? found;
+  return [token, value];
 }
 
 /** The token of a unit the contract serves (one with a header value, or "" for none), else undefined. */

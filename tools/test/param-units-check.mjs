@@ -32,7 +32,7 @@ import { installedDataDir, locateContract } from '../omx-contract.mjs';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const HEADER = 'include/omx_param_contract.h';
 const headerFile = process.env.OMX_PARAM_CONTRACT_H ?? PARAM_CONTRACT_H;
-const VENDOR = ['dbfs', 'dbu', 'ratio', 'lufs', 'dbperoct', 'dbpers', 'dbtp', 'lu'];
+const VENDOR = ['dbfs', 'dbu', 'ratio', 'lufs', 'dbPerOct', 'dbPerS', 'dbtp', 'lu'];
 /** The table tools/param-contract.mjs held before it read plugin-hostd's (FreeMixer/omx-plugins#210): unchanged. */
 const SHIPPED = {
   '': ['none', 0], s: ['s', 1], ms: ['ms', 2], min: ['min', 3], dB: ['db', 13], '%': ['pc', 14], x: ['coef', 15],
@@ -117,6 +117,14 @@ for (const [declared, [token, code]] of Object.entries(UNITS)) {
   if (token === 'none') continue;
   const got = enumOf.get(token.toUpperCase());
   if (got !== code) errors.push(`unit '${declared}' writes ${token} = ${code}, the header has ${got === undefined ? 'no OMX_CLAP_UNIT_' + token.toUpperCase() : got}`);
+}
+// the token a unit is served by is the sheet's own, case and all: a host names the unit by the sheet's token when it computes
+// the contract's fingerprint (omx-clap's pc_unit_name), so a token of our own case is an R4 refusal (dbperoct, #213)
+{
+  const sheet = declaredUnits();
+  for (const [declared, [token, code]] of Object.entries(UNITS)) {
+    if (token !== 'none' && sheet[token] !== code) errors.push(`unit '${declared}' is served as ${token}, which the sheet does not spell (it has ${Object.keys(sheet).find((t) => t.toUpperCase() === token.toUpperCase()) ?? 'no such token'})`);
+  }
 }
 const vendor = [...enumOf].filter(([, v]) => v >= 0x100).sort((a, b) => a[1] - b[1]);
 const want = VENDOR.map((t, i) => [t.toUpperCase(), 0x100 + i]);

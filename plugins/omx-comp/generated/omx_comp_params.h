@@ -166,8 +166,8 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_COMP_PARAM_CONTRACT_VERSION 5u
-#define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "db4cbabbc7245b84cf4c0cff87a88720f55f8338f6e85d0728c9a6ecd1060136"
+#define OMX_COMP_PARAM_CONTRACT_VERSION 6u
+#define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "2e6421f6270613736ddddcf7bcf7061a4c746e015e1127312bda8e56ca21c691"
 static const struct omx_param_contract_row OMX_COMP_PARAM_CONTRACT[OMX_COMP_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* thresholdDb db */
   { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio ratio */
@@ -182,7 +182,7 @@ static const struct omx_param_contract_row OMX_COMP_PARAM_CONTRACT[OMX_COMP_PARA
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* keySource none */
   { 16u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* keyHpHz hz */
   { 16u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* keyLpHz hz */
-  { 260u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* keyTiltDb dbperoct */
+  { 260u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* keyTiltDb dbPerOct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* keyListen none */
   { 2u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* holdMs ms */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* detectLink none */
