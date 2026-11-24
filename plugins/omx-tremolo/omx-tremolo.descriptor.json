@@ -113,6 +113,7 @@
       "group": [
         "Tremolo"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {

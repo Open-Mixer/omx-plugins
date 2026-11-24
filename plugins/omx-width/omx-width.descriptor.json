@@ -33,6 +33,7 @@
       "group": [
         "Width"
       ],
+      "meaning": "width",
       "automatable": true,
       "source": {
         "from": {
@@ -65,6 +66,7 @@
       "group": [
         "Width"
       ],
+      "meaning": "algorithm",
       "automatable": true,
       "source": {
         "from": {
@@ -89,6 +91,7 @@
       "group": [
         "Width"
       ],
+      "meaning": "delay",
       "automatable": true,
       "source": {
         "from": {
@@ -106,6 +109,7 @@
       "group": [
         "Width"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -130,6 +134,7 @@
       "group": [
         "Width"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {

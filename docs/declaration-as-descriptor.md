@@ -64,7 +64,8 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | `oracles`, `portHints` | | kept: tests, the LV2 hint pin |
 | `panel.sections[].label` | each listed control's `group` | `panel` (family, roles, section keys, order, widgets, graphs): the panel's hints |
 | `panel.sections[].subgroups` (`band`, a declaration with variants or a chain) | each band's controls' `group`, the path `[<section label>, "Band <n>"]` (a chain's: `[<section label>, "<element name> <n>"]`, omx-strip's `["EQ", "EQ 1"]`): the panel section first, the LV2 port group last (#257) | the panel is handed to omx-panel without it: the section is drawn as declared |
-| `panel.roles` | each bound control's `meaning`, where the role has a meaning word (omx-panel docs/panel-layout.md) | kept: the roles themselves |
+| `panel.roles` | each bound control's `meaning`, the word its role plays (contract/role-meanings.json; omx-panel docs/panel-layout.md) | kept: the roles themselves |
+| `params[].meaning` (a whole declaration's parameter; a chain element's switch states `enabled`, the stage order `order`, a band count `number`, where tools/gen.mjs makes them) | `controls[].meaning` of a control no role binds; a described plugin states it on the descriptor's control, kept as written. Every control states one, a word of omx-contract's PARAM_MEANINGS and never `unknown` (omx-contract docs/descriptors.md "Meanings"): `meaningOfControl` (tools/descriptor.mjs) refuses one with none, and `make meanings` holds the shipped descriptors (omx-plugins#208) | |
 | `console` | | kept: the console's placement, card and chip |
 | `params[i]` | `controls[i]`, `id: i` | |
 | `params[].symbol` | `controls[].symbol` | |
@@ -127,12 +128,16 @@ no pair for and a value two rows map are each refused by name. No transform is c
 - An LV2 port's `units:unit` is the LV2 row mapping its unit (`units:db` for `dB`, `<urn:openmixer:unit#dBFS>` for
   `dBFS`); the OpenMixer units, `dBFS`, `dBu`, `LUFS`, `dBPerOct` and `ratio` (`urn:openmixer:unit#ratio`, gap 4), are
   the `units:unit` row's pairs and are defined in the plugin's TTL.
-- An LV2 port's `lv2:designation` is the LV2 row mapping its control's `meaning`: 186 ports carry a `param:` term
-  (gain 93, frequency 63, wetDryRatio 11, release 5, threshold 4, ratio 4, attack 4, hold 1, delay 1). A meaning
+- An LV2 port's `lv2:designation` is the LV2 row mapping its control's `meaning`: 371 ports carry a `param:` term
+  (gain 138, frequency 101, threshold 27, release 26, attack 20, ratio 19, wetDryRatio 16, cutoffFrequency 6, delay 6,
+  bypass 5, hold 5, decay 1, resonance 1). A meaning
   LV2's `param:` vocabulary has no term for (knee, makeup, lowCut, q, ...) is written as the urn plugin-db declares for
   it (`<urn:openmixer:meaning#knee>`), the `lv2:designation` row's pairs, and the plugin's TTL defines each such
   Property (omx-plugins#12). Until plugin-db declares `LV2_OPENMIXER_MEANING_IDS` and plugin-hostd's `lv2:designation`
-  row reads it, that row is an extension with no pairs and such a meaning is written nowhere.
+  row reads it, that row is an extension with no pairs and such a meaning is written nowhere. `enabled` maps to
+  `lv2:enabled`, and LV2 gives a plugin one enabled port, the face's own first port (contract/plugin-face.json); a
+  declared control that states `enabled` turns a part on (a band, a filter, a chain's stage) and is designated by
+  nothing (`declaredDesignation`, tools/format-tables.mjs), so no host bypasses the plugin through a band's switch.
 - A CLAP parameter's `module` is its control's `group`, the labels joined by `/` (the inverse of plugin-hostd's
   `group-path`); a plugin with no descriptor writes `""`.
 - param-contract's unit tokens (`tools/param-contract.mjs`) are the LV2 units a face writes, their values those

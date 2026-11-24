@@ -83,6 +83,7 @@
       "group": [
         "Drive"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -204,6 +205,7 @@
       "group": [
         "Drive"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
@@ -221,6 +223,7 @@
       "group": [
         "Drive"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -238,6 +241,7 @@
       "group": [
         "Drive"
       ],
+      "meaning": "link",
       "automatable": true,
       "source": {
         "from": {
@@ -270,6 +274,7 @@
       "group": [
         "Drive"
       ],
+      "meaning": "highCut",
       "automatable": true,
       "source": {
         "from": {
@@ -302,6 +307,7 @@
       "group": [
         "Drive"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {

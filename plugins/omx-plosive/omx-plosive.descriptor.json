@@ -33,6 +33,7 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
@@ -57,6 +58,7 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
@@ -81,6 +83,7 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
@@ -105,6 +108,7 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -129,6 +133,7 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "bandwidth",
       "automatable": true,
       "source": {
         "from": {
@@ -153,6 +158,7 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
@@ -177,6 +183,7 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
@@ -201,6 +208,7 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
@@ -225,6 +233,7 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "cutoffFrequency",
       "automatable": true,
       "source": {
         "from": {

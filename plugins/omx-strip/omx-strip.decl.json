@@ -32,7 +32,8 @@
         {
           "symbol": "trimDb",
           "name": "Trim",
-          "ref": "TRIM_RANGE"
+          "ref": "TRIM_RANGE",
+          "meaning": "gain"
         }
       ]
     },
@@ -45,36 +46,42 @@
         {
           "symbol": "hpfOn",
           "name": "HPF",
-          "ref": "EQ_HPF_ONS"
+          "ref": "EQ_HPF_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "hpfFreq",
           "name": "HPF Freq",
           "ref": "HPF_FREQ_RANGE",
-          "defaultRef": "EQ_PASS_FILTER_DEFAULTS.hpfFreqHz"
+          "defaultRef": "EQ_PASS_FILTER_DEFAULTS.hpfFreqHz",
+          "meaning": "lowCut"
         },
         {
           "symbol": "hpfSlope",
           "name": "HPF Slope",
           "ref": "FILTER_SLOPES",
-          "unit": "dBPerOct"
+          "unit": "dBPerOct",
+          "meaning": "slope"
         },
         {
           "symbol": "lpfOn",
           "name": "LPF",
-          "ref": "EQ_LPF_ONS"
+          "ref": "EQ_LPF_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "lpfFreq",
           "name": "LPF Freq",
           "ref": "LPF_FREQ_RANGE",
-          "defaultRef": "EQ_PASS_FILTER_DEFAULTS.lpfFreqHz"
+          "defaultRef": "EQ_PASS_FILTER_DEFAULTS.lpfFreqHz",
+          "meaning": "highCut"
         },
         {
           "symbol": "lpfSlope",
           "name": "LPF Slope",
           "ref": "FILTER_SLOPES",
-          "unit": "dBPerOct"
+          "unit": "dBPerOct",
+          "meaning": "slope"
         }
       ],
       "faceBands": "eq32",
@@ -96,55 +103,64 @@
           "symbol": "gateThreshold",
           "name": "Gate Threshold",
           "ref": "GATE_CONTINUOUS_TRAVELS",
-          "field": "thresholdDb"
+          "field": "thresholdDb",
+          "meaning": "threshold"
         },
         {
           "symbol": "gateRatio",
           "name": "Gate Ratio",
           "ref": "GATE_CONTINUOUS_TRAVELS",
-          "field": "ratio"
+          "field": "ratio",
+          "meaning": "ratio"
         },
         {
           "symbol": "gateRange",
           "name": "Gate Range",
           "ref": "GATE_CONTINUOUS_TRAVELS",
-          "field": "rangeDb"
+          "field": "rangeDb",
+          "meaning": "range"
         },
         {
           "symbol": "gateAttack",
           "name": "Gate Attack",
           "ref": "GATE_LIMITS",
-          "field": "attackMs"
+          "field": "attackMs",
+          "meaning": "attack"
         },
         {
           "symbol": "gateRelease",
           "name": "Gate Release",
           "ref": "GATE_CONTINUOUS_TRAVELS",
-          "field": "releaseMs"
+          "field": "releaseMs",
+          "meaning": "release"
         },
         {
           "symbol": "gateKneeStart",
           "name": "Gate Knee Start",
           "ref": "GATE_LIMITS",
-          "field": "kneeStartDb"
+          "field": "kneeStartDb",
+          "meaning": "knee"
         },
         {
           "symbol": "gateKneeEnd",
           "name": "Gate Knee End",
           "ref": "GATE_LIMITS",
-          "field": "kneeEndDb"
+          "field": "kneeEndDb",
+          "meaning": "knee"
         },
         {
           "symbol": "gateHold",
           "name": "Gate Hold",
           "ref": "GATE_LIMITS",
-          "field": "holdMs"
+          "field": "holdMs",
+          "meaning": "hold"
         },
         {
           "symbol": "gateHysteresis",
           "name": "Gate Hysteresis",
           "ref": "GATE_LIMITS",
-          "field": "hysteresisDb"
+          "field": "hysteresisDb",
+          "meaning": "hysteresis"
         }
       ],
       "fixed": {
@@ -171,7 +187,8 @@
             "strip": "strip",
             "index": 0,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq1Freq",
@@ -181,24 +198,28 @@
             "strip": "strip",
             "index": 0,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq1Gain",
           "name": "EQ 1 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq1Q",
           "name": "EQ 1 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq1On",
           "name": "EQ 1",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq2Type",
@@ -208,7 +229,8 @@
             "strip": "strip",
             "index": 1,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq2Freq",
@@ -218,24 +240,28 @@
             "strip": "strip",
             "index": 1,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq2Gain",
           "name": "EQ 2 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq2Q",
           "name": "EQ 2 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq2On",
           "name": "EQ 2",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq3Type",
@@ -245,7 +271,8 @@
             "strip": "strip",
             "index": 2,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq3Freq",
@@ -255,24 +282,28 @@
             "strip": "strip",
             "index": 2,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq3Gain",
           "name": "EQ 3 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq3Q",
           "name": "EQ 3 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq3On",
           "name": "EQ 3",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq4Type",
@@ -282,7 +313,8 @@
             "strip": "strip",
             "index": 3,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq4Freq",
@@ -292,24 +324,28 @@
             "strip": "strip",
             "index": 3,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq4Gain",
           "name": "EQ 4 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq4Q",
           "name": "EQ 4 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq4On",
           "name": "EQ 4",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         }
       ],
       "bands": "eq32",
@@ -329,7 +365,8 @@
             "strip": "eq32",
             "index": 4,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq5Freq",
@@ -339,24 +376,28 @@
             "strip": "eq32",
             "index": 4,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq5Gain",
           "name": "EQ 5 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq5Q",
           "name": "EQ 5 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq5On",
           "name": "EQ 5",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq6Type",
@@ -366,7 +407,8 @@
             "strip": "eq32",
             "index": 5,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq6Freq",
@@ -376,24 +418,28 @@
             "strip": "eq32",
             "index": 5,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq6Gain",
           "name": "EQ 6 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq6Q",
           "name": "EQ 6 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq6On",
           "name": "EQ 6",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq7Type",
@@ -403,7 +449,8 @@
             "strip": "eq32",
             "index": 6,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq7Freq",
@@ -413,24 +460,28 @@
             "strip": "eq32",
             "index": 6,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq7Gain",
           "name": "EQ 7 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq7Q",
           "name": "EQ 7 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq7On",
           "name": "EQ 7",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq8Type",
@@ -440,7 +491,8 @@
             "strip": "eq32",
             "index": 7,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq8Freq",
@@ -450,24 +502,28 @@
             "strip": "eq32",
             "index": 7,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq8Gain",
           "name": "EQ 8 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq8Q",
           "name": "EQ 8 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq8On",
           "name": "EQ 8",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq9Type",
@@ -477,7 +533,8 @@
             "strip": "eq32",
             "index": 8,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq9Freq",
@@ -487,24 +544,28 @@
             "strip": "eq32",
             "index": 8,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq9Gain",
           "name": "EQ 9 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq9Q",
           "name": "EQ 9 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq9On",
           "name": "EQ 9",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq10Type",
@@ -514,7 +575,8 @@
             "strip": "eq32",
             "index": 9,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq10Freq",
@@ -524,24 +586,28 @@
             "strip": "eq32",
             "index": 9,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq10Gain",
           "name": "EQ 10 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq10Q",
           "name": "EQ 10 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq10On",
           "name": "EQ 10",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq11Type",
@@ -551,7 +617,8 @@
             "strip": "eq32",
             "index": 10,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq11Freq",
@@ -561,24 +628,28 @@
             "strip": "eq32",
             "index": 10,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq11Gain",
           "name": "EQ 11 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq11Q",
           "name": "EQ 11 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq11On",
           "name": "EQ 11",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq12Type",
@@ -588,7 +659,8 @@
             "strip": "eq32",
             "index": 11,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq12Freq",
@@ -598,24 +670,28 @@
             "strip": "eq32",
             "index": 11,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq12Gain",
           "name": "EQ 12 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq12Q",
           "name": "EQ 12 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq12On",
           "name": "EQ 12",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq13Type",
@@ -625,7 +701,8 @@
             "strip": "eq32",
             "index": 12,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq13Freq",
@@ -635,24 +712,28 @@
             "strip": "eq32",
             "index": 12,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq13Gain",
           "name": "EQ 13 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq13Q",
           "name": "EQ 13 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq13On",
           "name": "EQ 13",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq14Type",
@@ -662,7 +743,8 @@
             "strip": "eq32",
             "index": 13,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq14Freq",
@@ -672,24 +754,28 @@
             "strip": "eq32",
             "index": 13,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq14Gain",
           "name": "EQ 14 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq14Q",
           "name": "EQ 14 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq14On",
           "name": "EQ 14",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq15Type",
@@ -699,7 +785,8 @@
             "strip": "eq32",
             "index": 14,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq15Freq",
@@ -709,24 +796,28 @@
             "strip": "eq32",
             "index": 14,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq15Gain",
           "name": "EQ 15 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq15Q",
           "name": "EQ 15 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq15On",
           "name": "EQ 15",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq16Type",
@@ -736,7 +827,8 @@
             "strip": "eq32",
             "index": 15,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq16Freq",
@@ -746,24 +838,28 @@
             "strip": "eq32",
             "index": 15,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq16Gain",
           "name": "EQ 16 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq16Q",
           "name": "EQ 16 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq16On",
           "name": "EQ 16",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq17Type",
@@ -773,7 +869,8 @@
             "strip": "eq32",
             "index": 16,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq17Freq",
@@ -783,24 +880,28 @@
             "strip": "eq32",
             "index": 16,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq17Gain",
           "name": "EQ 17 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq17Q",
           "name": "EQ 17 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq17On",
           "name": "EQ 17",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq18Type",
@@ -810,7 +911,8 @@
             "strip": "eq32",
             "index": 17,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq18Freq",
@@ -820,24 +922,28 @@
             "strip": "eq32",
             "index": 17,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq18Gain",
           "name": "EQ 18 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq18Q",
           "name": "EQ 18 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq18On",
           "name": "EQ 18",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq19Type",
@@ -847,7 +953,8 @@
             "strip": "eq32",
             "index": 18,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq19Freq",
@@ -857,24 +964,28 @@
             "strip": "eq32",
             "index": 18,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq19Gain",
           "name": "EQ 19 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq19Q",
           "name": "EQ 19 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq19On",
           "name": "EQ 19",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq20Type",
@@ -884,7 +995,8 @@
             "strip": "eq32",
             "index": 19,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq20Freq",
@@ -894,24 +1006,28 @@
             "strip": "eq32",
             "index": 19,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq20Gain",
           "name": "EQ 20 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq20Q",
           "name": "EQ 20 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq20On",
           "name": "EQ 20",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq21Type",
@@ -921,7 +1037,8 @@
             "strip": "eq32",
             "index": 20,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq21Freq",
@@ -931,24 +1048,28 @@
             "strip": "eq32",
             "index": 20,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq21Gain",
           "name": "EQ 21 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq21Q",
           "name": "EQ 21 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq21On",
           "name": "EQ 21",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq22Type",
@@ -958,7 +1079,8 @@
             "strip": "eq32",
             "index": 21,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq22Freq",
@@ -968,24 +1090,28 @@
             "strip": "eq32",
             "index": 21,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq22Gain",
           "name": "EQ 22 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq22Q",
           "name": "EQ 22 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq22On",
           "name": "EQ 22",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq23Type",
@@ -995,7 +1121,8 @@
             "strip": "eq32",
             "index": 22,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq23Freq",
@@ -1005,24 +1132,28 @@
             "strip": "eq32",
             "index": 22,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq23Gain",
           "name": "EQ 23 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq23Q",
           "name": "EQ 23 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq23On",
           "name": "EQ 23",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq24Type",
@@ -1032,7 +1163,8 @@
             "strip": "eq32",
             "index": 23,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq24Freq",
@@ -1042,24 +1174,28 @@
             "strip": "eq32",
             "index": 23,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq24Gain",
           "name": "EQ 24 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq24Q",
           "name": "EQ 24 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq24On",
           "name": "EQ 24",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq25Type",
@@ -1069,7 +1205,8 @@
             "strip": "eq32",
             "index": 24,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq25Freq",
@@ -1079,24 +1216,28 @@
             "strip": "eq32",
             "index": 24,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq25Gain",
           "name": "EQ 25 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq25Q",
           "name": "EQ 25 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq25On",
           "name": "EQ 25",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq26Type",
@@ -1106,7 +1247,8 @@
             "strip": "eq32",
             "index": 25,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq26Freq",
@@ -1116,24 +1258,28 @@
             "strip": "eq32",
             "index": 25,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq26Gain",
           "name": "EQ 26 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq26Q",
           "name": "EQ 26 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq26On",
           "name": "EQ 26",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq27Type",
@@ -1143,7 +1289,8 @@
             "strip": "eq32",
             "index": 26,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq27Freq",
@@ -1153,24 +1300,28 @@
             "strip": "eq32",
             "index": 26,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq27Gain",
           "name": "EQ 27 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq27Q",
           "name": "EQ 27 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq27On",
           "name": "EQ 27",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq28Type",
@@ -1180,7 +1331,8 @@
             "strip": "eq32",
             "index": 27,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq28Freq",
@@ -1190,24 +1342,28 @@
             "strip": "eq32",
             "index": 27,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq28Gain",
           "name": "EQ 28 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq28Q",
           "name": "EQ 28 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq28On",
           "name": "EQ 28",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq29Type",
@@ -1217,7 +1373,8 @@
             "strip": "eq32",
             "index": 28,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq29Freq",
@@ -1227,24 +1384,28 @@
             "strip": "eq32",
             "index": 28,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq29Gain",
           "name": "EQ 29 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq29Q",
           "name": "EQ 29 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq29On",
           "name": "EQ 29",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq30Type",
@@ -1254,7 +1415,8 @@
             "strip": "eq32",
             "index": 29,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq30Freq",
@@ -1264,24 +1426,28 @@
             "strip": "eq32",
             "index": 29,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq30Gain",
           "name": "EQ 30 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq30Q",
           "name": "EQ 30 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq30On",
           "name": "EQ 30",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq31Type",
@@ -1291,7 +1457,8 @@
             "strip": "eq32",
             "index": 30,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq31Freq",
@@ -1301,24 +1468,28 @@
             "strip": "eq32",
             "index": 30,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq31Gain",
           "name": "EQ 31 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq31Q",
           "name": "EQ 31 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq31On",
           "name": "EQ 31",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         },
         {
           "symbol": "eq32Type",
@@ -1328,7 +1499,8 @@
             "strip": "eq32",
             "index": 31,
             "of": "type"
-          }
+          },
+          "meaning": "type"
         },
         {
           "symbol": "eq32Freq",
@@ -1338,24 +1510,28 @@
             "strip": "eq32",
             "index": 31,
             "of": "centre"
-          }
+          },
+          "meaning": "frequency"
         },
         {
           "symbol": "eq32Gain",
           "name": "EQ 32 Gain",
           "ref": "EQ_GAIN_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.gainDb"
+          "defaultRef": "EQ_BAND_DEFAULTS.gainDb",
+          "meaning": "gain"
         },
         {
           "symbol": "eq32Q",
           "name": "EQ 32 Q",
           "ref": "EQ_Q_RANGE",
-          "defaultRef": "EQ_BAND_DEFAULTS.q"
+          "defaultRef": "EQ_BAND_DEFAULTS.q",
+          "meaning": "q"
         },
         {
           "symbol": "eq32On",
           "name": "EQ 32",
-          "ref": "EQ_BAND_ONS"
+          "ref": "EQ_BAND_ONS",
+          "meaning": "enabled"
         }
       ],
       "fixed": {
@@ -1386,53 +1562,62 @@
           "symbol": "compThreshold",
           "name": "Comp Threshold",
           "ref": "COMP_CONTINUOUS_TRAVELS",
-          "field": "thresholdDb"
+          "field": "thresholdDb",
+          "meaning": "threshold"
         },
         {
           "symbol": "compRatio",
           "name": "Comp Ratio",
           "ref": "COMP_LIMITS",
-          "field": "ratio"
+          "field": "ratio",
+          "meaning": "ratio"
         },
         {
           "symbol": "compKnee",
           "name": "Comp Knee",
           "ref": "COMP_LIMITS",
-          "field": "kneeDb"
+          "field": "kneeDb",
+          "meaning": "knee"
         },
         {
           "symbol": "compAttack",
           "name": "Comp Attack",
           "ref": "COMP_LIMITS",
-          "field": "attackMs"
+          "field": "attackMs",
+          "meaning": "attack"
         },
         {
           "symbol": "compRelease",
           "name": "Comp Release",
           "ref": "COMP_CONTINUOUS_TRAVELS",
-          "field": "releaseMs"
+          "field": "releaseMs",
+          "meaning": "release"
         },
         {
           "symbol": "compMakeup",
           "name": "Comp Makeup",
           "ref": "COMP_LIMITS",
-          "field": "makeupDb"
+          "field": "makeupDb",
+          "meaning": "makeup"
         },
         {
           "symbol": "compKind",
           "name": "Comp Kind",
-          "ref": "COMP_KINDS"
+          "ref": "COMP_KINDS",
+          "meaning": "type"
         },
         {
           "symbol": "compMix",
           "name": "Comp Mix",
           "ref": "COMP_LIMITS",
-          "field": "mixPct"
+          "field": "mixPct",
+          "meaning": "wetDryRatio"
         },
         {
           "symbol": "compDetectorOversampling",
           "name": "Comp Detector Oversampling",
-          "ref": "DETECTOR_OVERSAMPLINGS"
+          "ref": "DETECTOR_OVERSAMPLINGS",
+          "meaning": "mode"
         }
       ],
       "fixed": {

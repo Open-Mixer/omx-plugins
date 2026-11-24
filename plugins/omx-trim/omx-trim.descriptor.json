@@ -33,6 +33,7 @@
       "group": [
         "Trim"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {

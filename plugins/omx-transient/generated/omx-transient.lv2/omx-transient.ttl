@@ -5,6 +5,7 @@
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix omxres: <https://www.openmixer.org/ns/resource-hints#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
 @prefix pg:    <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
@@ -81,6 +82,7 @@
         lv2:minimum -24 ;
         lv2:maximum 24 ;
         units:unit units:db ;
+        lv2:designation param:gain ;
         pg:group <urn:openmixer:transient#transient>
     ] ,
     [
@@ -92,6 +94,7 @@
         lv2:minimum -24 ;
         lv2:maximum 24 ;
         units:unit units:db ;
+        lv2:designation param:gain ;
         pg:group <urn:openmixer:transient#transient>
     ] ,
     [
@@ -103,6 +106,7 @@
         lv2:minimum 2 ;
         lv2:maximum 50 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:transient#transient>
     ] ,
     [
@@ -115,6 +119,7 @@
         lv2:maximum 2000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:transient#transient>
     ] ,
     [

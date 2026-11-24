@@ -33,6 +33,7 @@
       "group": [
         "Clipper"
       ],
+      "meaning": "drive",
       "automatable": true,
       "source": {
         "from": {
@@ -57,6 +58,7 @@
       "group": [
         "Clipper"
       ],
+      "meaning": "ceiling",
       "automatable": true,
       "source": {
         "from": {
@@ -81,6 +83,7 @@
       "group": [
         "Clipper"
       ],
+      "meaning": "knee",
       "automatable": true,
       "source": {
         "from": {

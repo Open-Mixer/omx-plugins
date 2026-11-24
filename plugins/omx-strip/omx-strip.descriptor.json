@@ -26,6 +26,7 @@
       "group": [
         "Input"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "impl": "plugins/omx-strip/omx_strip_clap.c#clap_entry"
@@ -47,6 +48,7 @@
       "group": [
         "Input"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -64,6 +66,7 @@
       "group": [
         "Filters"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "impl": "plugins/omx-strip/omx_strip_clap.c#clap_entry"
@@ -78,6 +81,7 @@
       "group": [
         "Filters"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -102,6 +106,7 @@
       "group": [
         "Filters"
       ],
+      "meaning": "lowCut",
       "automatable": true,
       "source": {
         "from": {
@@ -131,6 +136,7 @@
       "group": [
         "Filters"
       ],
+      "meaning": "slope",
       "automatable": true,
       "source": {
         "from": {
@@ -148,6 +154,7 @@
       "group": [
         "Filters"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -172,6 +179,7 @@
       "group": [
         "Filters"
       ],
+      "meaning": "highCut",
       "automatable": true,
       "source": {
         "from": {
@@ -201,6 +209,7 @@
       "group": [
         "Filters"
       ],
+      "meaning": "slope",
       "automatable": true,
       "source": {
         "from": {
@@ -218,6 +227,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "impl": "plugins/omx-strip/omx_strip_clap.c#clap_entry"
@@ -239,6 +249,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
@@ -263,6 +274,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
@@ -287,6 +299,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
@@ -311,6 +324,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
@@ -335,6 +349,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
@@ -359,6 +374,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "knee",
       "automatable": true,
       "source": {
         "from": {
@@ -383,6 +399,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "knee",
       "automatable": true,
       "source": {
         "from": {
@@ -407,6 +424,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "hold",
       "automatable": true,
       "source": {
         "from": {
@@ -431,6 +449,7 @@
       "group": [
         "Gate"
       ],
+      "meaning": "hysteresis",
       "automatable": true,
       "source": {
         "from": {
@@ -448,6 +467,7 @@
       "group": [
         "EQ"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "impl": "plugins/omx-strip/omx_strip_clap.c#clap_entry"
@@ -487,6 +507,7 @@
         "EQ",
         "EQ 1"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -512,6 +533,7 @@
         "EQ",
         "EQ 1"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -537,6 +559,7 @@
         "EQ",
         "EQ 1"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -562,6 +585,7 @@
         "EQ",
         "EQ 1"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -580,6 +604,7 @@
         "EQ",
         "EQ 1"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -622,6 +647,7 @@
         "EQ",
         "EQ 2"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -647,6 +673,7 @@
         "EQ",
         "EQ 2"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -672,6 +699,7 @@
         "EQ",
         "EQ 2"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -697,6 +725,7 @@
         "EQ",
         "EQ 2"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -715,6 +744,7 @@
         "EQ",
         "EQ 2"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -757,6 +787,7 @@
         "EQ",
         "EQ 3"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -782,6 +813,7 @@
         "EQ",
         "EQ 3"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -807,6 +839,7 @@
         "EQ",
         "EQ 3"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -832,6 +865,7 @@
         "EQ",
         "EQ 3"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -850,6 +884,7 @@
         "EQ",
         "EQ 3"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -892,6 +927,7 @@
         "EQ",
         "EQ 4"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -917,6 +953,7 @@
         "EQ",
         "EQ 4"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -942,6 +979,7 @@
         "EQ",
         "EQ 4"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -967,6 +1005,7 @@
         "EQ",
         "EQ 4"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -985,6 +1024,7 @@
         "EQ",
         "EQ 4"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -1002,6 +1042,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "impl": "plugins/omx-strip/omx_strip_clap.c#clap_entry"
@@ -1023,6 +1064,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
@@ -1047,6 +1089,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
@@ -1071,6 +1114,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "knee",
       "automatable": true,
       "source": {
         "from": {
@@ -1095,6 +1139,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
@@ -1119,6 +1164,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
@@ -1143,6 +1189,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "makeup",
       "automatable": true,
       "source": {
         "from": {
@@ -1172,6 +1219,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -1196,6 +1244,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "wetDryRatio",
       "automatable": true,
       "source": {
         "from": {
@@ -1228,6 +1277,7 @@
       "group": [
         "Comp"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
@@ -1252,6 +1302,7 @@
       "group": [
         "Order"
       ],
+      "meaning": "order",
       "automatable": true,
       "source": {
         "impl": "plugins/omx-strip/omx_strip_clap.c#clap_entry"
@@ -1273,6 +1324,7 @@
       "group": [
         "EQ"
       ],
+      "meaning": "number",
       "automatable": true,
       "source": {
         "impl": "plugins/omx-strip/omx_strip_clap.c#clap_entry"
@@ -1312,6 +1364,7 @@
         "EQ",
         "EQ 5"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -1337,6 +1390,7 @@
         "EQ",
         "EQ 5"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -1362,6 +1416,7 @@
         "EQ",
         "EQ 5"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -1387,6 +1442,7 @@
         "EQ",
         "EQ 5"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -1405,6 +1461,7 @@
         "EQ",
         "EQ 5"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -1447,6 +1504,7 @@
         "EQ",
         "EQ 6"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -1472,6 +1530,7 @@
         "EQ",
         "EQ 6"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -1497,6 +1556,7 @@
         "EQ",
         "EQ 6"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -1522,6 +1582,7 @@
         "EQ",
         "EQ 6"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -1540,6 +1601,7 @@
         "EQ",
         "EQ 6"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -1582,6 +1644,7 @@
         "EQ",
         "EQ 7"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -1607,6 +1670,7 @@
         "EQ",
         "EQ 7"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -1632,6 +1696,7 @@
         "EQ",
         "EQ 7"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -1657,6 +1722,7 @@
         "EQ",
         "EQ 7"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -1675,6 +1741,7 @@
         "EQ",
         "EQ 7"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -1717,6 +1784,7 @@
         "EQ",
         "EQ 8"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -1742,6 +1810,7 @@
         "EQ",
         "EQ 8"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -1767,6 +1836,7 @@
         "EQ",
         "EQ 8"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -1792,6 +1862,7 @@
         "EQ",
         "EQ 8"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -1810,6 +1881,7 @@
         "EQ",
         "EQ 8"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -1852,6 +1924,7 @@
         "EQ",
         "EQ 9"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -1877,6 +1950,7 @@
         "EQ",
         "EQ 9"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -1902,6 +1976,7 @@
         "EQ",
         "EQ 9"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -1927,6 +2002,7 @@
         "EQ",
         "EQ 9"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -1945,6 +2021,7 @@
         "EQ",
         "EQ 9"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -1987,6 +2064,7 @@
         "EQ",
         "EQ 10"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -2012,6 +2090,7 @@
         "EQ",
         "EQ 10"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -2037,6 +2116,7 @@
         "EQ",
         "EQ 10"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -2062,6 +2142,7 @@
         "EQ",
         "EQ 10"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -2080,6 +2161,7 @@
         "EQ",
         "EQ 10"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -2122,6 +2204,7 @@
         "EQ",
         "EQ 11"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -2147,6 +2230,7 @@
         "EQ",
         "EQ 11"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -2172,6 +2256,7 @@
         "EQ",
         "EQ 11"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -2197,6 +2282,7 @@
         "EQ",
         "EQ 11"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -2215,6 +2301,7 @@
         "EQ",
         "EQ 11"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -2257,6 +2344,7 @@
         "EQ",
         "EQ 12"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -2282,6 +2370,7 @@
         "EQ",
         "EQ 12"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -2307,6 +2396,7 @@
         "EQ",
         "EQ 12"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -2332,6 +2422,7 @@
         "EQ",
         "EQ 12"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -2350,6 +2441,7 @@
         "EQ",
         "EQ 12"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -2392,6 +2484,7 @@
         "EQ",
         "EQ 13"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -2417,6 +2510,7 @@
         "EQ",
         "EQ 13"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -2442,6 +2536,7 @@
         "EQ",
         "EQ 13"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -2467,6 +2562,7 @@
         "EQ",
         "EQ 13"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -2485,6 +2581,7 @@
         "EQ",
         "EQ 13"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -2527,6 +2624,7 @@
         "EQ",
         "EQ 14"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -2552,6 +2650,7 @@
         "EQ",
         "EQ 14"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -2577,6 +2676,7 @@
         "EQ",
         "EQ 14"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -2602,6 +2702,7 @@
         "EQ",
         "EQ 14"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -2620,6 +2721,7 @@
         "EQ",
         "EQ 14"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -2662,6 +2764,7 @@
         "EQ",
         "EQ 15"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -2687,6 +2790,7 @@
         "EQ",
         "EQ 15"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -2712,6 +2816,7 @@
         "EQ",
         "EQ 15"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -2737,6 +2842,7 @@
         "EQ",
         "EQ 15"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -2755,6 +2861,7 @@
         "EQ",
         "EQ 15"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -2797,6 +2904,7 @@
         "EQ",
         "EQ 16"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -2822,6 +2930,7 @@
         "EQ",
         "EQ 16"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -2847,6 +2956,7 @@
         "EQ",
         "EQ 16"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -2872,6 +2982,7 @@
         "EQ",
         "EQ 16"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -2890,6 +3001,7 @@
         "EQ",
         "EQ 16"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -2932,6 +3044,7 @@
         "EQ",
         "EQ 17"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -2957,6 +3070,7 @@
         "EQ",
         "EQ 17"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -2982,6 +3096,7 @@
         "EQ",
         "EQ 17"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -3007,6 +3122,7 @@
         "EQ",
         "EQ 17"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -3025,6 +3141,7 @@
         "EQ",
         "EQ 17"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -3067,6 +3184,7 @@
         "EQ",
         "EQ 18"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -3092,6 +3210,7 @@
         "EQ",
         "EQ 18"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -3117,6 +3236,7 @@
         "EQ",
         "EQ 18"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -3142,6 +3262,7 @@
         "EQ",
         "EQ 18"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -3160,6 +3281,7 @@
         "EQ",
         "EQ 18"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -3202,6 +3324,7 @@
         "EQ",
         "EQ 19"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -3227,6 +3350,7 @@
         "EQ",
         "EQ 19"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -3252,6 +3376,7 @@
         "EQ",
         "EQ 19"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -3277,6 +3402,7 @@
         "EQ",
         "EQ 19"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -3295,6 +3421,7 @@
         "EQ",
         "EQ 19"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -3337,6 +3464,7 @@
         "EQ",
         "EQ 20"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -3362,6 +3490,7 @@
         "EQ",
         "EQ 20"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -3387,6 +3516,7 @@
         "EQ",
         "EQ 20"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -3412,6 +3542,7 @@
         "EQ",
         "EQ 20"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -3430,6 +3561,7 @@
         "EQ",
         "EQ 20"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -3472,6 +3604,7 @@
         "EQ",
         "EQ 21"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -3497,6 +3630,7 @@
         "EQ",
         "EQ 21"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -3522,6 +3656,7 @@
         "EQ",
         "EQ 21"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -3547,6 +3682,7 @@
         "EQ",
         "EQ 21"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -3565,6 +3701,7 @@
         "EQ",
         "EQ 21"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -3607,6 +3744,7 @@
         "EQ",
         "EQ 22"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -3632,6 +3770,7 @@
         "EQ",
         "EQ 22"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -3657,6 +3796,7 @@
         "EQ",
         "EQ 22"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -3682,6 +3822,7 @@
         "EQ",
         "EQ 22"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -3700,6 +3841,7 @@
         "EQ",
         "EQ 22"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -3742,6 +3884,7 @@
         "EQ",
         "EQ 23"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -3767,6 +3910,7 @@
         "EQ",
         "EQ 23"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -3792,6 +3936,7 @@
         "EQ",
         "EQ 23"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -3817,6 +3962,7 @@
         "EQ",
         "EQ 23"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -3835,6 +3981,7 @@
         "EQ",
         "EQ 23"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -3877,6 +4024,7 @@
         "EQ",
         "EQ 24"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -3902,6 +4050,7 @@
         "EQ",
         "EQ 24"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -3927,6 +4076,7 @@
         "EQ",
         "EQ 24"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -3952,6 +4102,7 @@
         "EQ",
         "EQ 24"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -3970,6 +4121,7 @@
         "EQ",
         "EQ 24"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -4012,6 +4164,7 @@
         "EQ",
         "EQ 25"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -4037,6 +4190,7 @@
         "EQ",
         "EQ 25"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -4062,6 +4216,7 @@
         "EQ",
         "EQ 25"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -4087,6 +4242,7 @@
         "EQ",
         "EQ 25"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -4105,6 +4261,7 @@
         "EQ",
         "EQ 25"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -4147,6 +4304,7 @@
         "EQ",
         "EQ 26"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -4172,6 +4330,7 @@
         "EQ",
         "EQ 26"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -4197,6 +4356,7 @@
         "EQ",
         "EQ 26"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -4222,6 +4382,7 @@
         "EQ",
         "EQ 26"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -4240,6 +4401,7 @@
         "EQ",
         "EQ 26"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -4282,6 +4444,7 @@
         "EQ",
         "EQ 27"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -4307,6 +4470,7 @@
         "EQ",
         "EQ 27"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -4332,6 +4496,7 @@
         "EQ",
         "EQ 27"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -4357,6 +4522,7 @@
         "EQ",
         "EQ 27"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -4375,6 +4541,7 @@
         "EQ",
         "EQ 27"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -4417,6 +4584,7 @@
         "EQ",
         "EQ 28"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -4442,6 +4610,7 @@
         "EQ",
         "EQ 28"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -4467,6 +4636,7 @@
         "EQ",
         "EQ 28"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -4492,6 +4662,7 @@
         "EQ",
         "EQ 28"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -4510,6 +4681,7 @@
         "EQ",
         "EQ 28"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -4552,6 +4724,7 @@
         "EQ",
         "EQ 29"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -4577,6 +4750,7 @@
         "EQ",
         "EQ 29"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -4602,6 +4776,7 @@
         "EQ",
         "EQ 29"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -4627,6 +4802,7 @@
         "EQ",
         "EQ 29"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -4645,6 +4821,7 @@
         "EQ",
         "EQ 29"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -4687,6 +4864,7 @@
         "EQ",
         "EQ 30"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -4712,6 +4890,7 @@
         "EQ",
         "EQ 30"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -4737,6 +4916,7 @@
         "EQ",
         "EQ 30"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -4762,6 +4942,7 @@
         "EQ",
         "EQ 30"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -4780,6 +4961,7 @@
         "EQ",
         "EQ 30"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -4822,6 +5004,7 @@
         "EQ",
         "EQ 31"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -4847,6 +5030,7 @@
         "EQ",
         "EQ 31"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -4872,6 +5056,7 @@
         "EQ",
         "EQ 31"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -4897,6 +5082,7 @@
         "EQ",
         "EQ 31"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -4915,6 +5101,7 @@
         "EQ",
         "EQ 31"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -4957,6 +5144,7 @@
         "EQ",
         "EQ 32"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -4982,6 +5170,7 @@
         "EQ",
         "EQ 32"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
@@ -5007,6 +5196,7 @@
         "EQ",
         "EQ 32"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
@@ -5032,6 +5222,7 @@
         "EQ",
         "EQ 32"
       ],
+      "meaning": "q",
       "automatable": true,
       "source": {
         "from": {
@@ -5050,6 +5241,7 @@
         "EQ",
         "EQ 32"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {

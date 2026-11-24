@@ -26,6 +26,7 @@
       "group": [
         "HPF"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -98,6 +99,7 @@
       "group": [
         "LPF"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -195,6 +197,7 @@
         "Bands",
         "Band 1"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -291,6 +294,7 @@
         "Bands",
         "Band 1"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -333,6 +337,7 @@
         "Bands",
         "Band 2"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -429,6 +434,7 @@
         "Bands",
         "Band 2"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -471,6 +477,7 @@
         "Bands",
         "Band 3"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -567,6 +574,7 @@
         "Bands",
         "Band 3"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -609,6 +617,7 @@
         "Bands",
         "Band 4"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -705,6 +714,7 @@
         "Bands",
         "Band 4"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -747,6 +757,7 @@
         "Bands",
         "Band 5"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -843,6 +854,7 @@
         "Bands",
         "Band 5"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -885,6 +897,7 @@
         "Bands",
         "Band 6"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -981,6 +994,7 @@
         "Bands",
         "Band 6"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -1023,6 +1037,7 @@
         "Bands",
         "Band 7"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -1119,6 +1134,7 @@
         "Bands",
         "Band 7"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
@@ -1161,6 +1177,7 @@
         "Bands",
         "Band 8"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
@@ -1257,6 +1274,7 @@
         "Bands",
         "Band 8"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {

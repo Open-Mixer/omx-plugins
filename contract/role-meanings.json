@@ -1,12 +1,12 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
   "requires": {
-    "omx-contract-schema": ">= 3.13.0"
+    "omx-contract-schema": ">= 3.22.0"
   },
   "OMX_PLUGINS_ROLE_MEANINGS": {
     "kind": "roleMeanings",
     "since": "0.19.3",
-    "doc": "The meaning each role of our declared panels plays: every role of every panel family, a meaning of the contract's closed list or unknown for a role that plays none.",
+    "doc": "The meaning each role of our declared panels plays: every role of every panel family, a word of the contract's closed list (PARAM_MEANINGS), never unknown, since every control a role binds is an authored control's (omx-contract docs/descriptors.md \"Meanings\").",
     "roles": {
       "algorithm": {
         "role": "algorithm",
@@ -14,7 +14,7 @@
       },
       "amount": {
         "role": "amount",
-        "meaning": "unknown"
+        "meaning": "amount"
       },
       "attack": {
         "role": "attack",
@@ -30,7 +30,7 @@
       },
       "bandOn": {
         "role": "band_on",
-        "meaning": "unknown"
+        "meaning": "enabled"
       },
       "bandQ": {
         "role": "band_q",
@@ -38,11 +38,11 @@
       },
       "bandType": {
         "role": "band_type",
-        "meaning": "unknown"
+        "meaning": "type"
       },
       "bassMono": {
         "role": "bass_mono",
-        "meaning": "unknown"
+        "meaning": "enabled"
       },
       "bassMonoFreq": {
         "role": "bass_mono_freq",
@@ -82,7 +82,7 @@
       },
       "filterType": {
         "role": "filter_type",
-        "meaning": "unknown"
+        "meaning": "type"
       },
       "fine": {
         "role": "fine",
@@ -110,7 +110,7 @@
       },
       "hpfOn": {
         "role": "hpf_on",
-        "meaning": "unknown"
+        "meaning": "enabled"
       },
       "hpfSlope": {
         "role": "hpf_slope",
@@ -130,11 +130,11 @@
       },
       "kneeEnd": {
         "role": "knee_end",
-        "meaning": "unknown"
+        "meaning": "knee"
       },
       "kneeStart": {
         "role": "knee_start",
-        "meaning": "unknown"
+        "meaning": "knee"
       },
       "listen": {
         "role": "listen",
@@ -154,7 +154,7 @@
       },
       "lpfOn": {
         "role": "lpf_on",
-        "meaning": "unknown"
+        "meaning": "enabled"
       },
       "lpfSlope": {
         "role": "lpf_slope",
@@ -190,7 +190,7 @@
       },
       "pseudo": {
         "role": "pseudo",
-        "meaning": "unknown"
+        "meaning": "algorithm"
       },
       "pseudoTime": {
         "role": "pseudo_time",
@@ -228,9 +228,17 @@
         "role": "size",
         "meaning": "size"
       },
+      "slope": {
+        "role": "slope",
+        "meaning": "slope"
+      },
       "softness": {
         "role": "softness",
-        "meaning": "unknown"
+        "meaning": "knee"
+      },
+      "speed": {
+        "role": "speed",
+        "meaning": "rate"
       },
       "spread": {
         "role": "spread",
@@ -254,7 +262,7 @@
       },
       "voices": {
         "role": "voices",
-        "meaning": "unknown"
+        "meaning": "number"
       },
       "width": {
         "role": "width",

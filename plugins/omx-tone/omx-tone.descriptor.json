@@ -33,6 +33,7 @@
       "group": [
         "Tilt"
       ],
+      "meaning": "tone",
       "automatable": true,
       "source": {
         "from": {
@@ -57,6 +58,7 @@
       "group": [
         "Tilt"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {

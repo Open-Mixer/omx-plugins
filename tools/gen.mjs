@@ -42,7 +42,7 @@ import { fileURLToPath } from 'node:url';
 import { releaseVersion } from './release-version.mjs';
 import { faceBinding } from './instance-face.mjs';
 import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
-import { lv2Designation, lv2UnitNames, lv2UnitRef, ownLv2Units, unitSymbol } from './format-tables.mjs';
+import { declaredDesignation, lv2Designation, lv2UnitNames, lv2UnitRef, ownLv2Units, unitSymbol } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
 import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
 import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam, isMain } from './omx-contract.mjs';
@@ -208,6 +208,12 @@ const localParam = (p) => {
 };
 
 /**
+ * The meaning of each control a chain's generator makes itself, stated where it makes it (omx-contract docs/descriptors.md
+ * "Meanings"): an element's switch turns that element on (`enabled`), the stage order is `order`, a band count `number`.
+ */
+const OWN_MEANINGS = { switch: 'enabled', 'stage-order': 'order', 'band-count': 'number' };
+
+/**
  * The flattened parameter list of a chain: element by element in chain order, each element's
  * generated switch `<id>On` (its default the element's `on`) and then its parameters, each read from
  * the element's kernel; then, for `"order": "permutable"`, the plugin's own `order` over the
@@ -225,14 +231,14 @@ function flattenChain(file, d) {
     if (!/^[a-z][a-z0-9_]*$/.test(el.kernel ?? '')) throw new Error(`${file}: chain element '${el.id}' names no kernel`);
     if (typeof el.on !== 'boolean') throw new Error(`${file}: chain element '${el.id}': "on" (its switch's default) is true or false`);
     if (!Array.isArray(el.params) || !el.params.length) throw new Error(`${file}: chain element '${el.id}' has no "params"`);
-    out.push({ symbol: `${el.id}On`, name: elementName(el), unit: 'none', min: 0, max: 1, def: el.on ? 1 : 0, kind: 'toggle', own: 'switch', element: el.id });
+    out.push({ symbol: `${el.id}On`, name: elementName(el), unit: 'none', min: 0, max: 1, def: el.on ? 1 : 0, kind: 'toggle', own: 'switch', element: el.id, meaning: OWN_MEANINGS.switch });
     for (const p of el.params) {
       if (p.ref === undefined) throw new Error(`${file}: chain element '${el.id}': '${p.symbol}' has no ref; an element's parameters are its kernel's contract controls`);
       if (p.kernel !== undefined && p.kernel !== el.kernel) throw new Error(`${file}: chain element '${el.id}': '${p.symbol}' names kernel '${p.kernel}', not the element's '${el.kernel}'`);
       out.push({ ...p, kernel: el.kernel, element: el.id });
     }
   }
-  if (d.order === 'permutable') out.push({ symbol: 'order', name: 'Order', unit: 'none', min: 0, max: factorial(d.chain.length) - 1, def: 0, kind: 'integer', own: 'stage-order' });
+  if (d.order === 'permutable') out.push({ symbol: 'order', name: 'Order', unit: 'none', min: 0, max: factorial(d.chain.length) - 1, def: 0, kind: 'integer', own: 'stage-order', meaning: OWN_MEANINGS['stage-order'] });
   else if (d.order !== undefined) throw new Error(`${file}: "order" is "permutable" or left out (the declared order)`);
   // what an element gained after the plugin shipped comes AFTER every parameter it had, so no id and no LV2 parameter
   // port moves: element by element in chain order, its band count (`bandCount`), then its `appended` parameters
@@ -271,7 +277,7 @@ function bandCountParam(file, d, el) {
   if (!Number.isInteger(def) || def < 1 || def > max) throw new Error(`${file}: chain element '${el.id}': "bandCount" comes up at ${sheet}.${bc.default}.default (${def}), not a count from 1 to ${max}`);
   const gated = controls.find((c) => c.name === bc.gates);
   if (!gated?.count) throw new Error(`${file}: chain element '${el.id}': "bandCount" gates '${bc.gates}', no per-band control of the ${el.kernel} kernel`);
-  return { symbol: bc.symbol, name: bc.name, unit: 'none', min: 1, max, def, kind: 'integer', own: 'band-count', element: el.id, gates: bc.gates };
+  return { symbol: bc.symbol, name: bc.name, unit: 'none', min: 1, max, def, kind: 'integer', own: 'band-count', element: el.id, gates: bc.gates, meaning: OWN_MEANINGS['band-count'] };
 }
 
 /**
@@ -776,7 +782,7 @@ ${presetsManifest(d.lv2.uri, presets)}`;
 /** What a face states of parameter `i` beyond the declaration: its descriptor control's unit (a ratio's `ratio`, which
  * its link resolves to none) and meaning, for a plugin described in omx-contract's words; the declared unit otherwise. */
 const faceUnit = (d, i) => travelUnit(d.params[i].unit, d.descriptor?.controls[i]?.travel?.unit);
-const faceDesignation = (d, i) => lv2Designation(d.descriptor?.controls[i]?.meaning);
+const faceDesignation = (d, i) => declaredDesignation(d.descriptor?.controls[i]?.meaning);
 
 export function emitPluginTtl(d) {
   const port = (p) => {

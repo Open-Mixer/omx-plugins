@@ -333,6 +333,7 @@
         lv2:maximum 2000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:hold ;
         pg:group <urn:openmixer:comp#comp>
     ] ,
     [
