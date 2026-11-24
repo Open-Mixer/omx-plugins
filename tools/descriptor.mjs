@@ -69,7 +69,9 @@ export function filterResponses(schema = JSON.parse(readFileSync(descriptorSchem
 let installedResponses;
 
 /** Whether a type choice (a `*_BAND_TYPES` set) picks the shape of the band parameter `p` of `params` is on: the two carry one
- * band number in their symbols (b1_type and b1_freq, eq1Type and eq1Freq, bandType1 and freq1). */
+ * band number in their symbols (b1_type and b1_freq, eq1Type and eq1Freq, bandType1 and freq1). The band number is the first
+ * run of digits: a symbol with another number before its band's (eq2Band1Freq) would be read by that one; no symbol of ours
+ * has one, and tools/test/filter-response-check.mjs holds the exact set of controls that state a response. */
 export function typedBand(p, params) {
   const band = /\d+/.exec(p.symbol)?.[0];
   return band !== undefined && params.some((q) => /_BAND_TYPES$/.test(q.ref ?? '') && /\d+/.exec(q.symbol)?.[0] === band);
