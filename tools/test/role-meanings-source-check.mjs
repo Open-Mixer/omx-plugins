@@ -42,6 +42,23 @@ export function installedSchemaOf(dirs) {
   return [...urls][0];
 }
 
+/** Mirror installed contract roots into `at`: every package of the major (`3/<pkg>`) but omx-plugins, and every domain
+ * directory a root keeps outside the major (omx-contract-data >= 3.21.0 installs its param domain as `param/param.json`
+ * beside `3/`), the first root that holds a name winning, as the reader's search order does. */
+export function mirrorContract(contractRoots, at) {
+  const major = join(at, '3');
+  mkdirSync(major, { recursive: true });
+  for (const root of contractRoots) for (const e of readdirSync(root, { withFileTypes: true })) {
+    if (!e.isDirectory()) continue;
+    if (e.name === '3') {
+      for (const pkg of readdirSync(join(root, '3'), { withFileTypes: true })) {
+        if (!pkg.isDirectory() || pkg.name === 'omx-plugins' || existsSync(join(major, pkg.name))) continue;
+        symlinkSync(join(root, '3', pkg.name), join(major, pkg.name));
+      }
+    } else if (!/^[0-9]+$/.test(e.name) && !existsSync(join(at, e.name))) symlinkSync(join(root, e.name), join(at, e.name));
+  }
+}
+
 if (process.argv.includes('--self-test')) {
   const t = mkdtempSync(join(tmpdir(), 'rms-self-'));
   const put = (name, urls) => {
@@ -56,15 +73,26 @@ if (process.argv.includes('--self-test')) {
     for (const [arm, urls] of [['two URLs', ['https://x/v3.json', 'https://old/raw/v3.json']], ['no URL', []]]) {
       try { installedSchemaOf([put(arm.replace(' ', '-'), urls)]); bad.push(`${arm}: not refused`); } catch (e) { if (!/exactly one is needed/.test(e.message)) bad.push(`${arm}: ${e.message}`); }
     }
+    // the mirror carries a domain kept outside the major (param/param.json beside 3/), and leaves omx-plugins out
+    const root = join(t, 'root');
+    for (const [f, text] of [['3/omx-contract/a.json', '{}'], ['3/omx-plugins/b.json', '{}'], ['param/param.json', '{}']]) {
+      mkdirSync(dirname(join(root, f)), { recursive: true });
+      writeFileSync(join(root, f), text);
+    }
+    mirrorContract([root], join(t, 'mirror'));
+    if (!existsSync(join(t, 'mirror', 'param', 'param.json'))) bad.push('mirror: the param domain outside the major is not carried');
+    if (!existsSync(join(t, 'mirror', '3', 'omx-contract', 'a.json'))) bad.push('mirror: a package of the major is not carried');
+    if (existsSync(join(t, 'mirror', '3', 'omx-plugins'))) bad.push('mirror: omx-plugins is carried');
   } finally { rmSync(t, { recursive: true, force: true }); }
   for (const b of bad) console.error(`FAIL self-test: ${b}`);
   if (bad.length) process.exit(1);
-  console.log('role-meanings-source self-test: one URL read, two URLs and none refused by name');
+  console.log('role-meanings-source self-test: one URL read, two URLs and none refused by name; the mirror carries the param domain beside the major');
   process.exit(0);
 }
 
 const { contractDirs } = await import('../omx-panel.mjs').then(() => import(join(process.env.OMX_PANEL_DIR || '/usr/share/omx-panel', 'tools', 'vocabulary.mjs')));
-const sources = contractDirs().map((d) => join(d, '3')).filter((d) => existsSync(d));
+const roots = contractDirs().filter((d) => existsSync(join(d, '3')));
+const sources = roots.map((d) => join(d, '3'));
 if (!sources.length) { console.error('role-meanings-source: no installed contract directory to build from'); process.exit(2); }
 let installedSchema;
 try { installedSchema = installedSchemaOf(sources); } catch (e) { console.error(e.message); process.exit(2); }
@@ -73,11 +101,7 @@ const tmp = mkdtempSync(join(tmpdir(), 'role-meanings-source-'));
 /** A contract directory holding every installed package but omx-plugins, plus `omxPlugins` files when given. */
 function contractDir(name, omxPlugins) {
   const major = join(tmp, name, '3');
-  mkdirSync(major, { recursive: true });
-  for (const src of sources) for (const pkg of readdirSync(src, { withFileTypes: true })) {
-    if (!pkg.isDirectory() || pkg.name === 'omx-plugins' || existsSync(join(major, pkg.name))) continue;
-    symlinkSync(join(src, pkg.name), join(major, pkg.name));
-  }
+  mirrorContract(roots, join(tmp, name));
   if (omxPlugins) {
     const at = join(major, 'omx-plugins');
     mkdirSync(at);
