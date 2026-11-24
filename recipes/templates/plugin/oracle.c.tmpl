@@ -70,7 +70,8 @@
 {{^chain}}#include <omxdsp/fx/omx_{{face}}_instance.h>
 {{/chain}}{{#chain}}{{#faces}}#include <omxdsp/fx/omx_{{face}}_instance.h>
 {{/faces}}{{/chain}}#include <omxdsp/omx_denormal.h>
-{{#metered}}#include <omx-clap-host/clap_meters.h>
+{{#metered}}#include <omx-clap-host/clap_host.h>  /* OMX_CLAP_METER_IS_HELD, OMX_CLAP_METER_HAS_CLIP */
+#include <omx-clap-host/clap_meters.h>
 {{#meterLinear}}#include <omxdsp/omx_dyn.h>
 {{/meterLinear}}{{/metered}}{{#arrays}}
 _Static_assert({{count}} == {{extent}}, "the declaration names one {{arg}} parameter per band of the face");
@@ -118,8 +119,9 @@ static const struct {
   const char *name;
   uint32_t kind, channels, at;
   double min, max;
+  uint32_t flags;
 } METERS[NM] = {
-{{#meters}}    {"{{meterName}}", {{meterKind}}, {{meterChannels}}u, {{meterOffset}}u, {{meterMin}}, {{meterMax}}},
+{{#meters}}    {"{{meterName}}", {{meterKind}}, {{meterChannels}}u, {{meterOffset}}u, {{meterMin}}, {{meterMax}}, {{meterFlags}}},
 {{/meters}}};
 static double *meters_want, *meters_got;
 static bool meters_early, meters_listed;
@@ -572,7 +574,7 @@ static bool meters_listed_ok(const clap_plugin_meters_t *mx, const clap_plugin_t
   for (uint32_t m = 0; m < NM; m++) {
     clap_meter_info_t info;
     if (!mx->get_info(p, m, &info) || info.id != m || strcmp(info.name, METERS[m].name) != 0 ||
-        info.kind != METERS[m].kind || info.flags != CLAP_METER_IS_COHERENT || info.channel_count != METERS[m].channels ||
+        info.kind != METERS[m].kind || info.flags != METERS[m].flags || info.channel_count != METERS[m].channels ||
         info.min_value != METERS[m].min || info.max_value != METERS[m].max)
       return false;
   }

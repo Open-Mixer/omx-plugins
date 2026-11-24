@@ -26,8 +26,9 @@ export const descriptorFile = (stem) => `${stem}.descriptor.json`;
 /** The schema the descriptor words are in, and the release that added them. */
 export const DESCRIPTOR_SCHEMA = '../schema/omx-contract.schema.json';
 export const DESCRIPTOR_SCHEMA_FLOOR = '3.7.0';
-/** The release that added `meters` (omx-contract docs/descriptors.md): the floor of a descriptor that states them. */
-export const DESCRIPTOR_METERS_FLOOR = '3.9.0';
+/** The release that added the meter words `held`, `clip` and `measurement` beside `meters` (3.9.0): the floor of a
+ * descriptor that states meters, which always carry them. */
+export const DESCRIPTOR_METERS_FLOOR = '3.11.0';
 /** The release that added `latency.sweep` (omx-contract docs/descriptors.md): the floor of a descriptor that states one. */
 export const DESCRIPTOR_SWEEP_FLOOR = '3.21.0';
 /** The descriptor's word for each meter kind a declaration names. */
@@ -232,12 +233,15 @@ export function descriptorOf(d) {
     { id: 0, name: 'out', kind: 'audio', direction: 'out', role: 'main', channels: 2, layout: 'stereo' },
   ];
   // each meter as the faces publish it: its CLAP id (its index), the symbol a host reads it by, its range, and
-  // the kernel readout it publishes, linked where its travel would be; a level the face measures is the face's own
+  // the kernel readout it publishes, linked where its travel would be; a level the face measures is the face's own;
+  // and the meter words (gen.mjs meterWords): what it measures where the plugin knows it, whether the plugin holds it
+  // until read, and on a level whether it carries a clip word (omx-contract refuses the word on a gain reduction)
   const meters = metersOf(d).map((m, k) => {
     const link = m.readout ? `data/kernels/${d.kernel}.json#readouts[${m.readout.name}]` : undefined;
     return {
       id: k, symbol: m.id, name: m.label, ...(m.readout ? { doc: m.readout.doc } : {}), kind: METER_KIND_WORDS[m.kind], channels: m.channels,
       unit: m.unit, min: m.min, max: m.max, scale: m.scale,
+      ...(m.measurement ? { measurement: m.measurement } : {}), held: m.held, ...(m.kind === 'level' ? { clip: m.clip } : {}),
       source: link ? { from: atOf(link) ? { link, at: atOf(link) } : link } : { impl: face },
     };
   });

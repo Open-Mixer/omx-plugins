@@ -49,6 +49,7 @@
 
 #include <omxdsp/fx/omx_gate_instance.h>
 #include <omxdsp/omx_denormal.h>
+#include <omx-clap-host/clap_host.h>  /* OMX_CLAP_METER_IS_HELD, OMX_CLAP_METER_HAS_CLIP */
 #include <omx-clap-host/clap_meters.h>
 
 #define NP OMX_GATE_PARAM_COUNT
@@ -108,8 +109,9 @@ static const struct {
   const char *name;
   uint32_t kind, channels, at;
   double min, max;
+  uint32_t flags;
 } METERS[NM] = {
-    {"gateGr", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 0u, (double)OMX_GATE_READOUT_GAIN_REDUCTION_DB_MIN, (double)OMX_GATE_READOUT_GAIN_REDUCTION_DB_MAX},
+    {"gateGr", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 0u, (double)OMX_GATE_READOUT_GAIN_REDUCTION_DB_MIN, (double)OMX_GATE_READOUT_GAIN_REDUCTION_DB_MAX, CLAP_METER_IS_COHERENT | OMX_CLAP_METER_IS_HELD},
 };
 static double *meters_want, *meters_got;
 static bool meters_early, meters_listed;
@@ -420,7 +422,7 @@ static bool meters_listed_ok(const clap_plugin_meters_t *mx, const clap_plugin_t
   for (uint32_t m = 0; m < NM; m++) {
     clap_meter_info_t info;
     if (!mx->get_info(p, m, &info) || info.id != m || strcmp(info.name, METERS[m].name) != 0 ||
-        info.kind != METERS[m].kind || info.flags != CLAP_METER_IS_COHERENT || info.channel_count != METERS[m].channels ||
+        info.kind != METERS[m].kind || info.flags != METERS[m].flags || info.channel_count != METERS[m].channels ||
         info.min_value != METERS[m].min || info.max_value != METERS[m].max)
       return false;
   }

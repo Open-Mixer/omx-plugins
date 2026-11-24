@@ -20,7 +20,7 @@ static const char *G_FEATURES[] = {OMX_GATE_CLAP_FEATURES, NULL};
  * the 1 values the face publishes after a block. */
 _Static_assert(1u <= OMX_METER_RING_MAX, "one publication holds every meter's values");
 static const struct omx_face_meter G_METERS[] = {
-    {"gateGr", OMX_FACE_METER_KIND_GAIN_REDUCTION, 1u, 0u, (double)OMX_GATE_READOUT_GAIN_REDUCTION_DB_MIN, (double)OMX_GATE_READOUT_GAIN_REDUCTION_DB_MAX, OMX_FACE_METER_READ},
+    {"gateGr", OMX_FACE_METER_KIND_GAIN_REDUCTION, 1u, 0u, (double)OMX_GATE_READOUT_GAIN_REDUCTION_DB_MIN, (double)OMX_GATE_READOUT_GAIN_REDUCTION_DB_MAX, OMX_FACE_METER_READ, 1u, 0u},
 };
 
 static const struct omx_face G_FACE = {
