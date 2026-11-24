@@ -4,9 +4,15 @@
  * schema-validate.mjs — a JSON Schema validator for the subset schema/plugin.decl.schema.json uses.
  * A module of its own, so every tool can validate a declaration without loading the completeness checker
  * (tools/plugin-recipe.mjs re-exports it). A `$ref` into the same file is `#/...`; one into omx-panel's lists
- * (the widgets, the indexed roles) names its schema by `$id`, the installed copy tools/omx-panel.mjs reads.
+ * (the widgets, the indexed roles, visibleWhen) names its schema by the document's name, `panel.schema.json#/...`,
+ * and resolves to the installed copy tools/omx-panel.mjs reads, whatever address that copy's `$id` prints: the
+ * publisher's address has moved (github.com/FreeMixer, github.com/Open-Mixer in omx-panel 0.13.8, openmixer.org by
+ * ruling D21) and a reference by address went unresolved at each move (omx-plugins#98). No other document resolves.
  */
 import { PANEL_SCHEMA } from './omx-panel.mjs';
+
+/** The name omx-panel's schema is installed under (schema/panel.schema.json), the one a declaration schema's `$ref` names. */
+export const PANEL_DOCUMENT = 'panel.schema.json';
 
 /** Errors of `value` against `schema` (draft 2020-12: $ref into $defs, type, const, enum, pattern,
  * minLength, required, properties, additionalProperties, items, minItems, uniqueItems, anyOf, allOf, oneOf,
@@ -18,7 +24,7 @@ export function validate(root, schema, value, path = '') {
   const err = (msg) => errs.push(`${path || '/'}: ${msg}`);
   if (schema.$ref) {
     const [base, pointer = ''] = schema.$ref.split('#');
-    const from = base === '' ? root : base === PANEL_SCHEMA.$id ? PANEL_SCHEMA : undefined;
+    const from = base === '' ? root : base === PANEL_DOCUMENT ? PANEL_SCHEMA : undefined;
     const target = from && pointer.replace(/^\//, '').split('/').filter(Boolean).reduce((n, k) => n?.[k], from);
     if (!target) return [`${path || '/'}: unresolved ${schema.$ref}`];
     errs.push(...validate(from, target, value, path));
