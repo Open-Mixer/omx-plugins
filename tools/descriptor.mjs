@@ -175,7 +175,7 @@ export function portGroupsOf(d) {
  * scale; its group the label of the panel section listing it (and of its port group within it, where the
  * declaration splits the section: portGroupsOf), its meaning the one its declared role
  * plays, else the one it states (meaningOfControl, which refuses a control with none); its source the link its travel is read from, or the face for a parameter of the face's own.
- * `extras` carries what the descriptor has no word for: a choice's unit and the per-kind come-up values.
+ * `extras` carries what the descriptor has no word for: the per-kind come-up values.
  */
 export function descriptorOf(d) {
   const groupOf = new Map();
@@ -215,7 +215,7 @@ export function descriptorOf(d) {
     if (p.kind === 'toggle') Object.assign(c, { kind: 'toggle', default: p.def !== 0 });
     else if (choices) {
       Object.assign(c, { kind: 'choice', ids: choices.map((x) => String(x.value)), labels: choices.map((x) => x.label), values: choices.map((x) => x.value), default: String(p.def) });
-      if (p.unit) choiceUnits[p.symbol] = p.unit;
+      if (p.unit) choiceUnits[p.name] = p.unit;
     } else {
       c.kind = 'travel';
       c.travel = { min: p.min, max: p.max, step: p.kind === 'integer' ? 1 : 0, unit: travelUnit(p.unit, d.descriptor?.controls[i]?.travel?.unit), default: p.def, scale: p.kind === 'integer' ? integerScale(p) : scaleOf(p) };
@@ -262,10 +262,11 @@ export function descriptorOf(d) {
     needs: d.descriptor?.needs?.tempo ? { tempo: true, extensions: { optional: ['urid:map', LV2_HARD_RT] } } : { extensions: { optional: [LV2_HARD_RT] } },
     latency: { reports: true, ...(sweep ? { sweep } : {}) },
     ...(meters.length ? { meters } : {}),
+    ...(Object.keys(choiceUnits).length ? { choiceUnits } : {}),
     extensions: extensionsOf(d),
     source: { impl: face },
   };
-  return { descriptor, extras: { choiceUnits, byKind } };
+  return { descriptor, extras: { byKind } };
 }
 
 /** The descriptor file's text: what `node tools/gen.mjs` writes and `--check` holds equal. */

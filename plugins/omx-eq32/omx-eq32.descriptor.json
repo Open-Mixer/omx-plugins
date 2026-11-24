@@ -4674,6 +4674,10 @@
   "latency": {
     "reports": true
   },
+  "choiceUnits": {
+    "HPF Slope": "dBPerOct",
+    "LPF Slope": "dBPerOct"
+  },
   "extensions": {
     "clap": {
       "clap_plugin_descriptor.features": [

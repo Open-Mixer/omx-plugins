@@ -16,6 +16,7 @@
       "panel-layout",
       "descriptor-view",
       "descriptor-features",
+      "choice-units",
       "placement-strips",
       "lv2-units",
       "round-trip-loss-units",
