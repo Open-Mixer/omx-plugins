@@ -1083,11 +1083,11 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
 // unresolved, and every declaration that draws a widget or a visibleWhen (omx-geq, omx-strip) lacks its `declaration`
 await part('schema-refs', async () => {
 {
-  const { PANEL_SCHEMA } = await import('../omx-panel.mjs');
+  const { PANEL_DOCUMENT } = await import('../schema-validate.mjs');
   const text = readFileSync(join(ROOT, 'schema', 'plugin.decl.schema.json'), 'utf8');
   const refs = [...text.matchAll(/"\$ref": "([^"#]*panel\.schema\.json)#/g)].map((m) => m[1]);
-  const strays = [...new Set(refs)].filter((r) => r !== PANEL_SCHEMA.$id);
-  expect(refs.length > 0 && strays.length === 0, `the declaration schema's refs into omx-panel name the installed schema's $id ${PANEL_SCHEMA.$id}${strays.length ? ` (found ${strays.join(', ')})` : ''}`);
+  const strays = [...new Set(refs)].filter((r) => r !== PANEL_DOCUMENT);
+  expect(refs.length > 0 && strays.length === 0, `the declaration schema's refs into omx-panel name the document ${PANEL_DOCUMENT}${strays.length ? ` (found ${strays.join(', ')})` : ''}`);
 }
 });
 

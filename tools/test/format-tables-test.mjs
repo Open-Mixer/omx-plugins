@@ -53,7 +53,7 @@ function check(what, got, want) {
 // 1. the units, against the map tools/gen.mjs held before (LV2_UNITS, the release before #210)
 const SHIPPED_LV2_UNITS = {
   Hz: 'hz', dB: 'db', ms: 'ms', s: 's', min: 'min', percent: 'pc', coef: 'coef', oct: 'oct', cents: 'cent', st: 'semitone12TET',
-  dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', dBPerOct: 'dBoct',
+  dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', dBPerOct: 'dBoct', dBPerS: 'dBs',
 };
 const names = lv2UnitNames();
 check('the LV2 units a face writes are the ones it wrote before the table was read', Object.fromEntries(Object.keys(SHIPPED_LV2_UNITS).map((u) => [u, names[u]])), SHIPPED_LV2_UNITS);
@@ -234,7 +234,7 @@ rmSync(scratch, { recursive: true, force: true });
 {
   const FTS = JSON.stringify(join(ROOT, 'tools', 'format-tables.mjs'));
   const PUBLISHED = { none: '', Hz: 'Hz', dB: 'dB', ms: 'ms', s: 's', min: 'min', percent: '%', coef: 'coef', oct: 'oct', cents: 'cents', st: 'st', dBFS: 'dBFS', dBu: 'dBu', LUFS: 'LUFS', dBPerOct: 'dB/oct', ratio: 'ratio' };
-  const OWN = { dBFS: 'urn:openmixer:unit#dBFS', LUFS: 'urn:openmixer:unit#LUFS', ratio: 'urn:openmixer:unit#ratio', dBu: 'urn:openmixer:unit#dBu', dBPerOct: 'urn:openmixer:unit#dBoct' };
+  const OWN = { dBFS: 'urn:openmixer:unit#dBFS', LUFS: 'urn:openmixer:unit#LUFS', ratio: 'urn:openmixer:unit#ratio', dBu: 'urn:openmixer:unit#dBu', dBPerOct: 'urn:openmixer:unit#dBoct', dBPerS: 'urn:openmixer:unit#dBs' };
   const call = (env) => spawnSync(process.execPath, ['--input-type=module', '-e', `
     import { ownLv2Units, unitSymbol, lv2UnitRef } from ${FTS};
     console.log(JSON.stringify({ own: ownLv2Units(), std: Object.fromEntries(${JSON.stringify(Object.keys(PUBLISHED))}.map((u) => [u, unitSymbol(u)])), dbu: String(lv2UnitRef('dBu')) }));`], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } });

@@ -104,6 +104,7 @@
         lv2:default 1 ;
         lv2:minimum 0.1 ;
         lv2:maximum 6 ;
+        units:unit <urn:openmixer:unit#dBs> ;
         pg:group <urn:openmixer:loudlevel#loudlevel>
     ] ,
     [
@@ -148,3 +149,9 @@ lv2:displayPriority
     lv2:name "Loudlevel" ;
     lv2:displayPriority 1 ;
     rdfs:label "Loudlevel" .
+
+<urn:openmixer:unit#dBs>
+    a units:Unit ;
+    rdfs:label "decibels per second" ;
+    units:render "%f dB/s" ;
+    units:symbol "dB/s" .

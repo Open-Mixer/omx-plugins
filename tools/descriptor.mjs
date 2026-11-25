@@ -205,7 +205,8 @@ export function descriptorOf(d) {
     if (p.kind === 'toggle') Object.assign(c, { kind: 'toggle', default: p.def !== 0 });
     else if (choices) {
       Object.assign(c, { kind: 'choice', ids: choices.map((x) => String(x.value)), labels: choices.map((x) => x.label), values: choices.map((x) => x.value), default: String(p.def) });
-      if (p.unit) choiceUnits[p.name] = p.unit;
+      // a choice that states no unit, `none` since C2, has no entry
+      if (p.unit && p.unit !== 'none') choiceUnits[p.name] = p.unit;
     } else {
       c.kind = 'travel';
       c.travel = { min: p.min, max: p.max, step: p.kind === 'integer' ? 1 : 0, unit: travelUnit(p.unit, d.descriptor?.controls[i]?.travel?.unit), default: p.def, scale: p.kind === 'integer' ? integerScale(p) : scaleOf(p) };

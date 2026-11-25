@@ -76,12 +76,12 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 3u
-#define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "be44f8132ba0986b8a0062c136a6c2eb904a7039f306831160c22433b9f7c443"
+#define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 4u
+#define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "7bbc60b541436f45ede0dc84a704d220557837ca070990ec80f4c7a010fce8af"
 static const struct omx_param_contract_row OMX_LOUDLEVEL_PARAM_CONTRACT[OMX_LOUDLEVEL_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* targetLufs db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* rangeDb db */
-  { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* speedDbPerS none */
+  { 261u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* speedDbPerS dbPerS */
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* gateLufs db */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* window none */
 };

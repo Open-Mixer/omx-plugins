@@ -8,13 +8,13 @@
  * `make test`.
  *   node tools/test/choice-units-check.mjs [--self-test]
  */
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const slopes = { 'HPF Slope': 'dBPerOct', 'LPF Slope': 'dBPerOct' };
-const WANT = { 'omx-eq8': slopes, 'omx-eq16': slopes, 'omx-eq32': slopes, 'omx-strip': slopes, 'omx-geq': undefined };
+const WANT = { 'omx-eq8': slopes, 'omx-eq16': slopes, 'omx-eq32': slopes, 'omx-strip': slopes };
 /** The refusals of descriptor `d`, which is to state `want`: each key names a choice of it. */
 export function problems(stem, d, want) {
   const out = JSON.stringify(d.choiceUnits) === JSON.stringify(want) ? [] : [`${stem}: choiceUnits is ${JSON.stringify(d.choiceUnits)}, not ${JSON.stringify(want)}`];
@@ -22,14 +22,17 @@ export function problems(stem, d, want) {
   return out;
 }
 const load = (stem) => JSON.parse(readFileSync(join(root, 'plugins', stem, `${stem}.descriptor.json`), 'utf8'));
-const bad = Object.entries(WANT).flatMap(([stem, want]) => problems(stem, load(stem), want));
+// every plugin: those of WANT state theirs, every other states none
+const stems = readdirSync(join(root, 'plugins')).filter((s) => existsSync(join(root, 'plugins', s, `${s}.descriptor.json`)));
+const bad = stems.flatMap((stem) => problems(stem, load(stem), WANT[stem]));
+for (const stem of Object.keys(WANT)) if (!stems.includes(stem)) bad.push(`${stem}: no descriptor`);
 const text = readFileSync(join(root, 'tools', 'descriptor.mjs'), 'utf8');
 const optioned = (t) => /extras: \{[^}]*choiceUnits/.test(t);
 if (optioned(text)) bad.push('tools/descriptor.mjs hands choiceUnits beside the descriptor');
 if (process.argv.includes('--self-test')) {
   const d = { controls: [{ name: 'HPF Slope', kind: 'choice' }], choiceUnits: { 'HPF Slope': 'dBPerOct' } };
   if (problems('arm', d, { 'HPF Slope': 'dBPerOct' }).length) bad.push('arm: a stated unit was refused');
-  for (const [name, x, want] of [['no choiceUnits', { ...d, choiceUnits: undefined }, d.choiceUnits], ['another unit', { ...d, choiceUnits: { 'HPF Slope': 'dB' } }, d.choiceUnits], ['a name of no choice', { ...d, choiceUnits: { x: 'dB' } }, { x: 'dB' }]])
+  for (const [name, x, want] of [['no choiceUnits', { ...d, choiceUnits: undefined }, d.choiceUnits], ['another unit', { ...d, choiceUnits: { 'HPF Slope': 'dB' } }, d.choiceUnits], ['an entry of no unit', { ...d, choiceUnits: { 'HPF Slope': 'none' } }, undefined], ['a name of no choice', { ...d, choiceUnits: { x: 'dB' } }, { x: 'dB' }]])
     if (!problems('arm', x, want).length) bad.push(`arm '${name}' passed`);
   if (!optioned('return { descriptor, extras: { choiceUnits, byKind } };')) bad.push('arm: the option form passed');
 }

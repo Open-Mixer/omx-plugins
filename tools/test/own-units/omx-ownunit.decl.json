@@ -31,11 +31,13 @@
   "params": [
     {
       "symbol": "trimDb",
+      "meaning": "gain",
       "name": "Trim",
       "ref": "TRIM_RANGE"
     },
     {
       "symbol": "nudge",
+      "meaning": "gain",
       "name": "Nudge",
       "own": "fixture-nudge",
       "min": -4,

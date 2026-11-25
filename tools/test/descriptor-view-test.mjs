@@ -96,7 +96,7 @@ if (schema?.$defs?.descriptor) {
 // the owners a descriptor's links name come with the render: read through OMX_CONTRACT_DIR alone, with no
 // installed omx-contract, a copy of the render with its owners.json gives the same descriptors, and one
 // without is refused by name (a build never reads the installed omx-plugins' owners in their place)
-if (carriesWords) {
+{
   const first = described[0], firstStem = first.split('/').pop();
   // the render below hides the installed omx-contract from pkg-config; gen.mjs decides "run, not imported" with
   // omx-contract's isMain, which reads the command's own directory, so that one directory stays named

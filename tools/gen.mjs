@@ -554,6 +554,7 @@ export const LV2_CUSTOM_UNITS = {
   dBu: { label: 'decibels (unloaded)', render: '%f dBu', symbol: 'dBu' },
   LUFS: { label: 'loudness units (full scale)', render: '%f LUFS', symbol: 'LUFS' },
   dBPerOct: { label: 'decibels per octave', render: '%f dB/oct', symbol: 'dB/oct' },
+  dBPerS: { label: 'decibels per second', render: '%f dB/s', symbol: 'dB/s' },
   ratio: { label: 'ratio', render: '%f:1', symbol: ':1' },
 };
 
