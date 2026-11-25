@@ -134,7 +134,7 @@ Requires: omx-contract-devel
 # include/omx_param_contract.h includes omx-clap's unit and scale codes, <omx-clap-host/omx_param_units.h> (0.35.0) and <omx-clap-host/omx_param_scales.h>
 Requires: omx-clap-devel
 Requires: %{name}-contract = %{version}-%{release}
-Requires: clap-devel >= 1.2.7
+Requires: clap-devel >= 1.2.10
 
 %description devel
 The headers other projects include to use the OpenMixer plugins' parameters and
