@@ -19,6 +19,8 @@ name: release
 on:
   push:
     tags: ['v*']
+    # a merge to devel builds the real package and publishes it to staging (Open-Mixer/.github#289)
+    branches: [devel]
   workflow_dispatch:
     inputs:
       publish:
@@ -103,7 +105,7 @@ jobs:
       staged: ${{ inputs.staged == true }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
-      publish: ${{ github.event_name == 'push' || inputs.publish == true }}
+      publish: ${{ (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')) || inputs.publish == true }}
       needs-mod-host: false
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
       arch-matrix: '["x86_64"]'
@@ -118,7 +120,7 @@ jobs:
       staged: ${{ inputs.staged == true }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
-      publish: ${{ github.event_name == 'push' || inputs.publish == true }}
+      publish: ${{ (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')) || inputs.publish == true }}
       dependencies: 'clap-headers'
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
       arch-matrix: '["arm64"]'
