@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 #
-# deps-check.sh — no version relation on a package of ours is typed by hand (openmixer-ops#661): not in
+# deps-check.sh — no version relation on a package of ours is typed by hand (the devel wave of 2026-11-24, #221): not in
 # packaging/omx-plugins.spec, debian/control, lib/omxplugins.pc.in, the Makefiles or their template. A build uses what is
 # installed; a relation that must exist is generated (soname dependencies, `= %{version}-%{release}`). A third party's
 # floor (CLAP, Node.js) stays, with no ceiling. Also held here: no Breaks, Replaces, Conflicts or Obsoletes between our
