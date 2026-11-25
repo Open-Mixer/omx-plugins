@@ -88,6 +88,10 @@
 #                    value, each expected value changed once and found (tools/test/published-comp-scan.py; part of
 #                    `make test` and `make test-faces`; OMX_CLAP_SCAN names the scanner)
 #   make host-contract  every shipped face opened by libomx-clap, whose own fingerprint of what get_info and the
+#   make panel-abi-refuses  panel-abi refuses by name when omx-clap-core's omx_clap_ext.h is absent, never a compiler
+#                    error (tools/test/panel-abi-refuses-check.sh, against an include directory without it; part
+#                    of `make test` and `make test-faces`)
+#   make host-contract  every shipped face opened by libomx-clap-core, whose own fingerprint of what get_info and the
 #                    contract serve must match the face's: omx_clap_host_param_contract() trusts it
 #                    (tools/test/host-contract-accept.c; part of `make test` and `make test-faces`)
 #   make strip-crosscheck   omx-strip, a chain, against the hand-ported strip it replaced, bit for bit at
@@ -192,7 +196,7 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp)$(call dep_check,omx-contract)$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dir meter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features choice-units placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base selftest-shards decl-schema-panel-ref filter-response artifact-retention release-same-pass from-channel
+.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dir meter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features choice-units placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base selftest-shards decl-schema-panel-ref filter-response artifact-retention release-same-pass from-channel panel-abi-refuses
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
@@ -223,6 +227,8 @@ test: lib
 	$(MAKE) -s strip-bands || { rc=1; red="$$red strip-bands"; }; \
 	$(MAKE) -s test-role || { rc=1; red="$$red test-role"; }; \
 	$(MAKE) -s package-lists || { rc=1; red="$$red package-lists"; }; \
+	$(MAKE) -s panel-abi-refuses || { rc=1; red="$$red panel-abi-refuses"; }; \
+	$(MAKE) -s panel-abi-refuses || { rc=1; red="$$red panel-abi-refuses"; }; \
 	if [ $$rc -ne 0 ]; then echo "make test: red:$$red" >&2; fi; exit $$rc
 # the set that runs the built plugins through a host: each plugin's kernel-identity and hand-written oracles on both
 # faces, host-check.sh's external scanners, then the round trip through plugin-hostd. It runs on
@@ -248,6 +254,7 @@ test-faces: all lib contract-union eq-probe-race
 	@$(MAKE) -s lv2-refuse-rate
 	@$(MAKE) -s param-contract-abi
 	@$(MAKE) -s panel-abi
+	@$(MAKE) -s panel-abi-refuses
 	@$(MAKE) -s host-contract
 	@$(MAKE) -s meter-level
 	@$(MAKE) -s comp-published-scan

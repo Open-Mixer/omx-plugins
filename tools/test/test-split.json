@@ -71,7 +71,7 @@
       "meter-rows",
       "strip-bands",
       "test-role",
-      "package-lists"
+      "package-lists", "panel-abi-refuses"
     ]
   },
   "test-heavy": {
