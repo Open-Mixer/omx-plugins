@@ -464,6 +464,12 @@ selftest:
 	  *) echo "selftest: OMX_SELFTEST_SHARD='$(OMX_SELFTEST_SHARD)' is not i/n" >&2; exit 2;; esac
 	OMX_SELFTEST_SHARD='$(OMX_SELFTEST_SHARD)' node tools/test/recipe-selftest.mjs
 	@case '$(OMX_SELFTEST_SHARD)' in ''|1/*) set -e; tools/qualify-release.sh --self-test;; esac
+	node tools/round-trip.mjs --check
+	node tools/test/recipe-selftest.mjs
+	node tools/test/round-trip-ledger-check.mjs
+	tools/qualify-release.sh --self-test
+	tools/gen-pins.sh --self-test
+	tools/pins-check.sh --self-test
 OMX_PANEL ?= omx-panel
 panel-copies:
 	$(OMX_PANEL) copies --self-test
