@@ -197,7 +197,7 @@ all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
 # every fast check, each its own target: `make test` runs them with -k, so one red does not hide the others
-test-checks: entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings plugin-labels meanings meter-binding panel-layout descriptor-view descriptor-features filter-response choice-units placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets decl-schema-panel-ref summary-numbers param-tie own-units face-ids comp-release-mode strip-visible-when strip-pages-follow face-dirty-order core-init-answers selftest-shards meter-words artifact-retention debt-base test-split
+test-checks: entry-symlink units panel-words schema-urls graph-enum oracle-rates face-header role-meanings plugin-labels meanings meter-binding panel-layout descriptor-view descriptor-features filter-response choice-units placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells probe-checks eq-probe-race band-groups phaser-depth geq-widgets decl-schema-panel-ref summary-numbers param-tie own-units face-ids comp-release-mode strip-visible-when strip-pages-follow face-dirty-order core-init-answers selftest-shards meter-words artifact-retention test-no-host-nproc debt-base test-split
 # make test runs every part whatever an earlier part answered, and is red when any part was: the fast checks (-k),
 # then every plugin's test, then the steps that read the built plugins. A red check never hides a plugin's test
 # (tools/test/test-split-check.mjs holds the recipe to that).
@@ -677,3 +677,9 @@ release-version:
 
 clap-validate: all
 	tools/clap-validate.sh build/clap-validator
+
+# no workflow sizes its parallel jobs from the host's nproc (tools/no-host-nproc.sh: its self-test, then the scan)
+.PHONY: test-no-host-nproc
+test-no-host-nproc:
+	sh tools/no-host-nproc.sh --self-test
+	sh tools/no-host-nproc.sh

@@ -626,8 +626,13 @@ jobs:
           dnf install -y --setopt=install_weak_deps=False clap-validator
           command -v node >/dev/null || { echo "::error::no node after the builddep: the tools need it"; exit 1; }
 
+      # the parallel jobs from the job's CPU quota and the runner's declared CPUs, never the host's nproc
+      - name: The parallel jobs this runner may run
+        uses: Open-Mixer/.github/.github/actions/jobs@openmixer-v1
+        with:
+          max: ${{ vars.OMX_RUNNER_CPUS || '3' }}
       - name: Build every plugin
-        run: make -j"$(nproc)" all
+        run: make -j"$OMX_JOBS" all
 
       - name: Install the factory presets where the plugins declare them
         run: make install-presets
