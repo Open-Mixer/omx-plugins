@@ -6,6 +6,7 @@
     "balancer"
   ],
   "noun": "spectral balancer",
+  "category": "utility",
   "engaged": {
     "amountPct": 100
   },

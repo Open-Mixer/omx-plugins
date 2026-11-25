@@ -4,6 +4,7 @@
   "kernel": "strip",
   "name": "omx strip",
   "noun": "channel strip",
+  "category": "utility",
   "vendor": "openmixer",
   "url": "https://github.com/FreeMixer/omx-plugins",
   "version": "0.13.0",

@@ -5,6 +5,7 @@
   "kernels": [
     "reverb"
   ],
+  "category": "time",
   "url": "https://github.com/FreeMixer/omx-plugins",
   "binding": "instance",
   "engaged": {
