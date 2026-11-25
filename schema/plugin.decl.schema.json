@@ -481,7 +481,7 @@
       "description": "One of the plugin's own units: a word of omx-contract's domain schema ($defs.word, the shape of a PARAM_UNITS word), `const` its id (the word a descriptor, a TTL and the panel description state), `title` its key, `description` what it measures (the TTL's rdfs:label), `x-code` its place in the block, `x-symbol` its display spelling (what the C table and value_to_text show, the TTL's units:symbol), and, as a PARAM_UNITS word has them, `x-dimension` a PARAM_UNIT_DIMENSIONS word and `x-group` a PARAM_UNIT_SCOPES word.",
       "allOf": [
         {
-          "$ref": "https://openmixer.org/schema/omx-contract/v3/domain.schema.json#/$defs/word"
+          "$ref": "domain.schema.json#/$defs/word"
         },
         {
           "required": [
@@ -755,7 +755,7 @@
           "$ref": "#/$defs/graph"
         },
         "basis": {
-          "$ref": "https://openmixer.org/schema/omx-panel/panel.schema.json#/$defs/basis",
+          "$ref": "panel.schema.json#/$defs/basis",
           "description": "The basis of the section's `graph`: `exact` when the plugin's own audio runs the closed form the curve draws, which tools/test/curve-proof.mjs measures for every display marked so (and refuses a measured one left out), else `modelled`, the default. The word and its values are omx-panel's (schema/panel.schema.json), the one place they are written."
         },
         "subgroups": {

@@ -48,7 +48,7 @@ read_dir() {
 validate() {
   local from=$1 dir=$SCRATCH/$2/contract.d
   mkdir -p "$dir"
-  sh "$INSTALLER" --domain "$from" "$dir" >/dev/null || return 1
+  sh "$INSTALLER" --domain "$from" "$dir" omx-plugins >/dev/null || return 1
   read_dir "$dir"
 }
 

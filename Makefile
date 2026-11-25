@@ -591,7 +591,7 @@ install-labels-domain:
 	@stage=$$(mktemp -d) && trap 'rm -rf "$$stage"' EXIT && mkdir -p "$$stage/contract.d/omx-plugin-labels/catalogs" && \
 	  cp contract.d/omx-plugin-labels/omx-plugin-labels.json "$$stage/contract.d/omx-plugin-labels/" && \
 	  cp $(wildcard $(LABELS_CATALOGS)/*.json) "$$stage/contract.d/omx-plugin-labels/catalogs/" && \
-	  sh $(INSTALL_CONTRACT_DIR) --domain "$$stage/contract.d/omx-plugin-labels" $(DESTDIR)$(CONTRACTDIR)
+	  sh $(INSTALL_CONTRACT_DIR) --domain "$$stage/contract.d/omx-plugin-labels" $(DESTDIR)$(CONTRACTDIR) omx-plugins
 # the install script the targets above run, for the checks that stage a contract directory the same way
 print-install-contract-dir:
 	@echo $(INSTALL_CONTRACT_DIR)
