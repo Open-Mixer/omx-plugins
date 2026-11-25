@@ -64,7 +64,7 @@ static const char *const OMX_WIDTH_PARAM_MODULES[OMX_WIDTH_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_WIDTH_NAME "omx width"
 #define OMX_WIDTH_VENDOR "openmixer"
-#define OMX_WIDTH_URL "https://github.com/FreeMixer/omx-plugins"
+#define OMX_WIDTH_URL "https://github.com/Open-Mixer/omx-plugins"
 #define OMX_WIDTH_VERSION "0.21.0"
 #define OMX_WIDTH_DESCRIPTION "Widens or narrows the stereo image, with an optional pseudo-stereo spread for a mono source and a bass-mono cutoff that keeps the lows centred."
 #define OMX_WIDTH_CLAP_ID "org.openmixer.width"

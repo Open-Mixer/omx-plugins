@@ -31,7 +31,7 @@ Build-Depends: debhelper-compat (= 13),
                plugin-hostd <!nocheck>,
                plugin-hostd-contract
 Standards-Version: 4.6.2
-Homepage: https://github.com/FreeMixer/omx-plugins
+Homepage: https://github.com/Open-Mixer/omx-plugins
 Rules-Requires-Root: no
 
 Package: omx-plugins

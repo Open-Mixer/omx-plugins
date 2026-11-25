@@ -72,7 +72,7 @@
           "description": "The vendor every plugin publishes."
         },
         "url": {
-          "const": "https://github.com/FreeMixer/omx-plugins",
+          "const": "https://github.com/Open-Mixer/omx-plugins",
           "title": "URL",
           "description": "The project's home."
         },

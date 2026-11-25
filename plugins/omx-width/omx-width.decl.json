@@ -7,7 +7,7 @@
   ],
   "noun": "stereo width",
   "category": "utility",
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "resourceHints": {
     "threads-spawned": 0,

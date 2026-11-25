@@ -4,7 +4,7 @@
   "kernel": "trim",
   "name": "omx ownunit",
   "vendor": "openmixer",
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "version": "0.1.0",
   "description": "A fixture: a trim with a nudge control in a unit of the plugin's own.",
   "category": "utility",

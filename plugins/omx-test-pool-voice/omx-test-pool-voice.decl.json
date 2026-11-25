@@ -5,7 +5,7 @@
   "role": "test",
   "name": "omx test-pool-voice",
   "vendor": "openmixer",
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "version": "0.13.0",
   "description": "A test instrument that offers clap.thread-pool: one sine per held note, each voice one pool task with a fixed CPU load per frame.",
   "clap": {
