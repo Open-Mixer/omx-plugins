@@ -24,6 +24,7 @@
         "HPF"
       ],
       "meaning": "enabled",
+      "response": "highpass",
       "automatable": true,
       "source": {
         "from": {
@@ -49,6 +50,7 @@
         "HPF"
       ],
       "meaning": "lowCut",
+      "response": "highpass",
       "automatable": true,
       "source": {
         "from": {
@@ -79,6 +81,7 @@
         "HPF"
       ],
       "meaning": "slope",
+      "response": "highpass",
       "automatable": true,
       "source": {
         "from": {
@@ -97,6 +100,7 @@
         "LPF"
       ],
       "meaning": "enabled",
+      "response": "lowpass",
       "automatable": true,
       "source": {
         "from": {
@@ -122,6 +126,7 @@
         "LPF"
       ],
       "meaning": "highCut",
+      "response": "lowpass",
       "automatable": true,
       "source": {
         "from": {
@@ -152,6 +157,7 @@
         "LPF"
       ],
       "meaning": "slope",
+      "response": "lowpass",
       "automatable": true,
       "source": {
         "from": {

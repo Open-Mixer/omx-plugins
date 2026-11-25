@@ -79,6 +79,36 @@ export function meaningOfControl(d, p, i, role, words = MEANINGS) {
   return m;
 }
 
+/** The filter responses a control may state: the enum of the schema's `$defs.filterResponse` (omx-contract
+ * docs/descriptors.md "Filter responses"), the render of PARAM_FILTER_RESPONSES; never spelled in a tool. */
+export function filterResponses(schema = JSON.parse(readFileSync(descriptorSchemaFile(), 'utf8'))) {
+  const list = schema?.$defs?.filterResponse?.enum;
+  if (!Array.isArray(list) || !list.length || list.some((w) => typeof w !== 'string')) throw new Error(`${DESCRIPTOR_SCHEMA_FILE}: $defs.filterResponse.enum is not the filter responses`);
+  return list;
+}
+
+/** The installed schema's filter responses, read once, when a control first states one: a tool that meets none needs none. */
+let installedResponses;
+
+/** Whether a type choice (a `*_BAND_TYPES` set) picks the shape of the band parameter `p` of `params` is on: the two carry one
+ * band number in their symbols (b1_type and b1_freq, eq1Type and eq1Freq, bandType1 and freq1). The band number is the first
+ * run of digits: a symbol with another number before its band's (eq2Band1Freq) would be read by that one; no symbol of ours
+ * has one, and tools/test/filter-response-check.mjs holds the exact set of controls that state a response. */
+export function typedBand(p, params) {
+  const band = /\d+/.exec(p.symbol)?.[0];
+  return band !== undefined && params.some((q) => /_BAND_TYPES$/.test(q.ref ?? '') && /\d+/.exec(q.symbol)?.[0] === band);
+}
+
+/** The response parameter `p` of `where` states, or undefined. A word the schema does not list is refused, and so is one on
+ * a band whose shape a type choice picks (`typed`): its response is the choice's value (omx-plugins#218). */
+export function responseOfControl(p, where, typed = false) {
+  if (p.response === undefined) return undefined;
+  installedResponses ??= filterResponses();
+  if (!installedResponses.includes(p.response)) throw new Error(`${where}: '${p.symbol}' states the response '${p.response}', no word of the schema's $defs.filterResponse`);
+  if (typed) throw new Error(`${where}: '${p.symbol}' states a response, and a type choice picks its band's shape: its response is the choice's value`);
+  return p.response;
+}
+
 /** The extension bag's source fields our faces write (omx-contract docs/descriptors.md, The extension bag): CLAP's
  * open features, in the face's order, and the LV2 face's types as its .ttl states them. */
 export const CLAP_FEATURES_FIELD = 'clap_plugin_descriptor.features';
@@ -213,6 +243,9 @@ export function descriptorOf(d) {
     }
     if (groupOf.has(p.symbol)) c.group = groupOf.get(p.symbol);
     c.meaning = meaningOfControl(d, p, i, meaningOf.get(p.symbol));
+    // a fixed filter's response: the parameter's own word, or (a described control) the descriptor's
+    const response = responseOfControl({ symbol: p.symbol, response: p.response ?? d.descriptor?.controls[i]?.response }, `plugins/${d.stem}`, typedBand(p, d.params));
+    if (response !== undefined) c.response = response;
     c.automatable = true;
     c.source = p.from ? { from: atOf(p.from) ? { link: p.from, at: atOf(p.from) } : p.from } : { impl: face };
     if (p.byKind) byKind[p.symbol] = p.byKind;

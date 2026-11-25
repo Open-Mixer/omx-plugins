@@ -17,6 +17,7 @@
       "descriptor-view",
       "descriptor-features",
       "choice-units",
+      "filter-response",
       "placement-strips",
       "lv2-units",
       "round-trip-loss-units",
