@@ -50,7 +50,7 @@
       "core-init-answers",
       "selftest-shards",
       "meter-words",
-      "debt-base",
+      "artifact-retention", "debt-base",
       "test-split"
     ],
     "steps": [
