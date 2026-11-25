@@ -19,7 +19,7 @@
     },
     {
       "symbol": "speedDbPerS",
-      "unit": "dB",
+      "unit": "dBPerS",
       "value": 1
     },
     {

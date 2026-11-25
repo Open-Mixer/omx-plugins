@@ -51,9 +51,6 @@
     "rangeDb": {
       "unit": "units:db"
     },
-    "speedDbPerS": {
-      "unit": "units:db"
-    },
     "gateLufs": {
       "props": [
         "lv2:integer"

@@ -9,7 +9,7 @@
  *     declaration's (tools/param-contract.mjs), the bypass last; version 1; the
  *     fingerprint is the SHA-256 of what get_info and the contract serve, and the declaration's;
  *   - clap.remote-controls: the pages of the page rule over every control of the declaration's panel sections, a control
- *     hidden at the defaults served as a blank slot;
+ *     hidden at the defaults served as a blank slot and a page with none left not served;
  *   - clap.track-info: under each placement, before activation and after it, every parameter reads
  *     the placement's default the contract states for it, else its own default; a parameter the host
  *     has set keeps its value;
@@ -65,7 +65,9 @@ const desc = panelDescription(d);
 const everyShown = { ...desc, controls: desc.controls.map((c) => ({ ...c, visible: null })) };
 const hidden = new Set(desc.controls.filter((c) => !isVisible(c)).map((c) => c.param));
 const slot = (i) => (i === null || hidden.has(i) ? NONE : i);
-const pages = pagesOf(everyShown, d).map((g, k) => [k, k, g.sectionName, g.pageName, g.ids.map(slot).join(','), 0]);
+// a page whose every slot is hidden is not served (omx-plugins#212)
+const cut = pagesOf(everyShown, d).map((g) => ({ ...g, ids: g.ids.map(slot) })).filter((g) => g.ids.some((i) => i !== NONE));
+const pages = cut.map((g, k) => [k, k, g.sectionName, g.pageName, g.ids.join(','), 0]);
 const servedPages = of('page').map(([k, id, section, name, ids, preset]) => [Number(k), Number(id), section, name, ids, Number(preset)]);
 check(same(servedPages, pages), `remote-controls: the ${pages.length} page(s) of the declaration's sections`, JSON.stringify(servedPages));
 
