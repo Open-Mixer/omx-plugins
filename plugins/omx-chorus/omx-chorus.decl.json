@@ -5,6 +5,7 @@
   "kernels": [
     "chorus"
   ],
+  "category": "modulation",
   "url": "https://github.com/FreeMixer/omx-plugins",
   "binding": "instance",
   "portHints": {

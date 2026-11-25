@@ -24,6 +24,7 @@
   },
   "name": "omx eq",
   "noun": "{bands}-band EQ",
+  "category": "eq",
   "vendor": "openmixer",
   "url": "https://github.com/FreeMixer/omx-plugins",
   "version": "0.13.0",

@@ -7,6 +7,7 @@
   "url": "https://github.com/FreeMixer/omx-plugins",
   "version": "0.1.0",
   "description": "A fixture: a trim with a nudge control in a unit of the plugin's own.",
+  "category": "utility",
   "clap": {
     "id": "org.openmixer.ownunit",
     "features": [

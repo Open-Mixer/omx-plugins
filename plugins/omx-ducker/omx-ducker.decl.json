@@ -6,6 +6,7 @@
     "comp"
   ],
   "noun": "ducker",
+  "category": "dynamics",
   "url": "https://github.com/FreeMixer/omx-plugins",
   "binding": "instance",
   "sidechain": {

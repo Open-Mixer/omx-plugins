@@ -239,6 +239,7 @@ async function main() {
   const unsettled = await planPlugin(draft.decl, src, { root: tree, recipe });
   expect(!unsettled.ok && unsettled.refusals.length === marks.length, `a draft with REVIEW marks is refused, each named (${unsettled.refusals.map((r) => r.field).join(' ')})`);
   const settled = structuredClone(draft.decl);
+  settled.category = 'modulation';
   settled.description = 'The console\'s wobble: the level, or the balance, moved by one LFO.';
   settled.clap.features[1] = 'wobble';
   settled.lv2.class = 'lv2:ModulatorPlugin';
@@ -938,10 +939,11 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     expect(draft.decl?.binding === 'chain' && draft.decl.chain.map((el) => `${el.id}:${el.kernel}`).join(' ') === 'eq:eq gate:gate comp:comp',
       `chain: the draft has one element per kernel, in the order given (${draft.decl?.chain.map((el) => el.id).join(' ')})`);
     const cmarks = reviewMarks(draft.decl);
-    expect(['/chain/0/on', '/chain/0/bands', '/chain/1/on', '/chain/2/on', '/description', '/console/placement/group'].every((m) => cmarks.includes(m)), `chain: each switch's default, the band count and the console placement are marked REVIEW (${cmarks.join(' ')})`);
+    expect(['/chain/0/on', '/chain/0/bands', '/chain/1/on', '/chain/2/on', '/category', '/description', '/console/placement/group'].every((m) => cmarks.includes(m)), `chain: each switch's default, the band count and the console placement are marked REVIEW (${cmarks.join(' ')})`);
     expect(draft.decl?.panel?.sections.map((x) => x.key).join(' ') === 'eq gate comp', `chain: the drafted panel is one section per element (${draft.decl?.panel?.sections.map((x) => x.key).join(' ')})`);
     expect(draft.notes.some((n) => n.startsWith("element 'gate'")), 'chain: the draft notes that the gate\'s face takes a key');
     const settled = structuredClone(draft.decl);
+    settled.category = 'utility';
     settled.description = 'A test chain: the console EQ, then its gate, then its compressor, in any order.';
     settled.clap.features[1] = 'mixing';
     settled.lv2.class = 'lv2:MixerPlugin';

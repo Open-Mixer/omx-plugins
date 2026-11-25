@@ -6,6 +6,7 @@
     "loudlevel"
   ],
   "noun": "loudness leveler",
+  "category": "dynamics",
   "engaged": {
     "rangeDb": 24
   },

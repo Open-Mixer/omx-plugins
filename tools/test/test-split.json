@@ -19,6 +19,7 @@
       "choice-units",
       "filter-response",
       "placement-strips",
+      "plugin-category",
       "lv2-units",
       "round-trip-loss-units",
       "lv2-deprecated",

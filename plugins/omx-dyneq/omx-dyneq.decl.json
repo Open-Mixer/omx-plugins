@@ -6,6 +6,7 @@
     "dyneq"
   ],
   "noun": "dynamic EQ",
+  "category": "dynamics",
   "url": "https://github.com/FreeMixer/omx-plugins",
   "binding": "instance",
   "portHints": {
