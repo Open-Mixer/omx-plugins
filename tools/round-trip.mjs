@@ -59,7 +59,7 @@ function hostdVersion() {
  * contractdir), or null when none does. */
 function contractVersion(pkg) {
   const dirs = process.env.OMX_CONTRACT_PATH?.split(':').filter(Boolean) ?? [pkgConfig('--variable=contractdir', 'omx-contract')].filter(Boolean);
-  const manifest = dirs.map((d) => join(d, '3', pkg, 'MANIFEST.json')).find((f) => existsSync(f));
+  const manifest = dirs.map((d) => join(d, pkg, 'MANIFEST.json')).find((f) => existsSync(f));
   return manifest ? JSON.parse(readFileSync(manifest, 'utf8')).version ?? null : null;
 }
 

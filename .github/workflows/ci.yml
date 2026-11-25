@@ -377,7 +377,7 @@ jobs:
           # one descriptor per shipped plugin that has one, in omx-contract's contract directory, with its manifest: in
           # omx-plugins-contract, a package of their own that the metapackage and the devel package require at their
           # version, read at run time with no -devel installed
-          cdir=/usr/share/omx-contract/contract.d/3/omx-plugins
+          cdir=/usr/share/omx-contract/contract.d/omx-plugins
           rpm -qlp rpms/omx-plugins-contract-[0-9]*.noarch.rpm | sort > files-contract.txt
           { printf '%s\n' "$cdir" "$cdir/MANIFEST.json" "$cdir/plugin-face.json" "$cdir/role-meanings.json" "$cdir/plugins" \
               /usr/share/doc/omx-plugins-contract /usr/share/doc/omx-plugins-contract/README.md \
@@ -417,7 +417,7 @@ jobs:
             rpms/omx-plugins-clap-[0-9]*.${{ matrix.cell.arch }}.rpm rpms/omx-plugins-lv2-[0-9]*.${{ matrix.cell.arch }}.rpm \
             rpms/omx-plugins-contract-[0-9]*.noarch.rpm
           # the descriptors come with the metapackage, no -devel installed
-          rpm -qf /usr/share/omx-contract/contract.d/3/omx-plugins/MANIFEST.json | grep -q '^omx-plugins-contract-'
+          rpm -qf /usr/share/omx-contract/contract.d/omx-plugins/MANIFEST.json | grep -q '^omx-plugins-contract-'
           # the unit codes are omx-contract's sheet (3.6.0), not this package's
           ! rpm -ql omx-plugins-contract | grep -q '/param-units\.json$'
           ! rpm -q omx-plugins-devel
@@ -554,10 +554,10 @@ jobs:
           # the descriptors are omx-plugins-contract's, which the metapackage and the dev package depend on at this
           # version, installed here with no -dev
           out=$(dpkg -L omx-plugins-contract)
-          grep -qx /usr/share/omx-contract/contract.d/3/omx-plugins/MANIFEST.json <<<"$out"
+          grep -qx /usr/share/omx-contract/contract.d/omx-plugins/MANIFEST.json <<<"$out"
           # the unit codes are omx-contract's sheet (3.6.0), not this package's
           ! grep -q '/param-units\.json$' <<<"$out"
-          test "$(grep -cE '^/usr/share/omx-contract/contract\.d/3/omx-plugins/plugins/[^/]+\.json$' <<<"$out")" = "$(ls plugins/*/*.descriptor.json | wc -l)"
+          test "$(grep -cE '^/usr/share/omx-contract/contract\.d/omx-plugins/plugins/[^/]+\.json$' <<<"$out")" = "$(ls plugins/*/*.descriptor.json | wc -l)"
           ! dpkg -s omx-plugins-dev >/dev/null 2>&1
           info=$(dpkg -I debs/omx-plugins-contract_*_all.deb)
           grep -qE '^ Architecture: all$' <<<"$info"

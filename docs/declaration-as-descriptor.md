@@ -29,7 +29,7 @@ A link carries the release it is read from, `at`: `omx-contract@<floor>`, the pa
 ## Where a host reads it
 
 `make install-devel` (through `make install-contract`) installs each shipped plugin's descriptor, byte for byte,
-into omx-contract's contract directory as `<contractdir>/3/omx-plugins/plugins/<stem>.json`, with a `MANIFEST.json`
+into omx-contract's contract directory as `<contractdir>/omx-plugins/plugins/<stem>.json`, with a `MANIFEST.json`
 naming the release (omx-contract `docs/contract-dir.md`); the -devel and -dev packages carry it. A host reads it
 there through omx-contract's reader, never from this tree. `make contract-dir` holds the installed tree to the
 plugin folders' descriptors, one per shipped plugin that has one, and reads it back through the reader.

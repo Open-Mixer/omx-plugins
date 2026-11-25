@@ -21,15 +21,16 @@ export const PANEL_DOCUMENT = 'panel.schema.json';
 
 /** The name omx-contract's domain schema is installed under, the one a declaration schema's `$ref` names. */
 export const DOMAIN_DOCUMENT = 'domain.schema.json';
-/** omx-contract's domain schema, by its `$id`, from the render or the installed data directory. */
-export const DOMAIN_SCHEMA_ID = 'https://openmixer.org/schema/omx-contract/v3/domain.schema.json';
+/** omx-contract's domain schema, by its `$id` (the installed format's major, never spelled here), from the render or the
+ * installed data directory. */
+export const DOMAIN_SCHEMA_ID = /^https:\/\/openmixer\.org\/schema\/omx-contract\/v\d+\/domain\.schema\.json$/;
 let domainSchema;
 function contractDomainSchema() {
   if (domainSchema) return domainSchema;
   const file = [process.env.OMX_CONTRACT_DIR, installedDataDir()].filter(Boolean).map((d) => join(d, 'domain.schema.json')).find((f) => existsSync(f));
-  if (!file) throw new Error(`domain.schema.json: not in the installed omx-contract's data directory; a declaration's own units are words of its ${DOMAIN_SCHEMA_ID} (omx-contract-devel, BUILDING.md)`);
+  if (!file) throw new Error(`domain.schema.json: not in the installed omx-contract's data directory; a declaration's own units are words of omx-contract's domain schema (omx-contract-devel, BUILDING.md)`);
   const doc = JSON.parse(readFileSync(file, 'utf8'));
-  if (doc.$id !== DOMAIN_SCHEMA_ID) throw new Error(`${file}: its $id is ${doc.$id}, not ${DOMAIN_SCHEMA_ID}`);
+  if (!DOMAIN_SCHEMA_ID.test(doc.$id ?? '')) throw new Error(`${file}: its $id is ${doc.$id}, not omx-contract's domain schema (https://openmixer.org/schema/omx-contract/v<major>/domain.schema.json)`);
   return (domainSchema = doc);
 }
 

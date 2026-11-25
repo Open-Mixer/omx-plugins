@@ -49,7 +49,7 @@ make test                 # the fast set the package builds run: declaration che
 make test-heavy           # the built faces through a host: oracles, host-check, round trip (CI, every PR)
 make install DESTDIR=/tmp/stage LIBDIR=/usr/lib64   # <CLAPDIR>/*.clap (default /usr/lib/clap, any LIBDIR), <LIBDIR>/lv2/*.lv2/
 make install-devel DESTDIR=/tmp/stage LIBDIR=/usr/lib64   # headers, <LIBDIR>/libomxplugins.a, <LIBDIR>/pkgconfig/omxplugins.pc, and each plugin's descriptor
-                                                         # in <DATADIR>/omx-contract/contract.d/3/omx-plugins/ (make install-contract, CONTRACTDIR=)
+                                                         # in <DATADIR>/omx-contract/contract.d/omx-plugins/ (make install-contract, CONTRACTDIR=)
 make version              # the release version
 ```
 

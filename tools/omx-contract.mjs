@@ -189,7 +189,7 @@ export function ownersOf(contractdir = installedContractDir()) {
     for (const [rel, o] of Object.entries(JSON.parse(readFileSync(join(contractdir, OWNERS), 'utf8')))) out.set(rel, o);
     return out;
   }
-  const base = contractdir && join(contractdir, '3');
+  const base = contractdir; // every owner package is <contractdir>/<owner>/, no schema-major level
   if (!base || !existsSync(base)) return out;
   for (const pkg of readdirSync(base)) {
     const file = join(base, pkg, 'MANIFEST.json');

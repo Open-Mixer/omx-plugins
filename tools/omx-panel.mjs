@@ -50,12 +50,13 @@ export function roleMeaningFiles() {
   const files = [fileURLToPath(new URL('../contract/role-meanings.json', import.meta.url))];
   const seen = new Set(['omx-plugins']);
   for (const dir of vocabulary.contractDirs()) {
-    const major = join(dir, '3');
-    if (!existsSync(major)) continue;
-    for (const pkg of readdirSync(major, { withFileTypes: true })) {
-      if (!pkg.isDirectory() || seen.has(pkg.name)) continue;
+    if (!existsSync(dir)) continue;
+    // a package is <dir>/<owner>/ with its MANIFEST.json; a directory without one is a domain, read by its own readers
+    for (const pkg of readdirSync(dir, { withFileTypes: true })) {
+      if (!pkg.isDirectory() || seen.has(pkg.name) || !existsSync(join(dir, pkg.name, 'MANIFEST.json'))) continue;
       seen.add(pkg.name);
-      for (const f of readdirSync(join(major, pkg.name))) if (f.endsWith('.json')) files.push(join(major, pkg.name, f));
+      const listed = Object.keys(JSON.parse(readFileSync(join(dir, pkg.name, 'MANIFEST.json'), 'utf8')).files ?? {});
+      for (const f of listed) if (f.endsWith('.json') && !f.includes('/')) files.push(join(dir, pkg.name, f));
     }
   }
   return files;

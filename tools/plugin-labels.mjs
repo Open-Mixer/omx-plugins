@@ -64,7 +64,7 @@ export function committedLabels(root) {
 /** The domain document for the shipped declarations `ds` (in list order): `presetsOf(d)` their preset files,
  * `choicesOf(p)` a parameter's labelled values, `version` the release's, `committed` the committed document. A plugin
  * with no section, choice or preset has no item. */
-export function labelsDomain(ds, { presetsOf, choicesOf, version, committed }) {
+export function labelsDomain(ds, { presetsOf, choicesOf, version, committed, format }) {
   const schemas = {};
   for (const d of ds) {
     const words = labelsOf(d, choicesOf, presetsOf(d));
@@ -89,6 +89,8 @@ export function labelsDomain(ds, { presetsOf, choicesOf, version, committed }) {
   return {
     $schema: 'https://json-schema.org/draft/2020-12/schema',
     $id: `https://openmixer.org/contract/${LABELS_DOMAIN}`,
+    // the omx-contract format the document is written in, MAJOR.MINOR (omx-contract docs/contract-dir.md, "x-omx-contract")
+    'x-omx-contract': format,
     info: {
       title: 'The OpenMixer plugins\' labels a surface translates: section titles, choice labels and preset names',
       version,

@@ -79,6 +79,14 @@ export function meaningOfControl(d, p, i, role, words = MEANINGS) {
   return m;
 }
 
+/** The omx-contract format a document of this build is written in: MAJOR.MINOR of the installed schema's
+ * `x-omx-schema-version` (what a domain document states as `x-omx-contract`); never spelled in a tool. */
+export function contractFormat(schema = JSON.parse(readFileSync(descriptorSchemaFile(), 'utf8'))) {
+  const m = /^(\d+\.\d+)\.\d+$/.exec(schema?.['x-omx-schema-version'] ?? '');
+  if (!m) throw new Error(`${DESCRIPTOR_SCHEMA_FILE}: x-omx-schema-version is not MAJOR.MINOR.PATCH`);
+  return m[1];
+}
+
 /** The filter responses a control may state: the enum of the schema's `$defs.filterResponse` (omx-contract
  * docs/descriptors.md "Filter responses"), the render of PARAM_FILTER_RESPONSES; never spelled in a tool. */
 export function filterResponses(schema = JSON.parse(readFileSync(descriptorSchemaFile(), 'utf8'))) {

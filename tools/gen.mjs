@@ -44,7 +44,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { releaseVersion } from './release-version.mjs';
 import { faceBinding } from './instance-face.mjs';
-import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
+import { contractFormat, descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
 import { declaredDesignation, lv2Designation, lv2UnitNames, lv2UnitRef, ownLv2Units, ownUnitOf, ownUnitRefusals, standardUnitOf, unitSymbol } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
 import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
@@ -1654,7 +1654,7 @@ export function generateShared(root = ROOT, decls = pluginDirs(root).map((p) => 
 const LABELS_DOMAIN_FIRST_VERSION = '0.1.0';
 export function labelsDocText(root = ROOT, decls = pluginDirs(root).map((p) => loadDecl(p))) {
   const ds = decls.filter(ships).sort(byStem);
-  return labelsText(labelsDomain(ds, { presetsOf: (d) => presetsOf(d.clap.id, root), choicesOf, version: committedLabels(root)?.info?.version ?? LABELS_DOMAIN_FIRST_VERSION, committed: committedLabels(root) }));
+  return labelsText(labelsDomain(ds, { presetsOf: (d) => presetsOf(d.clap.id, root), choicesOf, version: committedLabels(root)?.info?.version ?? LABELS_DOMAIN_FIRST_VERSION, committed: committedLabels(root), format: contractFormat() }));
 }
 
 /** A declaration's pinned port hints (its `portHints`, tools/port-hints.mjs) in the view's shape,

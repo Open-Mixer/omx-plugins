@@ -250,7 +250,7 @@ Its documentation is on openmixer.org.
 %license LICENSE
 %doc README.md
 # each plugin's descriptor and the manifest, in omx-contract's contract directory (the directory itself is omx-contract-data's)
-%{_datadir}/omx-contract/contract.d/3/omx-plugins/
+%{_datadir}/omx-contract/contract.d/omx-plugins/
 # the labels domain (contract.d/omx-plugin-labels: section titles, choice labels and preset names, each a key with its
 # English source sentence) and the catalogs, beside the other domains; the same catalogs at /usr/share/omx-plugins/catalogs
 # are the language packs'

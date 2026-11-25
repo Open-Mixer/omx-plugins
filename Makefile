@@ -115,7 +115,7 @@
 #   make install    DESTDIR, PREFIX, LIBDIR, CLAPDIR, DATADIR: $(CLAPDIR)/<name>.clap, $(LIBDIR)/lv2/<name>.lv2/ and the
 #                   factory presets in $(DATADIR)/omx/presets/<plugin id>/<preset id>.json
 #   make install-contract  DESTDIR, CONTRACTDIR: each shipped plugin's descriptor into omx-contract's contract directory,
-#                   $(CONTRACTDIR)/3/omx-plugins/plugins/<stem>.json and its MANIFEST.json, and the labels domain,
+#                   $(CONTRACTDIR)/omx-plugins/plugins/<stem>.json and its MANIFEST.json, and the labels domain,
 #                   $(CONTRACTDIR)/omx-plugin-labels/ with the catalogs (run by install-devel; alone: install-labels-domain)
 #   make install-catalogs  DESTDIR, DATADIR: the labels' catalogs, $(DATADIR)/omx-plugins/catalogs/<lang>.json, one per
 #                   listed language (run by install; each is its language pack's)
@@ -584,15 +584,14 @@ package-lists:
 	tools/package-lists-check.sh
 	tools/package-lists-check.sh --self-test
 # Each shipped plugin's descriptor, plugins/<stem>/<stem>.descriptor.json, installed byte for byte into omx-contract's
-# contract directory as $(CONTRACTDIR)/<schema major>/omx-plugins/plugins/<stem>.json, and each definition file of
+# contract directory as $(CONTRACTDIR)/omx-plugins/plugins/<stem>.json, and each definition file of
 # contract/ (a definition file this tree owns: role-meanings.json, the meaning each panel role plays) as
-# $(CONTRACTDIR)/<schema major>/omx-plugins/<file>.json, with a MANIFEST.json naming this
+# $(CONTRACTDIR)/omx-plugins/<file>.json, with a MANIFEST.json naming this
 # version (omx-contract docs/contract-dir.md); the packages ship it in omx-plugins-contract. The directory is
 # omx-contract-data's, under the same data directory
 # (`pkg-config --variable=contractdir omx-contract`); the install script too, or OMX_CONTRACT_DIR's, an omx-contract
 # checkout, when no package is installed.
 CONTRACTDIR ?= $(DATADIR)/omx-contract/contract.d
-CONTRACT_SCHEMA_MAJOR := 3
 INSTALL_CONTRACT_DIR = $(firstword $(wildcard $(shell $(PKG_CONFIG) --variable=datadir omx-contract 2>/dev/null)/install-contract-dir.sh) $(wildcard $(OMX_CONTRACT_DIR)/tools/install-contract-dir.sh))
 DESCRIPTORS = $(foreach p,$(SHIP_PLUGINS),$(wildcard $(p)$(notdir $(p:/=)).descriptor.json))
 CONTRACT_FILES = $(wildcard contract/*.json)
@@ -601,7 +600,7 @@ install-contract:
 	@stage=$$(mktemp -d) && trap 'rm -rf "$$stage"' EXIT && mkdir -p "$$stage/plugins" && \
 	  for f in $(DESCRIPTORS); do cp "$$f" "$$stage/plugins/$$(basename "$$f" .descriptor.json).json" || exit 1; done && \
 	  for f in $(CONTRACT_FILES); do cp "$$f" "$$stage/" || exit 1; done && \
-	  sh $(INSTALL_CONTRACT_DIR) omx-plugins $(VERSION) $(CONTRACT_SCHEMA_MAJOR) "$$stage" $(DESTDIR)$(CONTRACTDIR)
+	  sh $(INSTALL_CONTRACT_DIR) omx-plugins $(VERSION) "$$stage" $(DESTDIR)$(CONTRACTDIR)
 	$(MAKE) -s install-labels-domain
 # the labels domain: its document (contract.d/omx-plugin-labels, tools/gen.mjs) and the tree's catalogs/ beside it, staged
 # as omx-contract's domain layout (<domain>/<domain>.json, <domain>/catalogs/<lang>.json) and installed by its script
