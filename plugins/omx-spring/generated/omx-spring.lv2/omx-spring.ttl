@@ -5,6 +5,7 @@
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix omxres: <https://www.openmixer.org/ns/resource-hints#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
 @prefix pg:    <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
@@ -82,6 +83,7 @@
         lv2:minimum 0.5 ;
         lv2:maximum 8 ;
         units:unit units:s ;
+        lv2:designation param:decay ;
         pg:group <urn:openmixer:spring#spring>
     ] ,
     [
@@ -131,6 +133,7 @@
         lv2:maximum 100 ;
         lv2:portProperty lv2:integer ;
         units:unit units:pc ;
+        lv2:designation param:wetDryRatio ;
         pg:group <urn:openmixer:spring#spring>
     ] .
 

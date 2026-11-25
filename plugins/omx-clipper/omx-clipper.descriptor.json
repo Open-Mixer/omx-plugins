@@ -57,6 +57,7 @@
       "group": [
         "Clipper"
       ],
+      "meaning": "ceiling",
       "automatable": true,
       "source": {
         "from": {

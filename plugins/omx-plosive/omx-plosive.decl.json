@@ -6,6 +6,7 @@
     "plosive"
   ],
   "noun": "plosive tamer",
+  "category": "dynamics",
   "url": "https://github.com/FreeMixer/omx-plugins",
   "binding": "instance",
   "resourceHints": {
@@ -14,8 +15,14 @@
     "opens-sockets": false
   },
   "panel": {
-    "family": "none",
-    "roles": {},
+    "family": "deesser",
+    "roles": {
+      "frequency": "bandHz",
+      "threshold": "sensitivityDb",
+      "range": "consonantDb",
+      "width": "bandWidthOct",
+      "release": "recoveryMs"
+    },
     "sections": [
       {
         "key": "plosive",
@@ -35,7 +42,7 @@
     ]
   },
   "console": {
-    "$comment": "The OpenMixer console has no plosive stage. Racked as a plugin in a channel's insert rack, it is drawn by the generic plugin editor.",
+    "$comment": "The OpenMixer console has no plosive stage. Racked as a plugin in a channel's insert rack, it is drawn by the console's de-esser view, through its panel family's roles.",
     "placement": {
       "group": "plugins"
     }

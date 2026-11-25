@@ -79,7 +79,7 @@ const { got, want } = designations(lv2Designation);
 check('every described control whose meaning the LV2 table maps is designated by it, and no other', got, want);
 const byTerm = {};
 for (const g of got) byTerm[g.split(' ')[1]] = (byTerm[g.split(' ')[1]] ?? 0) + 1;
-check('the designations of this release, by term', Object.fromEntries(Object.entries(byTerm).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))), { 'param:gain': 93, 'param:frequency': 63, 'param:wetDryRatio': 12, 'param:release': 6, 'param:attack': 5, 'param:ratio': 5, 'param:threshold': 5, 'param:cutoffFrequency': 1, 'param:delay': 1, 'param:hold': 1, 'param:resonance': 1 });
+check('the designations of this release, by term', Object.fromEntries(Object.entries(byTerm).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]))), { 'param:gain': 93, 'param:frequency': 64, 'param:wetDryRatio': 14, 'param:release': 9, 'param:threshold': 8, 'param:attack': 7, 'param:ratio': 7, 'param:cutoffFrequency': 1, 'param:decay': 1, 'param:delay': 1, 'param:hold': 1, 'param:resonance': 1 });
 
 // 3. the ratio unit
 const ratios = [];

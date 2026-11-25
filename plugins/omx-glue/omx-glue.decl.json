@@ -6,6 +6,7 @@
     "glue"
   ],
   "noun": "bus compressor",
+  "category": "dynamics",
   "url": "https://github.com/FreeMixer/omx-plugins",
   "binding": "instance",
   "resourceHints": {
@@ -14,8 +15,15 @@
     "opens-sockets": false
   },
   "panel": {
-    "family": "none",
-    "roles": {},
+    "family": "dynamics",
+    "roles": {
+      "threshold": "thresholdDb",
+      "ratio": "ratio",
+      "attack": "attack",
+      "release": "release",
+      "makeup": "makeupDb",
+      "mix": "mixPct"
+    },
     "sections": [
       {
         "key": "glue",
@@ -34,7 +42,7 @@
     ]
   },
   "console": {
-    "$comment": "The OpenMixer console has no bus compressor stage. Racked as a plugin in a channel's insert rack, it is drawn by the generic plugin editor.",
+    "$comment": "The OpenMixer console has no bus compressor stage. Racked as a plugin in a channel's insert rack, it is drawn by the console's compressor view, through its panel family's roles.",
     "placement": {
       "strips": [
         "aux",

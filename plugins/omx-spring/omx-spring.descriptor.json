@@ -33,6 +33,7 @@
       "group": [
         "Spring"
       ],
+      "meaning": "decay",
       "automatable": true,
       "source": {
         "from": {
@@ -105,6 +106,7 @@
       "group": [
         "Spring"
       ],
+      "meaning": "damping",
       "automatable": true,
       "source": {
         "from": {
@@ -129,6 +131,7 @@
       "group": [
         "Spring"
       ],
+      "meaning": "wetDryRatio",
       "automatable": true,
       "source": {
         "from": {

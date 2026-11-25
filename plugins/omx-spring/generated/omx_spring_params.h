@@ -96,8 +96,10 @@ static const omx_resource_hints_t OMX_SPRING_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family none. */
-#define OMX_SPRING_PANEL_FINGERPRINT "2dcde81668fd45187faf1989f0dddb6c655546f96683a4d63e22f3d0b0fe2fa3"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family reverb.
+ * Declared roles not published:
+ *   damping (dampHz): the damping role takes none, percent, x, not Hz */
+#define OMX_SPRING_PANEL_FINGERPRINT "189f3eba87d49c5aa82c3e514f0250cbba132b1f824c2610daa24f99f35fc751"
 static const struct omx_panel_section_row OMX_SPRING_PANEL_SECTIONS[] = {
   { "spring", "fx.spring.section.spring", "Spring" },
 };
@@ -108,18 +110,22 @@ static const struct omx_panel_control_row OMX_SPRING_PANEL_CONTROLS[] = {
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.spring.damp_hz", "Damping", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 4u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.spring.mix_pct", "Mix", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
+static const struct omx_panel_role_row OMX_SPRING_PANEL_ROLES[] = {
+  { "decay", 0u, 0u },
+  { "mix", 0u, 4u },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_SPRING_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Spring", "Spring", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 4u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Spring", "Spring", { 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_SPRING_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_SPRING_PANEL = {
-  OMX_SPRING_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
+  OMX_SPRING_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_REVERB,
   OMX_SPRING_PANEL_SECTIONS, 1u,
   OMX_SPRING_PANEL_CONTROLS, 5u,
-  NULL, 0u,
+  OMX_SPRING_PANEL_ROLES, 2u,
   NULL, 0u,
   NULL, 0u,
 };
