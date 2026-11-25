@@ -134,6 +134,15 @@ the two legs' levels must differ somewhere, so must the input and output levels,
 write nothing before its first block. A wrong sign, swapped legs, an output level read at the
 input, or a value one block stale is red.
 
+A panel display reads a meter by its `clap.meters/1` id (omx-clap-core's `omx_clap_ext.h`: a display's
+`meter_ids` are the ids it reads; the LV2 face serves the same meter as the output port of its symbol). `tools/panel-check.mjs`, on each built face, holds the forward
+direction: every meter id a served display reads names a meter the face serves, `tools/panel-probe.c` printing
+the CLAP face's `clap.meters/1` list beside the panel tables. A display indexing past what the face serves is
+what a console reads as a meter that never moves (#65). `tools/test/meter-binding-check.mjs` holds the other
+direction over the declarations: every meter a plugin exports is drawn by a display, or listed unbound with its
+reason. `make probe-checks` proves the forward check red on a face that lost the meter, or serves it under
+another name.
+
 `make meter-ring` (`tools/meter-ring-check.sh`) holds the ring itself: an audio thread publishing
 every 3 µs, then with no pause, against readers that outnumber the cores two to one, so they are
 preempted mid-copy and lapped. Every value of a publication is its own number, so a read that

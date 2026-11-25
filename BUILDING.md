@@ -115,8 +115,9 @@ Makefiles and CI to it, so a step cannot fall out of both. Together they run, in
 8. **panel description** (`tools/panel-probe.c`, `tools/panel-check.mjs`): each built face is opened
    as a host opens it (the `.clap` through `clap_entry`, the LV2 bundle through lilv) and its
    `org.openmixer.panel-description/1` read back: the family, the sections, every listed parameter as
-   a control in its section and order, the roles and displays equal the declaration's panel, and the
-   fingerprint is the SHA-256 of what it serves.
+   a control in its section and order, the roles and displays equal the declaration's panel, the
+   fingerprint is the SHA-256 of what it serves, and every meter a display reads is one the face
+   serves (a `clap.meters/1` meter of that id on CLAP, the meter's output port on LV2).
 8. **CLAP extensions** (`tools/clap-ext-probe.c`, `tools/clap-ext-check.mjs`): the CLAP face's
    `org.openmixer.param-contract/1` (each parameter's symbol, unit, scale and step, version 1, the
    fingerprint of what it serves), its `clap.remote-controls` pages (each section's controls, eight
