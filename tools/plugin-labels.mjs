@@ -14,8 +14,8 @@
  * One item per shipped plugin, OMX_PLUGIN_LABELS_<STEM> (omx-keyed-gate: OMX_PLUGIN_LABELS_KEYED_GATE), so a plugin
  * added, or a preset added to one, moves no other plugin's codes (a word's x-code is its place in its item). A word is
  * `section.<section key>`, `choice.<parameter symbol>.<value>` or `preset.<preset id>`: stable while the text it carries
- * is reworded. The domain's version is the tree's release version (the Makefile's VERSION), and an item's `x-since` the
- * version that first carried it, read from the committed document.
+ * is reworded. The domain's version is its vocabulary's own, never the package's: the committed document's, 0.1.0 at first; an
+ * item's `x-since` is the domain version that first carried it, read from the committed document.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';

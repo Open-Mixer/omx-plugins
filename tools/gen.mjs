@@ -1650,9 +1650,11 @@ export function generateShared(root = ROOT, decls = pluginDirs(root).map((p) => 
 }
 
 /** The labels domain's text (tools/plugin-labels.mjs) for the shipped declarations among `decls`, in plugin order. */
+/** The labels domain's first version: a domain's version is its vocabulary's own (0.1.0, rising only when its words change), never the package's. */
+const LABELS_DOMAIN_FIRST_VERSION = '0.1.0';
 export function labelsDocText(root = ROOT, decls = pluginDirs(root).map((p) => loadDecl(p))) {
   const ds = decls.filter(ships).sort(byStem);
-  return labelsText(labelsDomain(ds, { presetsOf: (d) => presetsOf(d.clap.id, root), choicesOf, version: releaseVersion(root), committed: committedLabels(root) }));
+  return labelsText(labelsDomain(ds, { presetsOf: (d) => presetsOf(d.clap.id, root), choicesOf, version: committedLabels(root)?.info?.version ?? LABELS_DOMAIN_FIRST_VERSION, committed: committedLabels(root) }));
 }
 
 /** A declaration's pinned port hints (its `portHints`, tools/port-hints.mjs) in the view's shape,
