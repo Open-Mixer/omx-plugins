@@ -15,6 +15,7 @@
       "descriptor-view",
       "descriptor-features",
       "placement-strips",
+      "plugin-category",
       "lv2-units",
       "lv2-deprecated",
       "lv2-maintainer",
