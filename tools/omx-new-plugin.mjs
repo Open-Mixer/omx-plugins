@@ -161,6 +161,7 @@ export function draftDeclaration(kernel, src, { root = ROOT, recipe = loadRecipe
   const schema = loadSchema(root, recipe);
   const decl = {
     stem, kernel, kernels: [kernel],
+    category: `${REVIEW}: the row a console groups it under (the schema's $defs.category)`,
     description: `${REVIEW}: one plain sentence a host shows, what the effect does for you`,
     clap: { features: ['audio-effect', `${REVIEW}: the CLAP kind (delay, distortion, modulation, ...)`, 'stereo'] },
     lv2: { class: `${REVIEW}: the LV2 class (lv2:DelayPlugin, lv2:ModulatorPlugin, ...)` },
@@ -351,6 +352,7 @@ export function draftChain(kernels, chainSrc, { root = ROOT, recipe = loadRecipe
   const schema = loadSchema(root, recipe);
   const decl = {
     stem, kernel: short.replace(/-/g, '_'),
+    category: `${REVIEW}: the row a console groups it under (the schema's $defs.category)`,
     description: `${REVIEW}: one plain sentence a host shows, what the effect does for you`,
     clap: { features: ['audio-effect', `${REVIEW}: the CLAP kind (mixing, dynamics, ...)`, 'stereo'] },
     lv2: { class: `${REVIEW}: the LV2 class (lv2:MixerPlugin, lv2:DynamicsPlugin, ...)` },

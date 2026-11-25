@@ -249,13 +249,8 @@
           },
           "additionalProperties": {
             "oneOf": [
-              {
-                "type": "boolean"
-              },
-              {
-                "type": "integer",
-                "minimum": 0
-              }
+              { "type": "boolean" },
+              { "type": "integer", "minimum": 0 }
             ]
           }
         },
@@ -307,13 +302,8 @@
           "minProperties": 1,
           "title": "Sabotage step",
           "description": "The step the identity test's sabotage arm moves a parameter by, by parameter symbol, in the parameter's unit, where its default share of the travel is too small for the kernel to show it: a threshold that a kernel measuring in blocks decides on only when it is moved across a block's level.",
-          "propertyNames": {
-            "pattern": "^[A-Za-z][A-Za-z0-9_]*$"
-          },
-          "additionalProperties": {
-            "type": "number",
-            "exclusiveMinimum": 0
-          }
+          "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+          "additionalProperties": { "type": "number", "exclusiveMinimum": 0 }
         },
         "liveStretch": {
           "type": "integer",
@@ -1532,7 +1522,7 @@
         "utility"
       ],
       "title": "Category",
-      "description": "The one row a console groups the plugin under when it offers it on a strip, put away: dynamics, eq (EQ and tone), modulation, time (delays and reverbs), pitch, drive, utility. A closed set, ruled by the owner on 2026-11-25; a console reads it from the declaration and holds no list of its own. A test plugin declares none and is never offered."
+      "description": "The one row a console groups the plugin under when it offers it on a strip, put away: dynamics, eq (EQ and tone), modulation, time (delays and reverbs), pitch, drive, utility. A closed set; a console reads it from the declaration and holds no list of its own. A test plugin declares none and is never offered."
     }
   }
 }

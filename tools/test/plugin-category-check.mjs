@@ -5,7 +5,7 @@
  * plugin-category-check.mjs — every shipped plugin declares what a console needs to offer it and draw it: its one
  * `category` (the row a console's folded strip line groups it under, schema/plugin.decl.schema.json `$defs.category`)
  * and a panel `family` other than `none` (the house view a console draws instead of its generic editor). A test
- * plugin (omx-test-*) declares neither: it is never offered. The categories were ruled by the owner on 2026-11-25.
+ * plugin (omx-test-*) declares neither: it is never offered.
  * `make plugin-category`, part of `make test`.
  *
  * NO_FAMILY names the plugins no design gives a family and whose parameters play no family's roles: each
