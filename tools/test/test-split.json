@@ -50,7 +50,7 @@
       "core-init-answers",
       "selftest-shards",
       "meter-words",
-      "artifact-retention", "test-no-host-nproc", "debt-base",
+      "artifact-retention", "test-no-host-nproc", "release-same-pass", "debt-base",
       "test-split"
     ],
     "steps": [
