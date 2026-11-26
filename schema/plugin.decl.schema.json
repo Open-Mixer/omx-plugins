@@ -17,7 +17,8 @@
         "clap",
         "lv2",
         "panel",
-        "console"
+        "console",
+        "category"
       ],
       "additionalProperties": false,
       "properties": {
@@ -62,13 +63,16 @@
           "title": "Noun",
           "description": "How the packages' descriptions and the changelog name the effect in prose (\"8-band EQ\", \"channel strip\"). Defaults to the short name."
         },
+        "category": {
+          "$ref": "#/$defs/category"
+        },
         "vendor": {
           "const": "openmixer",
           "title": "Vendor",
           "description": "The vendor every plugin publishes."
         },
         "url": {
-          "const": "https://github.com/FreeMixer/omx-plugins",
+          "const": "https://github.com/Open-Mixer/omx-plugins",
           "title": "URL",
           "description": "The project's home."
         },
@@ -158,6 +162,15 @@
           },
           "title": "Parameters",
           "description": "The parameters, in order. Append-only once released: the order is the CLAP param id and the LV2 port order. A `binding: chain` declaration has none: its list is generated from `chain`."
+        },
+        "units": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ownUnit"
+          },
+          "title": "Units",
+          "description": "The plugin's own units: a unit no PARAM_UNITS word of omx-contract's param domain is, which a parameter of this plugin names in its `unit` (units are owned per producer, omx-contract#144). Each is a word shaped as PARAM_UNITS' words are, in order, `x-code` its place. A parameter's unit is a PARAM_UNITS id or one of these; an own id or x-symbol that is PARAM_UNITS' is refused (one name, one home), and so is an own unit no parameter names. The faces carry it as a standard unit: the C table and the CLAP face's value_to_text show its x-symbol, the LV2 port's units:unit is <lv2 uri>#unit.<id>, defined in the plugin's TTL, the descriptor and the panel description state its id, and the parameter contract states none (omx-clap's codes are standard units'). A unit moves to a shared domain only when a second producer needs it. Left out, every unit is a PARAM_UNITS id."
         },
         "chain": {
           "type": "array",
@@ -467,6 +480,32 @@
         }
       ]
     },
+    "ownUnit": {
+      "title": "An own unit",
+      "description": "One of the plugin's own units: a word of omx-contract's domain schema ($defs.word, the shape of a PARAM_UNITS word), `const` its id (the word a descriptor, a TTL and the panel description state), `title` its key, `description` what it measures (the TTL's rdfs:label), `x-code` its place in the block, `x-symbol` its display spelling (what the C table and value_to_text show, the TTL's units:symbol), and, as a PARAM_UNITS word has them, `x-dimension` a PARAM_UNIT_DIMENSIONS word and `x-group` a PARAM_UNIT_SCOPES word.",
+      "allOf": [
+        {
+          "$ref": "domain.schema.json#/$defs/word"
+        },
+        {
+          "required": [
+            "description",
+            "x-symbol"
+          ],
+          "properties": {
+            "const": {
+              "pattern": "^[A-Za-z][A-Za-z0-9]*$"
+            },
+            "description": {
+              "minLength": 1
+            },
+            "x-symbol": {
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
     "param": {
       "type": "object",
       "required": [
@@ -539,6 +578,12 @@
           "title": "Default reference",
           "description": "Where a fresh plugin comes up when the export names no default of its own: for a list, the scalar export naming the value; for a travel, a number inside a sheet (NAME.field, as EQ_BAND_DEFAULTS.gainDb)."
         },
+        "meaning": {
+          "type": "string",
+          "pattern": "^[a-z][A-Za-z]*$",
+          "title": "Meaning",
+          "description": "The control's ROLE, a word of omx-contract's PARAM_MEANINGS (the installed schema's $defs.meaning; docs/descriptors.md \"Meanings\": declare, don't infer), never unknown: the descriptor's `meaning`. A parameter a panel role binds states none, its meaning is its role's (contract/role-meanings.json); tools/descriptor.mjs refuses a control with no meaning and a word the schema does not list."
+        },
         "scale": {
           "enum": [
             "linear",
@@ -589,8 +634,11 @@
         "def": {
           "type": "number"
         },
+        "response": { "type": "string", "minLength": 1, "description": "The response of the filter the control sets, where it is fixed: a word of omx-contract's PARAM_FILTER_RESPONSES (the installed schema's $defs.filterResponse, which tools/descriptor.mjs holds it to). A band whose shape a type choice picks states none." },
         "unit": {
-          "type": "string"
+          "type": "string",
+          "title": "Unit",
+          "description": "The travel's unit by id: a PARAM_UNITS id of omx-contract's param domain (`dB`, `percent`, `none`), or one of the plugin's own `units`. Never a display spelling (`%`): that is the id's x-symbol."
         },
         "kind": {
           "enum": [
@@ -711,6 +759,10 @@
         "graph": {
           "$ref": "#/$defs/graph"
         },
+        "basis": {
+          "$ref": "panel.schema.json#/$defs/basis",
+          "description": "The basis of the section's `graph`: `exact` when the plugin's own audio runs the closed form the curve draws, which tools/test/curve-proof.mjs measures for every display marked so (and refuses a measured one left out), else `modelled`, the default. The word and its values are omx-panel's (schema/panel.schema.json), the one place they are written."
+        },
         "subgroups": {
           "enum": [
             "band"
@@ -769,7 +821,7 @@
           }
         },
         "visibleWhen": {
-          "$ref": "https://openmixer.org/schema/omx-panel/panel.schema.json#/$defs/visibleWhen",
+          "$ref": "panel.schema.json#/$defs/visibleWhen",
           "description": "Each control shown only while another control holds certain values, by symbol: `{ param, values }`, or for a count `{ param, atLeast: n }` (a band's controls follow a band count). The rule is omx-panel's (schema/panel.schema.json), which carries it into the description's visible and mask."
         },
         "widgets": {
@@ -958,17 +1010,19 @@
             "range",
             "drive",
             "ceiling",
-            "softness"
+            "softness",
+            "speed",
+            "slope"
           ]
         }
       }
     },
     "indexedRole": {
-      "$ref": "https://openmixer.org/schema/omx-panel/panel.schema.json#/$defs/indexedRole",
+      "$ref": "panel.schema.json#/$defs/indexedRole",
       "description": "The roles that repeat by index, one parameter per band: the only roles that may name a list of symbols. The list is omx-panel's (schema/panel.schema.json), the one place it is written."
     },
     "widget": {
-      "$ref": "https://openmixer.org/schema/omx-panel/panel.schema.json#/$defs/widget",
+      "$ref": "panel.schema.json#/$defs/widget",
       "description": "The shared widgets a control is drawn with, by the names the console reads (its `auto` is a control left out of `widgets`). The list is omx-panel's (schema/panel.schema.json), the one place it is written, and every renderer reads it."
     },
     "graph": {
@@ -1506,6 +1560,19 @@
           }
         }
       }
+    },
+    "category": {
+      "enum": [
+        "dynamics",
+        "eq",
+        "modulation",
+        "time",
+        "pitch",
+        "drive",
+        "utility"
+      ],
+      "title": "Category",
+      "description": "The one row a console groups the plugin under when it offers it on a strip, put away: dynamics, eq (EQ and tone), modulation, time (delays and reverbs), pitch, drive, utility. A closed set; a console reads it from the declaration and holds no list of its own. A test plugin declares none and is never offered."
     }
   }
 }

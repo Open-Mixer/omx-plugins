@@ -3,6 +3,7 @@
 /*
  * preset-lib.mjs — what a preset file is checked against: each shipped plugin's parameters as its
  * generated header declares them (symbol, unit, travel, integer steps) and the labels of its choices,
+ * the unit as the PARAM_UNITS id a preset states (the header's text is the id's x-symbol, value_to_text's; C2),
  * read from the generated LV2 description, and plugin-hostd's preset schema. Shared by tools/gen-presets.mjs (which writes the files)
  * and tools/test/presets-check.mjs (which holds them to the travels).
  */
@@ -10,6 +11,8 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { standardUnitSymbols } from './format-tables.mjs';
+import { rawDeclOf } from './variants.mjs';
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const FORMAT = 'org.openmixer.preset/1';
@@ -24,17 +27,24 @@ export function plugins(root = ROOT) {
     const header = readdirSync(gen).find((f) => f.endsWith('_params.h'));
     if (!header) continue;
     const text = readFileSync(join(gen, header), 'utf8');
-    out.push({ stem, id: `org.openmixer.${stem.replace(/^omx-/, '')}`, uri: text.match(/_LV2_URI "([^"]+)"/)?.[1], params: paramsOf(text, header), labels: labelsOf(join(gen, `${stem}.lv2`, `${stem}.ttl`)) });
+    out.push({ stem, id: `org.openmixer.${stem.replace(/^omx-/, '')}`, uri: text.match(/_LV2_URI "([^"]+)"/)?.[1], params: paramsOf(text, header, rawDeclOf(join(root, 'plugins', stem)).units), labels: labelsOf(join(gen, `${stem}.lv2`, `${stem}.ttl`)) });
   }
   return out;
 }
 
-/** The rows of the OMX_<X>_PARAMS table: `{ symbol, name, unit, min, max, def, integer, toggle }`. */
-function paramsOf(text, file) {
+/** The unit id whose x-symbol a header's unit text is: a PARAM_UNITS id (`%` -> percent, `` -> none), or one of the
+ * plugin's own units (`units`, its declaration's block), else the text as written. The symbols are distinct (an own
+ * x-symbol that is a PARAM_UNITS one is refused, tools/format-tables.mjs ownUnitRefusals), so the text names one id. */
+let idBySymbol;
+export const unitIdOfText = (text, units = []) =>
+  (idBySymbol ??= new Map(Object.entries(standardUnitSymbols()).map(([id, symbol]) => [symbol, id]))).get(text) ?? units.find((u) => u['x-symbol'] === text)?.const ?? text;
+
+/** The rows of the OMX_<X>_PARAMS table: `{ symbol, name, unit, min, max, def, integer, toggle }`, the unit its id. */
+function paramsOf(text, file, units) {
   const table = text.match(/OMX_\w+_PARAMS\[[^\]]*\]\s*=\s*\{([\s\S]*?)\n\};/);
   if (!table) throw new Error(`${file}: no parameter table`);
   const rows = [...table[1].matchAll(/\{\s*"([^"]+)",\s*"([^"]*)",\s*"([^"]*)",\s*(-?[\d.]+)f,\s*(-?[\d.]+)f,\s*(-?[\d.]+)f,\s*([^}]+?)\s*\}/g)];
-  return rows.map((m) => ({ symbol: m[1], name: m[2], unit: m[3], min: Number(m[4]), max: Number(m[5]), def: Number(m[6]), integer: /INTEGER|TOGGLE/.test(m[7]), toggle: /TOGGLE/.test(m[7]) }));
+  return rows.map((m) => ({ symbol: m[1], name: m[2], unit: unitIdOfText(m[3], units), min: Number(m[4]), max: Number(m[5]), def: Number(m[6]), integer: /INTEGER|TOGGLE/.test(m[7]), toggle: /TOGGLE/.test(m[7]) }));
 }
 
 /** symbol -> labels by value, from the LV2 description's scale points. */

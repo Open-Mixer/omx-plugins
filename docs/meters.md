@@ -15,7 +15,7 @@ the host's idle rate through `get_values()`.
 The LV2 face writes the same values to output control ports, one per channel, after the `latency` port: each
 port's symbol is the one omx-clap derives from the CLAP meter's name (the meter's `id` for one channel,
 `<id>_<channel>` from 0 for more), its range the meter's display range. So a host reads `band2Gr` by the same
-symbol from either face. The plugin's descriptor lists the meters (omx-contract's `meters` word, schema 3.9.0):
+symbol from either face. The plugin's descriptor lists the meters (omx-contract's `meters` word, schema 3.9.0, with its `held`, `clip` and `measurement` words, 3.11.0):
 the id, the symbol, the kind, the channels, the range, and the kernel readout each publishes, linked as
 `data/kernels/<kernel>.json#readouts[<name>]`. A console learns from the descriptor which readouts a linked
 plugin carries. A meter is never also a read-only parameter: CLAP has a word for meters, and omx-clap
@@ -78,8 +78,25 @@ does not expose yet (FX-14, #148), so today it would read 0 for ever.
 
 - **A gain reduction is the kernel's.** A gain reduction is dB with CLAP's sign: 0 none, negative a
   reduction, the deepest gain the kernel applied inside the block (omx-dsp's `gr_min_db`, what
-  the console's own stage publishes). The console holds and releases it for display, as it does
-  for its own stages; the plugin does not.
+  the console's own stage publishes). The plugin holds it until the host reads it: the value a read
+  gives is the deepest since the last read. The reader recovers it for display, as the console does
+  for its own stages.
+- **A plugin holds until read.** Every meter keeps the block value until the host reads it: a level's
+  largest, a gain reduction's deepest since the last read. The audio thread does this with one
+  compare per value per block, beside the value, in the same copy of the ring, so a 10 ms burst
+  between two reads is in the next read whatever the blocks after it were. A read takes the meter it
+  reads, and one reader per instance does it; the host reads at its own tick (50 Hz, spec 7.9) and
+  any thread but the audio role may. A block that lands between a reader's copy and its note of what
+  it took is held once more, never dropped. A meter whose declaration says `held: false` gives the
+  block's own value.
+- **The clip word.** A level the face measures (at the inputs or the outputs) carries, on the same
+  publication, the longest run of consecutive samples over full scale since the last read, per
+  channel, unless its declaration says `clip: false`. It says digital over-full-scale, nothing of
+  the analog stage. The meter flags `OMX_CLAP_METER_HAS_CLIP` (bit 9, omx-clap's
+  `<omx-clap-host/clap_host.h>`) and, written as the host reads them, `get_values()` gives one more value after
+  the channels when the host leaves room for it: 1 if a run of any channel ran since the last read,
+  0 otherwise. A held meter also carries `OMX_CLAP_METER_IS_HELD` (bit 8). The LV2 face writes the
+  block's values to its ports on each run and has no reader to hold for.
 - **Per block, and coherent.** After each `process()` the audio thread publishes the values of
   every meter at once, through `include/omx_meter_ring.h`, and every meter carries
   `CLAP_METER_IS_COHERENT`: one `get_values()` never mixes two blocks, so a host may derive a
@@ -96,7 +113,8 @@ does not expose yet (FX-14, #148), so today it would read 0 for ever.
   is stale; the face reports 0, as the console's disabled stage does. A level is measured on the
   buffers whatever the bypass, so a bypassed plugin's output level is its input's.
 - **Nothing before the first block.** After activation, until a block is processed,
-  `get_values()` writes nothing and returns 0.
+  `get_values()` writes nothing and returns 0. Deactivating ends every hold: nothing measured
+  before it is read after the next activation.
 - `channel_count` is 1 for a gain reduction and a level the kernel reads, 2 for a level the face
   measures, and every meter is coherent.
 
@@ -116,13 +134,39 @@ the two legs' levels must differ somewhere, so must the input and output levels,
 write nothing before its first block. A wrong sign, swapped legs, an output level read at the
 input, or a value one block stale is red.
 
+A panel display reads a meter by its `clap.meters/1` id (omx-clap-core's `omx_clap_ext.h`: a display's
+`meter_ids` are the ids it reads; the LV2 face serves the same meter as the output port of its symbol). `tools/panel-check.mjs`, on each built face, holds the forward
+direction: every meter id a served display reads names a meter the face serves, `tools/panel-probe.c` printing
+the CLAP face's `clap.meters/1` list beside the panel tables. A display indexing past what the face serves is
+what a console reads as a meter that never moves (#65). `tools/test/meter-binding-check.mjs` holds the other
+direction over the declarations: every meter a plugin exports is drawn by a display, or listed unbound with its
+reason. `make probe-checks` proves the forward check red on a face that lost the meter, or serves it under
+another name.
+
 `make meter-ring` (`tools/meter-ring-check.sh`) holds the ring itself: an audio thread publishing
 every 3 µs, then with no pause, against readers that outnumber the cores two to one, so they are
 preempted mid-copy and lapped. Every value of a publication is its own number, so a read that
 mixes two blocks shows two numbers, and a read older than the same reader's last shows a smaller
 one; either fails the run. Its self-test breaks the header three ways, each of which must go red:
 two copies instead of three, no second load of the word, and the word stored before the copy is
-filled.
+filled. The held accumulator has its own proof there: a burst held until the take and gone at the
+one after, a gain reduction's deepest, a clip word's longest run, a take that is not yet noted,
+one meter taken at a time, and a clear that ends every hold; then one taker beside plain readers
+that outnumber the cores, every burst between two takes in the later one. It is built under
+UndefinedBehaviorSanitizer. Its arms (no hold, no restart, no deepest, no clip hold, no count, no
+clear, a 32-bit hold mask) each go red.
+
+`make meter-held` (`tools/meter-held-check.sh`) holds the same through a built face, omx-comp, at
+each of omx-dsp's nine ORACLE_FULL_RATES and each quantum from 32 to 1024 frames: 20 ms of silence,
+a 10 ms burst of 1.2 on both legs, 100 ms of silence, one read, 100 ms more, one read. A reference
+instance read after every block gives each block's own values, and the held reads must be their
+largest level and deepest gain reduction since the read before, bit for bit: +1.58 dBFS and a clip
+word of 1 after the burst, the floor and 0 at the read after; a gain reduction that steps down with
+the burst and falls back after it without deepening again. A face read before its first block, or
+after a deactivation and a new activation, gives nothing. The same burst between two reads of
+omx-clap's `omx_clap_host_meter_values`, the host's own call, reaches the later read
+(`tools/test/meter-held-host.c`). Its self-test breaks the ring once per kind (no hold, no restart,
+no deepest for the gain reduction, no clip hold for the clip word), each red.
 
 The readouts' values are held by hand-written oracles on both faces, at the nine oracle rates, against the audio
 they describe (`tools/test/face-driver.h` drives a built face and reads a meter by its symbol):

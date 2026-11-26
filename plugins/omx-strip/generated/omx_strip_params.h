@@ -1199,15 +1199,15 @@ static inline uint32_t omx_strip_eq_band_count(const float *values) {
 /* The identity every face publishes. */
 #define OMX_STRIP_NAME "omx strip"
 #define OMX_STRIP_VENDOR "openmixer"
-#define OMX_STRIP_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_STRIP_VERSION "0.20.0"
+#define OMX_STRIP_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_STRIP_VERSION "0.21.0"
 #define OMX_STRIP_DESCRIPTION "The OpenMixer console's channel strip in one plugin: input trim, high- and low-pass filters, gate, a parametric EQ of as many bands as its Bands control says, and compressor, in the console's order or any other. No DSP of its own: each stage is omx-dsp's instance face of the console's kernel, called in order."
 #define OMX_STRIP_CLAP_ID "org.openmixer.strip"
 #define OMX_STRIP_CLAP_FEATURES "audio-effect", "mixing", "stereo"
 #define OMX_STRIP_LV2_URI "urn:openmixer:strip"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_STRIP_DECL_SOURCE "omx strip: Input 0 to 1, Trim -24 to 24 dB, Filters 0 to 1, HPF 0 to 1, HPF Freq 20 to 1000 Hz, HPF Slope 12 to 24 dB/oct, LPF 0 to 1, LPF Freq 1000 to 20000 Hz, LPF Slope 12 to 24 dB/oct, Gate 0 to 1, Gate Threshold -80 to 0 dB, Gate Ratio 1 to 100, Gate Range -90 to 0 dB, Gate Attack 0 to 500 ms, Gate Release 0 to 5000 ms, Gate Knee Start -80 to 0 dB, Gate Knee End -80 to 0 dB, Gate Hold 0 to 2000 ms, Gate Hysteresis 0 to 24 dB, EQ 0 to 1, EQ 1 Type 0 to 5, EQ 1 Freq 20 to 20000 Hz, EQ 1 Gain -15 to 15 dB, EQ 1 Q 0.3 to 116, EQ 1 0 to 1, EQ 2 Type 0 to 5, EQ 2 Freq 20 to 20000 Hz, EQ 2 Gain -15 to 15 dB, EQ 2 Q 0.3 to 116, EQ 2 0 to 1, EQ 3 Type 0 to 5, EQ 3 Freq 20 to 20000 Hz, EQ 3 Gain -15 to 15 dB, EQ 3 Q 0.3 to 116, EQ 3 0 to 1, EQ 4 Type 0 to 5, EQ 4 Freq 20 to 20000 Hz, EQ 4 Gain -15 to 15 dB, EQ 4 Q 0.3 to 116, EQ 4 0 to 1, Comp 0 to 1, Comp Threshold -60 to 0 dB, Comp Ratio 1 to 20, Comp Knee 0 to 24 dB, Comp Attack 0.1 to 100 ms, Comp Release 5 to 3000 ms, Comp Makeup 0 to 24 dB, Comp Kind 0 to 1, Comp Mix 0 to 100 %, Comp Detector Oversampling 0 to 2, Order 0 to 119, EQ Bands 1 to 32, EQ 5 Type 0 to 5, EQ 5 Freq 20 to 20000 Hz, EQ 5 Gain -15 to 15 dB, EQ 5 Q 0.3 to 116, EQ 5 0 to 1, EQ 6 Type 0 to 5, EQ 6 Freq 20 to 20000 Hz, EQ 6 Gain -15 to 15 dB, EQ 6 Q 0.3 to 116, EQ 6 0 to 1, EQ 7 Type 0 to 5, EQ 7 Freq 20 to 20000 Hz, EQ 7 Gain -15 to 15 dB, EQ 7 Q 0.3 to 116, EQ 7 0 to 1, EQ 8 Type 0 to 5, EQ 8 Freq 20 to 20000 Hz, EQ 8 Gain -15 to 15 dB, EQ 8 Q 0.3 to 116, EQ 8 0 to 1, EQ 9 Type 0 to 5, EQ 9 Freq 20 to 20000 Hz, EQ 9 Gain -15 to 15 dB, EQ 9 Q 0.3 to 116, EQ 9 0 to 1, EQ 10 Type 0 to 5, EQ 10 Freq 20 to 20000 Hz, EQ 10 Gain -15 to 15 dB, EQ 10 Q 0.3 to 116, EQ 10 0 to 1, EQ 11 Type 0 to 5, EQ 11 Freq 20 to 20000 Hz, EQ 11 Gain -15 to 15 dB, EQ 11 Q 0.3 to 116, EQ 11 0 to 1, EQ 12 Type 0 to 5, EQ 12 Freq 20 to 20000 Hz, EQ 12 Gain -15 to 15 dB, EQ 12 Q 0.3 to 116, EQ 12 0 to 1, EQ 13 Type 0 to 5, EQ 13 Freq 20 to 20000 Hz, EQ 13 Gain -15 to 15 dB, EQ 13 Q 0.3 to 116, EQ 13 0 to 1, EQ 14 Type 0 to 5, EQ 14 Freq 20 to 20000 Hz, EQ 14 Gain -15 to 15 dB, EQ 14 Q 0.3 to 116, EQ 14 0 to 1, EQ 15 Type 0 to 5, EQ 15 Freq 20 to 20000 Hz, EQ 15 Gain -15 to 15 dB, EQ 15 Q 0.3 to 116, EQ 15 0 to 1, EQ 16 Type 0 to 5, EQ 16 Freq 20 to 20000 Hz, EQ 16 Gain -15 to 15 dB, EQ 16 Q 0.3 to 116, EQ 16 0 to 1, EQ 17 Type 0 to 5, EQ 17 Freq 20 to 20000 Hz, EQ 17 Gain -15 to 15 dB, EQ 17 Q 0.3 to 116, EQ 17 0 to 1, EQ 18 Type 0 to 5, EQ 18 Freq 20 to 20000 Hz, EQ 18 Gain -15 to 15 dB, EQ 18 Q 0.3 to 116, EQ 18 0 to 1, EQ 19 Type 0 to 5, EQ 19 Freq 20 to 20000 Hz, EQ 19 Gain -15 to 15 dB, EQ 19 Q 0.3 to 116, EQ 19 0 to 1, EQ 20 Type 0 to 5, EQ 20 Freq 20 to 20000 Hz, EQ 20 Gain -15 to 15 dB, EQ 20 Q 0.3 to 116, EQ 20 0 to 1, EQ 21 Type 0 to 5, EQ 21 Freq 20 to 20000 Hz, EQ 21 Gain -15 to 15 dB, EQ 21 Q 0.3 to 116, EQ 21 0 to 1, EQ 22 Type 0 to 5, EQ 22 Freq 20 to 20000 Hz, EQ 22 Gain -15 to 15 dB, EQ 22 Q 0.3 to 116, EQ 22 0 to 1, EQ 23 Type 0 to 5, EQ 23 Freq 20 to 20000 Hz, EQ 23 Gain -15 to 15 dB, EQ 23 Q 0.3 to 116, EQ 23 0 to 1, EQ 24 Type 0 to 5, EQ 24 Freq 20 to 20000 Hz, EQ 24 Gain -15 to 15 dB, EQ 24 Q 0.3 to 116, EQ 24 0 to 1, EQ 25 Type 0 to 5, EQ 25 Freq 20 to 20000 Hz, EQ 25 Gain -15 to 15 dB, EQ 25 Q 0.3 to 116, EQ 25 0 to 1, EQ 26 Type 0 to 5, EQ 26 Freq 20 to 20000 Hz, EQ 26 Gain -15 to 15 dB, EQ 26 Q 0.3 to 116, EQ 26 0 to 1, EQ 27 Type 0 to 5, EQ 27 Freq 20 to 20000 Hz, EQ 27 Gain -15 to 15 dB, EQ 27 Q 0.3 to 116, EQ 27 0 to 1, EQ 28 Type 0 to 5, EQ 28 Freq 20 to 20000 Hz, EQ 28 Gain -15 to 15 dB, EQ 28 Q 0.3 to 116, EQ 28 0 to 1, EQ 29 Type 0 to 5, EQ 29 Freq 20 to 20000 Hz, EQ 29 Gain -15 to 15 dB, EQ 29 Q 0.3 to 116, EQ 29 0 to 1, EQ 30 Type 0 to 5, EQ 30 Freq 20 to 20000 Hz, EQ 30 Gain -15 to 15 dB, EQ 30 Q 0.3 to 116, EQ 30 0 to 1, EQ 31 Type 0 to 5, EQ 31 Freq 20 to 20000 Hz, EQ 31 Gain -15 to 15 dB, EQ 31 Q 0.3 to 116, EQ 31 0 to 1, EQ 32 Type 0 to 5, EQ 32 Freq 20 to 20000 Hz, EQ 32 Gain -15 to 15 dB, EQ 32 Q 0.3 to 116, EQ 32 0 to 1"
-#define OMX_STRIP_DECL_DIGEST "0a095ba0f9230b0cfff693d43aa9f3063e7246b70534e57fe369132708922244"
+#define OMX_STRIP_DECL_DIGEST "9b8186549c1de6c26b8a32927251e7d443a401534cccc47a6d11ae86be2e8145"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
@@ -1625,8 +1625,9 @@ static const struct omx_panel_control_row OMX_STRIP_PANEL_CONTROLS[] = {
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_STRIP_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Filters", "Filters", { 4u, 5u, 6u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 1u, 4u, 5u, 7u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Input", "Input", { 0u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Filters", "Filters", { 2u, 3u, 6u, 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Gate", "Gate: Gate - Gate Knee End", { 9u, 10u, 11u, 12u, 13u, 14u, 15u, 16u } },
   { "Gate", "Gate: Gate Hold - Gate Hysteresis", { 17u, 18u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "EQ", "EQ: EQ - EQ 1", { 19u, 51u, 20u, 21u, 22u, 23u, 24u, OMX_CLAP_PANEL_INVALID_ID } },
@@ -1665,7 +1666,7 @@ static const struct omx_panel_page_row OMX_STRIP_PANEL_PAGES[] = {
   { "Comp", "Comp: Comp Mix - Comp Detector Oversampling", { 48u, 49u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Order", "Order", { 50u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
-#define OMX_STRIP_PANEL_PAGE_COUNT 39u
+#define OMX_STRIP_PANEL_PAGE_COUNT 40u
 static const struct omx_panel_rows OMX_STRIP_PANEL = {
   OMX_STRIP_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
   OMX_STRIP_PANEL_SECTIONS, 6u,

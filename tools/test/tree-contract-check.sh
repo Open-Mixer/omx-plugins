@@ -18,14 +18,16 @@ realdata=$($real --variable=datadir omx-contract 2>/dev/null || true)
 [ -n "$realdata" ] && [ -f "$realdata/install-contract-dir.sh" ] || { echo "tree-contract: no omx-contract-devel installed" >&2; exit 2; }
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
-mkdir -p "$tmp/data" "$tmp/installed/3/omx-plugins" "$tmp/installed/3/other-owner"
+mkdir -p "$tmp/data" "$tmp/installed/omx-plugins" "$tmp/installed/other-owner"
 ln -s "$realdata/install-contract-dir.sh" "$tmp/data/install-contract-dir.sh"
+# the install script reads the format off the schema beside it
+ln -s "$realdata/omx-contract.schema.json" "$tmp/data/omx-contract.schema.json"
 # the installed render holds only the shared facts: no kernels, which is what asks for the union (a version inside the
 # packaging's range: the fake stands for the install, whichever release the host has)
 printf '{"version":"%s","kernels":{},"items":{}}\n' 3.99.0 > "$tmp/data/omx-contract.json"
 # the stale package: the old address form, as an older release installed it
-printf '{\n  "%s": "%s"\n}\n' "\$schema" 'https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json' > "$tmp/installed/3/omx-plugins/plugin-face.json"
-printf '{}\n' > "$tmp/installed/3/other-owner/x.json"
+printf '{\n  "%s": "%s"\n}\n' "\$schema" 'https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json' > "$tmp/installed/omx-plugins/plugin-face.json"
+printf '{}\n' > "$tmp/installed/other-owner/x.json"
 cat > "$tmp/pkg-config" <<EOF
 #!/bin/sh
 case "\$*" in
@@ -42,8 +44,8 @@ import { join } from 'node:path';
 const a = process.argv.slice(2);
 const at = (f) => a[a.indexOf(f) + 1];
 const dir = a.includes('--contract-dir') ? at('--contract-dir') : execFileSync(process.env.PKG_CONFIG, ['--variable=contractdir', 'omx-contract'], { encoding: 'utf8' }).trim();
-for (const major of readdirSync(dir)) for (const pkg of readdirSync(join(dir, major))) {
-  const f = join(dir, major, pkg, 'plugin-face.json');
+for (const pkg of readdirSync(dir)) {
+  const f = join(dir, pkg, 'plugin-face.json');
   if (!existsSync(f)) continue;
   const s = JSON.parse(readFileSync(f, 'utf8')).$schema;
   if (/FreeMixer/.test(s)) { console.error(`contract.schema.major ${pkg}/plugin-face.json: $schema "${s}" is not the installed form`); process.exit(1); }

@@ -14,19 +14,19 @@
     },
     {
       "symbol": "ratio",
-      "unit": "",
+      "unit": "none",
       "value": 1,
       "label": "4:1"
     },
     {
       "symbol": "attack",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "0.1 ms"
     },
     {
       "symbol": "release",
-      "unit": "",
+      "unit": "none",
       "value": 4,
       "label": "Auto"
     },
@@ -42,12 +42,12 @@
     },
     {
       "symbol": "mixPct",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {
       "symbol": "detectorTopology",
-      "unit": "",
+      "unit": "none",
       "value": 1,
       "label": "Feedback"
     }

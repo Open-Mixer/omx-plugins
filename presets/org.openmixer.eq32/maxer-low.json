@@ -9,7 +9,7 @@
   "params": [
     {
       "symbol": "hpf_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
@@ -19,13 +19,13 @@
     },
     {
       "symbol": "hpf_slope",
-      "unit": "dB/oct",
+      "unit": "dBPerOct",
       "value": 12,
       "label": "12 dB/oct"
     },
     {
       "symbol": "lpf_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
@@ -35,13 +35,13 @@
     },
     {
       "symbol": "lpf_slope",
-      "unit": "dB/oct",
+      "unit": "dBPerOct",
       "value": 12,
       "label": "12 dB/oct"
     },
     {
       "symbol": "b1_type",
-      "unit": "",
+      "unit": "none",
       "value": 1,
       "label": "Low Shelf"
     },
@@ -57,17 +57,17 @@
     },
     {
       "symbol": "b1_q",
-      "unit": "",
+      "unit": "none",
       "value": 0.7
     },
     {
       "symbol": "b1_on",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b2_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -83,17 +83,17 @@
     },
     {
       "symbol": "b2_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b2_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b3_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -109,17 +109,17 @@
     },
     {
       "symbol": "b3_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b3_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b4_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -135,17 +135,17 @@
     },
     {
       "symbol": "b4_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b4_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b5_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -161,17 +161,17 @@
     },
     {
       "symbol": "b5_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b5_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b6_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -187,17 +187,17 @@
     },
     {
       "symbol": "b6_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b6_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b7_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -213,17 +213,17 @@
     },
     {
       "symbol": "b7_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b7_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b8_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -239,17 +239,17 @@
     },
     {
       "symbol": "b8_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b8_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b9_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -265,17 +265,17 @@
     },
     {
       "symbol": "b9_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b9_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b10_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -291,17 +291,17 @@
     },
     {
       "symbol": "b10_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b10_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b11_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -317,17 +317,17 @@
     },
     {
       "symbol": "b11_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b11_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b12_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -343,17 +343,17 @@
     },
     {
       "symbol": "b12_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b12_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b13_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -369,17 +369,17 @@
     },
     {
       "symbol": "b13_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b13_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b14_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -395,17 +395,17 @@
     },
     {
       "symbol": "b14_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b14_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b15_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -421,17 +421,17 @@
     },
     {
       "symbol": "b15_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b15_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b16_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -447,17 +447,17 @@
     },
     {
       "symbol": "b16_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b16_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b17_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -473,17 +473,17 @@
     },
     {
       "symbol": "b17_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b17_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b18_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -499,17 +499,17 @@
     },
     {
       "symbol": "b18_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b18_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b19_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -525,17 +525,17 @@
     },
     {
       "symbol": "b19_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b19_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b20_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -551,17 +551,17 @@
     },
     {
       "symbol": "b20_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b20_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b21_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -577,17 +577,17 @@
     },
     {
       "symbol": "b21_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b21_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b22_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -603,17 +603,17 @@
     },
     {
       "symbol": "b22_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b22_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b23_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -629,17 +629,17 @@
     },
     {
       "symbol": "b23_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b23_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b24_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -655,17 +655,17 @@
     },
     {
       "symbol": "b24_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b24_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b25_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -681,17 +681,17 @@
     },
     {
       "symbol": "b25_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b25_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b26_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -707,17 +707,17 @@
     },
     {
       "symbol": "b26_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b26_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b27_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -733,17 +733,17 @@
     },
     {
       "symbol": "b27_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b27_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b28_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -759,17 +759,17 @@
     },
     {
       "symbol": "b28_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b28_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b29_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -785,17 +785,17 @@
     },
     {
       "symbol": "b29_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b29_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b30_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -811,17 +811,17 @@
     },
     {
       "symbol": "b30_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b30_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b31_type",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -837,17 +837,17 @@
     },
     {
       "symbol": "b31_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b31_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "b32_type",
-      "unit": "",
+      "unit": "none",
       "value": 2,
       "label": "High Shelf"
     },
@@ -863,12 +863,12 @@
     },
     {
       "symbol": "b32_q",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "b32_on",
-      "unit": "",
+      "unit": "none",
       "value": 0
     }
   ],

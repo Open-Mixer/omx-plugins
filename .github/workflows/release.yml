@@ -4,7 +4,7 @@ name: release
 
 # A version tag builds omx-plugins-clap and omx-plugins-lv2 as RPMs (Fedora 45, x86_64) and
 # DEBs (bookworm and trixie, amd64 and arm64), signs them, publishes them into the rpm/ and deb/ trees of
-# the FreeMixer Pages repository and attaches them to the GitHub release, with the trixie arm64 DEBs
+# the OpenMixer Pages repository and attaches them to the GitHub release, with the trixie arm64 DEBs
 # repacked as a Zynthian tarball beside them. Anything else builds unsigned trees and publishes nothing. Everything is in Open-Mixer/.github; the secrets are the organisation's.
 # The build dependencies the distributions do not carry (omx-dsp-devel, omx-clap-devel,
 # omx-clap-host) come from the FreeMixer channel, inside the build containers only.
@@ -19,21 +19,20 @@ name: release
 on:
   push:
     tags: ['v*']
+    # a merge to devel builds the real package and publishes it to staging (Open-Mixer/.github#289)
+    branches: [devel]
   workflow_dispatch:
     inputs:
-      publish:
-        description: 'Sign and publish; only a run on a tag publishes'
-        type: boolean
-        default: false
       staged:
         description: 'Build fc45 x86_64 and trixie amd64 only and publish them to the staging channel for the next layer; publishes nothing to the real channel'
         type: boolean
         default: false
+      same_pass:
+        description: 'Packages other repositories release later in the same pass, space separated; empty reads .github/release-same-pass at the commit built'
+        type: string
+        default: ''
   workflow_call:
     inputs:
-      publish:
-        type: boolean
-        default: false
       runner:
         type: string
         default: 'ubuntu-latest'
@@ -45,6 +44,9 @@ on:
       staged:
         type: boolean
         default: false
+      same_pass:
+        type: string
+        default: ''
 
 permissions:
   contents: write
@@ -52,18 +54,79 @@ permissions:
   actions: read
 
 jobs:
+  # The packages other repositories release LATER in this same pass, for the channel-installability gate's same-pass
+  # (a breakage they cause or suffer is reported, not red): a dispatch's same_pass input, else the tracked
+  # .github/release-same-pass at the very commit this run builds (the tag on a push, source-ref when one is named), one
+  # package per line, # comments allowed. The file is reviewed like code, lives on its release branch and goes with it;
+  # never a repository variable, which is mutable, unversioned and can outlive its pass to excuse a later break.
+  samepass:
+    runs-on: ubuntu-latest
+    outputs:
+      list: ${{ steps.read.outputs.list }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github/release-same-pass
+          sparse-checkout-cone-mode: false
+      - id: read
+        env:
+          NAMED_SOURCE: ${{ github.event_name == 'workflow_dispatch' && inputs.source-ref || '' }}
+        run: |
+          f=.github/release-same-pass
+          # a named source-ref is fetched and its file read from FETCH_HEAD: no checkout is pinned to a ref (make check-no-pins)
+          if [ -n "$NAMED_SOURCE" ]; then
+            git fetch --quiet --depth=1 origin "$NAMED_SOURCE" || { echo "::error::cannot fetch source-ref $NAMED_SOURCE"; exit 1; }
+            rm -f "$f"
+            git show "FETCH_HEAD:$f" >"$f" 2>/dev/null || rm -f "$f"
+          fi
+          [ -f "$f" ] || { echo "list=" >>"$GITHUB_OUTPUT"; echo "no $f at this commit: nothing released in the same pass"; exit 0; }
+          names=$(sed -e 's/#.*//' "$f" | tr -s ' \t\r\n' '\n' | sed '/^$/d')
+          for n in $names; do
+            [[ "$n" =~ ^[a-z0-9][a-z0-9.+-]*$ ]] || { echo "::error::$f: '$n' is not a package name"; exit 1; }
+          done
+          list=$(echo $names)
+          echo "list=$list" >>"$GITHUB_OUTPUT"
+          echo "same pass from $f: ${list:-none}"
+
   # The decision of 2026-10-10: plugin-qualify's real-time-safety verdict runs over every plugin, THEN omx-plugins
   # is released. The rpm job below publishes the moment it builds, so this job comes first and the release waits
   # on it: tools/qualify-release.sh builds the tree, qualifies every installed .clap and refuses unless each one's
   # qualification record says suitable. The records and the probe outputs they judged are attached to the run.
+  # the cells the verdict runs in, from Open-Mixer/.github's release-matrix (ruling D25: no Fedora release written into
+  # a job; omx-plugins#54), the quick set or the whole matrix as the rpm build decides it
+  qualify-cells:
+    name: the verdict's cells (release-matrix)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      cells: ${{ steps.m.outputs.cells }}
+      count: ${{ steps.m.outputs.count }}
+    steps:
+      - id: m
+        uses: Open-Mixer/.github/.github/actions/release-matrix@openmixer-v1
+        with:
+          kind: rpm
+          wave: ${{ vars.OMX_RELEASE_MATRIX }}
+          staged: ${{ inputs.staged }}
+          releases: '["45"]'
+          arches: '["x86_64"]'
+
   qualify:
-    name: RT-safety verdict (every plugin)
+    name: RT-safety verdict (every plugin, fedora ${{ matrix.cell.fedora }}, ${{ matrix.cell.arch }})
+    needs: qualify-cells
+    if: needs.qualify-cells.outputs.count != '0'
     runs-on: ${{ (inputs.runner != 'ubuntu-latest' && inputs.runner) || github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
     timeout-minutes: 60
     permissions:
       contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        cell: ${{ fromJSON(needs.qualify-cells.outputs.cells) }}
     container:
-      image: fedora:45
+      image: fedora:${{ matrix.cell.fedora }}
     steps:
       - name: Install git and dnf plugins
         run: dnf install -y --setopt=install_weak_deps=False git dnf5-plugins nodejs
@@ -71,7 +134,8 @@ jobs:
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
         with:
-          staging: ${{ inputs.staged == true }}
+          # a devel push stages its build, so its proof reads the staging channel, as build-rpm.yml's jobs do
+          staging: ${{ inputs.staged == true || (github.event_name == 'push' && github.ref == 'refs/heads/devel') }}
 
       - uses: actions/checkout@v4
 
@@ -89,21 +153,22 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: omx-plugins-qualification
+          name: omx-plugins-qualification-fc${{ matrix.cell.fedora }}-${{ matrix.cell.arch }}
           path: |
             qualification/*.qualification.json
             qualification/*.probe.json
           if-no-files-found: warn
-          retention-days: 90
+          retention-days: ${{ (startsWith(github.ref, 'refs/tags/') || inputs.publish || inputs.staged) && 90 || 2 }}
 
   rpm:
-    needs: qualify
+    needs: [qualify, samepass]
     uses: Open-Mixer/.github/.github/workflows/build-rpm.yml@openmixer-v1
     with:
+      same-pass: ${{ inputs.same_pass || needs.samepass.outputs.list }}
       staged: ${{ inputs.staged == true }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
-      publish: ${{ github.event_name == 'push' || inputs.publish == true }}
+      publish: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
       needs-mod-host: false
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
       arch-matrix: '["x86_64"]'
@@ -112,13 +177,14 @@ jobs:
 
   # beside the RPMs: the two publish jobs share one concurrency group, so their pushes never race
   deb:
-    needs: qualify
+    needs: [qualify, samepass]
     uses: Open-Mixer/.github/.github/workflows/build-deb.yml@openmixer-v1
     with:
+      same-pass: ${{ inputs.same_pass || needs.samepass.outputs.list }}
       staged: ${{ inputs.staged == true }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
-      publish: ${{ github.event_name == 'push' || inputs.publish == true }}
+      publish: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
       dependencies: 'clap-headers'
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
       arch-matrix: '["arm64"]'
@@ -134,7 +200,8 @@ jobs:
     name: Zynthian tarball (trixie, arm64)
     needs: deb
     # not on a staged run: it reads packages a staged run does not build
-    if: ${{ !cancelled() && needs.deb.result == 'success' && inputs.staged != true }}
+    # a devel push on the x86_64 RPM alone builds no deb (OMX_DEVEL_MATRIX, Open-Mixer/.github#304): nothing to bundle
+    if: ${{ !cancelled() && needs.deb.result == 'success' && needs.deb.outputs.skipped != 'true' && inputs.staged != true }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 15
     permissions:
@@ -167,13 +234,13 @@ jobs:
           name: omx-plugins-zynthian-${{ env.ARCH }}
           path: zynthian/*
           if-no-files-found: error
-          retention-days: 30
+          retention-days: ${{ (startsWith(github.ref, 'refs/tags/') || inputs.publish || inputs.staged) && 30 || 2 }}
 
   # attached beside the DEBs; the deb job's own release step has created the release by now
   zynthian-release:
     name: Attach the Zynthian tarball to the release
     needs: zynthian
-    if: ${{ !cancelled() && needs.zynthian.result == 'success' && github.ref_type == 'tag' && (github.event_name == 'push' || inputs.publish == true) }}
+    if: ${{ !cancelled() && needs.zynthian.result == 'success' && github.ref_type == 'tag' && (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')) }}
     runs-on: ${{ inputs.runner || 'ubuntu-latest' }}
     timeout-minutes: 10
     permissions:

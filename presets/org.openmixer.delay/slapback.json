@@ -14,97 +14,97 @@
     },
     {
       "symbol": "fxDelayFeedback",
-      "unit": "",
+      "unit": "none",
       "value": 0.1
     },
     {
       "symbol": "tone",
-      "unit": "",
+      "unit": "none",
       "value": 0.6
     },
     {
       "symbol": "pingpong",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "fxDelayTaps",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "tap0Gain",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "tap0Pan",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "tap1Factor",
-      "unit": "",
+      "unit": "none",
       "value": 3,
       "label": "1/2"
     },
     {
       "symbol": "tap1Gain",
-      "unit": "",
+      "unit": "none",
       "value": 0.7
     },
     {
       "symbol": "tap1Pan",
-      "unit": "",
+      "unit": "none",
       "value": -0.5
     },
     {
       "symbol": "tap2Factor",
-      "unit": "",
+      "unit": "none",
       "value": 5,
       "label": "3/4"
     },
     {
       "symbol": "tap2Gain",
-      "unit": "",
+      "unit": "none",
       "value": 0.5
     },
     {
       "symbol": "tap2Pan",
-      "unit": "",
+      "unit": "none",
       "value": 0.5
     },
     {
       "symbol": "tap3Factor",
-      "unit": "",
+      "unit": "none",
       "value": 8,
       "label": "3/2"
     },
     {
       "symbol": "tap3Gain",
-      "unit": "",
+      "unit": "none",
       "value": 0.35
     },
     {
       "symbol": "tap3Pan",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "sync",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Free"
     },
     {
       "symbol": "division",
-      "unit": "",
+      "unit": "none",
       "value": 6,
       "label": "1/4"
     },
     {
       "symbol": "mode",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Digital"
     },

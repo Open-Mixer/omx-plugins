@@ -1,0 +1,71 @@
+{
+  "$comment": "A fixture of tools/test/own-units-test.mjs, never a plugin of the tree: omx-trim's travel by reference plus a control of the face's own in a unit of the plugin's own, declared in its \"units\" block. The test copies it to a scratch plugins/omx-ownunit/ and loads it as tools/gen.mjs loads a declaration.",
+  "stem": "omx-ownunit",
+  "kernel": "trim",
+  "name": "omx ownunit",
+  "vendor": "openmixer",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
+  "version": "0.1.0",
+  "description": "A fixture: a trim with a nudge control in a unit of the plugin's own.",
+  "category": "utility",
+  "clap": {
+    "id": "org.openmixer.ownunit",
+    "features": [
+      "audio-effect",
+      "stereo"
+    ]
+  },
+  "lv2": {
+    "uri": "urn:openmixer:ownunit",
+    "class": "lv2:AmplifierPlugin"
+  },
+  "units": [
+    {
+      "const": "nudge",
+      "title": "nudge",
+      "description": "Nudges, the fixture's own step of half a decibel.",
+      "x-code": 0,
+      "x-symbol": "nd",
+      "x-dimension": "gain"
+    }
+  ],
+  "params": [
+    {
+      "symbol": "trimDb",
+      "meaning": "gain",
+      "name": "Trim",
+      "ref": "TRIM_RANGE"
+    },
+    {
+      "symbol": "nudge",
+      "meaning": "gain",
+      "name": "Nudge",
+      "own": "fixture-nudge",
+      "min": -4,
+      "max": 4,
+      "def": 0,
+      "unit": "nudge",
+      "kind": "integer"
+    }
+  ],
+  "panel": {
+    "family": "none",
+    "roles": {},
+    "sections": [
+      {
+        "key": "trim",
+        "label": "Trim",
+        "controls": [
+          "trimDb",
+          "nudge"
+        ]
+      }
+    ]
+  },
+  "console": {
+    "placement": {
+      "group": "walk",
+      "stage": "trim"
+    }
+  }
+}

@@ -18,23 +18,13 @@ installed=${OMX_INSTALLED_CONTRACTDIR:-$(${PKG_CONFIG:-pkg-config} --variable=co
 [ -n "$installed" ] || installed=/usr/share/omx-contract/contract.d
 rm -rf "$out"
 mkdir -p "$out"
-for major in "$installed"/*/; do
-  [ -d "$major" ] || continue
-  m=$(basename "$major")
-  case $m in
-    *[!0-9]*)
-      # a DOMAIN directory (plugin-hostd's machine domain: <domain>/<domain>.json and its own subdirectories) is no
-      # numbered major: its subdirectories are not packages, and omx-contract refuses it without its document
-      cp -RL "${major%/}" "$out/$m"
-      continue ;;
-  esac
-  mkdir -p "$out/$m"
-  for pkg in "$major"*/; do
-    [ -d "$pkg" ] || continue
-    name=$(basename "$pkg")
-    [ "$name" = omx-plugins ] && continue
-    cp -RL "${pkg%/}" "$out/$m/$name"
-  done
+# every owner package and every domain sits one level under the contract directory (no schema-major level): each is
+# carried whole, a domain with its own subdirectories, and only the installed omx-plugins package is left out
+for entry in "$installed"/*/; do
+  [ -d "$entry" ] || continue
+  name=$(basename "$entry")
+  [ "$name" = omx-plugins ] && continue
+  cp -RL "${entry%/}" "$out/$name"
 done
 make -s -C "$here" install-contract DESTDIR= CONTRACTDIR="$out" >/dev/null
 echo "$out"

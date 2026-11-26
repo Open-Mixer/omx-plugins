@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.9.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.keyed-gate",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:keyed-gate",
     "name": "omx keyed-gate",
     "vendor": "openmixer",
-    "version": "0.20.0",
+    "version": "0.21.0",
     "doc": "The OpenMixer console's channel gate with an external key: the stereo signal is gated while the detector listens to the sidechain input the host routes to it, or to the signal itself with the key unconnected or set to Self. One gain drives both legs. An attack under 0.5 ms engages 4x detector oversampling, which adds 72 frames of latency, reported to the host. The DSP is omx-dsp's <omxdsp/fx/omx_gate_instance.h>, the console's own gate.",
     "features": [
       "audio-effect"
@@ -38,11 +35,12 @@
       "group": [
         "Key"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_KEY_SOURCES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -67,7 +65,7 @@
       "source": {
         "from": {
           "link": "data/primitives/gate-continuous-travels.json#GATE_CONTINUOUS_TRAVELS.thresholdDb",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -92,7 +90,7 @@
       "source": {
         "from": {
           "link": "data/primitives/gate-continuous-travels.json#GATE_CONTINUOUS_TRAVELS.ratio",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -117,7 +115,7 @@
       "source": {
         "from": {
           "link": "data/primitives/gate-continuous-travels.json#GATE_CONTINUOUS_TRAVELS.rangeDb",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -142,7 +140,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_LIMITS.attackMs",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -167,7 +165,7 @@
       "source": {
         "from": {
           "link": "data/primitives/gate-continuous-travels.json#GATE_CONTINUOUS_TRAVELS.releaseMs",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -187,11 +185,12 @@
       "group": [
         "Gate"
       ],
+      "meaning": "knee",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_LIMITS.kneeStartDb",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -211,11 +210,12 @@
       "group": [
         "Gate"
       ],
+      "meaning": "knee",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_LIMITS.kneeEndDb",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -240,7 +240,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_LIMITS.holdMs",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -265,7 +265,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_LIMITS.hysteresisDb",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -285,11 +285,12 @@
       "group": [
         "Key"
       ],
+      "meaning": "lowCut",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_KEY_LIMITS.hpHz",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -309,11 +310,12 @@
       "group": [
         "Key"
       ],
+      "meaning": "highCut",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_KEY_LIMITS.lpHz",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     }
@@ -369,10 +371,12 @@
       "min": -90,
       "max": 0,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/gate.json#readouts[gainReductionDb]",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     }

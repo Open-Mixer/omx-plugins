@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.delay",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:delay",
     "name": "omx delay",
     "vendor": "openmixer",
-    "version": "0.20.0",
+    "version": "0.21.0",
     "doc": "The OpenMixer console's stereo delay: one time, free or synced to the host's tempo, feedback through a tone filter, ping-pong, read taps, a tape or analog colour, a wet/dry mix and a duck under the input.",
     "features": [
       "audio-effect"
@@ -38,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/delay.json#FX_DELAY_TIME_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -51,7 +48,7 @@
         "min": 0,
         "max": 0.99,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0.3,
         "scale": "linear"
       },
@@ -63,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/delay.json#FX_DELAY_FEEDBACK_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -76,7 +73,7 @@
         "min": 0,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0.3,
         "scale": "linear"
       },
@@ -88,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TONE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -101,7 +98,7 @@
         "min": 0,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0.3,
         "scale": "linear"
       },
@@ -113,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_MIX_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -131,7 +128,7 @@
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_PINGPONGS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -144,18 +141,19 @@
         "min": 1,
         "max": 4,
         "step": 1,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "stepped"
       },
       "group": [
         "Taps"
       ],
+      "meaning": "number",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#FX_DELAY_TAPS_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -168,18 +166,19 @@
         "min": 0,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
       "group": [
         "Taps"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP_LIMITS.tap0Gain",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -192,18 +191,19 @@
         "min": -1,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0,
         "scale": "linear"
       },
       "group": [
         "Taps"
       ],
+      "meaning": "balance",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP_LIMITS.tap0Pan",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -255,11 +255,12 @@
       "group": [
         "Taps"
       ],
+      "meaning": "delay",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP1_FACTORS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -272,18 +273,19 @@
         "min": 0,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0.7,
         "scale": "linear"
       },
       "group": [
         "Taps"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP_LIMITS.tap1Gain",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -296,18 +298,19 @@
         "min": -1,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": -0.5,
         "scale": "linear"
       },
       "group": [
         "Taps"
       ],
+      "meaning": "balance",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP_LIMITS.tap1Pan",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -359,11 +362,12 @@
       "group": [
         "Taps"
       ],
+      "meaning": "delay",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP2_FACTORS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -376,18 +380,19 @@
         "min": 0,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0.5,
         "scale": "linear"
       },
       "group": [
         "Taps"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP_LIMITS.tap2Gain",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -400,18 +405,19 @@
         "min": -1,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0.5,
         "scale": "linear"
       },
       "group": [
         "Taps"
       ],
+      "meaning": "balance",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP_LIMITS.tap2Pan",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -463,11 +469,12 @@
       "group": [
         "Taps"
       ],
+      "meaning": "delay",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP3_FACTORS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -480,18 +487,19 @@
         "min": 0,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0.35,
         "scale": "linear"
       },
       "group": [
         "Taps"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP_LIMITS.tap3Gain",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -504,18 +512,19 @@
         "min": -1,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0,
         "scale": "linear"
       },
       "group": [
         "Taps"
       ],
+      "meaning": "balance",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_TAP_LIMITS.tap3Pan",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -541,11 +550,12 @@
       "group": [
         "Tempo"
       ],
+      "meaning": "sync",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_SYNCS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -618,11 +628,12 @@
       "group": [
         "Tempo"
       ],
+      "meaning": "division",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_DIVISIONS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -650,11 +661,12 @@
       "group": [
         "Delay"
       ],
+      "meaning": "model",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_MODES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -674,11 +686,12 @@
       "group": [
         "Duck"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_DUCK_DB_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -698,11 +711,12 @@
       "group": [
         "Duck"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_DUCK_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -722,11 +736,12 @@
       "group": [
         "Duck"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/delay.json#DELAY_DUCK_RELEASE_MS_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     }

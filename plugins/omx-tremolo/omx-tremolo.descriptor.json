@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.tremolo",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:tremolo",
     "name": "omx tremolo",
     "vendor": "openmixer",
-    "version": "0.20.0",
+    "version": "0.21.0",
     "doc": "The console's tremolo and auto-pan: one oscillator turned into a level change on both legs, or into a left-right pan.",
     "features": [
       "audio-effect"
@@ -38,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/tremolo.json#TREMOLO_RATE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -51,7 +48,7 @@
         "min": 0,
         "max": 100,
         "step": 0,
-        "unit": "%",
+        "unit": "percent",
         "default": 50,
         "scale": "linear"
       },
@@ -63,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/tremolo.json#TREMOLO_DEPTH_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -76,7 +73,7 @@
         "min": 0,
         "max": 100,
         "step": 0,
-        "unit": "%",
+        "unit": "percent",
         "default": 100,
         "scale": "linear"
       },
@@ -88,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/tremolo.json#TREMOLO_MIX_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -113,11 +110,12 @@
       "group": [
         "Tremolo"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/tremolo.json#TREMOLO_MODES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     }

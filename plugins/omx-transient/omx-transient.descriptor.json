@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.transient",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:transient",
     "name": "omx transient",
     "vendor": "openmixer",
-    "version": "0.20.0",
+    "version": "0.21.0",
     "doc": "The console's transient designer: more or less attack and sustain, from two envelope contrasts, with no threshold to set.",
     "features": [
       "audio-effect"
@@ -33,11 +30,12 @@
       "group": [
         "Transient"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/transient.json#TRANSIENT_LIMITS.attackDb",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -57,11 +55,12 @@
       "group": [
         "Transient"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/transient.json#TRANSIENT_LIMITS.sustainDb",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -81,11 +80,12 @@
       "group": [
         "Transient"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/transient.json#TRANSIENT_LIMITS.attackTimeMs",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -105,11 +105,12 @@
       "group": [
         "Transient"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/transient.json#TRANSIENT_LIMITS.sustainTimeMs",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -129,11 +130,12 @@
       "group": [
         "Transient"
       ],
+      "meaning": "output",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/transient.json#TRANSIENT_LIMITS.outputDb",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     }

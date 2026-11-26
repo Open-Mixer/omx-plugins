@@ -5,7 +5,8 @@
   "kernels": [
     "trim"
   ],
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "category": "utility",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "resourceHints": {
     "threads-spawned": 0,

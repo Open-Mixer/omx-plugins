@@ -58,15 +58,15 @@ static const char *const OMX_TREMOLO_PARAM_MODULES[OMX_TREMOLO_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_TREMOLO_NAME "omx tremolo"
 #define OMX_TREMOLO_VENDOR "openmixer"
-#define OMX_TREMOLO_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TREMOLO_VERSION "0.20.0"
+#define OMX_TREMOLO_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_TREMOLO_VERSION "0.21.0"
 #define OMX_TREMOLO_DESCRIPTION "The console's tremolo and auto-pan: one oscillator turned into a level change on both legs, or into a left-right pan."
 #define OMX_TREMOLO_CLAP_ID "org.openmixer.tremolo"
 #define OMX_TREMOLO_CLAP_FEATURES "audio-effect", "tremolo", "stereo"
 #define OMX_TREMOLO_LV2_URI "urn:openmixer:tremolo"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_TREMOLO_DECL_SOURCE "omx tremolo: Rate 0.1 to 20 Hz, Depth 0 to 100 %, Mix 0 to 100 %, Mode 0 to 1"
-#define OMX_TREMOLO_DECL_DIGEST "b57991962924d939b9966fa18b44ce86bb73f3c940611aaf165dd227ec9b6d1a"
+#define OMX_TREMOLO_DECL_DIGEST "dc5815ecda7cf7ba6e285bfa043f1cfe1a47119eb83844fafc61d371029a4944"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

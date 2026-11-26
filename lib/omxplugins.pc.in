@@ -7,6 +7,6 @@ includedir=@INCLUDEDIR@
 Name: omxplugins
 Description: The OpenMixer plugins' CLAP faces in one static archive, with the table of their entries for a host that runs them in-process (#include <omx-plugins/omx_clap_static.h>)
 Version: @VERSION@
-Requires: omxdsp >= @OMXDSP_MIN@, omx-contract >= @CONTRACT_MIN@, omx-clap >= @CLAPCORE_MIN@, clap
+Requires: omxdsp, omx-contract, omx-clap, clap
 Cflags: -I${includedir}
 Libs: -L${libdir} -lomxplugins

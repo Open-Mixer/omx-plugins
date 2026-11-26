@@ -64,15 +64,15 @@ static const char *const OMX_CHORUS_PARAM_MODULES[OMX_CHORUS_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_CHORUS_NAME "omx chorus"
 #define OMX_CHORUS_VENDOR "openmixer"
-#define OMX_CHORUS_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_CHORUS_VERSION "0.20.0"
+#define OMX_CHORUS_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_CHORUS_VERSION "0.21.0"
 #define OMX_CHORUS_DESCRIPTION "The console's chorus: up to four voices read one modulated delay line, the right leg's sweep offset by the spread, mixed with the dry signal."
 #define OMX_CHORUS_CLAP_ID "org.openmixer.chorus"
 #define OMX_CHORUS_CLAP_FEATURES "audio-effect", "chorus", "stereo"
 #define OMX_CHORUS_LV2_URI "urn:openmixer:chorus"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_CHORUS_DECL_SOURCE "omx chorus: Spread 0 to 0.5, Rate 0.05 to 8 Hz, Depth 0 to 12 ms, Voices 1 to 4, Mix 0 to 100 %"
-#define OMX_CHORUS_DECL_DIGEST "7e9d7de96f6b48a792b97d200fa3c98c64f705c253f31637301752d03a5a2e51"
+#define OMX_CHORUS_DECL_DIGEST "47bb4d2edaf0a74a46b1d4b950bff980642c1f004ec243d3994c53ba05402df7"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
@@ -98,7 +98,7 @@ static const omx_resource_hints_t OMX_CHORUS_RESOURCE_HINTS = {
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family modulation.
  * Declared roles not published:
- *   depth (depth): the depth role takes none, percent, x, oct, not ms */
+ *   depth (depth): the depth role takes none, percent, coef, oct, not ms */
 #define OMX_CHORUS_PANEL_FINGERPRINT "f74674fc0273db9c13b04bcefbdde42d9faa30dd64fec72cd7b881bfb1d98b2f"
 static const struct omx_panel_section_row OMX_CHORUS_PANEL_SECTIONS[] = {
   { "chorus", "fx.chorus.section.chorus", "Chorus" },

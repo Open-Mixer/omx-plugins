@@ -120,12 +120,14 @@ int main(int argc, char **argv) {
   const uint32_t nm = m->count(p);
   uint32_t levels = 0;
   static bool is_level[64];
+  static uint32_t chans[64];
   if (nm > 64) return fprintf(stderr, "%u meters, more than this host reads\n", nm), 1;
   for (uint32_t k = 0; k < nm; k++) {
     clap_meter_info_t info;
     if (!m->get_info(p, k, &info)) return fprintf(stderr, "get_info %u\n", k), 1;
     /* a level the face measures, its two legs' peaks; a level the kernel reads (one channel, a detector's) is
      * the kernel's float through libm, an other */
+    chans[k] = info.channel_count;
     is_level[k] = info.kind == CLAP_METER_KIND_LEVEL && info.channel_count == 2u;
     if (is_level[k]) levels++;
   }
@@ -151,7 +153,7 @@ int main(int argc, char **argv) {
     if (p->process(p, &pr) == CLAP_PROCESS_ERROR) return fprintf(stderr, "process\n"), 1;
     for (uint32_t k = 0; k < nm; k++) {
       double v[8] = {0};
-      uint32_t got = m->get_values(p, k, v, 8);
+      uint32_t got = m->get_values(p, k, v, chans[k]); /* the channels: a clip word after them is tools/meter-held-check.sh's */
       if (is_level[k]) {
         for (uint32_t j = 0; j < got; j++) printf("%u %u %.17g\n", b, k, v[j]);
         if (got == 0) printf("%u %u none\n", b, k);

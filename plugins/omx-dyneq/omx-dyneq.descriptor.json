@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.9.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.dyneq",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:dyneq",
     "name": "omx dyneq",
     "vendor": "openmixer",
-    "version": "0.20.0",
+    "version": "0.21.0",
     "doc": "A six-band dynamic EQ: each band is an EQ bell or shelf whose gain also moves with the level of its own band, cutting above a threshold (down) or lifting below it (up), held to a range, so a harsh or boomy band is tamed only while it is too loud.",
     "features": [
       "audio-effect"
@@ -26,11 +23,12 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -43,11 +41,12 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -60,11 +59,12 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -77,11 +77,12 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -94,11 +95,12 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -111,11 +113,12 @@
       "group": [
         "Band 6"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_ONS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -143,11 +146,12 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -175,11 +179,12 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -207,11 +212,12 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -239,11 +245,12 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -271,11 +278,12 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -303,11 +311,12 @@
       "group": [
         "Band 6"
       ],
+      "meaning": "type",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -332,7 +341,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -357,7 +366,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -382,7 +391,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -407,7 +416,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -432,7 +441,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -457,7 +466,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -482,7 +491,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -507,7 +516,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -532,7 +541,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -557,7 +566,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -582,7 +591,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -607,7 +616,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -620,7 +629,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -632,7 +641,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -645,7 +654,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -657,7 +666,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -670,7 +679,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -682,7 +691,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -695,7 +704,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -707,7 +716,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -720,7 +729,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -732,7 +741,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -745,7 +754,7 @@
         "min": 0.3,
         "max": 8,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 1,
         "scale": "linear"
       },
@@ -757,7 +766,7 @@
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_Q_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -785,11 +794,12 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -817,11 +827,12 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -849,11 +860,12 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -881,11 +893,12 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -913,11 +926,12 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -945,11 +959,12 @@
       "group": [
         "Band 6"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_DYN_MODES",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -969,11 +984,12 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -993,11 +1009,12 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1017,11 +1034,12 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1041,11 +1059,12 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1065,11 +1084,12 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1089,11 +1109,12 @@
       "group": [
         "Band 6"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1113,11 +1134,12 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1137,11 +1159,12 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1161,11 +1184,12 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1185,11 +1209,12 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1209,11 +1234,12 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1233,11 +1259,12 @@
       "group": [
         "Band 6"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RATIO_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1257,11 +1284,12 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1281,11 +1309,12 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1305,11 +1334,12 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1329,11 +1359,12 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1353,11 +1384,12 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1377,11 +1409,12 @@
       "group": [
         "Band 6"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RANGE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1401,11 +1434,12 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1425,11 +1459,12 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1449,11 +1484,12 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1473,11 +1509,12 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1497,11 +1534,12 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1521,11 +1559,12 @@
       "group": [
         "Band 6"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_ATTACK_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1545,11 +1584,12 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1569,11 +1609,12 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1593,11 +1634,12 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1617,11 +1659,12 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1641,11 +1684,12 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1665,11 +1709,12 @@
       "group": [
         "Band 6"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_RELEASE_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1682,11 +1727,12 @@
       "group": [
         "Band 1"
       ],
+      "meaning": "listen",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1699,11 +1745,12 @@
       "group": [
         "Band 2"
       ],
+      "meaning": "listen",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1716,11 +1763,12 @@
       "group": [
         "Band 3"
       ],
+      "meaning": "listen",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1733,11 +1781,12 @@
       "group": [
         "Band 4"
       ],
+      "meaning": "listen",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1750,11 +1799,12 @@
       "group": [
         "Band 5"
       ],
+      "meaning": "listen",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1767,11 +1817,12 @@
       "group": [
         "Band 6"
       ],
+      "meaning": "listen",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_LISTENS",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1784,18 +1835,19 @@
         "min": 0,
         "max": 100,
         "step": 1,
-        "unit": "%",
+        "unit": "percent",
         "default": 100,
         "scale": "stepped"
       },
       "group": [
         "Output"
       ],
+      "meaning": "wetDryRatio",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#DYNEQ_MIX_PCT_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     }
@@ -1842,10 +1894,12 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band1GainDb]",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1860,10 +1914,12 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band2GainDb]",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1878,10 +1934,12 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band3GainDb]",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1896,10 +1954,12 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band4GainDb]",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1914,10 +1974,12 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band5GainDb]",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -1932,10 +1994,12 @@
       "min": -24,
       "max": 12,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/dyneq.json#readouts[band6GainDb]",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     }

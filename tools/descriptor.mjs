@@ -17,7 +17,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { choicesOf, metersOf, scaleOf } from './gen.mjs';
 import { clapFeatureField, clapFeatureValue } from './format-tables.mjs';
-import { installedDataDir, locateContract, OWNERS, ownersOf, packagingRange } from './omx-contract.mjs';
+import { installedDataDir, locateContract, OWNERS, ownersOf } from './omx-contract.mjs';
 import { meaningOfRole, panelLayout } from './omx-panel.mjs';
 
 /** The descriptor file of a plugin folder. */
@@ -25,11 +25,6 @@ export const descriptorFile = (stem) => `${stem}.descriptor.json`;
 
 /** The schema the descriptor words are in, and the release that added them. */
 export const DESCRIPTOR_SCHEMA = '../schema/omx-contract.schema.json';
-export const DESCRIPTOR_SCHEMA_FLOOR = '3.7.0';
-/** The release that added `meters` (omx-contract docs/descriptors.md): the floor of a descriptor that states them. */
-export const DESCRIPTOR_METERS_FLOOR = '3.9.0';
-/** The release that added `latency.sweep` (omx-contract docs/descriptors.md): the floor of a descriptor that states one. */
-export const DESCRIPTOR_SWEEP_FLOOR = '3.21.0';
 /** The descriptor's word for each meter kind a declaration names. */
 const METER_KIND_WORDS = { gain_reduction: 'gain-reduction', level: 'level' };
 
@@ -41,7 +36,7 @@ export const DESCRIPTOR_SCHEMA_FILE = 'omx-contract.schema.json';
  * it, else the data directory's (`pkg-config --variable=datadir omx-contract`). */
 export function descriptorSchemaFile() {
   const file = [process.env.OMX_CONTRACT_SCHEMA, ...[process.env.OMX_CONTRACT_DIR, installedDataDir()].filter(Boolean).map((d) => join(d, DESCRIPTOR_SCHEMA_FILE))].filter(Boolean).find((f) => existsSync(f));
-  if (!file) throw new Error(`${DESCRIPTOR_SCHEMA_FILE}: not in the installed omx-contract's data directory; install omx-contract-devel >= ${DESCRIPTOR_SCHEMA_FLOOR} (BUILDING.md)`);
+  if (!file) throw new Error(`${DESCRIPTOR_SCHEMA_FILE}: not in the installed omx-contract's data directory; install omx-contract-devel (BUILDING.md)`);
   return file;
 }
 
@@ -56,6 +51,71 @@ export function descriptorFeatures(schema = JSON.parse(readFileSync(descriptorSc
 /** The descriptor's feature words, the installed schema's: never spelled here (tools/test/descriptor-features-check.mjs
  * refuses a list of them in any tool). */
 export const FEATURES = descriptorFeatures();
+
+/** The words a control's `meaning` takes, the installed schema's `$defs.meaning` (omx-contract's PARAM_MEANINGS, docs/
+ * descriptors.md "Meanings"): never spelled here. */
+export function descriptorMeanings(schema = JSON.parse(readFileSync(descriptorSchemaFile(), 'utf8'))) {
+  const list = schema?.$defs?.meaning?.enum;
+  if (!Array.isArray(list) || !list.length || list.some((w) => typeof w !== 'string')) throw new Error(`${DESCRIPTOR_SCHEMA_FILE}: $defs.meaning.enum is not the descriptor's meaning words`);
+  return list;
+}
+export const MEANINGS = descriptorMeanings();
+/** The meaning of a control that states none: a built or scanned descriptor's word, never an authored one's. */
+export const UNKNOWN_MEANING = 'unknown';
+
+/**
+ * The meaning control `p` (parameter `i` of declaration `d`) declares, or a refusal naming it: the word of the panel role
+ * it plays (`role`, read through contract/role-meanings.json), else the word it states itself (a whole declaration's
+ * parameter, or a described plugin's descriptor control). Our descriptors are `authored`, so the word is one of the
+ * installed schema's and never `unknown` (omx-contract docs/descriptors.md "Meanings": declare, don't infer).
+ */
+export function meaningOfControl(d, p, i, role, words = MEANINGS) {
+  const where = `plugins/${d.stem}: control '${p.symbol}'`;
+  if (role !== undefined && p.meaning !== undefined && p.meaning !== role) throw new Error(`${where} plays a panel role whose meaning is '${role}' and states '${p.meaning}'; a control a role binds states no meaning of its own`);
+  const m = role ?? p.meaning ?? d.descriptor?.controls?.[i]?.meaning;
+  if (m === undefined) throw new Error(`${where} states no meaning; an authored control states its role, a word of omx-contract's PARAM_MEANINGS (the panel role it plays, or "meaning" on its declaration; docs/declaration-as-descriptor.md)`);
+  if (m === UNKNOWN_MEANING) throw new Error(`${where} states meaning '${UNKNOWN_MEANING}'; an authored control states a word (contract.descriptor.unknown-authored)`);
+  if (!words.includes(m)) throw new Error(`${where} states meaning '${m}', no word of the installed schema's $defs.meaning`);
+  return m;
+}
+
+/** The omx-contract format a document of this build is written in: MAJOR.MINOR of the installed schema's
+ * `x-omx-schema-version` (what a domain document states as `x-omx-contract`); never spelled in a tool. */
+export function contractFormat(schema = JSON.parse(readFileSync(descriptorSchemaFile(), 'utf8'))) {
+  const m = /^(\d+\.\d+)\.\d+$/.exec(schema?.['x-omx-schema-version'] ?? '');
+  if (!m) throw new Error(`${DESCRIPTOR_SCHEMA_FILE}: x-omx-schema-version is not MAJOR.MINOR.PATCH`);
+  return m[1];
+}
+
+/** The filter responses a control may state: the enum of the schema's `$defs.filterResponse` (omx-contract
+ * docs/descriptors.md "Filter responses"), the render of PARAM_FILTER_RESPONSES; never spelled in a tool. */
+export function filterResponses(schema = JSON.parse(readFileSync(descriptorSchemaFile(), 'utf8'))) {
+  const list = schema?.$defs?.filterResponse?.enum;
+  if (!Array.isArray(list) || !list.length || list.some((w) => typeof w !== 'string')) throw new Error(`${DESCRIPTOR_SCHEMA_FILE}: $defs.filterResponse.enum is not the filter responses`);
+  return list;
+}
+
+/** The installed schema's filter responses, read once, when a control first states one: a tool that meets none needs none. */
+let installedResponses;
+
+/** Whether a type choice (a `*_BAND_TYPES` set) picks the shape of the band parameter `p` of `params` is on: the two carry one
+ * band number in their symbols (b1_type and b1_freq, eq1Type and eq1Freq, bandType1 and freq1). The band number is the first
+ * run of digits: a symbol with another number before its band's (eq2Band1Freq) would be read by that one; no symbol of ours
+ * has one, and tools/test/filter-response-check.mjs holds the exact set of controls that state a response. */
+export function typedBand(p, params) {
+  const band = /\d+/.exec(p.symbol)?.[0];
+  return band !== undefined && params.some((q) => /_BAND_TYPES$/.test(q.ref ?? '') && /\d+/.exec(q.symbol)?.[0] === band);
+}
+
+/** The response parameter `p` of `where` states, or undefined. A word the schema does not list is refused, and so is one on
+ * a band whose shape a type choice picks (`typed`): its response is the choice's value (omx-plugins#218). */
+export function responseOfControl(p, where, typed = false) {
+  if (p.response === undefined) return undefined;
+  installedResponses ??= filterResponses();
+  if (!installedResponses.includes(p.response)) throw new Error(`${where}: '${p.symbol}' states the response '${p.response}', no word of the schema's $defs.filterResponse`);
+  if (typed) throw new Error(`${where}: '${p.symbol}' states a response, and a type choice picks its band's shape: its response is the choice's value`);
+  return p.response;
+}
 
 /** The extension bag's source fields our faces write (omx-contract docs/descriptors.md, The extension bag): CLAP's
  * open features, in the face's order, and the LV2 face's types as its .ttl states them. */
@@ -95,7 +155,7 @@ const RATIO = 'ratio';
  * lv2:integer and plugin-hostd's describe reads as log (plugin-hostd#142). */
 const STEPPED = 'stepped';
 const integerScale = (p) => (scaleOf(p) === 'log' ? 'log' : STEPPED);
-export const travelUnit = (unit, authored) => (unit === '' && authored === RATIO ? RATIO : unit);
+export const travelUnit = (unit, authored) => (unit === 'none' && authored === RATIO ? RATIO : unit);
 
 /** A reference link, `<file>#<NAME>[.<field>]`, as its parts. */
 const LINK = /^(data\/[A-Za-z0-9_./-]+\.json)#([A-Za-z0-9_]+)(?:\.([A-Za-z0-9_]+))?$/;
@@ -146,8 +206,8 @@ export function portGroupsOf(d) {
  * values a choice (ids the values, as text), any other parameter a travel with the declared unit and
  * scale; its group the label of the panel section listing it (and of its port group within it, where the
  * declaration splits the section: portGroupsOf), its meaning the one its declared role
- * plays; its source the link its travel is read from, or the face for a parameter of the face's own.
- * `extras` carries what the descriptor has no word for: a choice's unit and the per-kind come-up values.
+ * plays, else the one it states (meaningOfControl, which refuses a control with none); its source the link its travel is read from, or the face for a parameter of the face's own.
+ * `extras` carries what the descriptor has no word for: the per-kind come-up values.
  */
 export function descriptorOf(d) {
   const groupOf = new Map();
@@ -155,10 +215,10 @@ export function descriptorOf(d) {
   const meaningOf = new Map();
   for (const [role, syms] of Object.entries(d.panel?.roles ?? {})) {
     const m = meaningOfRole(role);
-    if (m) for (const sym of [syms].flat()) if (!meaningOf.has(sym)) meaningOf.set(sym, m);
+    if (m && m !== UNKNOWN_MEANING) for (const sym of [syms].flat()) if (!meaningOf.has(sym)) meaningOf.set(sym, m);
   }
   // the release a link is read from: its owner (the contract directory's manifests, from omx-contract 2.15.0
-  // on; omx-contract itself before) at the floor the packaging builds against, else the installed version
+  // on; omx-contract itself before) at the version the render read was installed at
   let owners;
   const atOf = (rel) => {
     if (owners === undefined) {
@@ -170,11 +230,7 @@ export function descriptorOf(d) {
       if (!owners.size) throw new Error(`${where.at ?? where.dir}: the render read carries no ${OWNERS}, so a link's owner is unknown; a build reads the owners of the render it is handed, never the installed contract directory's`);
     }
     const owner = owners.get(rel.split('#')[0]) ?? { package: 'omx-contract' };
-    try {
-      return `${owner.package}@${packagingRange(`${owner.package}-devel`, d.tree).floor}`;
-    } catch {
-      return owner.version ? `${owner.package}@${owner.version}` : null;
-    }
+    return owner.version ? `${owner.package}@${owner.version}` : null;
   };
   const face = `plugins/${d.stem}/omx_${d.kernel}_clap.c#clap_entry`;
   const choiceUnits = {}, byKind = {};
@@ -187,13 +243,17 @@ export function descriptorOf(d) {
     if (p.kind === 'toggle') Object.assign(c, { kind: 'toggle', default: p.def !== 0 });
     else if (choices) {
       Object.assign(c, { kind: 'choice', ids: choices.map((x) => String(x.value)), labels: choices.map((x) => x.label), values: choices.map((x) => x.value), default: String(p.def) });
-      if (p.unit) choiceUnits[p.symbol] = p.unit;
+      // a choice that states no unit, `none` since C2, has no entry
+      if (p.unit && p.unit !== 'none') choiceUnits[p.name] = p.unit;
     } else {
       c.kind = 'travel';
       c.travel = { min: p.min, max: p.max, step: p.kind === 'integer' ? 1 : 0, unit: travelUnit(p.unit, d.descriptor?.controls[i]?.travel?.unit), default: p.def, scale: p.kind === 'integer' ? integerScale(p) : scaleOf(p) };
     }
     if (groupOf.has(p.symbol)) c.group = groupOf.get(p.symbol);
-    if (meaningOf.has(p.symbol)) c.meaning = meaningOf.get(p.symbol);
+    c.meaning = meaningOfControl(d, p, i, meaningOf.get(p.symbol));
+    // a fixed filter's response: the parameter's own word, or (a described control) the descriptor's
+    const response = responseOfControl({ symbol: p.symbol, response: p.response ?? d.descriptor?.controls[i]?.response }, `plugins/${d.stem}`, typedBand(p, d.params));
+    if (response !== undefined) c.response = response;
     c.automatable = true;
     c.source = p.from ? { from: atOf(p.from) ? { link: p.from, at: atOf(p.from) } : p.from } : { impl: face };
     if (p.byKind) byKind[p.symbol] = p.byKind;
@@ -205,23 +265,26 @@ export function descriptorOf(d) {
     { id: 0, name: 'out', kind: 'audio', direction: 'out', role: 'main', channels: 2, layout: 'stereo' },
   ];
   // each meter as the faces publish it: its CLAP id (its index), the symbol a host reads it by, its range, and
-  // the kernel readout it publishes, linked where its travel would be; a level the face measures is the face's own
+  // the kernel readout it publishes, linked where its travel would be; a level the face measures is the face's own;
+  // and the meter words (gen.mjs meterWords): what it measures where the plugin knows it, whether the plugin holds it
+  // until read, and on a level whether it carries a clip word (omx-contract refuses the word on a gain reduction)
   const meters = metersOf(d).map((m, k) => {
     const link = m.readout ? `data/kernels/${d.kernel}.json#readouts[${m.readout.name}]` : undefined;
     return {
       id: k, symbol: m.id, name: m.label, ...(m.readout ? { doc: m.readout.doc } : {}), kind: METER_KIND_WORDS[m.kind], channels: m.channels,
       unit: m.unit, min: m.min, max: m.max, scale: m.scale,
+      ...(m.measurement ? { measurement: m.measurement } : {}), held: m.held, ...(m.kind === 'level' ? { clip: m.clip } : {}),
       source: link ? { from: atOf(link) ? { link, at: atOf(link) } : link } : { impl: face },
     };
   });
   // a modulated delay's sweep (the rotary's), as its descriptor states it: each end a frame count or a ref to a kernel
-  // scalar in frames or ms; a ref names the kernel's package, at the floor the packaging builds against
+  // scalar in frames or ms; a ref names the kernel's package
   const sweep = d.descriptor?.latency?.sweep;
   const sweepRefs = sweep ? [sweep.min, sweep.max].some((e) => typeof e === 'object' && e !== null) : false;
-  const schemaFloor = sweep ? DESCRIPTOR_SWEEP_FLOOR : meters.length ? DESCRIPTOR_METERS_FLOOR : DESCRIPTOR_SCHEMA_FLOOR;
   const descriptor = {
     $schema: DESCRIPTOR_SCHEMA,
-    requires: { 'omx-contract-schema': `>= ${schemaFloor}`, ...(sweepRefs ? { 'omx-dsp': `>= ${packagingRange('omx-dsp-devel', d.tree).floor}` } : {}) },
+    // the packages whose items the file refers to by name, in order; a file that refers to none has no requires
+    ...(sweepRefs ? { requires: ['omx-dsp'] } : {}),
     origin: 'authored',
     plugin: { id: d.clap.id, format: 'clap', uri: d.lv2.uri, name: d.name, vendor: d.vendor, version: d.version, doc: d.description, features: d.clap.features.filter((f) => FEATURES.includes(f)) },
     controls,
@@ -231,10 +294,11 @@ export function descriptorOf(d) {
     needs: d.descriptor?.needs?.tempo ? { tempo: true, extensions: { optional: ['urid:map', LV2_HARD_RT] } } : { extensions: { optional: [LV2_HARD_RT] } },
     latency: { reports: true, ...(sweep ? { sweep } : {}) },
     ...(meters.length ? { meters } : {}),
+    ...(Object.keys(choiceUnits).length ? { choiceUnits } : {}),
     extensions: extensionsOf(d),
     source: { impl: face },
   };
-  return { descriptor, extras: { choiceUnits, byKind } };
+  return { descriptor, extras: { byKind } };
 }
 
 /** The descriptor file's text: what `node tools/gen.mjs` writes and `--check` holds equal. */
@@ -249,7 +313,9 @@ export function panelDescription(d) {
   // the units the faces serve beside it (the parameter contract, the declaration's): a ratio travel with no unit of
   // its own is served as ratio (omx-contract's param-contract unit 258, travelUnit), by the LV2 face and the contract
   // alike, so its role is judged on that unit
-  const { descriptor, extras } = descriptorOf({ ...d, descriptor: undefined });
+  // the meanings a described plugin's controls state stay (descriptorOf refuses a control with none), nothing else of it
+  const stated = d.descriptor && { controls: d.descriptor.controls.map((c) => (c.meaning === undefined ? {} : { meaning: c.meaning })) };
+  const { descriptor, extras } = descriptorOf({ ...d, descriptor: stated });
   descriptor.controls.forEach((c, i) => {
     if (c.travel) c.travel.unit = travelUnit(c.travel.unit, d.descriptor?.controls[i]?.travel?.unit);
   });
@@ -277,7 +343,7 @@ const SAID = ['name', 'vendor', 'version', 'params', 'description'];
 export function describedOf(raw, prepared) {
   const descriptor = descriptorOf(prepared).descriptor;
   descriptor.controls.forEach((c, i) => {
-    if (c.travel && c.travel.unit === '' && prepared.controls?.[i]?.name === 'ratio') c.travel.unit = RATIO;
+    if (c.travel && c.travel.unit === 'none' && prepared.controls?.[i]?.name === 'ratio') c.travel.unit = RATIO;
   });
   const extras = {};
   for (const [k, v] of Object.entries(raw)) {
@@ -330,7 +396,7 @@ export function viewOf(descriptor, extras, file) {
     } else {
       // a control of the face's own: its travel is typed, the reason kept with it
       if (!x.own) throw new Error(`${file}: '${c.symbol}' has no source link and no "own" reason`);
-      if (c.kind === 'toggle') Object.assign(p, { unit: '', min: 0, max: 1, def: c.default ? 1 : 0, kind: 'toggle' });
+      if (c.kind === 'toggle') Object.assign(p, { unit: 'none', min: 0, max: 1, def: c.default ? 1 : 0, kind: 'toggle' });
       else if (c.kind === 'travel') Object.assign(p, { unit: c.travel.unit, min: c.travel.min, max: c.travel.max, def: c.travel.default, ...(c.travel.step === 1 ? { kind: 'integer' } : {}) });
       else throw new Error(`${file}: '${c.symbol}', a ${c.kind} of the face's own, is not a toggle or a travel`);
     }

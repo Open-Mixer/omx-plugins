@@ -154,15 +154,15 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_COMP_NAME "omx comp"
 #define OMX_COMP_VENDOR "openmixer"
-#define OMX_COMP_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_COMP_VERSION "0.20.0"
+#define OMX_COMP_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_COMP_VERSION "0.21.0"
 #define OMX_COMP_DESCRIPTION "The console's compressor: threshold, ratio and knee set how hard it holds the level down, attack and release how fast, with makeup gain and a dry/wet mix. Kind picks the RMS detector (Compressor) or the peak detector (Limiter), and detector oversampling can run the control path at 4x; detector topology has it hear the input (feedforward) or its own output (feedback). Its detector can listen to a key routed to its sidechain input instead, through a high-pass, a low-pass and a tilt, on the louder leg, the mid or the side, with a hold; key listen puts what the detector hears on the output, and duck holds the reduction to a set depth. The DSP is omx-dsp's <omxdsp/fx/omx_comp_instance.h>, the console's own compressor."
 #define OMX_COMP_CLAP_ID "org.openmixer.comp"
 #define OMX_COMP_CLAP_FEATURES "audio-effect", "compressor", "stereo"
 #define OMX_COMP_LV2_URI "urn:openmixer:comp"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_COMP_DECL_SOURCE "omx comp: Threshold -60 to 0 dB, Ratio 1 to 20, Knee 0 to 24 dB, Attack 0.1 to 100 ms, Release 5 to 3000 ms, Makeup 0 to 24 dB, Mix 0 to 100 %, Kind 0 to 1, Detector Oversampling 0 to 2, Detector Topology 0 to 1, Key Source 0 to 1, Key HP 0 to 2000 Hz, Key LP 0 to 20000 Hz, Key Tilt -6 to 6 dB/oct, Key Listen 0 to 1, Hold 0 to 2000 ms, Detect Link 0 to 3, Duck 0 to 1, Duck Range -40 to 0 dB, Release Mode 0 to 2"
-#define OMX_COMP_DECL_DIGEST "589c4119820fb26e5685c8c7a48c50bc984d8b735a9324fab16a8ae87ce5bf10"
+#define OMX_COMP_DECL_DIGEST "93bb0c58a5129078b63109505a2d5ab6cafffe7eaa7c0e3c4900d5071c63a1bd"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

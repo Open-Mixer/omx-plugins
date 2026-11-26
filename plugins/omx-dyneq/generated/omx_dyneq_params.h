@@ -472,15 +472,15 @@ static const char *const OMX_DYNEQ_PARAM_MODULES[OMX_DYNEQ_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_DYNEQ_NAME "omx dyneq"
 #define OMX_DYNEQ_VENDOR "openmixer"
-#define OMX_DYNEQ_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DYNEQ_VERSION "0.20.0"
+#define OMX_DYNEQ_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_DYNEQ_VERSION "0.21.0"
 #define OMX_DYNEQ_DESCRIPTION "A six-band dynamic EQ: each band is an EQ bell or shelf whose gain also moves with the level of its own band, cutting above a threshold (down) or lifting below it (up), held to a range, so a harsh or boomy band is tamed only while it is too loud."
 #define OMX_DYNEQ_CLAP_ID "org.openmixer.dyneq"
 #define OMX_DYNEQ_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
 #define OMX_DYNEQ_LV2_URI "urn:openmixer:dyneq"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_DYNEQ_DECL_SOURCE "omx dyneq: Band 1 On 0 to 1, Band 2 On 0 to 1, Band 3 On 0 to 1, Band 4 On 0 to 1, Band 5 On 0 to 1, Band 6 On 0 to 1, Band 1 Type 0 to 2, Band 2 Type 0 to 2, Band 3 Type 0 to 2, Band 4 Type 0 to 2, Band 5 Type 0 to 2, Band 6 Type 0 to 2, Band 1 Freq 20 to 20000 Hz, Band 2 Freq 20 to 20000 Hz, Band 3 Freq 20 to 20000 Hz, Band 4 Freq 20 to 20000 Hz, Band 5 Freq 20 to 20000 Hz, Band 6 Freq 20 to 20000 Hz, Band 1 Gain -15 to 15 dB, Band 2 Gain -15 to 15 dB, Band 3 Gain -15 to 15 dB, Band 4 Gain -15 to 15 dB, Band 5 Gain -15 to 15 dB, Band 6 Gain -15 to 15 dB, Band 1 Q 0.3 to 8, Band 2 Q 0.3 to 8, Band 3 Q 0.3 to 8, Band 4 Q 0.3 to 8, Band 5 Q 0.3 to 8, Band 6 Q 0.3 to 8, Band 1 Dynamics 0 to 2, Band 2 Dynamics 0 to 2, Band 3 Dynamics 0 to 2, Band 4 Dynamics 0 to 2, Band 5 Dynamics 0 to 2, Band 6 Dynamics 0 to 2, Band 1 Threshold -60 to 0 dB, Band 2 Threshold -60 to 0 dB, Band 3 Threshold -60 to 0 dB, Band 4 Threshold -60 to 0 dB, Band 5 Threshold -60 to 0 dB, Band 6 Threshold -60 to 0 dB, Band 1 Ratio 1 to 20, Band 2 Ratio 1 to 20, Band 3 Ratio 1 to 20, Band 4 Ratio 1 to 20, Band 5 Ratio 1 to 20, Band 6 Ratio 1 to 20, Band 1 Range -24 to 12 dB, Band 2 Range -24 to 12 dB, Band 3 Range -24 to 12 dB, Band 4 Range -24 to 12 dB, Band 5 Range -24 to 12 dB, Band 6 Range -24 to 12 dB, Band 1 Attack 0.5 to 100 ms, Band 2 Attack 0.5 to 100 ms, Band 3 Attack 0.5 to 100 ms, Band 4 Attack 0.5 to 100 ms, Band 5 Attack 0.5 to 100 ms, Band 6 Attack 0.5 to 100 ms, Band 1 Release 5 to 3000 ms, Band 2 Release 5 to 3000 ms, Band 3 Release 5 to 3000 ms, Band 4 Release 5 to 3000 ms, Band 5 Release 5 to 3000 ms, Band 6 Release 5 to 3000 ms, Band 1 Listen 0 to 1, Band 2 Listen 0 to 1, Band 3 Listen 0 to 1, Band 4 Listen 0 to 1, Band 5 Listen 0 to 1, Band 6 Listen 0 to 1, Mix 0 to 100 %"
-#define OMX_DYNEQ_DECL_DIGEST "42f922522e41342fe1d9de839ecccca9f1537956c5418067f09bbe0ec8b15024"
+#define OMX_DYNEQ_DECL_DIGEST "31ae519edf400e2322bddaa0958d94e3081e49c3f9adc36df363eaa241ff09cb"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

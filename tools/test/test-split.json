@@ -10,12 +10,18 @@
       "oracle-rates",
       "face-header",
       "role-meanings",
+      "plugin-labels",
+      "meanings",
       "meter-binding",
       "panel-layout",
       "descriptor-view",
       "descriptor-features",
+      "choice-units",
+      "filter-response",
       "placement-strips",
+      "plugin-category",
       "lv2-units",
+      "round-trip-loss-units",
       "lv2-deprecated",
       "lv2-maintainer",
       "no-modgui",
@@ -33,15 +39,19 @@
       "band-groups",
       "phaser-depth",
       "geq-widgets",
+      "decl-schema-panel-ref",
       "summary-numbers",
       "param-tie",
+      "own-units",
       "face-ids",
       "comp-release-mode",
       "strip-visible-when",
       "strip-pages-follow",
       "face-dirty-order",
       "core-init-answers",
-      "debt-base",
+      "selftest-shards",
+      "meter-words",
+      "artifact-retention", "test-no-host-nproc", "release-same-pass", "from-channel", "debt-base",
       "test-split"
     ],
     "steps": [
@@ -58,9 +68,11 @@
       "host-contract",
       "meter-level",
       "comp-published-scan",
+      "meter-held",
+      "meter-rows",
       "strip-bands",
       "test-role",
-      "package-lists"
+      "package-lists", "panel-abi-refuses"
     ]
   },
   "test-heavy": {
@@ -69,7 +81,8 @@
     ],
     "steps": [
       "per-plugin test-heavy",
-      "round-trip"
+      "round-trip",
+      "curve-proof"
     ]
   },
   "plugin": {

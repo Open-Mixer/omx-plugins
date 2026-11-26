@@ -4,9 +4,35 @@
  * schema-validate.mjs — a JSON Schema validator for the subset schema/plugin.decl.schema.json uses.
  * A module of its own, so every tool can validate a declaration without loading the completeness checker
  * (tools/plugin-recipe.mjs re-exports it). A `$ref` into the same file is `#/...`; one into omx-panel's lists
- * (the widgets, the indexed roles) names its schema by `$id`, the installed copy tools/omx-panel.mjs reads.
+ * (the widgets, the indexed roles, visibleWhen) names its schema by the document's name, `panel.schema.json#/...`,
+ * and resolves to the installed copy tools/omx-panel.mjs reads, whatever address that copy's `$id` prints: the
+ * publisher's address has moved (github.com/FreeMixer, github.com/Open-Mixer in omx-panel 0.13.8, openmixer.org by
+ * ruling D21) and a reference by address went unresolved at each move (omx-plugins#98). One into omx-contract's domain
+ * schema (a word's shape, $defs.word: a plugin's own units) names it by the document's name too, `domain.schema.json#/...`, read from the installed omx-contract's data
+ * directory (or $OMX_CONTRACT_DIR) when a declaration reaches it. No other document resolves.
  */
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { installedDataDir } from './omx-contract.mjs';
 import { PANEL_SCHEMA } from './omx-panel.mjs';
+
+/** The name omx-panel's schema is installed under (schema/panel.schema.json), the one a declaration schema's `$ref` names. */
+export const PANEL_DOCUMENT = 'panel.schema.json';
+
+/** The name omx-contract's domain schema is installed under, the one a declaration schema's `$ref` names. */
+export const DOMAIN_DOCUMENT = 'domain.schema.json';
+/** omx-contract's domain schema, by its `$id` (the installed format's major, never spelled here), from the render or the
+ * installed data directory. */
+export const DOMAIN_SCHEMA_ID = /^https:\/\/openmixer\.org\/schema\/omx-contract\/v\d+\/domain\.schema\.json$/;
+let domainSchema;
+function contractDomainSchema() {
+  if (domainSchema) return domainSchema;
+  const file = [process.env.OMX_CONTRACT_DIR, installedDataDir()].filter(Boolean).map((d) => join(d, 'domain.schema.json')).find((f) => existsSync(f));
+  if (!file) throw new Error(`domain.schema.json: not in the installed omx-contract's data directory; a declaration's own units are words of omx-contract's domain schema (omx-contract-devel, BUILDING.md)`);
+  const doc = JSON.parse(readFileSync(file, 'utf8'));
+  if (!DOMAIN_SCHEMA_ID.test(doc.$id ?? '')) throw new Error(`${file}: its $id is ${doc.$id}, not omx-contract's domain schema (https://openmixer.org/schema/omx-contract/v<major>/domain.schema.json)`);
+  return (domainSchema = doc);
+}
 
 /** Errors of `value` against `schema` (draft 2020-12: $ref into $defs, type, const, enum, pattern,
  * minLength, required, properties, additionalProperties, items, minItems, uniqueItems, anyOf, allOf, oneOf,
@@ -18,7 +44,7 @@ export function validate(root, schema, value, path = '') {
   const err = (msg) => errs.push(`${path || '/'}: ${msg}`);
   if (schema.$ref) {
     const [base, pointer = ''] = schema.$ref.split('#');
-    const from = base === '' ? root : base === PANEL_SCHEMA.$id ? PANEL_SCHEMA : undefined;
+    const from = base === '' ? root : base === PANEL_DOCUMENT ? PANEL_SCHEMA : base === DOMAIN_DOCUMENT ? contractDomainSchema() : undefined;
     const target = from && pointer.replace(/^\//, '').split('/').filter(Boolean).reduce((n, k) => n?.[k], from);
     if (!target) return [`${path || '/'}: unresolved ${schema.$ref}`];
     errs.push(...validate(from, target, value, path));

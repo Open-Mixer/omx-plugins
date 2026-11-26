@@ -19,12 +19,12 @@
     },
     {
       "symbol": "feedback",
-      "unit": "",
+      "unit": "none",
       "value": 0.8
     },
     {
       "symbol": "mix",
-      "unit": "%",
+      "unit": "percent",
       "value": 50
     }
   ],

@@ -88,8 +88,8 @@ static const char *const OMX_PLOSIVE_PARAM_MODULES[OMX_PLOSIVE_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_PLOSIVE_NAME "omx plosive"
 #define OMX_PLOSIVE_VENDOR "openmixer"
-#define OMX_PLOSIVE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_PLOSIVE_VERSION "0.20.0"
+#define OMX_PLOSIVE_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_PLOSIVE_VERSION "0.21.0"
 #define OMX_PLOSIVE_DESCRIPTION "Softens the p pops and hard t and k consonants of a voice, cutting each only while it bursts."
 #define OMX_PLOSIVE_CLAP_ID "org.openmixer.plosive"
 #define OMX_PLOSIVE_CLAP_FEATURES "audio-effect", "de-esser", "stereo"
@@ -124,8 +124,8 @@ static const omx_resource_hints_t OMX_PLOSIVE_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family none. */
-#define OMX_PLOSIVE_PANEL_FINGERPRINT "eb6543f8129e147b31e879d680071590531831c3407b4b34c2b27a80bca54436"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family deesser. */
+#define OMX_PLOSIVE_PANEL_FINGERPRINT "a625ebfece996c9b370604b325e23a7f5823d6b07b7f77100e5163ed871cc23d"
 static const struct omx_panel_section_row OMX_PLOSIVE_PANEL_SECTIONS[] = {
   { "plosive", "fx.plosive.section.plosive", "Plosive" },
 };
@@ -140,18 +140,25 @@ static const struct omx_panel_control_row OMX_PLOSIVE_PANEL_CONTROLS[] = {
   { 7u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.plosive.pop_recovery_ms", "Pop Recovery", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 8u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.plosive.pop_hz", "Pop Corner", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
+static const struct omx_panel_role_row OMX_PLOSIVE_PANEL_ROLES[] = {
+  { "frequency", 0u, 3u },
+  { "threshold", 0u, 1u },
+  { "range", 0u, 0u },
+  { "width", 0u, 4u },
+  { "release", 0u, 2u },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_PLOSIVE_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 3u, 1u, 0u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "Plosive", "Plosive", { 4u, 5u, 6u, 7u, 8u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_PLOSIVE_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_PLOSIVE_PANEL = {
-  OMX_PLOSIVE_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
+  OMX_PLOSIVE_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DEESSER,
   OMX_PLOSIVE_PANEL_SECTIONS, 1u,
   OMX_PLOSIVE_PANEL_CONTROLS, 9u,
-  NULL, 0u,
+  OMX_PLOSIVE_PANEL_ROLES, 5u,
   NULL, 0u,
   NULL, 0u,
 };

@@ -58,15 +58,15 @@ static const char *const OMX_TONE_PARAM_MODULES[OMX_TONE_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_TONE_NAME "omx tone"
 #define OMX_TONE_VENDOR "openmixer"
-#define OMX_TONE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_TONE_VERSION "0.20.0"
+#define OMX_TONE_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_TONE_VERSION "0.21.0"
 #define OMX_TONE_DESCRIPTION "Tilts the whole tone darker or brighter about a pivot, and sweeps a resonant DJ filter from a low-pass through open to a high-pass with one knob."
 #define OMX_TONE_CLAP_ID "org.openmixer.tone"
 #define OMX_TONE_CLAP_FEATURES "audio-effect", "filter", "stereo"
 #define OMX_TONE_LV2_URI "urn:openmixer:tone"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_TONE_DECL_SOURCE "omx tone: Tilt -6 to 6 dB, Pivot 200 to 5000 Hz, DJ Filter -100 to 100, Resonance 0.5 to 4"
-#define OMX_TONE_DECL_DIGEST "98bc8d37e1cb6e843ad5cae6db1e41273e996044dc425c5aa435f945ed96656e"
+#define OMX_TONE_DECL_DIGEST "78282e136a47be090fa9d7c2810dd9512aa78a94ba718f248ab398feb1d4ee1c"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

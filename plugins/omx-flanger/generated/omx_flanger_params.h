@@ -58,15 +58,15 @@ static const char *const OMX_FLANGER_PARAM_MODULES[OMX_FLANGER_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_FLANGER_NAME "omx flanger"
 #define OMX_FLANGER_VENDOR "openmixer"
-#define OMX_FLANGER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_FLANGER_VERSION "0.20.0"
+#define OMX_FLANGER_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_FLANGER_VERSION "0.21.0"
 #define OMX_FLANGER_DESCRIPTION "The console's flanger: one modulated short delay with signed feedback, swept by one oscillator and mixed with the dry signal."
 #define OMX_FLANGER_CLAP_ID "org.openmixer.flanger"
 #define OMX_FLANGER_CLAP_FEATURES "audio-effect", "flanger", "stereo"
 #define OMX_FLANGER_LV2_URI "urn:openmixer:flanger"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_FLANGER_DECL_SOURCE "omx flanger: Rate 0.05 to 5 Hz, Depth 0 to 5 ms, Feedback -0.95 to 0.95, Mix 0 to 100 %"
-#define OMX_FLANGER_DECL_DIGEST "323560b13042be1596a25511cdd1cabcddfc4f976cb7c1ab68f318f2ad8fc73e"
+#define OMX_FLANGER_DECL_DIGEST "dd41a3b11f3d4a8e901f5604c51ecb5bd16696fb1b3baf1333f7911bb5bd831e"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
@@ -91,7 +91,7 @@ static const omx_resource_hints_t OMX_FLANGER_RESOURCE_HINTS = {
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family modulation.
  * Declared roles not published:
- *   depth (depth): the depth role takes none, percent, x, oct, not ms */
+ *   depth (depth): the depth role takes none, percent, coef, oct, not ms */
 #define OMX_FLANGER_PANEL_FINGERPRINT "efbf83c2361c47c85db68bcf5e339be2cc1679cbb35e2ce2c50eb8e39a6907a6"
 static const struct omx_panel_section_row OMX_FLANGER_PANEL_SECTIONS[] = {
   { "flanger", "fx.flanger.section.flanger", "Flanger" },

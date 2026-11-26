@@ -6,7 +6,8 @@
     "deesser"
   ],
   "noun": "de-esser",
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "category": "dynamics",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "controls": {
     "deessMode": {

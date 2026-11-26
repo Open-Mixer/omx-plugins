@@ -3,7 +3,7 @@
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 //
 // tools/test/role-meanings-check.mjs — contract/role-meanings.json, the meaning each role of our declared panels
-// plays (installed as <contractdir>/3/omx-plugins/role-meanings.json; omx-contract docs/contract-dir.md "A package's
+// plays (installed as <contractdir>/omx-plugins/role-meanings.json; omx-contract docs/contract-dir.md "A package's
 // role meanings"), is whole and only ours: every role of every family schema/plugin.decl.schema.json's familyRoles
 // declares has exactly one row, no row names a role no family has, and a row's key is its role in lowerCamel case.
 // That each meaning is a word of the contract's closed list, and that a role has one owner, is omx-contract's reader's

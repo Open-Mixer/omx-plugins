@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.balancer",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:balancer",
     "name": "omx balancer",
     "vendor": "openmixer",
-    "version": "0.20.0",
+    "version": "0.21.0",
     "doc": "Walks four bands slowly toward a target tone, so a mix settles toward a pink-noise balance without chasing notes.",
     "features": [
       "audio-effect"
@@ -26,18 +23,19 @@
         "min": 0,
         "max": 100,
         "step": 1,
-        "unit": "%",
+        "unit": "percent",
         "default": 0,
         "scale": "stepped"
       },
       "group": [
         "Balancer"
       ],
+      "meaning": "amount",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/balancer.json#BALANCER_AMOUNT_PCT_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -57,11 +55,12 @@
       "group": [
         "Balancer"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/balancer.json#BALANCER_RANGE_DB_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -74,18 +73,19 @@
         "min": 0.1,
         "max": 6,
         "step": 0,
-        "unit": "dB",
+        "unit": "dBPerS",
         "default": 0.5,
         "scale": "linear"
       },
       "group": [
         "Balancer"
       ],
+      "meaning": "rate",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/balancer.json#BALANCER_SPEED_DB_PER_S_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     },
@@ -98,18 +98,19 @@
         "min": -6,
         "max": 0,
         "step": 0,
-        "unit": "dB/oct",
+        "unit": "dBPerOct",
         "default": -3,
         "scale": "linear"
       },
       "group": [
         "Balancer"
       ],
+      "meaning": "slope",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/balancer.json#BALANCER_SLOPE_DB_OCT_RANGE",
-          "at": "omx-dsp@0.34.0"
+          "at": "omx-dsp@0.34.1"
         }
       }
     }
