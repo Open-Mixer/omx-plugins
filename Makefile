@@ -91,6 +91,9 @@
 #   make panel-abi-refuses  panel-abi refuses by name when omx-clap-core's omx_clap_ext.h is absent, never a compiler
 #                    error (tools/test/panel-abi-refuses-check.sh, against an include directory without it; part
 #                    of `make test` and `make test-faces`)
+#   make control-layout  every shipped face serves org.openmixer.control-layout.draft/1, the panel cut down, and
+#                    omx-clap-scan's host rules leave none of it out (tools/test/control-layout-check.mjs; part of
+#                    `make test`; OMX_CLAP_SCAN names the scanner)
 #   make host-contract  every shipped face opened by libomx-clap-core, whose own fingerprint of what get_info and the
 #                    contract serve must match the face's: omx_clap_host_param_contract() trusts it
 #                    (tools/test/host-contract-accept.c; part of `make test` and `make test-faces`)
@@ -196,7 +199,7 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp)$(call dep_check,omx-contract)$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dir meter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features choice-units placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base selftest-shards decl-schema-panel-ref filter-response artifact-retention release-same-pass from-channel panel-abi-refuses plugin-category
+.PHONY: control-layout test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dir meter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features choice-units placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base selftest-shards decl-schema-panel-ref filter-response artifact-retention release-same-pass from-channel panel-abi-refuses plugin-category
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
@@ -220,6 +223,7 @@ test: lib
 	$(MAKE) -s param-contract-abi || { rc=1; red="$$red param-contract-abi"; }; \
 	$(MAKE) -s panel-abi || { rc=1; red="$$red panel-abi"; }; \
 	$(MAKE) -s host-contract || { rc=1; red="$$red host-contract"; }; \
+	$(MAKE) -s control-layout || { rc=1; red="$$red control-layout"; }; \
 	$(MAKE) -s meter-level || { rc=1; red="$$red meter-level"; }; \
 	$(MAKE) -s comp-published-scan || { rc=1; red="$$red comp-published-scan"; }; \
 	$(MAKE) -s meter-held || { rc=1; red="$$red meter-held"; }; \
@@ -532,6 +536,10 @@ meter-level:
 # org.openmixer.param-contract/1 entries by value, as text, JSON and field dump (tools/test/published-comp-scan.py), and
 # each expected value changed once is found. The scanner is a build dependency of the package, not built here
 OMX_CLAP_SCAN ?= omx-clap-scan
+# every shipped face serves org.openmixer.control-layout.draft/1, the panel cut down, and omx-clap-scan's host rules
+# leave nothing of it out (tools/test/control-layout-check.mjs; part of `make test`)
+control-layout: all
+	node tools/test/control-layout-check.mjs $(OMX_CLAP_SCAN) $(foreach p,$(SHIP_PLUGINS),$(p)build/$(notdir $(patsubst %/,%,$(p))).clap)
 comp-published-scan:
 	@$(MAKE) -s -C plugins/omx-comp all
 	python3 -I tools/test/published-comp-scan.py --self-test $(OMX_CLAP_SCAN) plugins/omx-comp/build/omx-comp.clap
