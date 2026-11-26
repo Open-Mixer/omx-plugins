@@ -134,7 +134,8 @@ jobs:
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
         with:
-          staging: ${{ inputs.staged == true }}
+          # a devel push stages its build, so its proof reads the staging channel, as build-rpm.yml's jobs do
+          staging: ${{ inputs.staged == true || (github.event_name == 'push' && github.ref == 'refs/heads/devel') }}
 
       - uses: actions/checkout@v4
 
