@@ -40,7 +40,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_KEY_SOURCES",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -65,7 +65,7 @@
       "source": {
         "from": {
           "link": "data/primitives/gate-continuous-travels.json#GATE_CONTINUOUS_TRAVELS.thresholdDb",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -90,7 +90,7 @@
       "source": {
         "from": {
           "link": "data/primitives/gate-continuous-travels.json#GATE_CONTINUOUS_TRAVELS.ratio",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -115,7 +115,7 @@
       "source": {
         "from": {
           "link": "data/primitives/gate-continuous-travels.json#GATE_CONTINUOUS_TRAVELS.rangeDb",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -140,7 +140,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_LIMITS.attackMs",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -165,7 +165,7 @@
       "source": {
         "from": {
           "link": "data/primitives/gate-continuous-travels.json#GATE_CONTINUOUS_TRAVELS.releaseMs",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -190,7 +190,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_LIMITS.kneeStartDb",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -215,7 +215,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_LIMITS.kneeEndDb",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -240,7 +240,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_LIMITS.holdMs",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -265,7 +265,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_LIMITS.hysteresisDb",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -290,7 +290,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_KEY_LIMITS.hpHz",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -315,7 +315,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#GATE_KEY_LIMITS.lpHz",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     }
@@ -376,7 +376,7 @@
       "source": {
         "from": {
           "link": "data/kernels/gate.json#readouts[gainReductionDb]",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     }

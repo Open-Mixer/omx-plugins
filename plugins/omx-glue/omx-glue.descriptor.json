@@ -35,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -68,7 +68,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_RATIOS",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -110,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_ATTACKS",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -149,7 +149,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_RELEASES",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -174,7 +174,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_MAKEUP_DB_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -199,7 +199,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_KEY_HP_HZ_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -224,7 +224,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_MIX_PCT_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -254,7 +254,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#DETECTOR_TOPOLOGY",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     }

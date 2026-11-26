@@ -35,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_SPREAD_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -60,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_RATE_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_DEPTH_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -110,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_VOICES_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -135,7 +135,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_MIX_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     }

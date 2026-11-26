@@ -37,7 +37,12 @@ run() { # <tree>
 
 if [ "${1:-}" = --self-test ]; then
   tree="$scratch/tree"; mkdir -p "$tree"
-  (cd "$HERE" && git ls-files -z | tar --null -T - -cf -) | tar -C "$tree" -xf -
+  # the tracked files in a checkout; a release tarball (the package builds' make test) has no git, and is its tracked files
+  if [ "$(git -C "$HERE" rev-parse --show-toplevel 2>/dev/null)" = "$HERE" ]; then
+    (cd "$HERE" && git ls-files -z | tar --null -T - -cf -) | tar -C "$tree" -xf -
+  else
+    tar -C "$HERE" --exclude=./build --exclude='./plugins/*/build' -cf - . | tar -C "$tree" -xf -
+  fi
   h="$tree/include/omx_meter_ring.h"
   fail=0
   for arm in no-hold no-restart no-deep no-clip-hold; do
