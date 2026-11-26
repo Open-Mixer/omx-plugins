@@ -200,7 +200,8 @@ jobs:
     name: Zynthian tarball (trixie, arm64)
     needs: deb
     # not on a staged run: it reads packages a staged run does not build
-    if: ${{ !cancelled() && needs.deb.result == 'success' && inputs.staged != true }}
+    # a devel push on the x86_64 RPM alone builds no deb (OMX_DEVEL_MATRIX, Open-Mixer/.github#304): nothing to bundle
+    if: ${{ !cancelled() && needs.deb.result == 'success' && needs.deb.outputs.skipped != 'true' && inputs.staged != true }}
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 15
     permissions:
