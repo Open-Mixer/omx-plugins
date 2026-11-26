@@ -35,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_FREQ_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -60,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_WIDTH_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -110,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_RATIO_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -135,7 +135,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_RANGE_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -160,7 +160,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_ATTACK_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -185,7 +185,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_RELEASE_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -215,7 +215,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_MODES",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     }
@@ -267,7 +267,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#readouts[gainReductionDb]",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },

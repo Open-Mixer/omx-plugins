@@ -35,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_WIDTH_PCT_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -68,7 +68,7 @@
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_PSEUDOS",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -93,7 +93,7 @@
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_PSEUDO_MS_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -111,7 +111,7 @@
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_BASS_MONOS",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -136,7 +136,7 @@
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_BASS_MONO_HZ_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     }

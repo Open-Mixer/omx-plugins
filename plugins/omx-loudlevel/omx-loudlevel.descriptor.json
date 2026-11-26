@@ -35,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/loudlevel.json#LOUDLEVEL_TARGET_LUFS_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -60,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/loudlevel.json#LOUDLEVEL_RANGE_DB_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/loudlevel.json#LOUDLEVEL_SPEED_DB_PER_S_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -110,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/loudlevel.json#LOUDLEVEL_GATE_LUFS_RANGE",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     },
@@ -140,7 +140,7 @@
       "source": {
         "from": {
           "link": "data/kernels/loudlevel.json#LOUDLEVEL_WINDOWS",
-          "at": "omx-dsp@0.34.1"
+          "at": "omx-dsp@0.34.2"
         }
       }
     }
