@@ -7,7 +7,7 @@
     "uri": "urn:openmixer:multiband",
     "name": "omx multiband",
     "vendor": "openmixer",
-    "version": "0.21.0",
+    "version": "0.21.1",
     "doc": "A multiband compressor: two to five bands split by Linkwitz-Riley crossovers, each band its own compressor with threshold, ratio, attack, release, make-up, solo and bypass, then a mix and an output gain, for in-ear mixes, vocals and playback buses.",
     "features": [
       "audio-effect"
@@ -46,7 +46,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_BANDS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -71,7 +71,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_XOVER_HZ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -96,7 +96,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_XOVER_HZ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -121,7 +121,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_XOVER_HZ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -146,7 +146,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_XOVER_HZ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -171,7 +171,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -196,7 +196,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -221,7 +221,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -246,7 +246,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -271,7 +271,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -296,7 +296,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_RATIO_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -321,7 +321,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_RATIO_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -346,7 +346,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_RATIO_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -371,7 +371,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_RATIO_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -396,7 +396,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_RATIO_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -421,7 +421,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_ATTACK_MS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -446,7 +446,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_ATTACK_MS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -471,7 +471,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_ATTACK_MS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -496,7 +496,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_ATTACK_MS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -521,7 +521,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_ATTACK_MS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -546,7 +546,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_RELEASE_MS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -571,7 +571,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_RELEASE_MS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -596,7 +596,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_RELEASE_MS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -621,7 +621,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_RELEASE_MS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -646,7 +646,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_RELEASE_MS_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -671,7 +671,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_MAKEUP_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -696,7 +696,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_MAKEUP_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -721,7 +721,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_MAKEUP_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -746,7 +746,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_MAKEUP_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -771,7 +771,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_MAKEUP_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -789,7 +789,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_SOLOS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -807,7 +807,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_SOLOS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -825,7 +825,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_SOLOS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -843,7 +843,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_SOLOS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -861,7 +861,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_SOLOS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -879,7 +879,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_BAND_BYPASSES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -897,7 +897,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_BAND_BYPASSES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -915,7 +915,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_BAND_BYPASSES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -933,7 +933,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_BAND_BYPASSES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -951,7 +951,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_BAND_BYPASSES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -976,7 +976,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_MIX_PCT_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1001,7 +1001,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#MBCOMP_OUTPUT_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }
@@ -1053,7 +1053,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#readouts[band1GainReductionDb]",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1073,7 +1073,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#readouts[band2GainReductionDb]",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1093,7 +1093,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#readouts[band3GainReductionDb]",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1113,7 +1113,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#readouts[band4GainReductionDb]",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1133,7 +1133,7 @@
       "source": {
         "from": {
           "link": "data/kernels/mbcomp.json#readouts[band5GainReductionDb]",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }

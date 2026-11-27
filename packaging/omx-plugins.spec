@@ -388,6 +388,13 @@ English source sentence.
   org.openmixer.control-layout.draft/1, drawn whole by omx-clap-scan's host
   rules (#233).
 
+* Thu Nov 26 2026 Pau Aliagas <linuxnow@gmail.com> - 0.21.1-1
+- The RPMs are built for Fedora aarch64 as well as x86_64: the release
+  matrix is Open-Mixer/.github's shared releases and architectures, with no
+  list of this repository's own.
+- Published by the devel release of the full matrix, with every change
+  merged to devel since 0.21.0.
+
 * Mon Nov 23 2026 Pau Aliagas <linuxnow@gmail.com> - 0.21.0-1
 - the version moves to 0.21.0 (chain 3)
 - section titles, choice labels and preset names are translatable: the

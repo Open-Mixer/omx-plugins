@@ -6,6 +6,16 @@ omx-plugins (0.22.0) unstable; urgency=medium
 
  -- Pau Aliagas <linuxnow@gmail.com>  Fri, 27 Nov 2026 03:27:39 +0100
 
+omx-plugins (0.21.1) unstable; urgency=medium
+
+  * The RPMs are built for Fedora aarch64 as well as x86_64: the release
+    matrix is Open-Mixer/.github's shared releases and architectures, with
+    no list of this repository's own.
+  * Published by the devel release of the full matrix, with every change
+    merged to devel since 0.21.0.
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Thu, 26 Nov 2026 23:09:48 +0100
+
 omx-plugins (0.21.0) unstable; urgency=medium
 
   * The version moves to 0.21.0 (chain 3).
