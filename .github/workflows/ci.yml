@@ -127,6 +127,9 @@ jobs:
 
       # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
       - name: Every omx package comes from the channel
+        env:
+          # a wave's run builds against its devel channel and staging (Open-Mixer/.github#329)
+          OMX_WAVE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
         run: tools/from-channel-check.sh
 
       - name: The version agrees everywhere it is written
@@ -260,6 +263,9 @@ jobs:
 
       # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
       - name: Every omx package comes from the channel
+        env:
+          # a wave's run builds against its devel channel and staging (Open-Mixer/.github#329)
+          OMX_WAVE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
         run: tools/from-channel-check.sh
 
       - name: make test-heavy, and nothing skipped
@@ -317,6 +323,9 @@ jobs:
 
       # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
       - name: Every omx package comes from the channel
+        env:
+          # a wave's run builds against its devel channel and staging (Open-Mixer/.github#329)
+          OMX_WAVE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
         run: tools/from-channel-check.sh
 
       - name: The recipe machinery, sabotaged arm by arm
