@@ -1,3 +1,11 @@
+omx-plugins (0.22.0) unstable; urgency=medium
+
+  * CLAP face: every plugin serves its panel cut down as
+    org.openmixer.control-layout.draft/1, drawn whole by omx-clap-scan's
+    host rules (#233).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Fri, 27 Nov 2026 03:27:39 +0100
+
 omx-plugins (0.21.0) unstable; urgency=medium
 
   * The version moves to 0.21.0 (chain 3).
