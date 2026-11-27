@@ -136,6 +136,8 @@ jobs:
         with:
           # a devel push stages its build, so its proof reads the staging channel, as build-rpm.yml's jobs do
           staging: ${{ inputs.staged == true || (github.event_name == 'push' && github.ref == 'refs/heads/devel') }}
+          # a pull request into devel in a wave reads that wave's devel channel above staging (Open-Mixer/.github#329)
+          devel-channel: ${{ startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel' && vars.OMX_DEVEL_CHANNEL || '' }}
 
       - uses: actions/checkout@v4
 
