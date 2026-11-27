@@ -7,7 +7,7 @@
     "uri": "urn:openmixer:eq16",
     "name": "omx eq16",
     "vendor": "openmixer",
-    "version": "0.21.0",
+    "version": "0.21.1",
     "doc": "The OpenMixer console's channel EQ, 16-band form: 16 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire.",
     "features": [
       "audio-effect"
@@ -29,7 +29,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_HPF_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -55,7 +55,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#HPF_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -86,7 +86,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#FILTER_SLOPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -105,7 +105,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_LPF_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -131,7 +131,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#LPF_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -162,7 +162,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#FILTER_SLOPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -205,7 +205,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -231,7 +231,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -257,7 +257,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -283,7 +283,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -302,7 +302,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -345,7 +345,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -371,7 +371,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -397,7 +397,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -423,7 +423,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -442,7 +442,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -485,7 +485,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -511,7 +511,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -537,7 +537,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -563,7 +563,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -582,7 +582,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -625,7 +625,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -651,7 +651,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -677,7 +677,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -703,7 +703,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -722,7 +722,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -765,7 +765,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -791,7 +791,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -817,7 +817,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -843,7 +843,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -862,7 +862,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -905,7 +905,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -931,7 +931,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -957,7 +957,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -983,7 +983,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1002,7 +1002,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1045,7 +1045,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1071,7 +1071,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1097,7 +1097,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1123,7 +1123,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1142,7 +1142,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1185,7 +1185,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1211,7 +1211,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1237,7 +1237,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1263,7 +1263,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1282,7 +1282,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1325,7 +1325,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1351,7 +1351,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1377,7 +1377,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1403,7 +1403,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1422,7 +1422,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1465,7 +1465,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1491,7 +1491,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1517,7 +1517,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1543,7 +1543,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1562,7 +1562,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1605,7 +1605,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1631,7 +1631,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1657,7 +1657,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1683,7 +1683,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1702,7 +1702,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1745,7 +1745,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1771,7 +1771,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1797,7 +1797,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1823,7 +1823,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1842,7 +1842,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1885,7 +1885,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1911,7 +1911,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1937,7 +1937,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1963,7 +1963,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -1982,7 +1982,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2025,7 +2025,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2051,7 +2051,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2077,7 +2077,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2103,7 +2103,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2122,7 +2122,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2165,7 +2165,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2191,7 +2191,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2217,7 +2217,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2243,7 +2243,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2262,7 +2262,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2305,7 +2305,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_TYPES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2331,7 +2331,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2357,7 +2357,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_GAIN_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2383,7 +2383,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_NOTCH_Q_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -2402,7 +2402,7 @@
       "source": {
         "from": {
           "link": "data/kernels/eq.json#EQ_BAND_ONS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }
