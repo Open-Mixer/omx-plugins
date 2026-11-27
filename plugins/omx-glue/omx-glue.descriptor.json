@@ -7,7 +7,7 @@
     "uri": "urn:openmixer:glue",
     "name": "omx glue",
     "vendor": "openmixer",
-    "version": "0.21.0",
+    "version": "0.21.1",
     "doc": "A bus compressor with the detents of a classic console: stepped ratio, attack and release, a key filter and a dry mix.",
     "features": [
       "audio-effect"
@@ -35,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -68,7 +68,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_RATIOS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -110,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_ATTACKS",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -149,7 +149,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_RELEASES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -174,7 +174,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_MAKEUP_DB_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -199,7 +199,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_KEY_HP_HZ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -224,7 +224,7 @@
       "source": {
         "from": {
           "link": "data/kernels/glue.json#GLUE_MIX_PCT_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -254,7 +254,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#DETECTOR_TOPOLOGY",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }
