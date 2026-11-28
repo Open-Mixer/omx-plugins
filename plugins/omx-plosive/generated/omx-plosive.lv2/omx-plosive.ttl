@@ -22,7 +22,7 @@
     doap:name "omx plosive" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
-    lv2:minorVersion 21 ;
+    lv2:minorVersion 22 ;
     lv2:microVersion 1 ;
     rdfs:comment "Softens the p pops and hard t and k consonants of a voice, cutting each only while it bursts." ;
     lv2:optionalFeature lv2:hardRTCapable ;

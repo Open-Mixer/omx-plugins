@@ -439,6 +439,30 @@ export const CHECKERS = {
     return ok(`${file}: '${name}' lists ${want}`);
   },
 
+  /**
+   * The labels domain (tools/plugin-labels.mjs, written by tools/gen.mjs) carries the plugin's item, its section
+   * titles, choice labels and preset names, and the committed file is what tools/gen.mjs generates now. A plugin
+   * that gives no such word has no item, and owes none.
+   */
+  async labelsListed(root, _recipe, facts, { file }) {
+    const gen = await import(join(root, 'tools', 'gen.mjs'));
+    const labels = await import(join(root, 'tools', 'plugin-labels.mjs'));
+    let d, doc;
+    try {
+      d = gen.loadDecl(join(root, 'plugins', facts.stem));
+      doc = gen.labelsDocText(root);
+    } catch (e) {
+      return missing(`cannot generate: ${e.message}`);
+    }
+    if (!gen.ships(d)) return missing(`${facts.stem} does not ship yet: its folder has no Makefile and its declaration no "binding" (instance or chain)`);
+    const item = labels.itemOf(facts.stem);
+    const words = JSON.parse(doc).components.schemas[item]?.oneOf ?? [];
+    const committed = existsSync(join(root, file)) ? JSON.parse(text(root, file)).components?.schemas?.[item] : undefined;
+    if (words.length && !committed) return missing(`${file} has no item ${item}, the ${words.length} words ${facts.stem} gives (node tools/gen.mjs)`);
+    if (existsSync(join(root, file)) && text(root, file) !== doc) return missing(`${file} is stale: it is not what the declarations generate (node tools/gen.mjs)`);
+    return ok(words.length ? `${file}: ${item}, ${words.length} words` : `${facts.stem} gives no section, choice or preset: no item owed`);
+  },
+
   // ---- the laws ----
 
   /** No file with one of the extensions. */

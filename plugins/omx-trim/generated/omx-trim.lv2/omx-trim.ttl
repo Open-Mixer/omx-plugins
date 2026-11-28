@@ -21,7 +21,7 @@
     doap:name "omx trim" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
-    lv2:minorVersion 21 ;
+    lv2:minorVersion 22 ;
     lv2:microVersion 1 ;
     rdfs:comment "The OpenMixer console's input trim: one gain control, -24 to +24 dB in 0.1 dB steps, applied first in the channel as a click-free ramp, stereo, zero latency; at 0 dB a racked instance is a wire." ;
     lv2:optionalFeature lv2:hardRTCapable ;
