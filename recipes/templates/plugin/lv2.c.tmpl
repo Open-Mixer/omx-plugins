@@ -23,7 +23,7 @@
  * {{meterValues}} values the face writes after a block, the output control ports from OMX_{{K}}_LV2_PORT_FIRST_METER on. */
 _Static_assert({{meterValues}}u <= OMX_METER_RING_MAX, "one block's values fit the face's array");
 static const struct omx_face_meter G_METERS[] = {
-{{#meters}}    {"{{meterName}}", {{meterFaceKind}}, {{meterChannels}}u, {{meterOffset}}u, {{meterMin}}, {{meterMax}}, {{meterSource}}},
+{{#meters}}    {"{{meterName}}", {{meterFaceKind}}, {{meterChannels}}u, {{meterOffset}}u, {{meterMin}}, {{meterMax}}, {{meterSource}}, {{meterHeld}}, {{meterClip}}},
 {{/meters}}};
 {{/metered}}
 static const struct omx_face G_FACE = {

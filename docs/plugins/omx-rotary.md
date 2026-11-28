@@ -35,7 +35,7 @@ Ids are the order below, 0 to 7; a parameter appended later takes the next id. T
 | 1 | `hornFastHz` | Horn Fast | Hz | 3 | 10 | 6.8 | continuous, log | automatable | Rotary (1) |
 | 2 | `drumSlowHz` | Drum Slow | Hz | 0.1 | 2 | 0.7 | continuous, log | automatable | Rotary (1) |
 | 3 | `drumFastHz` | Drum Fast | Hz | 3 | 10 | 5.9 | continuous, log | automatable | Rotary (1) |
-| 4 | `accel` | Accel | x | 0.25 | 4 | 1 | continuous, linear | automatable | Rotary (1) |
+| 4 | `accel` | Accel | coef | 0.25 | 4 | 1 | continuous, linear | automatable | Rotary (1) |
 | 5 | `balance` | Balance | % | -100 | 100 | 0 | whole steps | automatable | Rotary (1) |
 | 6 | `mix` | Mix | % | 0 | 100 | 100 | continuous, linear | automatable | Rotary (1) |
 | 7 | `speed` | Speed |  | 0 | 2 | Slow (1) | 0 Stop, 1 Slow, 2 Fast | automatable | Rotary (1) |

@@ -119,15 +119,15 @@ static const char *const *const OMX_DRIVE_PARAM_LABELS[OMX_DRIVE_PARAM_COUNT] = 
 /* The identity every face publishes. */
 #define OMX_DRIVE_NAME "omx drive"
 #define OMX_DRIVE_VENDOR "openmixer"
-#define OMX_DRIVE_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DRIVE_VERSION "0.19.3"
+#define OMX_DRIVE_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_DRIVE_VERSION "0.22.3"
 #define OMX_DRIVE_DESCRIPTION "The console's drive: one waveshaper (soft, tape, tube or exciter) run inside the console's oversampler, on the full band, the lows, the highs or a tilt, with a wet/dry mix and a trim."
 #define OMX_DRIVE_CLAP_ID "org.openmixer.drive"
 #define OMX_DRIVE_CLAP_FEATURES "audio-effect", "distortion", "stereo"
 #define OMX_DRIVE_LV2_URI "urn:openmixer:drive"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_DRIVE_DECL_SOURCE "omx drive: Drive 0 to 36 dB, Character -1 to 1, Band Frequency 20 to 20000 Hz, Mix 0 to 100 %, Trim -24 to 12 dB, Curve 0 to 3, Band 0 to 3, Auto Gain 0 to 1, Stereo Link 0 to 1, HF Roll-off 0 to 2, Oversampling 1 to 4"
-#define OMX_DRIVE_DECL_DIGEST "0ace5ddc34e47ca5e4258c820757c6b1d5dc0c2172e8e71c39b036347f8e6e0c"
+#define OMX_DRIVE_DECL_DIGEST "ac85d70760d9810b1a1c2cf34ead3c72d07aee25b96cc8b10abf4158dab3cbc5"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

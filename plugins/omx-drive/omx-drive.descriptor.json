@@ -1,8 +1,5 @@
 {
-  "$schema": "https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
+  "$schema": "../schema/omx-contract.schema.json",
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.drive",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:drive",
     "name": "omx drive",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.22.3",
     "doc": "The console's drive: one waveshaper (soft, tape, tube or exciter) run inside the console's oversampler, on the full band, the lows, the highs or a tilt, with a wet/dry mix and a trim.",
     "features": [
       "audio-effect"
@@ -38,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_AMOUNT_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -51,7 +48,7 @@
         "min": -1,
         "max": 1,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0,
         "scale": "linear"
       },
@@ -63,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_CHARACTER_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -83,11 +80,12 @@
       "group": [
         "Drive"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_BAND_FREQ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -100,7 +98,7 @@
         "min": 0,
         "max": 100,
         "step": 0,
-        "unit": "%",
+        "unit": "percent",
         "default": 100,
         "scale": "linear"
       },
@@ -112,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_MIX_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -137,7 +135,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_TRIM_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -173,7 +171,7 @@
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_CURVES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -204,11 +202,12 @@
       "group": [
         "Drive"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_BANDS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -221,11 +220,12 @@
       "group": [
         "Drive"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_AUTO_GAINS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -238,11 +238,12 @@
       "group": [
         "Drive"
       ],
+      "meaning": "link",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_STEREO_LINKS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -270,11 +271,12 @@
       "group": [
         "Drive"
       ],
+      "meaning": "highCut",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_HF_ROLLOFFS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -302,11 +304,12 @@
       "group": [
         "Drive"
       ],
+      "meaning": "mode",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/drive.json#DRIVE_OVERSAMPLES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }

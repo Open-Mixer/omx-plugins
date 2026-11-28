@@ -75,15 +75,15 @@ static const char *const *const OMX_SPRING_PARAM_LABELS[OMX_SPRING_PARAM_COUNT] 
 /* The identity every face publishes. */
 #define OMX_SPRING_NAME "omx spring"
 #define OMX_SPRING_VENDOR "openmixer"
-#define OMX_SPRING_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_SPRING_VERSION "0.19.3"
+#define OMX_SPRING_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_SPRING_VERSION "0.22.3"
 #define OMX_SPRING_DESCRIPTION "A spring reverb: a delay, a chain of all-passes and a darkening loop, with decay, length, tension and damping."
 #define OMX_SPRING_CLAP_ID "org.openmixer.spring"
 #define OMX_SPRING_CLAP_FEATURES "audio-effect", "reverb", "stereo"
 #define OMX_SPRING_LV2_URI "urn:openmixer:spring"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_SPRING_DECL_SOURCE "omx spring: Decay 0.5 to 8 s, Length 20 to 60 ms, Tension 0 to 100 %, Damping 1000 to 10000 Hz, Mix 0 to 100 %"
-#define OMX_SPRING_DECL_DIGEST "ae132ec37dfeaf6fb16508365b4898dcb7adaaa84715d27b8b1e6784cab73059"
+#define OMX_SPRING_DECL_DIGEST "6cc0db7435e3bb96c28e4e491faf20bcc942d9f03f11b76d854c8f77003c0aee"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
@@ -107,8 +107,10 @@ static const omx_resource_hints_t OMX_SPRING_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family none. */
-#define OMX_SPRING_PANEL_FINGERPRINT "2dcde81668fd45187faf1989f0dddb6c655546f96683a4d63e22f3d0b0fe2fa3"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family reverb.
+ * Declared roles not published:
+ *   damping (dampHz): the damping role takes none, percent, coef, not Hz */
+#define OMX_SPRING_PANEL_FINGERPRINT "189f3eba87d49c5aa82c3e514f0250cbba132b1f824c2610daa24f99f35fc751"
 static const struct omx_panel_section_row OMX_SPRING_PANEL_SECTIONS[] = {
   { "spring", "fx.spring.section.spring", "Spring" },
 };
@@ -119,18 +121,22 @@ static const struct omx_panel_control_row OMX_SPRING_PANEL_CONTROLS[] = {
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.spring.damp_hz", "Damping", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 4u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.spring.mix_pct", "Mix", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
+static const struct omx_panel_role_row OMX_SPRING_PANEL_ROLES[] = {
+  { "decay", 0u, 0u },
+  { "mix", 0u, 4u },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_SPRING_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Spring", "Spring", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 4u, 1u, 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Spring", "Spring", { 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_SPRING_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_SPRING_PANEL = {
-  OMX_SPRING_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
+  OMX_SPRING_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_REVERB,
   OMX_SPRING_PANEL_SECTIONS, 1u,
   OMX_SPRING_PANEL_CONTROLS, 5u,
-  NULL, 0u,
+  OMX_SPRING_PANEL_ROLES, 2u,
   NULL, 0u,
   NULL, 0u,
 };

@@ -20,10 +20,10 @@ static const char *G_FEATURES[] = {OMX_COMP_CLAP_FEATURES, NULL};
  * the 6 values the face publishes after a block. */
 _Static_assert(6u <= OMX_METER_RING_MAX, "one publication holds every meter's values");
 static const struct omx_face_meter G_METERS[] = {
-    {"compGr", OMX_FACE_METER_KIND_GAIN_REDUCTION, 1u, 0u, (double)OMX_COMP_READOUT_GAIN_REDUCTION_DB_MIN, (double)OMX_COMP_READOUT_GAIN_REDUCTION_DB_MAX, OMX_FACE_METER_READ},
-    {"compIn", OMX_FACE_METER_KIND_LEVEL, 2u, 1u, -60.0, 6.0, OMX_FACE_METER_IN},
-    {"compOut", OMX_FACE_METER_KIND_LEVEL, 2u, 3u, -60.0, 6.0, OMX_FACE_METER_OUT},
-    {"compKey", OMX_FACE_METER_KIND_LEVEL, 1u, 5u, (double)OMX_COMP_READOUT_KEY_LEVEL_DB_MIN, (double)OMX_COMP_READOUT_KEY_LEVEL_DB_MAX, OMX_FACE_METER_READ},
+    {"compGr", OMX_FACE_METER_KIND_GAIN_REDUCTION, 1u, 0u, (double)OMX_COMP_READOUT_GAIN_REDUCTION_DB_MIN, (double)OMX_COMP_READOUT_GAIN_REDUCTION_DB_MAX, OMX_FACE_METER_READ, 1u, 0u},
+    {"compIn", OMX_FACE_METER_KIND_LEVEL, 2u, 1u, -60.0, 6.0, OMX_FACE_METER_IN, 1u, 1u},
+    {"compOut", OMX_FACE_METER_KIND_LEVEL, 2u, 3u, -60.0, 6.0, OMX_FACE_METER_OUT, 1u, 1u},
+    {"compKey", OMX_FACE_METER_KIND_LEVEL, 1u, 5u, (double)OMX_COMP_READOUT_KEY_LEVEL_DB_MIN, (double)OMX_COMP_READOUT_KEY_LEVEL_DB_MAX, OMX_FACE_METER_READ, 1u, 0u},
 };
 
 static const struct omx_face G_FACE = {

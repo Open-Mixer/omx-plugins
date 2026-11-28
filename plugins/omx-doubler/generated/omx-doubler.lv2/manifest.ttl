@@ -8,7 +8,7 @@
 <urn:openmixer:doubler>
     a lv2:Plugin ;
     lv2:binary <omx-doubler.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-doubler.ttl> .
+    rdfs:seeAlso <omx-doubler.ttl> .
 
 <urn:openmixer:doubler#preset-guitar-double>
     a pset:Preset ;

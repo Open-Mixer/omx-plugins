@@ -26,12 +26,18 @@
  *      plugin's groups), one lv2:name and one rdfs:label;
  *   7. every group states one lv2:displayPriority, no two the same, and in that order (higher first, as Zynthian
  *      sorts a plugin's screens) the groups of one panel section come together: a section's own group and its bands
- *      are never split by another section's group (omx-strip's EQ 1 ... EQ 32 all come before Comp).
+ *      are never split by another section's group (omx-strip's EQ 1 ... EQ 32 all come before Comp);
+ *   8. every group a port names is `<the plugin's URI>#<its lv2:symbol>`: a host loads every installed bundle into one
+ *      model (lilv's world), so a group node under another plugin's URI merges its statements with that plugin's
+ *      (omx-eq8 and omx-eq16 both have a band2; omx-plugins#100).
+ *
+ * And across every plugin: 9. no group node is stated by two bundles.
  *
  * `--self-test` adds the sabotage arms, each on a scratch copy of omx-eq8's TTL with one thing changed, each of which
  * must go red on its own law: two bands sharing a group, a band port with no group, a band port moved out of its
  * band's group, a group with no lv2:symbol, two groups with one symbol, a TTL that is not Turtle, and a section's bands
- * split by another section's group (two priorities exchanged). And the
+ * split by another section's group (two priorities exchanged), and a band's group renamed into omx-eq16's namespace at
+ * its node and its five ports (law 8; across the two bundles, law 9). And the
  * generator's arms, on a scratch copy of omx-strip's declaration (a chain: its EQ section says `"subgroups": "band"`,
  * tools/gen.mjs chainSubgroups): as declared it writes the committed TTL; without the word its TTL is red on law 3;
  * and the word on a section that lists no per-band control (the gate's) is refused.
@@ -43,6 +49,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { emitPluginTtl, loadDecl, pluginDirs, ROOT } from '../gen.mjs';
 import { triplesOf } from './resource-hints-check.mjs';
+import { isMain } from '../omx-contract.mjs';
 
 const LV2 = 'http://lv2plug.in/ns/lv2core#';
 const PG = 'http://lv2plug.in/ns/ext/port-groups#';
@@ -145,6 +152,7 @@ export function bandGroupErrors(d, ttlText) {
     if (node.names.length !== 1 || !node.names[0]) errors.push(`${what}: law 6: it states ${node.names.length} lv2:name`);
     if (node.labels.length !== 1 || !node.labels[0]) errors.push(`${what}: law 6: it states ${node.labels.length} rdfs:label`);
     if (node.priorities.length !== 1 || !Number.isInteger(node.priorities[0])) errors.push(`${what}: law 7: it states ${node.priorities.length} lv2:displayPriority`);
+    if (node.symbols.length === 1 && g !== `<${d.lv2.uri}#${node.symbols[0]}>`) errors.push(`${what}: law 8: it is not <${d.lv2.uri}#${node.symbols[0]}>, under its plugin's URI by its lv2:symbol`);
   }
   // law 7: the section of each group, from the model (a section's key, or the key of one of its subgroups)
   const sectionOf = new Map();
@@ -163,6 +171,21 @@ export function bandGroupErrors(d, ttlText) {
   return errors;
 }
 
+/** Law 9 over `[[d, ttlText], ...]`, every plugin's TTL: `[error, ...]`, one per group node two bundles state. */
+export function crossBundleGroupErrors(faces) {
+  const stated = new Map();
+  for (const [d, text] of faces) {
+    let groups;
+    try {
+      groups = readGroups(d, text).groups;
+    } catch {
+      continue; // a TTL that is not Turtle is law 5's, named by bandGroupErrors
+    }
+    for (const g of groups.keys()) stated.set(g, [...(stated.get(g) ?? []), d.stem]);
+  }
+  return [...stated].filter(([, stems]) => stems.length > 1).map(([g, stems]) => `law 9: ${g} is stated by ${stems.join(' and ')}`);
+}
+
 /** The sabotage arms: `[what, the law that must refuse it, the change to omx-eq8's TTL text]`. */
 const ARMS = [
   ['two bands share a group (band 2\'s ports name band 1\'s)', /law 3: it shares <urn:openmixer:eq8#band1> with band 1/,
@@ -179,11 +202,13 @@ const ARMS = [
     (t) => t.replace('    lv2:symbol "band6" ;\n', '    lv2:symbol "band5" ;\n')],
   ['a section\'s bands are split by another section\'s group (LPF and Band 1 exchange priorities)', /group 'band2': law 7: section 'bands' is split: 'lpf' \(section 'lpf'\) comes between its groups/,
     (t) => t.replace(/(lv2:symbol "lpf" ;\n {4}lv2:name "LPF" ;\n {4}lv2:displayPriority )9 ;/, '$18 ;').replace(/(lv2:symbol "band1" ;\n {4}lv2:name "Band 1" ;\n {4}lv2:displayPriority )8 ;/, '$19 ;')],
+  ['a band\'s group renamed into another plugin\'s namespace (eq8#band2 -> eq16#band2, its node and its five ports)', /group <urn:openmixer:eq16#band2>: law 8: it is not <urn:openmixer:eq8#band2>/,
+    (t) => t.replaceAll('<urn:openmixer:eq8#band2>', '<urn:openmixer:eq16#band2>')],
   ['the TTL is not Turtle (a statement left open)', /law 5: its TTL is not Turtle serdi reads/,
     (t) => t.replace('    a pg:Group ;\n', '    a pg:Group ;;;\n    ] \n')],
 ];
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (isMain(import.meta.url)) {
   let bad = 0, n = 0;
   const check = (ok, what, detail = []) => {
     n++;
@@ -202,6 +227,8 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
     const errors = bandGroupErrors(d, ttlOf(d));
     check(!errors.length, `${d.stem}: ${said}`, errors.slice(0, 6).concat(errors.length > 6 ? [`... and ${errors.length - 6} more`] : []));
   }
+  const across = crossBundleGroupErrors(plugins.map((d) => [d, ttlOf(d)]));
+  check(!across.length, `no group node is stated by two of the ${plugins.length} bundles (law 9)`, across.slice(0, 6));
   check(banded >= 5, `the model names the banded plugins (${banded} with a band of several controls; omx-eq8, 16, 32, omx-dyneq, omx-multiband at least)`);
   if (process.argv.includes('--self-test')) {
     const d = plugins.find((p) => p.stem === 'omx-eq8');
@@ -212,6 +239,10 @@ if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).
       const errors = changed === text ? ['the arm changed nothing'] : bandGroupErrors(d, changed);
       check(errors.some((e) => want.test(e)), `sabotage goes red: ${what}`, errors.length ? errors.slice(0, 3) : ['the check passed it']);
     }
+    // law 9, across bundles: omx-eq8 with band 2's group renamed into omx-eq16's namespace, beside omx-eq16 as committed
+    const eq16 = plugins.find((p) => p.stem === 'omx-eq16');
+    const across = crossBundleGroupErrors([[d, text.replaceAll('<urn:openmixer:eq8#band2>', '<urn:openmixer:eq16#band2>')], [eq16, ttlOf(eq16)]]);
+    check(across.some((e) => /law 9: <urn:openmixer:eq16#band2> is stated by omx-eq8 and omx-eq16/.test(e)), 'sabotage goes red: a group node two bundles state (law 9)', across.length ? across.slice(0, 3) : ['the check passed it']);
     // the generator: a scratch omx-strip under the temporary directory, its declaration changed one thing at a time
     const TMP = mkdtempSync(join(tmpdir(), 'band-port-groups-'));
     const scratch = join(TMP, 'plugins', 'omx-strip');

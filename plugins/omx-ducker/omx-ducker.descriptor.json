@@ -1,8 +1,5 @@
 {
-  "$schema": "https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
+  "$schema": "../schema/omx-contract.schema.json",
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.ducker",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:ducker",
     "name": "omx ducker",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.22.3",
     "doc": "Pulls the programme down while a key is heard, music under a voice, by a set depth with attack, hold and release, the console ducker.",
     "features": [
       "audio-effect"
@@ -38,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.thresholdDb",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -58,11 +55,12 @@
       "group": [
         "Duck"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_RANGE_DB_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -87,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.attackMs",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -107,11 +105,12 @@
       "group": [
         "Timing"
       ],
+      "meaning": "hold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_HOLD_MS_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -136,7 +135,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.releaseMs",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -161,7 +160,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.ratio",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -186,7 +185,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.kneeDb",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -206,11 +205,12 @@
       "group": [
         "Key"
       ],
+      "meaning": "lowCut",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_KEY_HP_HZ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -230,11 +230,12 @@
       "group": [
         "Key"
       ],
+      "meaning": "highCut",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_KEY_LP_HZ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -247,11 +248,12 @@
       "group": [
         "Key"
       ],
+      "meaning": "listen",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_KEY_LISTENS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }

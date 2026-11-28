@@ -19,7 +19,7 @@
     },
     {
       "symbol": "mix",
-      "unit": "%",
+      "unit": "percent",
       "value": 50
     }
   ],

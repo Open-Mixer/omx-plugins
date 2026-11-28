@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 Name: omx-plugins
-Version: 0.19.3
+Version: 0.22.3
 Release: 1%{?dist}
 License: GPL-3.0-or-later
 Summary: The OpenMixer console's delay, drive, EQ, channel strip, keyed gate and effects, as plugins for your DAW
-URL: https://github.com/FreeMixer/omx-plugins
+URL: https://github.com/Open-Mixer/omx-plugins
 
 Source0: %{url}/archive/v%{version}/%{name}-%{version}.tar.gz
 
@@ -13,53 +13,64 @@ BuildRequires: gcc
 BuildRequires: make
 BuildRequires: pkgconf-pkg-config
 # The releases this tree builds against: a floor each and no ceiling (floors only, as 0.8.0 ruled), once here and
-# in debian/control the same (tools/deps-check.sh). The Makefile and tools/gen.mjs read them from here.
-BuildRequires: omx-dsp-devel >= 0.32.0
-BuildRequires: omx-contract-devel >= 3.13.0
-BuildRequires: omx-clap-core-devel >= 0.32.3
+# in debian/control the same (tools/deps-check.sh).
+BuildRequires: omx-dsp-devel
+BuildRequires: omx-contract-devel
+BuildRequires: omx-clap-devel
 # plugin-hostd's format tables, which the generators read backwards (tools/format-tables.mjs)
-BuildRequires: plugin-hostd-devel >= 0.20.5
+BuildRequires: plugin-hostd-devel
 # the omx-contract command, first packaged in 2.15.0: the generators read the contract directory through it
 # (3.3.0: the directory and its schema are omx-contract-data's, the definitions each owner's -contract package's)
-BuildRequires: omx-contract >= 3.13.0
-# the panel layout and the MOD GUI are omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
-BuildRequires: omx-panel >= 0.13.5
+# (3.20.2: the tools decide "run, not imported" with its isMain, <clidir>/lib/entry.mjs, read through pkg-config)
+# (3.21.0: the descriptor word latency.sweep, which omx-rotary states)
+BuildRequires: omx-contract
+# the panel layout is omx-panel's, from a descriptor and the declared panel (tools/omx-panel.mjs)
+BuildRequires: omx-panel
+# omx-clap's domains the generators read (tools/omx-contract.mjs domainDocument): omx-param-contract, the unit codes
+# (tools/param-contract.mjs), and clap, the CLAP feature terms (tools/format-tables.mjs)
+BuildRequires: omx-clap-contract
 # omx-panel recommends omx-plugins-devel: an older one installed beside this build puts its release's contract
 # package where make test reads this one's (tools/test/contract-dir-check.sh), so a build installs none
 BuildConflicts: omx-plugins-devel < %{version}
+# the panel words: omx-panel's panel domain and its render <omxdomain/panel_codes.h>, which include/omx_panel_description.h
+# expands (tools/test/panel-words-check.mjs)
+BuildRequires: omx-panel-contract
 BuildRequires: clap-devel >= 1.2.7
+# include/omx_panel_description.h includes omx-panel's <omxdomain/panel_codes.h>
+Requires: omx-panel-contract
 BuildRequires: lv2-devel
 # %%check: the generators and checks are Node scripts; the hosts that load the built plugins
-BuildRequires: nodejs
+# (20.19: tools/omx-contract.mjs require()s omx-contract's entry.mjs, an ES module, unflagged from 20.19 / 22.12)
+BuildRequires: nodejs >= 20.19
 BuildRequires: python3
 # make selftest copies the tree with tar
 BuildRequires: tar
+# git get-tar-commit-id: the source commit the tarball was made from, stamped into each installed descriptor (#32);
+# %%check: make debt-base runs git (tools/test/debt-base-test.mjs builds its fixture repositories with it)
+BuildRequires: git-core
 BuildRequires: diffutils
+# the curve kinds the schema's graph enum renders: omx-dsp's CURVE_KINDS (tools/graph-enum.mjs)
+BuildRequires: omx-dsp-contract
 BuildRequires: lilv
 BuildRequires: lilv-devel
+# the standard units a face publishes, by symbol (omx-contract's param domain, PARAM_UNITS x-symbol), and the OpenMixer
+# unit spellings an LV2 face writes (plugin-db's lv2 domain, LV2_OPENMIXER_UNIT_IDS x-uri): tools/format-tables.mjs
+BuildRequires: omx-contract-data
+BuildRequires: plugin-db-contract
 BuildRequires: sord
-BuildRequires: omx-clap-host >= 0.32.3
+BuildRequires: omx-clap-host
 # %%check: make round-trip scans the built faces back with plugin-hostd-probe describe
-BuildRequires: plugin-hostd >= 0.20.5
-# %%install: our own plugins' pins are known at build time (tools/gen-pins.sh); %%check then holds the
-# shipped pins.d file to the shipped binaries' hashes (tools/pins-check.sh)
-BuildRequires: plugin-qualify >= 0.20.4
-# the shipped .clap is the stripped one (find-debuginfo runs after %%install), so its pin is measured
-# again once the buildroot is stripped: a pin taken at %%install names bytes the package never ships
-%define __spec_install_post \
-    %{?__debug_package:%{__debug_install_post}}\
-    %{__arch_install_post}\
-    %{__os_install_post}\
-    %{__make} -s install-pins DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir} CLAPDIR=/usr/lib/clap\
-%{nil}
+BuildRequires: plugin-hostd
+# plugin-hostd's words the generators read: its domains plugin-hostd/clap and plugin-hostd/lv2, the format tables
+# (tools/format-tables.mjs), and the resource hints, RESOURCE_* (tools/resource-hints.mjs)
+BuildRequires: plugin-hostd-contract
 
 # The name a user installs: both formats.
 Requires: %{name}-clap%{?_isa} = %{version}-%{release}
 Requires: %{name}-lv2%{?_isa} = %{version}-%{release}
 # each plugin's descriptor, which a host and the console read at run time
 Requires: %{name}-contract = %{version}-%{release}
-# the first plugin-hostd release that reads pins.d (plugin-hostd issue #42)
-Recommends: plugin-hostd >= 0.20.5
+Recommends: plugin-hostd
 
 %description
 Take the sound of the OpenMixer console into your DAW or onto your own rig:
@@ -71,7 +82,7 @@ with its sidechain key, multiband compressor and dynamic EQ. They come
 as CLAP plugins for Bitwig, REAPER and Carla, and as LV2 plugins for Ardour,
 Carla, MOD and Zynthian. Each one runs the same DSP as the console, so a track sounds the same
 in a session as it does on the desk, sample for sample. Every plugin comes in
-both formats with the same controls, MOD GUI included.
+both formats with the same controls.
 Its documentation is on openmixer.org.
 
 This package installs both formats; omx-plugins-clap and omx-plugins-lv2
@@ -93,13 +104,14 @@ Its documentation is on openmixer.org.
 %package lv2
 Summary: OpenMixer delay, drive, EQ, strip, gate and effects as LV2 plugins
 Requires: lv2
+Recommends: omx-panel
 
 %description lv2
 The OpenMixer console's delay, drive, 8-, 16- and 32-band EQ, 31-band graphic
 EQ, channel strip, keyed gate and effects (chorus, flanger, phaser, tremolo,
 rotary speaker, reverb, pitch shifter, transient shaper, de-esser, sub-octaver, plosive tamer, clipper, upward compressor, bus compressor, loudness leveler, spectral balancer, spring reverb, input trim, limiter, compressor) as
 LV2 plugins, installed in %{_libdir}/lv2 where Ardour, Carla, MOD
-and Zynthian find them, with a MOD GUI where the plugin has one. They run the
+and Zynthian find them. They run the
 console's own DSP, so they sound like the desk.
 Its documentation is on openmixer.org.
 
@@ -117,11 +129,13 @@ Its documentation is on openmixer.org.
 
 %package devel
 Summary: Headers and static library of the OpenMixer plugins, for projects that build on them
-Requires: omx-dsp-devel >= 0.32.0
+Requires: omx-dsp-devel
 # the generated parameter headers include omx-contract's C renders, and omxplugins.pc requires omx-contract
-Requires: omx-contract-devel >= 3.13.0
+Requires: omx-contract-devel
+# include/omx_param_contract.h includes omx-clap's unit and scale codes, <omx-clap-host/omx_param_units.h> (0.35.0) and <omx-clap-host/omx_param_scales.h>
+Requires: omx-clap-devel
 Requires: %{name}-contract = %{version}-%{release}
-Requires: clap-devel >= 1.2.7
+Requires: clap-devel >= 1.2.10
 
 %description devel
 The headers other projects include to use the OpenMixer plugins' parameters and
@@ -136,14 +150,17 @@ Its documentation is on openmixer.org.
 Summary: The OpenMixer plugins' descriptors in omx-contract's contract directory
 BuildArch: noarch
 # the contract directory, its schema and its reader's own package
-# 3.13.0: the reader that knows the roleMeanings kind contract/role-meanings.json is
-Requires: omx-contract-data >= 3.13.0
+# 3.19.1: its install-contract-dir.sh rewrites the relative $schema of contract/*.json and the descriptors to the
+# major's URL, and its reader requires that URL (3.13.0 brought the roleMeanings kind of contract/role-meanings.json)
+Requires: omx-contract-data
 
 %description contract
 Each OpenMixer plugin's descriptor, its parameters in omx-contract's words,
 and the manifest naming this release, as files in omx-contract's contract
 directory, for any program that reads them at run time: a host, the console's
-panels and the omx-contract command.
+panels and the omx-contract command. With them the omx-plugin-labels domain:
+each plugin's section titles, choice labels and preset names, keyed, with
+their English source sentences and their catalogs.
 Its documentation is on openmixer.org.
 
 %prep
@@ -155,23 +172,25 @@ Its documentation is on openmixer.org.
 
 %install
 %make_install PREFIX=%{_prefix} LIBDIR=%{_libdir} CLAPDIR=/usr/lib/clap
-%{__make} install-devel DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir}
+# each installed descriptor carries the commit the source tarball was made from (git archive records it): #32
+%{__make} install-devel DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir} SOURCE_COMMIT=$(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 %{__make} install-test DESTDIR=%{buildroot} PREFIX=%{_prefix} TESTCLAPDIR=%{_libexecdir}/omx-plugins/test
 
 %check
-%make_build test
-# the shipped pins.d file still names the shipped binaries' own hashes (sabotage: a changed binary goes red)
-tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins %{buildroot}/usr/lib/clap
+# make test runs in the unpacked tarball, which has no git tree: it is handed the tarball's commit to stamp (#32)
+%make_build test SOURCE_COMMIT=$(gzip -dc %{SOURCE0} | git get-tar-commit-id)
+# every shipped descriptor carries this release's version and the source tarball's commit (sabotage: one unstamped,
+# another commit or another version goes red)
+tools/integrity-check.sh %{buildroot}%{_datadir}/omx-contract/contract.d %{version} $(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 
 %files
 %license LICENSE
 %doc README.md
 # the factory presets of every plugin, read only data the console's preset library lists (presets/)
 %{_datadir}/omx/presets/
-# our own plugins' pins, known at build time (plugin-hostd issue #42's pins.d, a floor-only Recommends above);
-# the directory is plugin-hostd's, co-owned here so the package stands on its own at %%files time
-%dir %{_datadir}/plugin-hostd/pins.d
-%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
+# the directory of the labels' catalogs; each catalog is its language pack's
+%dir %{_datadir}/omx-plugins
+%dir %{_datadir}/omx-plugins/catalogs
 
 %files clap
 %license LICENSE
@@ -237,7 +256,11 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 %license LICENSE
 %doc README.md
 # each plugin's descriptor and the manifest, in omx-contract's contract directory (the directory itself is omx-contract-data's)
-%{_datadir}/omx-contract/contract.d/3/omx-plugins/
+%{_datadir}/omx-contract/contract.d/omx-plugins/
+# the labels domain (contract.d/omx-plugin-labels: section titles, choice labels and preset names, each a key with its
+# English source sentence) and the catalogs, beside the other domains; the same catalogs at /usr/share/omx-plugins/catalogs
+# are the language packs'
+%{_datadir}/omx-contract/contract.d/omx-plugin-labels/
 
 %files lv2
 %license LICENSE
@@ -279,11 +302,156 @@ tools/pins-check.sh %{buildroot}%{_datadir}/plugin-hostd/pins.d/omx-plugins.pins
 %{_libdir}/lv2/omx-width.lv2/
 # END GENERATED lv2-files
 
+# BEGIN langpacks: generated by langpacks.py, do not edit
+%package langpack-ca
+Summary: The ca catalog of omx-plugins's codes
+BuildArch: noarch
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-ca)
+
+%description langpack-ca
+The sentences of omx-plugins's codes in the language ca, read by every surface
+that shows them on a host in that locale; without it a surface shows the
+English source sentence.
+
+%files langpack-ca
+%{_datadir}/omx-plugins/catalogs/ca.json
+
+%package langpack-es
+Summary: The es catalog of omx-plugins's codes
+BuildArch: noarch
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-es)
+
+%description langpack-es
+The sentences of omx-plugins's codes in the language es, read by every surface
+that shows them on a host in that locale; without it a surface shows the
+English source sentence.
+
+%files langpack-es
+%{_datadir}/omx-plugins/catalogs/es.json
+
+%package langpack-fr
+Summary: The fr catalog of omx-plugins's codes
+BuildArch: noarch
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-fr)
+
+%description langpack-fr
+The sentences of omx-plugins's codes in the language fr, read by every surface
+that shows them on a host in that locale; without it a surface shows the
+English source sentence.
+
+%files langpack-fr
+%{_datadir}/omx-plugins/catalogs/fr.json
+
+%package langpack-de
+Summary: The de catalog of omx-plugins's codes
+BuildArch: noarch
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-de)
+
+%description langpack-de
+The sentences of omx-plugins's codes in the language de, read by every surface
+that shows them on a host in that locale; without it a surface shows the
+English source sentence.
+
+%files langpack-de
+%{_datadir}/omx-plugins/catalogs/de.json
+
+%package langpack-it
+Summary: The it catalog of omx-plugins's codes
+BuildArch: noarch
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-it)
+
+%description langpack-it
+The sentences of omx-plugins's codes in the language it, read by every surface
+that shows them on a host in that locale; without it a surface shows the
+English source sentence.
+
+%files langpack-it
+%{_datadir}/omx-plugins/catalogs/it.json
+
+%package langpack-pt
+Summary: The pt catalog of omx-plugins's codes
+BuildArch: noarch
+Requires: omx-plugins = %{version}-%{release}
+Supplements: (omx-plugins and langpacks-pt)
+
+%description langpack-pt
+The sentences of omx-plugins's codes in the language pt, read by every surface
+that shows them on a host in that locale; without it a surface shows the
+English source sentence.
+
+%files langpack-pt
+%{_datadir}/omx-plugins/catalogs/pt.json
+# END langpacks
+
 %changelog
+* Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.3-1
+- each installed descriptor carries integrity, its version and the source
+  commit of the build, held by the package build (#32)
+
+* Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.2-1
+- release.yml publishes only by tagging; a dispatch is a dry run, and the
+  qualification and Zynthian artifacts no longer read inputs.publish (#109).
+
+* Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.1-1
+- Release: the trixie DEBs are built for amd64 beside arm64; the Zynthian
+  tarball stays arm64 (#238).
+
+* Fri Nov 27 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.0-1
+- CLAP face: every plugin serves its panel cut down as
+  org.openmixer.control-layout.draft/1, drawn whole by omx-clap-scan's host
+  rules (#233).
+
+* Thu Nov 26 2026 Pau Aliagas <linuxnow@gmail.com> - 0.21.1-1
+- The RPMs are built for Fedora aarch64 as well as x86_64: the release
+  matrix is Open-Mixer/.github's shared releases and architectures, with no
+  list of this repository's own.
+- Published by the devel release of the full matrix, with every change
+  merged to devel since 0.21.0.
+
+* Mon Nov 23 2026 Pau Aliagas <linuxnow@gmail.com> - 0.21.0-1
+- the version moves to 0.21.0 (chain 3)
+- section titles, choice labels and preset names are translatable: the
+  omx-plugin-labels domain in omx-plugins-contract, generated from the
+  declarations (each a key and its English source sentence; parameter names
+  stay English), and one language pack per listed language, each
+  /usr/share/omx-plugins/catalogs/<lang>.json (#18)
+- floors: omx-clap-devel and omx-clap-contract >= 0.35.0
+- floors: omx-dsp-devel and omx-dsp-contract >= 0.34.1, the release whose
+  ROTARY_ACCEL_RANGE travels in coef; the rotary's accel is coef
+- V23d: the unit codes are read from omx-clap's domain omx-param-contract and its
+  render; make units refuses an include of omx-contract's old unit header
+- floors: plugin-hostd-contract >= 0.22.0 and plugin-db-contract >= 0.5.1: the
+  format tables are x-kind map items, their unit and meaning pairs read from
+  omx-clap and plugin-db (plugin-hostd V19, M5)
+
+* Sun Nov 22 2026 Pau Aliagas <linuxnow@gmail.com> - 0.20.0-1
+- the version moves to 0.20.0
+- floors: omx-clap-devel, omx-clap-contract and omx-clap-host >= 0.34.1 (0.34.1 carries
+  the rename's Obsoletes an upgrade needs), omx-contract >= 3.21.0,
+  omx-dsp >= 0.34.0
+- the sorting pass: the moves into the owner domains
+- units: the vendor block is omx-contract 3.21.0's eight (dbfs, dbu, ratio, lufs, dbPerOct, dbPerS, dbtp, lu), and a
+  slope is served: dB/oct writes the sheet's own token dbPerOct (260) in the param contract, the token a host
+  fingerprints, so the balancer, comp, eq8, eq16, eq32 and strip contracts each move on (clap#163, omx-plugins#213);
+  each of the six gained two entries in tools/param-contract-versions.json, the first (lowercased dbperoct) never
+  served, kept because the list is append-only
+- no shipped pins: the pins.d route (plugin-hostd#42) is retired, and tools/gen-pins.sh, the packaged
+  /usr/share/plugin-hostd/pins.d/omx-plugins.pins, tools/pins-check.sh and the build dependency on
+  plugin-qualify go; our plugins are qualified like any plugin, plugin-qualify measuring them into the
+  qualification records once the release is served (omx-plugins#211)
+- CLAP remote controls: a page whose every slot the governing values hide is not served (omx-panel's page
+  rule, no screen has zero visible items), so omx-strip at 4 bands serves 11 pages, not 39 (omx-plugins#212)
+- make test runs every part whatever an earlier part answered, and runs strip-pages-follow; %%check needs git-core
+
 * Wed Nov 11 2026 Pau Aliagas <linuxnow@gmail.com> - 0.19.3-1
 - omx-plugins-contract installs role-meanings.json (the meaning each panel
   role plays) and plugin-face.json (the face ids, declared here since
-  omx-contract 3.13.0 no longer does); omx-contract-data >= 3.13.0 and < 4
+  omx-contract 3.13.0 no longer does); omx-contract-data >= 3.19.1 and < 4
 - a ratio travel's unit is ratio in the parameter contract, as in the LV2 face
 - omx-comp draws its transfer curve and gain-reduction bar; the panels are
   laid out by omx-panel >= 0.13.2 and < 0.14

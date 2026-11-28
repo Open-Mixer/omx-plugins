@@ -1,8 +1,5 @@
 {
-  "$schema": "https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
+  "$schema": "../schema/omx-contract.schema.json",
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.chorus",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:chorus",
     "name": "omx chorus",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.22.3",
     "doc": "The console's chorus: up to four voices read one modulated delay line, the right leg's sweep offset by the spread, mixed with the dry signal.",
     "features": [
       "audio-effect"
@@ -26,7 +23,7 @@
         "min": 0,
         "max": 0.5,
         "step": 0,
-        "unit": "",
+        "unit": "none",
         "default": 0,
         "scale": "linear"
       },
@@ -38,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_SPREAD_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -63,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_RATE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -88,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_DEPTH_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -101,18 +98,19 @@
         "min": 1,
         "max": 4,
         "step": 1,
-        "unit": "",
+        "unit": "none",
         "default": 3,
         "scale": "stepped"
       },
       "group": [
         "Chorus"
       ],
+      "meaning": "number",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_VOICES_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -125,7 +123,7 @@
         "min": 0,
         "max": 100,
         "step": 0,
-        "unit": "%",
+        "unit": "percent",
         "default": 35,
         "scale": "linear"
       },
@@ -137,7 +135,7 @@
       "source": {
         "from": {
           "link": "data/kernels/chorus.json#CHORUS_MIX_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }

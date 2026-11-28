@@ -47,6 +47,9 @@
  *      released tag (`shipped`), a list that differs from it is refused, each index named, unless
  *      `shippedDiff` names exactly those, and a tree with no such tag says it was not checked.
  *
+ * Each numbered arm is one or more part('<id>') blocks. OMX_SELFTEST_SHARD=i/n runs the parts of the i-th of the n
+ * shards tools/test/selftest-shards.json packs by measured time (CI runs each in its own job); unset, every part runs.
+ *
  * Works in build/selftest/ (removed first). Needs git, and omx-dsp's headers as the build does.
  * Exit 1 when any check failed, including an arm that stopped early.
  */
@@ -57,7 +60,7 @@ import { fileURLToPath } from 'node:url';
 import { checkCommits, rangeCommits } from '../commit-plan-check.mjs';
 import { chainSources, commitPlan, draftChain, draftDeclaration, kernelSources, planChain, planPlugin, reviewMarks, writePlugin } from '../omx-new-plugin.mjs';
 import { bindFace, parseFace } from '../instance-face.mjs';
-import { eqDefaultBands, kernelControls, locateContract, resolveParam } from '../omx-contract.mjs';
+import { OWNERS, eqDefaultBands, kernelControls, locateContract, resolveParam } from '../omx-contract.mjs';
 import { omxdspInclude } from '../template.mjs';
 import { defaultPanel, emitPluginTtl, generateInstance, loadDecl, meterRows } from '../gen.mjs';
 import { hintErrors } from '../port-hints.mjs';
@@ -74,6 +77,39 @@ const fail = (what) => {
   fails++;
 };
 const expect = (cond, what) => (cond ? pass(what) : fail(what));
+/** The roles of the test chain's parameters (eq, gate, comp), by the control each reads (its symbol after the element id
+ * and a band number, lower case): the answers a person gives the REVIEW marks. */
+const CHAIN_MEANINGS = {
+  hpfon: 'enabled', hpffreq: 'lowCut', hpfslope: 'slope', lpfon: 'enabled', lpffreq: 'highCut', lpfslope: 'slope',
+  bandtype: 'type', freq: 'frequency', gain: 'gain', q: 'q', bandon: 'enabled',
+  thresholddb: 'threshold', rangedb: 'range', kneestartdb: 'knee', kneeenddb: 'knee', kneedb: 'knee', attackms: 'attack', holdms: 'hold',
+  releasems: 'release', hysteresisdb: 'hysteresis', ratio: 'ratio', hphz: 'lowCut', lphz: 'highCut', makeupdb: 'makeup',
+  mixpct: 'wetDryRatio', kind: 'type', detectoroversampling: 'mode', detectortopology: 'type', releasemode: 'mode',
+};
+
+// The parts, each a part('<id>') block. OMX_SELFTEST_SHARD=i/n runs the parts of the i-th of the n shards
+// tools/test/selftest-shards.json packs by measured time (the wizard, whose tree generators, commit-plan, refusals and
+// oracle read, runs first wherever one of those runs without it); unset, every part runs. Each part prints its minutes
+// (PART <id> <min>), the figure the table is refreshed from. tools/test/selftest-shards-check.mjs holds these parts, the
+// table and the CI matrix to each other.
+const SHARDS = JSON.parse(readFileSync(join(ROOT, 'tools', 'test', 'selftest-shards.json'), 'utf8')).shards;
+const SHARD = process.env.OMX_SELFTEST_SHARD ?? '';
+const RUN = (() => {
+  if (!SHARD) return null;
+  const m = SHARD.match(/^(\d+)\/(\d+)$/);
+  if (!m || Number(m[2]) !== SHARDS.length || Number(m[1]) < 1 || Number(m[1]) > SHARDS.length) {
+    console.log(`FAIL OMX_SELFTEST_SHARD='${SHARD}' is not i/${SHARDS.length}, a shard of tools/test/selftest-shards.json`);
+    process.exit(2);
+  }
+  console.log(`recipe-selftest: shard ${SHARD}: ${SHARDS[Number(m[1]) - 1].join(' ')}`);
+  return new Set(SHARDS[Number(m[1]) - 1]);
+})();
+const part = async (id, body) => {
+  if (RUN && !RUN.has(id)) return;
+  const t0 = Date.now();
+  await body();
+  console.log(`PART ${id} ${((Date.now() - t0) / 60000).toFixed(1)} min`);
+};
 
 /** A copy of this tree's files (tracked and new, never ignored) at `dst`. */
 function copyTree(dst) {
@@ -98,16 +134,19 @@ function fakeContract(dst, kernels, listed) {
   }
   if (listed) render.kernels = { ...(render.kernels ?? {}), ...listed };
   writeFileSync(join(dst, 'omx-contract.json'), JSON.stringify(render, null, 2));
+  // the owners beside the render: a build reads the owners of the render it is handed (descriptor.mjs), so the stand-in carries the
+  // installed render's, as every copy of a union render does
+  if (existsSync(join(real.dir, OWNERS))) cpSync(join(real.dir, OWNERS), join(dst, OWNERS));
 }
 
 const travel = (min, max, step, unit, def) => ({ kind: 'travels', shape: 'travel', value: { min, max, step, unit, default: def, defaultFrom: 'desk' } });
 const WOBBLE = {
   WOBBLE_RATE_RANGE: travel(0.1, 20, 0.01, 'Hz', 4),
-  WOBBLE_DEPTH_RANGE: travel(0, 100, 0.1, '%', 50),
-  WOBBLE_MIX_RANGE: travel(0, 100, 0.1, '%', 100),
+  WOBBLE_DEPTH_RANGE: travel(0, 100, 0.1, 'percent', 50),
+  WOBBLE_MIX_RANGE: travel(0, 100, 0.1, 'percent', 100),
   WOBBLE_MODES: { kind: 'set', value: ['wobble', 'pan'], default: 'wobble' },
   // the aggregate: its field names are the controls' names (rateHz, not rate)
-  WOBBLE_TRAVELS: { kind: 'travels', shape: 'table', value: { rateHz: travel(0.1, 20, 0.01, 'Hz', 4).value, depth: travel(0, 100, 0.1, '%', 50).value, mix: travel(0, 100, 0.1, '%', 100).value } },
+  WOBBLE_TRAVELS: { kind: 'travels', shape: 'table', value: { rateHz: travel(0.1, 20, 0.01, 'Hz', 4).value, depth: travel(0, 100, 0.1, 'percent', 50).value, mix: travel(0, 100, 0.1, 'percent', 100).value } },
 };
 
 /** The render's `kernels` entry for wobble: its controls in order, `depth` re-arming when asked. */
@@ -170,34 +209,48 @@ async function main() {
   fakeContract(contract, { wobble: WOBBLE }, wobbleControls(false));
   const inc = join(WORK, 'omxdsp-include');
   const face = fakeOmxdsp(inc);
+  const wobbleEnv = () => { // the stand-in release (plus wobble) and the stand-in wobble face
   process.env.OMX_CONTRACT_DIR = contract;
   process.env.OMXDSP_INCLUDE = inc;
+  };
+  const realEnv = () => { // the real tree reads the installed release and the faces the build finds
+    delete process.env.OMX_CONTRACT_DIR;
+    delete process.env.OMXDSP_INCLUDE;
+  };
 
   // ---- 1. the wizard -------------------------------------------------------------------------
+  // run once: by its own part, or first in a shard whose part reads its tree (generators, commit-plan, refusals,
+  // oracle); null when an arm stopped it, and the parts that read it stop too
+  let wizardRun;
+  const wizard = () => (wizardRun ??= (async () => {
+    wobbleEnv();
   const tree = join(WORK, 'wizard');
   copyTree(tree);
   const src = kernelSources('wobble', { root: tree });
   expect(!src.refusals.length, `the wizard finds the wobble kernel and its face${src.refusals.length ? `: ${src.refusals.map((r) => r.reason).join('; ')}` : ''}`);
-  if (src.refusals.length) return;
+    if (src.refusals.length) return null;
   const draft = draftDeclaration('wobble', src, { root: tree, recipe });
   expect(draft.decl?.params.map((p) => `${p.symbol}:${p.name}`).join(' ') === 'rateHz:Rate depth:Depth mix:Mix mode:Mode',
     `the draft has one parameter per resolve() argument, named by the contract (${draft.decl?.params.map((p) => `${p.symbol}:${p.name}`).join(' ')})`);
   expect(draft.decl?.params.every((p) => p.ref && !('min' in p) && !('def' in p)), 'the draft is by reference only');
   const marks = reviewMarks(draft.decl);
-  expect(marks.join(' ') === '/description /clap/features/1 /lv2/class /params/3/values/0 /params/3/values/1 /console/placement/group',
+  expect(marks.join(' ') === '/description /clap/features/1 /lv2/class /params/0/meaning /params/1/meaning /params/2/meaning /params/3/meaning /params/3/values/0 /params/3/values/1 /console/placement/group',
     `the draft marks every design choice REVIEW (${marks.join(' ')})`);
   const unsettled = await planPlugin(draft.decl, src, { root: tree, recipe });
   expect(!unsettled.ok && unsettled.refusals.length === marks.length, `a draft with REVIEW marks is refused, each named (${unsettled.refusals.map((r) => r.field).join(' ')})`);
   const settled = structuredClone(draft.decl);
+  settled.category = 'modulation';
   settled.description = 'The console\'s wobble: the level, or the balance, moved by one LFO.';
   settled.clap.features[1] = 'wobble';
   settled.lv2.class = 'lv2:ModulatorPlugin';
   settled.params[3].values = ['Wobble', 'Pan'];
+  // each parameter's role, a person's reading (the draft guesses none)
+  ['rate', 'depth', 'wetDryRatio', 'mode'].forEach((m, i) => { settled.params[i].meaning = m; });
   settled.console.placement = { group: 'plugins' };
   const answers = settled; // what section 5 mutates
   const plan = await planPlugin(settled, src, { root: tree, recipe });
   expect(plan.ok, `the settled draft is accepted${plan.ok ? '' : `: ${plan.refusals.map((r) => `${r.field} ${r.reason}`).join('; ')}`}`);
-  if (!plan.ok) return;
+    if (!plan.ok) return null;
   const written = writePlugin(plan, { root: tree });
   const P_ = 'plugins/omx-wobble';
   for (const f of ['omx-wobble.decl.json', 'Makefile', 'omx_wobble_clap.c', 'omx_wobble_lv2.c', 'omx_wobble_core.h', 'test/wobble-oracle.c', 'generated/omx_wobble_params.h'])
@@ -228,8 +281,16 @@ async function main() {
   }
   const owed = gapLines(await checkPlugin(tree, recipe, 'omx-wobble'));
   expect(owed.length === 1 && owed[0].startsWith('omx-wobble: package-description missing'), `a generated plugin owes only the package description, prose a person writes (${owed.map((g) => g.split(' (')[0]).join('; ')})`);
+    return { tree, plan, written, answers, P_, VERSIONS, first };
+  })());
+  await part('wizard', wizard);
 
   // ---- 1b. the generators, sabotaged input by input --------------------------------------------
+  await part('generators', async () => {
+    const w = await wizard();
+    if (!w) return;
+    const { tree, P_, VERSIONS, first } = w;
+    wobbleEnv();
   const check = () => spawnSync('node', [join(tree, 'tools', 'gen.mjs'), '--check'], { cwd: tree, encoding: 'utf8' });
   const green = check();
   expect(green.status === 0, `gen.mjs --check is green on the wizard's tree${green.status ? `: ${green.stderr.trim().split('\n')[0]}` : ''}`);
@@ -262,8 +323,14 @@ async function main() {
     writeFileSync(join(tree, P_, 'omx_wobble_core.h'), was);
     expect(r.some((l) => l.startsWith('omx-wobble: instance-files missing')), `sabotage completeness: a stale generated binding is the gap instance-files (${r.length} gaps)`);
   }
+  });
 
   // ---- 2. the commit plan, applied literally ------------------------------------------------
+  await part('commit-plan', async () => {
+    const w = await wizard();
+    if (!w) return;
+    const { tree, plan, written } = w;
+    wobbleEnv();
   const commits = commitPlan(recipe, plan, written);
   const order = recipe.layers.map((l) => l.id);
   expect(commits.every((c, i) => i === 0 || order.indexOf(c.layer) > order.indexOf(commits[i - 1].layer)), `the plan is in layer order (${commits.map((c) => c.layer).join(' → ')})`);
@@ -281,21 +348,28 @@ async function main() {
 
   const none = checkCommits(recipe, rangeCommits(join(WORK, 'plan-ok'), 'HEAD..HEAD'));
   expect(!none.ok && none.violations.some((v) => /holds no commit/.test(v)), 'sabotage: an empty commit range fails the protocol check');
+  });
 
   // ---- 3. every checker family, broken on a copy of omx-drive --------------------------------
-  delete process.env.OMX_CONTRACT_DIR;
-  delete process.env.OMXDSP_INCLUDE;
+  // the copy the parts of 3, 3b and 4 break and restore, made once
   const t = join(WORK, 'sabotage');
-  copyTree(t);
-  const P = 'plugins/omx-drive';
-  const base = await checkPlugin(t, recipe, 'omx-drive');
-  expect(gapLines(base).length === 0, `baseline: omx-drive is complete${gapLines(base).length ? `: ${gapLines(base).join('; ')}` : ''}`);
+  let copied = false;
+  const sabotageTree = () => {
+    if (!copied) copyTree(t);
+    copied = true;
+  };
   const edit = (f, fn) => {
     const at = join(t, f);
     const was = readFileSync(at, 'utf8');
     writeFileSync(at, fn(was));
     return () => writeFileSync(at, was);
   };
+  await part('checkers', async () => {
+    realEnv();
+    sabotageTree();
+    const P = 'plugins/omx-drive';
+    const base = await checkPlugin(t, recipe, 'omx-drive');
+    expect(gapLines(base).length === 0, `baseline: omx-drive is complete${gapLines(base).length ? `: ${gapLines(base).join('; ')}` : ''}`);
   const add = (f, text) => {
     writeFileSync(join(t, f), text);
     return () => unlinkSync(join(t, f));
@@ -314,7 +388,6 @@ async function main() {
     ['declValid', 'declaration', () => edit(`${P}/omx-drive.descriptor.json`, (s) => s.replace('"org.openmixer.drive"', '"org.openmixer.delay"'))],
     ['generatedFresh', 'params-header', () => edit(`${P}/generated/omx_drive_params.h`, (s) => `${s}\n`)],
     ['generatedFresh', 'lv2-description', () => edit(`${P}/generated/omx-drive.lv2/omx-drive.ttl`, (s) => s.replace('lv2:default 0 ;', 'lv2:default 1 ;'))],
-    ['modguiFresh', 'modgui', () => add(`${P}/generated/omx-drive.lv2/modgui/stray.css`, '')],
     ['makefile', 'makefile', () => edit(`${P}/Makefile`, (s) => s.replace('urn:openmixer:drive', 'urn:openmixer:drives'))],
     // the generated faces reach the table directly and through the binding: both includes go
     ['face', 'clap-face', () => edit(`${P}/omx_drive_clap.c`, (s) => s.replace('#include "omx_drive_params.h"', '').replace('#include "omx_drive_core.h"', ''))],
@@ -371,6 +444,7 @@ async function main() {
   }
   const whole3 = gapLines(await checkPlugin(t, recipe, 'omx-drive'));
   expect(whole3.length === 0, `every sabotage restored: omx-drive is complete again${whole3.length ? `: ${whole3.join('; ')}` : ''}`);
+  });
 
   // ---- 3b. the debt ratchet, both directions ---------------------------------------------------
   // checkPlugin reads the tree and never the debt (only debtVerdict does), so the whole tree is checked ONCE: the arms
@@ -378,12 +452,15 @@ async function main() {
   // every plugin, the entries that read that file (a sharedListed entry compares its own checker.file and nothing
   // else), merged over the whole reports by id: the verdict of the edited tree, entry for entry, for the cost of those
   // entries (omx-plugins#39: each arm used to re-check every plugin, ~10 minutes each).
+  await part('debt', async () => {
+    realEnv();
+    sabotageTree();
   const wholeReports = [];
   for (const st of pluginStems(t)) wholeReports.push(await checkPlugin(t, recipe, st));
   const ratchet = (reports, debt, known) => debtVerdict(reports, debt, known);
   const whole = ratchet(wholeReports, loadDebt(t));
   expect(!whole.fresh.length && !whole.stale.length && whole.held.length === loadDebt(t).length,
-    `the debt holds today's gaps exactly (${whole.held.length} held, ${whole.fresh.length} new, ${whole.stale.length} stale)`);
+    `the debt holds today's gaps exactly (${whole.held.length} held, ${whole.fresh.length} new, ${whole.stale.length} stale)${whole.fresh.length ? `; new: ${whole.fresh.join(', ')}` : ''}${whole.stale.length ? `; stale: ${whole.stale.join(', ')}` : ''}`);
   const reading = (file) => ({ ...recipe, artifacts: recipe.artifacts.filter((e) => e.checker?.file === file || (e.paths ?? []).includes(file)),
     laws: recipe.laws.filter((e) => e.checker?.file === file) });
   const recheck = async (file) => {
@@ -422,7 +499,10 @@ async function main() {
     const run = spawnSync('node', [join(ROOT, 'tools', 'plugin-recipe.mjs')], { env: { ...process.env, OMX_PLUGINS_ROOT: empty }, encoding: 'utf8' });
     expect(run.status === 1 && /no plugin to check/.test(run.stdout + run.stderr), `sabotage: a run over no plugin fails (exit ${run.status})`);
   }
+  });
 
+  await part('debt-growth', async () => {
+    realEnv();
   {
     // the debt against its merge-base: a throwaway repository whose origin/main holds today's debt
     const repo = join(WORK, 'growth');
@@ -446,8 +526,12 @@ async function main() {
     const none = debtGrowth(repo, loadDebt(repo));
     expect(none.base === undefined && /origin\/main/.test(none.why) && growthVerdict(none).bad === 1, `no main to compare to is refused by name, never a silent pass (${none.why?.slice(0, 60)})`);
   }
+  });
 
   // ---- 4. the recipe itself ----------------------------------------------------------------
+  await part('recipe', async () => {
+    realEnv();
+    sabotageTree();
   const grown = JSON.parse(JSON.stringify(recipe));
   grown.artifacts.push({ id: 'sabotage-notes', what: 'a section every plugin now owes', step: 'docs', layer: 'docs', made: 'HAND-WRITTEN', target: 'docs/catalogue.md', paths: [], questions: [], template: null, when: 'always', checker: { fn: 'sharedListed', file: 'docs/catalogue.md', region: 'sections', needle: '### {name} notes' } });
   let allRed = true;
@@ -461,10 +545,14 @@ async function main() {
   const unruled = JSON.parse(JSON.stringify(recipe));
   unruled.laws[0].when = 'someday';
   expect(recipeErrors(unruled).some((e) => e.includes("'someday'")), 'sabotage: an entry naming an undeclared rule breaks the recipe');
+  });
 
   // ---- 5. the wizard refuses before writing ------------------------------------------------------
-  process.env.OMX_CONTRACT_DIR = contract;
-  process.env.OMXDSP_INCLUDE = inc;
+  await part('refusals', async () => {
+    const w = await wizard();
+    if (!w) return;
+    const { answers } = w;
+    wobbleEnv();
   const fresh = join(WORK, 'refusals');
   copyTree(fresh);
   const srcFresh = kernelSources('wobble', { root: fresh });
@@ -512,9 +600,9 @@ static inline void omx_wobble_instance_run(OmxWobbleInstance *s, const float *in
     const files = (widgets) => modgui({ ...d, panel: { ...d.panel, widgets } }, '--emit-stdout');
     const auto = files(undefined), named = files({ amount: 'fader', curve: 'selector' });
     expect(auto.status === 0 && named.status === 0, `modgui: omx-panel draws the declared panel (${auto.stderr || named.stderr})`);
-    expect(/omx-knob-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(auto.stdout) && !auto.stdout.includes('omx-fader.png'),
+    expect(/omx-knob-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(auto.stdout) && !/omx-fader-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(auto.stdout),
       'modgui: a control the panel names no widget for takes its kind\'s (amount a knob, no fader film)');
-    expect(/omx-fader-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(named.stdout) && named.stdout.includes('omx-fader.png') &&
+    expect(/omx-fader-image" mod-role="input-control-port" mod-port-symbol="amount"/.test(named.stdout) && /fader-(?:vintage|console|3d)\.png/.test(named.stdout) && // omx-panel 0.14.0 names the films per look
       named.stdout.includes('.omx-fader-image') && named.stdout.includes('mod-port-symbol="curve" mod-widget="custom-select"'),
       'modgui: the panel\'s widgets are drawn (amount a fader with its film, curve a selector)');
   }
@@ -599,10 +687,11 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     expect(/has no float omx_wobble_instance_gr_db/.test(missing) && /takes band index/.test(unbanded) && /takes no 'field'/.test(both),
       `meters: a reading the face lacks, a band index left out, and a field beside a read are refused (${[missing, unbanded, both].map((x) => (typeof x === 'string' ? x.split(': ').pop() : 'ACCEPTED')).join('; ')})`);
   }
+  });
 
-  // ---- 6. the port hints ---------------------------------------------------------------------
-  delete process.env.OMX_CONTRACT_DIR; // the real tree reads the installed release
-  delete process.env.OMXDSP_INCLUDE;
+  // ---- 5b. variants (and defaultBand): one declaration, several band counts (tools/variants.mjs) ------------------
+  await part('variants', async () => {
+    realEnv(); // the real tree reads the installed release
   {
     // a band's centre at a contract count: the dynamic EQ's bands come up by the EQ rule for DYNEQ_BANDS
     const real = locateContract(ROOT).dir;
@@ -618,7 +707,6 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     expect(JSON.stringify(got) === JSON.stringify(rule) && rule[3] !== rule[0], `defaultBand: the dynamic EQ's six centres are the EQ rule's for DYNEQ_BANDS (${got.join(' ')})`);
     expect(/no count omx-contract declares/.test(String(centre(0, 'DYNEQ_FREQ_RANGE'))), `defaultBand: a count that is no count is refused (${centre(0, 'DYNEQ_FREQ_RANGE')})`);
   }
-  // ---- 5b. variants: one declaration, several band counts (tools/variants.mjs) ------------------
   {
     const real = locateContract(ROOT).dir;
     const baseFile = join(ROOT, 'plugins', 'omx-eq', 'omx-eq.decl.json');
@@ -649,6 +737,11 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
         `the wizard drafts the EQ as one declaration of variants, each variant a REVIEW mark (${draft.refusals?.[0]?.reason ?? reviewMarks(draft.decl ?? {}).filter((m) => m.startsWith('/variants')).length})`);
     } else expect(false, 'variants: the real contract and plugins/omx-eq are there to expand');
   }
+  });
+
+  // ---- 6. the port hints ---------------------------------------------------------------------
+  await part('port-hints', async () => {
+    realEnv();
   {
     const hints = join(WORK, 'hints');
     copyTree(hints);
@@ -714,8 +807,14 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     rmSync(join(hints, 'plugins/omx-tremolo/port-hints.json'));
     expect(view() === v0 && gen('--check').status === 0, 'port hints: restored, the view is whole again');
   }
+  });
 
   // ---- 7. the identity oracle holds a control that re-arms ---------------------------------------
+  await part('oracle', async () => {
+    const w = await wizard();
+    if (!w) return;
+    const { tree, P_ } = w;
+    realEnv();
   {
     // the oracle's plan, one column per parameter in declaration order
     const planOf = (dir) => {
@@ -819,8 +918,11 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     try { kernelControls(unlisted, 'wobble'); } catch (e) { why = e.message; }
     expect(why.includes("lists no kernel 'wobble'"), `oracle: a render that does not list the kernel is refused (${why || 'READ ANYWAY'})`);
   }
+  });
 
   // ---- 8. a chain of real faces: eq, gate, comp ------------------------------------------------
+  await part('chain', async () => {
+    realEnv();
   {
     process.env.OMX_CONTRACT_DIR = contract; // the pinned render (plus wobble), for the tree and its make
     delete process.env.OMXDSP_INCLUDE; // the real faces, as the build finds them
@@ -837,10 +939,11 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     expect(draft.decl?.binding === 'chain' && draft.decl.chain.map((el) => `${el.id}:${el.kernel}`).join(' ') === 'eq:eq gate:gate comp:comp',
       `chain: the draft has one element per kernel, in the order given (${draft.decl?.chain.map((el) => el.id).join(' ')})`);
     const cmarks = reviewMarks(draft.decl);
-    expect(['/chain/0/on', '/chain/0/bands', '/chain/1/on', '/chain/2/on', '/description', '/console/placement/group'].every((m) => cmarks.includes(m)), `chain: each switch's default, the band count and the console placement are marked REVIEW (${cmarks.join(' ')})`);
+    expect(['/chain/0/on', '/chain/0/bands', '/chain/1/on', '/chain/2/on', '/category', '/description', '/console/placement/group'].every((m) => cmarks.includes(m)), `chain: each switch's default, the band count and the console placement are marked REVIEW (${cmarks.join(' ')})`);
     expect(draft.decl?.panel?.sections.map((x) => x.key).join(' ') === 'eq gate comp', `chain: the drafted panel is one section per element (${draft.decl?.panel?.sections.map((x) => x.key).join(' ')})`);
     expect(draft.notes.some((n) => n.startsWith("element 'gate'")), 'chain: the draft notes that the gate\'s face takes a key');
     const settled = structuredClone(draft.decl);
+    settled.category = 'utility';
     settled.description = 'A test chain: the console EQ, then its gate, then its compressor, in any order.';
     settled.clap.features[1] = 'mixing';
     settled.lv2.class = 'lv2:MixerPlugin';
@@ -864,6 +967,8 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     hold(comp, ['keySource', 'keyHpHz', 'keyLpHz', 'keyTiltDb', 'keyListen', 'holdMs', 'detectLink', 'duck', 'rangeDb']);
     // the detector topology's set carries no labels in the contract: the person names them, as omx-comp does
     for (const p of comp.params.filter((x) => x.ref === 'DETECTOR_TOPOLOGY')) p.values = ['Feedforward', 'Feedback'];
+    // each parameter's role, a person's reading (the draft marks every one REVIEW), by the contract control it reads
+    for (const el of settled.chain) for (const p of el.params) p.meaning = CHAIN_MEANINGS[p.symbol.slice(el.id.length).replace(/^\d+/, '').toLowerCase()] ?? p.meaning;
     settled.order = 'permutable';
     settled.panel = defaultPanel(settled); // the settled elements' parameters, one section each
     const plan = await planChain(settled, csrc, { root: ct, recipe });
@@ -874,7 +979,7 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
       symbols[symbols.indexOf('compOn') + 1] === 'compThresholdDb' && symbols.at(-1) === 'order' && plan.resolved.at(-1).max === 5,
       `chain: the flattened list is each element's switch then its parameters, then order over 3! orders (${symbols.length} parameters)`);
     const written = writePlugin(plan, { root: ct });
-    for (const f of ['Makefile', 'omx_chainproof_core.h', 'omx_chainproof_clap.c', 'omx_chainproof_lv2.c', 'test/chainproof-oracle.c', 'generated/omx_chainproof_params.h', `generated/${stem}.lv2/modgui.ttl`])
+    for (const f of ['Makefile', 'omx_chainproof_core.h', 'omx_chainproof_clap.c', 'omx_chainproof_lv2.c', 'test/chainproof-oracle.c', 'generated/omx_chainproof_params.h'])
       expect(written.includes(`${CP}/${f}`), `chain: the wizard wrote ${CP}/${f}`);
     const header = readFileSync(join(ct, CP, 'generated/omx_chainproof_params.h'), 'utf8');
     expect(header.includes('#define OMX_EQ_INSTANCE_BANDS OMX_EQ_BAND_COUNTS_EQ8_MAX'), 'chain: the eq element\'s band count is the contract\'s, compiled into its face');
@@ -972,18 +1077,21 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
     spawnSync('node', ['tools/gen.mjs', CP], { cwd: ct, encoding: 'utf8' }); // the plugin as it was released
     delete process.env.OMX_CONTRACT_DIR;
   }
+  });
 
 }
 
 // the declaration schema names omx-panel's lists by the installed schema's own $id: a ref to any other address is
 // unresolved, and every declaration that draws a widget or a visibleWhen (omx-geq, omx-strip) lacks its `declaration`
+await part('schema-refs', async () => {
 {
-  const { PANEL_SCHEMA } = await import('../omx-panel.mjs');
+  const { PANEL_DOCUMENT } = await import('../schema-validate.mjs');
   const text = readFileSync(join(ROOT, 'schema', 'plugin.decl.schema.json'), 'utf8');
   const refs = [...text.matchAll(/"\$ref": "([^"#]*panel\.schema\.json)#/g)].map((m) => m[1]);
-  const strays = [...new Set(refs)].filter((r) => r !== PANEL_SCHEMA.$id);
-  expect(refs.length > 0 && strays.length === 0, `the declaration schema's refs into omx-panel name the installed schema's $id ${PANEL_SCHEMA.$id}${strays.length ? ` (found ${strays.join(', ')})` : ''}`);
+  const strays = [...new Set(refs)].filter((r) => r !== PANEL_DOCUMENT);
+  expect(refs.length > 0 && strays.length === 0, `the declaration schema's refs into omx-panel name the document ${PANEL_DOCUMENT}${strays.length ? ` (found ${strays.join(', ')})` : ''}`);
 }
+});
 
 // an arm that stops early has failed already: the verdict and the exit come after main, always
 await main();

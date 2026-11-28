@@ -11,8 +11,8 @@ the extras file carries only the extras, and `viewOf` (`tools/descriptor.mjs`) r
 says (the identity, the parameters, the CLAP features, the LV2 class, the description).
 
 `tools/gen.mjs`'s `loadDecl` reads the two and gives every generator the declaration it gave before, so the
-headers, both faces, the panel description, the MOD GUI and its rasters do not change by a byte when a
-plugin moves to a descriptor (`node tools/gen.mjs --check`, `omx-panel modgui --check`, `make panel-layout`).
+headers, both faces and the panel description do not change by a byte when a
+plugin moves to a descriptor (`node tools/gen.mjs --check`, `make panel-layout`).
 The panel is omx-panel's: it lays a panel out from a descriptor (its `docs/panel-layout.md`) and writes the MOD GUI
 (its `docs/modgui.md`), and reads a descriptor, never a declaration. This repository renders a declaration to its
 descriptor (`panelDescription(d)` lays that descriptor out under the declared panel) and hands omx-panel the
@@ -29,7 +29,7 @@ A link carries the release it is read from, `at`: `omx-contract@<floor>`, the pa
 ## Where a host reads it
 
 `make install-devel` (through `make install-contract`) installs each shipped plugin's descriptor, byte for byte,
-into omx-contract's contract directory as `<contractdir>/3/omx-plugins/plugins/<stem>.json`, with a `MANIFEST.json`
+into omx-contract's contract directory as `<contractdir>/omx-plugins/plugins/<stem>.json`, with a `MANIFEST.json`
 naming the release (omx-contract `docs/contract-dir.md`); the -devel and -dev packages carry it. A host reads it
 there through omx-contract's reader, never from this tree. `make contract-dir` holds the installed tree to the
 plugin folders' descriptors, one per shipped plugin that has one, and reads it back through the reader.
@@ -50,7 +50,7 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | `name`, `vendor`, `version` | `plugin.name`, `.vendor`, `.version` | |
 | `clap.id` | `plugin.id` (`format: clap`) | |
 | `lv2.uri` | `plugin.uri` | |
-| `clap.features` | `plugin.features`: the four the descriptor names (`audio-effect`, `instrument`, `note-effect`, `analyzer`); CLAP's other features (`delay`, `stereo`, ...) in the extension bag, `extensions.clap["clap_plugin_descriptor.features"]`, in the face's order, each as a scan's field dump writes it: a feature the CLAP headers define by its macro name (`CLAP_PLUGIN_FEATURE_DELAY`, omx-contract's `CLAP_PLUGIN_FEATURES_TERMS`), one feature as it is, two or more a list | |
+| `clap.features` | `plugin.features`: the four the descriptor names (`audio-effect`, `instrument`, `note-effect`, `analyzer`); CLAP's other features (`delay`, `stereo`, ...) in the extension bag, `extensions.clap["clap_plugin_descriptor.features"]`, in the face's order, each as a scan's field dump writes it: a feature the CLAP headers define by its macro name (`CLAP_PLUGIN_FEATURE_DELAY`, omx-clap's `CLAP_PLUGIN_FEATURES_TERMS`, domain `clap`), one feature as it is, two or more a list | |
 | (every LV2 face) `lv2:optionalFeature lv2:hardRTCapable` | `needs.extensions.optional: ["lv2:hardRTCapable"]` | |
 | `lv2.class` | the extension bag, `extensions.lv2["rdf:type"]`: the face's types as its `.ttl` states them, `["lv2:Plugin", <class>]` (`"lv2:Plugin"` alone when that is the class) | |
 | `description` | `plugin.doc`: the one-line description, CLAP `description` and LV2 `rdfs:comment` | |
@@ -59,11 +59,13 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | `sidechain` (`symbol`, `name`) | a `ports[]` entry: `kind: audio`, `direction: in`, `role: sidechain`, `channels: 1`, `layout: mono`, named as the CLAP face names it (the symbol) | `sidechain`, whole: the LV2 port's symbol and name |
 | the audio pair | `ports[]`: `in` and `out` (the CLAP face's names), `role: main`, `channels: 2`, `layout: stereo` | |
 | `latencyChecks` | `latency.reports: true`; `latency.frames` when every check reports one constant | kept: the checks the oracles run |
+| (no declaration word) | `latency.sweep` (`min`, `max`, omx-contract 3.21.0): the range a modulated delay's lag lies in, omx-rotary's, each end a `{ ref }` to its kernel's scalar in ms. The descriptor file states it and the generator keeps it; a ref names the kernel's package in `requires` (`omx-dsp`, at the packaging's floor), and the schema floor is 3.21.0. Neither face carries it, so the round trip names its two ends a face as losses | |
 | `meters` | `meters[]`: `id` its index, `symbol` its id, `name` from it, `kind` (`gain-reduction`, `level`), `channels`, the range, unit and scale (the kernel readout's, linked in `source.from` as `data/kernels/<kernel>.json#readouts[<name>]`; a level's as declared, `dBFS`), the readout's `doc` | kept: where the face reads it (`field`, `read`, `linear`, `source`) |
 | `oracles`, `portHints` | | kept: tests, the LV2 hint pin |
 | `panel.sections[].label` | each listed control's `group` | `panel` (family, roles, section keys, order, widgets, graphs): the panel's hints |
 | `panel.sections[].subgroups` (`band`, a declaration with variants or a chain) | each band's controls' `group`, the path `[<section label>, "Band <n>"]` (a chain's: `[<section label>, "<element name> <n>"]`, omx-strip's `["EQ", "EQ 1"]`): the panel section first, the LV2 port group last (#257) | the panel is handed to omx-panel without it: the section is drawn as declared |
-| `panel.roles` | each bound control's `meaning`, where the role has a meaning word (omx-panel docs/panel-layout.md) | kept: the roles themselves |
+| `panel.roles` | each bound control's `meaning`, the word its role plays (contract/role-meanings.json; omx-panel docs/panel-layout.md) | kept: the roles themselves |
+| `params[].meaning` (a whole declaration's parameter; a chain element's switch states `enabled`, the stage order `order`, a band count `number`, where tools/gen.mjs makes them) | `controls[].meaning` of a control no role binds; a described plugin states it on the descriptor's control, kept as written. Every control states one, a word of omx-contract's PARAM_MEANINGS and never `unknown` (omx-contract docs/descriptors.md "Meanings"): `meaningOfControl` (tools/descriptor.mjs) refuses one with none, and `make meanings` holds the shipped descriptors (omx-plugins#208) | |
 | `console` | | kept: the console's placement, card and chip |
 | `params[i]` | `controls[i]`, `id: i` | |
 | `params[].symbol` | `controls[].symbol` | |
@@ -74,7 +76,7 @@ link resolves to. A number edited by hand is stale, never a declaration.
 | resolved `values`, `points` | a `choice`: `ids` (each value as text), `labels`, `values` | |
 | `params[].forKind`, `.defaultRef`, `.defaultId`, `.defaultBand`, `.perBand`, `.values` | the come-up value and the labels they give, stated | kept, by symbol (`controls`): how the value is read, not the value |
 | resolved `byKind` | | kept as the read (gap 2) |
-| a set's `unit` (`dB/oct`) | | kept, by symbol (gap 1) |
+| a set's `unit` (`dBPerOct`) | | kept, by symbol (gap 1) |
 | `params[].own` (a face's switch, a stage order) | the control, its travel typed, `source.impl` naming the face | `own`, the reason, by symbol |
 
 ## The gaps
@@ -88,7 +90,7 @@ What the descriptor has no word for, found laying out our panels, and where each
 | 2 | The come-up value per kind of channel (a delay's mix fully wet on a return): the kernel files say it as `byKind` | contract: `travel.byKind`, the kernel word, on a descriptor travel | read through the link at load |
 | 3 | Meanings for a rotor's speeds and speed switch, an LFO's shape, a drive's model, a reverb's algorithm, a de-esser's mode, a filter or band type, a band's on switch, a ping-pong switch | contract: `speed`, `shape`, `model`, `algorithm`, `mode`, `type`, `on`, `pingpong` | the declared roles bind them |
 | 4 | A ratio's unit: LV2 has none, the item list has only `x` | contract: `ratio` (n:1) among the descriptor units (omx-contract 3.0.0); the LV2 face writes it as `urn:openmixer:unit#ratio` | done: omx-comp `ratio`, omx-deesser `deessRatio`, omx-keyed-gate `ratio` state `ratio` |
-| 5 | What a meter measures | contract: `meters[].kind` (`gain-reduction`, `level`, omx-contract 3.9.0); `peak`, `rms`, `vu`, `ppm`, `lufs` have no word yet | a meter is a `meters[]` entry, never a read-only control |
+| 5 | What a meter measures | contract: `meters[].kind` (`gain-reduction`, `level`, omx-contract 3.9.0) and `meters[].measurement` (`peak`, `true-peak`, `lufs-m`, `lufs-s`, `lufs-i`, `lra`, `gain-reduction`, 3.11.0); `rms`, `vu` and `ppm` are not words | a meter is a `meters[]` entry, never a read-only control; a level the face measures states `peak`, a level the kernel reads states none |
 | 6 | `dBu`, which param-contract serves | contract: `dBu` among the descriptor units | the unit stays on our declarations only |
 | 7 | An xy pad (two controls drawn as one) | omx-plugins: a panel hint, `panel.widgets` naming the pair | none of ours draws one |
 | 8 | A momentary control | none: a `trigger` is momentary | |
@@ -98,27 +100,75 @@ What the descriptor has no word for, found laying out our panels, and where each
 ## The faces, from plugin-hostd's tables read backwards
 
 One vocabulary, two directions (FreeMixer/omx-plugins#210, ruling B). plugin-hostd installs one mapping table per
-format into omx-contract's contract directory, `<contractdir>/3/plugin-hostd/formats/{clap,lv2}.json`: how each field a
-scan reads becomes a descriptor word. Our generators write a face from the authored descriptor by reading the same
-rows the other way (`tools/format-tables.mjs`), and only the rows whose transform is `identity` or `lookup`: the row
-whose `lookup` maps a source value to the word's value names what the face writes. No transform is code of ours.
-`$PLUGIN_HOSTD_TABLES`, a directory holding `clap.json` and `lv2.json` (a plugin-hostd checkout's `data/formats`),
-stands in for the installed tables.
+format as a domain of the contract directory, `plugin-hostd/clap` and `plugin-hostd/lv2` (named by their items' prefix,
+`PLUGIN_HOSTD_CLAP_MAP` and `PLUGIN_HOSTD_LV2_MAP`), `<contractdir>/plugin-hostd/<format>/<format>.json`: how each field a
+scan reads becomes a descriptor word. Each item is omx-contract's mapping-table kind, `x-kind: map` (sorting row V19):
+`x-format` names the format and its `oneOf` holds one row per source field, `const` the field, `x-term` or `x-from` what
+covers it, and one of `x-word`, `x-extension` or `x-dropped` (plugin-hostd `docs/formats.md`). Our generators write a
+face from the authored descriptor by reading the same rows the other way (`tools/format-tables.mjs`), and only the rows
+whose transform carries pairs: `lookup`, whose `values` the row holds, and the two whose pairs the format level's owner
+publishes (row M5, plugin-hostd `docs/formats.md`, "Lookup values the owners publish"):
+
+| Transform | Rows | The owner's mapping read |
+|---|---|---|
+| `unit-id` | CLAP `omx_clap_param_contract_entry.unit` | omx-clap's domain `omx-param-contract`, `OMX_PARAM_CONTRACT_UNIT_IDS` (code -> id) |
+| `unit-id` | LV2 `units:<unit>` | plugin-db's domain `lv2`, the word of `LV2_UNIT_IDS` whose `x-from` names the row's `x-term` |
+| `unit-id` | LV2 `units:unit` | plugin-db's domain `lv2`, every word of `LV2_OPENMIXER_UNIT_IDS` (`x-uri` -> id) |
+| `designation-meaning` | LV2 `param:<term>`, `lv2:enabled` | plugin-db's domain `lv2`, the word of `LV2_DESIGNATION_MEANINGS` whose `x-from` names the row's `x-term` |
+| `designation-meaning` | LV2 `lv2:designation` | plugin-db's domain `lv2`, every word of `LV2_OPENMIXER_MEANING_IDS` (`x-uri` -> meaning) |
+
+The row whose pair maps a source value to the word's value names what the face writes. A unit's value is a
+`PARAM_UNITS` id (`percent`), and a declaration states the id too: `%` is its `x-symbol`, what a person reads, and no
+declared unit. A face writes the id wherever a host reads a word (the descriptor, a TTL's `units:unit`, the parameter
+contract's token, a preset) and the `x-symbol` only where a person reads the value: the CLAP table value_to_text prints
+(`50 %`, `12 dB/oct`), a set's point labels, the manual and the parameter reference. A mapping that is absent, a document that is not its owner's (`info.x-owner`), a row its mapping holds
+no pair for and a value two rows map are each refused by name. No transform is code of ours.
+`$OMX_INSTALLED_CONTRACTDIR`, a contract directory holding the domains, stands in for the installed one.
 
 - An LV2 port's `units:unit` is the LV2 row mapping its unit (`units:db` for `dB`, `<urn:openmixer:unit#dBFS>` for
-  `dBFS`); a unit no row maps is the declaration's own, defined in the plugin's TTL: `dBu`, `dB/oct` and `ratio`
-  (`urn:openmixer:unit#ratio`, gap 4).
-- An LV2 port's `lv2:designation` is the LV2 row mapping its control's `meaning`: 186 ports carry a `param:` term
-  (gain 93, frequency 63, wetDryRatio 11, release 5, threshold 4, ratio 4, attack 4, hold 1, delay 1). A meaning with
-  no LV2 term is written nowhere.
+  `dBFS`); the OpenMixer units, `dBFS`, `dBu`, `LUFS`, `dBPerOct` and `ratio` (`urn:openmixer:unit#ratio`, gap 4), are
+  the `units:unit` row's pairs and are defined in the plugin's TTL.
+- An LV2 port's `lv2:designation` is the LV2 row mapping its control's `meaning`: 371 ports carry a `param:` term
+  (gain 138, frequency 101, threshold 27, release 26, attack 20, ratio 19, wetDryRatio 16, cutoffFrequency 6, delay 6,
+  bypass 5, hold 5, decay 1, resonance 1). A meaning
+  LV2's `param:` vocabulary has no term for (knee, makeup, lowCut, q, ...) is written as the urn plugin-db declares for
+  it (`<urn:openmixer:meaning#knee>`), the `lv2:designation` row's pairs, and the plugin's TTL defines each such
+  Property (omx-plugins#12). Until plugin-db declares `LV2_OPENMIXER_MEANING_IDS` and plugin-hostd's `lv2:designation`
+  row reads it, that row is an extension with no pairs and such a meaning is written nowhere. `enabled` maps to
+  `lv2:enabled`, and LV2 gives a plugin one enabled port, the face's own first port (contract/plugin-face.json); a
+  declared control that states `enabled` turns a part on (a band, a filter, a chain's stage) and is designated by
+  nothing (`declaredDesignation`, tools/format-tables.mjs), so no host bypasses the plugin through a band's switch.
 - A CLAP parameter's `module` is its control's `group`, the labels joined by `/` (the inverse of plugin-hostd's
   `group-path`); a plugin with no descriptor writes `""`.
 - param-contract's unit tokens (`tools/param-contract.mjs`) are the LV2 units a face writes, their values those
-  omx-contract declares (the sheet `OMX_PARAM_CONTRACT_UNITS`, `{ <token>: <code> }`, in its `param-contract.json`) and
-  renders to `omxcontract/omx_param_units.h`, which `include/omx_param_contract.h` includes; `make units` refuses a
-  drift between them and a unit code defined in this tree.
+  omx-clap declares (the sheet `OMX_PARAM_CONTRACT_UNITS`, `{ <token>: <code> }`, in its domain
+  `omx-param-contract`, `<contractdir>/omx-param-contract/omx-param-contract.json`) and renders to
+  `omx-clap-host/omx_param_units.h`, which `include/omx_param_contract.h` includes; `make units` refuses a drift between
+  them, a code moved from omx-contract 3.20.2's golden, and a unit code defined in this tree.
 
 `make format-tables` (part of `make test`) holds the faces to the tables, with its sabotage arms.
+
+## A plugin's own units
+
+Units are owned by their producer (omx-contract#144): a unit no `PARAM_UNITS` word is, which only this plugin's
+controls measure in, is declared in the declaration's `units` block (`<stem>.decl.json`, the extras file of a
+described plugin), and moves to a shared domain only when a second producer needs it. Each entry is a word shaped as
+`PARAM_UNITS`' words are, omx-contract's domain schema `$defs.word` (`domain.schema.json`, which
+`schema/plugin.decl.schema.json` references by `$id`): `const` the id, `title` its key, `description`, `x-code` its
+place in the block, `x-symbol` its display spelling, and optionally `x-dimension` (a `PARAM_UNIT_DIMENSIONS` word) and
+`x-group` (a `PARAM_UNIT_SCOPES` word). A parameter's `unit` is a `PARAM_UNITS` id or one of these ids.
+
+One name, one home: `tools/gen.mjs` refuses an own id that is a `PARAM_UNITS` id, an own `x-symbol` that is a
+`PARAM_UNITS` one (the text a face shows names one unit), an id or symbol declared twice, an `x-code` off its place, a
+dimension or group that is no word of its list, an own unit no parameter names, and a parameter naming a unit neither
+declares. An own unit flows as a standard one does: the C table and the CLAP face's value_to_text show its `x-symbol`,
+and so do the plain description, the manual and the parameter reference; the LV2 port's `units:unit` is
+`<urn:openmixer:<short>#unit.<id>>`, under the plugin's own URI (a port group's fragment is a section key, which has no
+dot), and the plugin's TTL defines it (`units:Unit`, its `description` the label, `%f <x-symbol>` the render, the
+`x-symbol` the symbol); the descriptor, the panel description and a preset state its id; the parameter contract
+states `none` for it, its text left to value_to_text, as for a standard unit omx-clap has no code for. No shipped
+plugin declares one yet. `make own-units` (part of `make test`) holds all of it over a fixture plugin,
+`tools/test/own-units/omx-ownunit.decl.json`.
 
 ## The round trip
 

@@ -29,7 +29,7 @@ enum {
 static const omx_plugin_param OMX_LOUDLEVEL_PARAMS[OMX_LOUDLEVEL_PARAM_COUNT] = {
   { "targetLufs", "Target", "dB", -40.0f, -6.0f, -23.0f, 0u },
   { "rangeDb", "Range", "dB", 0.0f, 24.0f, 0.0f, 0u },
-  { "speedDbPerS", "Speed", "dB", 0.1f, 6.0f, 1.0f, 0u },
+  { "speedDbPerS", "Speed", "dB/s", 0.1f, 6.0f, 1.0f, 0u },
   { "gateLufs", "Gate", "dB", -70.0f, -30.0f, -50.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "window", "Window", "", 0.0f, 1.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
 };
@@ -75,24 +75,24 @@ static const char *const *const OMX_LOUDLEVEL_PARAM_LABELS[OMX_LOUDLEVEL_PARAM_C
 /* The identity every face publishes. */
 #define OMX_LOUDLEVEL_NAME "omx loudlevel"
 #define OMX_LOUDLEVEL_VENDOR "openmixer"
-#define OMX_LOUDLEVEL_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_LOUDLEVEL_VERSION "0.19.3"
+#define OMX_LOUDLEVEL_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_LOUDLEVEL_VERSION "0.22.3"
 #define OMX_LOUDLEVEL_DESCRIPTION "Holds a signal at a loudness target by moving its gain slowly, with a gate so pauses are left alone."
 #define OMX_LOUDLEVEL_CLAP_ID "org.openmixer.loudlevel"
 #define OMX_LOUDLEVEL_CLAP_FEATURES "audio-effect", "utility", "stereo"
 #define OMX_LOUDLEVEL_LV2_URI "urn:openmixer:loudlevel"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
-#define OMX_LOUDLEVEL_DECL_SOURCE "omx loudlevel: Target -40 to -6 dB, Range 0 to 24 dB, Speed 0.1 to 6 dB, Gate -70 to -30 dB, Window 0 to 1"
-#define OMX_LOUDLEVEL_DECL_DIGEST "5ca40a12d69abada26cd79a670a6090d0dabf4de21b92531fafaccc34968ba61"
+#define OMX_LOUDLEVEL_DECL_SOURCE "omx loudlevel: Target -40 to -6 dB, Range 0 to 24 dB, Speed 0.1 to 6 dB/s, Gate -70 to -30 dB, Window 0 to 1"
+#define OMX_LOUDLEVEL_DECL_DIGEST "06e25f555534986abb233e73a6c3340719e7eec0b5f0dc7a1d29bbcbb73be71b"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 3u
-#define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "7601b61ad34098f29ce123cbd0f4d4ae5311ace16bc65b5c6831cc04f233a017"
+#define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 5u
+#define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "86663b52680cf2614942539b76c03b22794504a0567375c075be41586db475fc"
 static const struct omx_param_contract_row OMX_LOUDLEVEL_PARAM_CONTRACT[OMX_LOUDLEVEL_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* targetLufs db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* rangeDb db */
-  { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* speedDbPerS db */
+  { 261u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* speedDbPerS dbPerS */
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* gateLufs db */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* window none */
 };

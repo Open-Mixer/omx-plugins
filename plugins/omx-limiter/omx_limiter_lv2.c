@@ -22,7 +22,7 @@
  * 1 values the face writes after a block, the output control ports from OMX_LIMITER_LV2_PORT_FIRST_METER on. */
 _Static_assert(1u <= OMX_METER_RING_MAX, "one block's values fit the face's array");
 static const struct omx_face_meter G_METERS[] = {
-    {"limiterGr", OMX_FACE_METER_KIND_GAIN_REDUCTION, 1u, 0u, (double)OMX_LIMITER_READOUT_GAIN_REDUCTION_DB_MIN, (double)OMX_LIMITER_READOUT_GAIN_REDUCTION_DB_MAX, OMX_FACE_METER_READ},
+    {"limiterGr", OMX_FACE_METER_KIND_GAIN_REDUCTION, 1u, 0u, (double)OMX_LIMITER_READOUT_GAIN_REDUCTION_DB_MIN, (double)OMX_LIMITER_READOUT_GAIN_REDUCTION_DB_MAX, OMX_FACE_METER_READ, 1u, 0u},
 };
 
 static const struct omx_face G_FACE = {

@@ -10,7 +10,7 @@
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<https://github.com/FreeMixer/omx-plugins>
+<https://github.com/Open-Mixer/omx-plugins>
     a doap:Project ;
     doap:name "omx-plugins" ;
     doap:maintainer [ a foaf:Person ; foaf:name "Pau Aliagas" ; foaf:homepage <https://github.com/linuxnow> ] .
@@ -19,8 +19,8 @@
     a lv2:Plugin , lv2:EQPlugin ;
     doap:name "omx balancer" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
-    lv2:project <https://github.com/FreeMixer/omx-plugins> ;
-    lv2:minorVersion 19 ;
+    lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
+    lv2:minorVersion 22 ;
     lv2:microVersion 3 ;
     rdfs:comment "Walks four bands slowly toward a target tone, so a mix settles toward a pink-noise balance without chasing notes." ;
     lv2:optionalFeature lv2:hardRTCapable ;
@@ -103,7 +103,7 @@
         lv2:default 0.5 ;
         lv2:minimum 0.1 ;
         lv2:maximum 6 ;
-        units:unit units:db ;
+        units:unit <urn:openmixer:unit#dBs> ;
         pg:group <urn:openmixer:balancer#balancer>
     ] ,
     [
@@ -138,3 +138,9 @@ lv2:displayPriority
     rdfs:label "decibels per octave" ;
     units:render "%f dB/oct" ;
     units:symbol "dB/oct" .
+
+<urn:openmixer:unit#dBs>
+    a units:Unit ;
+    rdfs:label "decibels per second" ;
+    units:render "%f dB/s" ;
+    units:symbol "dB/s" .

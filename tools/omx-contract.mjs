@@ -19,13 +19,15 @@
  *
  * $OMX_CONTRACT_DIR, a directory holding an omx-contract.json, stands in for the installed data
  * directory: the perturbation proofs point it at a moved copy. Either way the release's version (the
- * render's own `version`) must lie in the packaging's range, or nothing is read.
+ * render's own `version`) is named with what is read.
  */
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { createRequire } from 'node:module';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { unitSymbol } from './format-tables.mjs';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /** Where the packaging declares the releases this repository builds against. */
@@ -40,23 +42,6 @@ export function compareVersions(a, b) {
   for (let i = 0; i < Math.max(pa.length, pb.length); i++) if ((pa[i] ?? 0) !== (pb[i] ?? 0)) return (pa[i] ?? 0) < (pb[i] ?? 0) ? -1 : 1;
   return 0;
 }
-
-/**
- * The range packaging/omx-plugins.spec requires of the build dependency `pkg` (`omx-dsp-devel`,
- * `omx-contract-devel`): `{ floor }`, from its BuildRequires line `BuildRequires: pkg >= floor` (floors only: no ceiling).
- * Throws when it is missing or written twice.
- */
-export function packagingRange(pkg, root = ROOT) {
-  const file = join(root, SPEC_FILE);
-  if (!existsSync(file)) throw new Error(`${SPEC_FILE} is missing: the packaging is where the releases this tree builds against are declared`);
-  const spec = readFileSync(file, 'utf8');
-  const name = pkg.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const found = [...spec.matchAll(new RegExp(`^BuildRequires: ${name} >= ([0-9][0-9.]*)$`, 'gm'))];
-  if (found.length !== 1) throw new Error(`${SPEC_FILE}: ${found.length ? 'more than one' : 'no'} "BuildRequires: ${pkg} >= <floor>" line`);
-  return { floor: found[0][1] };
-}
-
-const inRange = (v, r) => compareVersions(v, r.floor) >= 0;
 
 const versionOf = (dir) => {
   try {
@@ -88,8 +73,44 @@ function pkgVariable(name) {
 /** The installed omx-contract's data directory (pkg-config), or undefined. */
 export const installedDataDir = () => pkgVariable('datadir');
 
-/** The installed omx-contract's contract directory (pkg-config's contractdir, from 2.15.0 on), or undefined. */
-export const installedContractDir = () => pkgVariable('contractdir');
+/** The installed omx-contract's contract directory ($OMX_INSTALLED_CONTRACTDIR, else pkg-config's contractdir, from
+ * 2.15.0 on), or undefined. It holds the OTHER owners' packages: this tree's own omx-plugins package is read from the
+ * directory unionRender composes, never from here (an older released omx-plugins-contract may stand in this one). */
+export const installedContractDir = () => process.env.OMX_INSTALLED_CONTRACTDIR || pkgVariable('contractdir');
+
+/**
+ * The document of domain `domain` in the contract directory `contractdir` (default: the installed one),
+ * `<contractdir>/<domain>/<domain>.json` (omx-contract docs/contract-dir.md, "Domains": a reader that is no C or
+ * TypeScript render reads the domain document itself). Refused by name when the directory or the document is absent,
+ * naming `want`, the package and floor that installs it.
+ */
+export function domainDocument(domain, want, contractdir = installedContractDir()) {
+  const file = contractdir && join(contractdir, domain, `${domain}.json`);
+  if (!file || !existsSync(file)) throw new Error(`domain ${domain}: ${file ?? 'no contract directory (pkg-config --variable=contractdir omx-contract finds none)'} is not installed; this tree needs ${want}`);
+  const doc = JSON.parse(readFileSync(file, 'utf8'));
+  if (typeof doc?.components?.schemas !== 'object') throw new Error(`${file}: no domain document (components.schemas)`);
+  return { file, doc, schemas: doc.components.schemas };
+}
+
+/**
+ * omx-contract's `isMain(import.meta.url)`: whether the calling module is the script node runs, decided on real paths so
+ * a tool started through a symlink runs. Read, at the first call, from the installed command's own files,
+ * `<dir>/lib/entry.mjs`: the directory of $OMX_CONTRACT_CLI when it names bin/omx-contract.mjs, else
+ * `pkg-config --variable=clidir omx-contract` (from 3.20.2 on; the files ship in the omx-contract package, a build
+ * dependency here). A module that only imports this one never reads it.
+ * @param {string} moduleUrl the calling module's `import.meta.url`
+ * @returns {boolean} true when node was asked to run that module
+ */
+export function isMain(moduleUrl) {
+  if (!entry) {
+    const cli = process.env.OMX_CONTRACT_CLI;
+    const dir = cli?.endsWith('.mjs') ? resolve(dirname(cli), '..') : pkgVariable('clidir');
+    if (!dir) throw new Error('omx-contract: no installed command directory (pkg-config --variable=clidir omx-contract answers nothing; omx-contract >= 3.20.2 names it): isMain is read from <clidir>/lib/entry.mjs');
+    entry = createRequire(import.meta.url)(join(dir, 'lib', 'entry.mjs'));
+  }
+  return entry.isMain(moduleUrl);
+}
+let entry;
 
 /** The omx-contract CLI: $OMX_CONTRACT_CLI (its bin/omx-contract.mjs, or an executable), else `omx-contract`
  * on PATH; `[command, ...leading args]`, or undefined when there is none. */
@@ -108,7 +129,9 @@ const unionCache = new Map();
 /**
  * From omx-contract 2.15.0 on, the kernels ship with their owners (omx-dsp) into omx-contract's contract
  * directory, and the installed omx-contract.json holds only the shared facts. The union is read through the
- * omx-contract CLI, `render --target json --installed`. Every node process renders for itself, and the
+ * omx-contract CLI, `render --target json --contract-dir <composed>`: every installed package BUT omx-plugins, and this
+ * tree's own (tools/round-trip-contract-dir.sh), so an older released omx-plugins-contract that a build root pulls in
+ * is never read while this tree builds. Every node process renders for itself, and the
  * make targets run side by side (`make -j`), so no render is ever written where another process reads:
  * it goes into a private temporary directory, which is renamed to build/contract-union-<digest of its
  * files>, a name only that content has. A directory under that name is whole by construction and is never
@@ -122,14 +145,16 @@ function unionRender(root, contractdir) {
   if (!cli) out = { why: `omx-contract keeps its kernels in the contract directory ${contractdir}, read through the omx-contract CLI (\`omx-contract render --target json --installed\`), and none is installed: set OMX_CONTRACT_CLI to its bin/omx-contract.mjs or put omx-contract on PATH (BUILDING.md)` };
   else {
     const build = join(root, 'build');
-    let tmp;
+    let tmp, composed;
     try {
       mkdirSync(build, { recursive: true });
       tmp = mkdtempSync(join(build, 'contract-union.tmp-'));
-      execFileSync(cli[0], [...cli.slice(1), 'render', '--target', 'json', '--out', tmp, '--installed'], { stdio: ['ignore', 'ignore', 'pipe'] });
+      composed = mkdtempSync(join(build, 'contract-compose.tmp-'));
+      execFileSync('sh', [join(ROOT, 'tools', 'round-trip-contract-dir.sh'), join(composed, 'contract.d')], { env: { ...process.env, OMX_INSTALLED_CONTRACTDIR: contractdir }, stdio: ['ignore', 'ignore', 'pipe'] });
+      execFileSync(cli[0], [...cli.slice(1), 'render', '--target', 'json', '--out', tmp, '--contract-dir', join(composed, 'contract.d')], { stdio: ['ignore', 'ignore', 'pipe'] });
       // the render cites each definition by its path only: who owns it goes beside it, so a reader
       // pointed at this directory (OMX_CONTRACT_DIR) still knows
-      writeFileSync(join(tmp, OWNERS), `${JSON.stringify(Object.fromEntries(ownersOf(contractdir)), null, 2)}\n`);
+      writeFileSync(join(tmp, OWNERS), `${JSON.stringify(Object.fromEntries(ownersOf(join(composed, 'contract.d'))), null, 2)}\n`);
       const digest = createHash('sha256');
       for (const f of readdirSync(tmp).sort()) digest.update(f).update('\0').update(readFileSync(join(tmp, f))).update('\0');
       const dir = join(build, `contract-union-${digest.digest('hex').slice(0, 16)}`);
@@ -145,6 +170,7 @@ function unionRender(root, contractdir) {
       out = { why: `the omx-contract CLI refused the contract directory ${contractdir}: ${String(e.stderr ?? e.message).trim().split('\n')[0]}` };
     } finally {
       if (tmp) rmSync(tmp, { recursive: true, force: true });
+      if (composed) rmSync(composed, { recursive: true, force: true });
     }
   }
   unionCache.set(contractdir, out);
@@ -163,7 +189,7 @@ export function ownersOf(contractdir = installedContractDir()) {
     for (const [rel, o] of Object.entries(JSON.parse(readFileSync(join(contractdir, OWNERS), 'utf8')))) out.set(rel, o);
     return out;
   }
-  const base = contractdir && join(contractdir, '3');
+  const base = contractdir; // every owner package is <contractdir>/<owner>/, no schema-major level
   if (!base || !existsSync(base)) return out;
   for (const pkg of readdirSync(base)) {
     const file = join(base, pkg, 'MANIFEST.json');
@@ -175,32 +201,24 @@ export function ownersOf(contractdir = installedContractDir()) {
 }
 
 /**
- * The directory omx-contract's resolved render is read from: `{ dir, version, range, at, contractdir? }`, or
- * `{ dir: undefined, range, why }` when no omx-contract in the packaging's range is installed (nor given by
+ * The directory omx-contract's resolved render is read from: `{ dir, version, at, contractdir? }`, or
+ * `{ dir: undefined, why }` when no omx-contract is installed (nor given by
  * OMX_CONTRACT_DIR). From 2.15.0 on, the render is the union of the contract directory (unionRender).
  */
 export function locateContract(root = ROOT) {
-  let range;
-  try {
-    range = packagingRange('omx-contract-devel', root);
-  } catch (e) {
-    return { dir: undefined, why: e.message };
-  }
-  const want = `omx-contract >= ${range.floor} (${SPEC_FILE})`;
   const env = process.env.OMX_CONTRACT_DIR;
   const dir = env || installedDataDir();
   const at = env ? `OMX_CONTRACT_DIR=${env}` : dir;
-  if (!dir) return { dir: undefined, range, why: `no omx-contract is installed (\`${PKG_CONFIG()} --variable=datadir omx-contract\` finds none); this tree needs ${want}: install omx-contract-devel or libomx-contract-dev (BUILDING.md)` };
+  if (!dir) return { dir: undefined, why: `no omx-contract is installed (\`${PKG_CONFIG()} --variable=datadir omx-contract\` finds none): install omx-contract-devel or libomx-contract-dev (BUILDING.md)` };
   const version = versionOf(dir);
-  if (!version) return { dir: undefined, range, why: `${at} holds no readable ${RESOLVED}` };
-  if (!inRange(version, range)) return { dir: undefined, range, why: `${at} is omx-contract ${version}; this tree needs ${want}` };
+  if (!version) return { dir: undefined, why: `${at} holds no readable ${RESOLVED}` };
   const contractdir = env ? undefined : installedContractDir();
   if (contractdir && !Object.keys(JSON.parse(readFileSync(join(dir, RESOLVED), 'utf8')).kernels ?? {}).length) {
     const union = unionRender(root, contractdir);
-    if (!union.dir) return { dir: undefined, range, why: union.why };
-    return { dir: union.dir, version, range, at: `${contractdir} (omx-contract ${version} and its owners)`, contractdir };
+    if (!union.dir) return { dir: undefined, why: union.why };
+    return { dir: union.dir, version, at: `${contractdir} (omx-contract ${version} and its owners; this tree's omx-plugins)`, contractdir: union.dir };
   }
-  return { dir, version, range, at: `${at} (omx-contract ${version})` };
+  return { dir, version, at: `${at} (omx-contract ${version})` };
 }
 
 const resolvedCache = new Map();
@@ -372,13 +390,13 @@ export function resolveParam(dir, kernel, p) {
       if (p.defaultBand.of !== 'centre') throw new Error(`param '${p.symbol}': a travel's band default is the 'centre'`);
       def = band.freqHz;
     }
-    const out = { min: num(t.min, at), max: num(t.max, at), def: num(def, at), unit: t.unit ?? '', from: at };
+    const out = { min: num(t.min, at), max: num(t.max, at), def: num(def, at), unit: t.unit ?? 'none', from: at };
     // the default a channel kind comes up at instead (a return's wet mix), where the travel names one
     if (t.byKind && !p.forKind) out.byKind = Object.fromEntries(Object.entries(t.byKind).map(([k, v]) => [k, num(v, at)]));
     if (typeof t.step === 'number' && t.step >= 1 && Number.isInteger(out.min) && Number.isInteger(out.max)) out.kind = 'integer';
     return out;
   }
-  if (e.kind === 'scalar' && typeof e.value === 'boolean') return { min: 0, max: 1, def: e.value ? 1 : 0, unit: '', kind: 'toggle', from: at };
+  if (e.kind === 'scalar' && typeof e.value === 'boolean') return { min: 0, max: 1, def: e.value ? 1 : 0, unit: 'none', kind: 'toggle', from: at };
   if (e.kind === 'list' && Array.isArray(e.value)) {
     let def = 0;
     if (p.defaultRef) {
@@ -387,7 +405,7 @@ export function resolveParam(dir, kernel, p) {
       def = e.value.indexOf(d.entry.value);
       if (def < 0) throw new Error(`param '${p.symbol}': ${p.defaultRef}'s value ${JSON.stringify(d.entry.value)} is not one of ${p.ref}'s values`);
     }
-    return { min: 0, max: e.value.length - 1, def, unit: '', kind: 'integer', values: e.value, from: at };
+    return { min: 0, max: e.value.length - 1, def, unit: 'none', kind: 'integer', values: e.value, from: at };
   }
   if (e.kind === 'set' && Array.isArray(e.value)) {
     const ids = e.value;
@@ -402,16 +420,17 @@ export function resolveParam(dir, kernel, p) {
     if (def < 0) throw new Error(`param '${p.symbol}': ${JSON.stringify(defId)} is not one of ${p.ref}'s ids ${JSON.stringify(ids)}`);
     if (numeric) {
       // a set of numbers (the pass filters' slopes) is the travel from its first to its last, labelled at each id
-      const unit = p.unit ?? '';
-      return { min: ids[0], max: ids[ids.length - 1], def: ids[def], unit, kind: 'integer', points: ids.map((v) => ({ value: v, label: unit ? `${v} ${unit}` : `${v}` })), from: at };
+      // the set's unit is the declaration's PARAM_UNITS id (a slope's dBPerOct); a point's label shows its x-symbol (12 dB/oct)
+      const unit = p.unit ?? 'none', shown = unitSymbol(unit);
+      return { min: ids[0], max: ids[ids.length - 1], def: ids[def], unit, kind: 'integer', points: ids.map((v) => ({ value: v, label: shown ? `${v} ${shown}` : `${v}` })), from: at };
     }
     // a switch (ids exactly off, on: DELAY_PINGPONGS, DRIVE_AUTO_GAINS, EQ_BAND_ONS) is a toggle,
     // its value the id's index, so a host draws it as one and keeps the toggled hint
     if (ids.length === 2 && ids[0] === 'off' && ids[1] === 'on' && p.values === undefined)
-      return { min: 0, max: 1, def, unit: '', kind: 'toggle', from: at };
+      return { min: 0, max: 1, def, unit: 'none', kind: 'toggle', from: at };
     const labels = e.labels ?? p.values;
     if (!Array.isArray(labels) || labels.length !== ids.length) throw new Error(`param '${p.symbol}': ${p.ref} has no labels; the declaration's "values" must give one per id (${ids.length})`);
-    return { min: 0, max: ids.length - 1, def, unit: '', kind: 'integer', values: labels, from: at };
+    return { min: 0, max: ids.length - 1, def, unit: 'none', kind: 'integer', values: labels, from: at };
   }
   throw new Error(`param '${p.symbol}': ${at} is a ${e.kind}${e.kind === 'scalar' ? ` of ${JSON.stringify(e.value)}` : ''}, not a travel, a toggle, a list or a set`);
 }

@@ -20,6 +20,7 @@ import { join } from 'node:path';
 import { lv2UnitNames, loadDecl, pluginDirs, ROOT } from '../gen.mjs';
 import { contractUnits } from '../param-contract.mjs';
 import { ttlHints } from '../port-hints.mjs';
+import { isMain } from '../omx-contract.mjs';
 
 /** The part of an LV2 unit reference that names it: `units:db` -> db, `<urn:...#dBFS>` -> dBFS. */
 const nameOf = (ref) => ref?.replace(/^<|>$/g, '').split(/[:#]/).pop() ?? null;
@@ -27,7 +28,8 @@ const nameOf = (ref) => ref?.replace(/^<|>$/g, '').split(/[:#]/).pop() ?? null;
 /** Every defect, one line each: `plugins` is `[{ stem, params, ttl }]`, `map` the unit -> LV2 name table. */
 export function unitErrors(plugins, map = lv2UnitNames(), served = Object.entries(contractUnits()).filter(([, [t]]) => t !== 'none').map(([u]) => u)) {
   const errors = [];
-  const used = new Set([...served, ...plugins.flatMap((p) => p.params.map((q) => q.unit))].filter(Boolean));
+  // none states no unit, so it has no LV2 unit to carry
+  const used = new Set([...served, ...plugins.flatMap((p) => p.params.map((q) => q.unit))].filter((u) => u && u !== 'none'));
   for (const u of [...used].sort()) if (!map[u]) errors.push(`unit '${u}' has no LV2 unit`);
   for (const { stem, params, ttl } of plugins) {
     const ports = ttlHints(ttl);
@@ -49,7 +51,7 @@ export function load(root = ROOT) {
   });
 }
 
-if (process.argv[1] && import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (isMain(import.meta.url)) {
   const plugins = load();
   const errors = unitErrors(plugins);
   for (const e of errors) console.log(`FAIL lv2-units ${e}`);

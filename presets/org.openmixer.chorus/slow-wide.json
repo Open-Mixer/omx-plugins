@@ -9,7 +9,7 @@
   "params": [
     {
       "symbol": "spread",
-      "unit": "",
+      "unit": "none",
       "value": 0.25
     },
     {
@@ -24,12 +24,12 @@
     },
     {
       "symbol": "voices",
-      "unit": "",
+      "unit": "none",
       "value": 3
     },
     {
       "symbol": "mix",
-      "unit": "%",
+      "unit": "percent",
       "value": 50
     }
   ],

@@ -13,7 +13,7 @@
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<https://github.com/FreeMixer/omx-plugins>
+<https://github.com/Open-Mixer/omx-plugins>
     a doap:Project ;
     doap:name "omx-plugins" ;
     doap:maintainer [ a foaf:Person ; foaf:name "Pau Aliagas" ; foaf:homepage <https://github.com/linuxnow> ] .
@@ -22,8 +22,8 @@
     a lv2:Plugin , lv2:ReverbPlugin ;
     doap:name "omx reverb" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
-    lv2:project <https://github.com/FreeMixer/omx-plugins> ;
-    lv2:minorVersion 19 ;
+    lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
+    lv2:minorVersion 22 ;
     lv2:microVersion 3 ;
     rdfs:comment "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal; the early reflections and the tail set apart, the wet ducked under the dry and de-essed in its band." ;
     lv2:optionalFeature lv2:hardRTCapable ;
@@ -186,6 +186,7 @@
         lv2:maximum 2000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:hold ;
         pg:group <urn:openmixer:reverb#gated>
     ] ,
     [
@@ -198,6 +199,7 @@
         lv2:maximum 500 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:reverb#gated>
     ] ,
     [
@@ -210,6 +212,7 @@
         lv2:maximum 0 ;
         lv2:portProperty lv2:integer ;
         units:unit <urn:openmixer:unit#dBFS> ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:reverb#gated>
     ] ,
     [
@@ -238,6 +241,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:gain ;
         pg:group <urn:openmixer:reverb#early>
     ] ,
     [
@@ -249,6 +253,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:gain ;
         pg:group <urn:openmixer:reverb#early>
     ] ,
     [
@@ -284,6 +289,7 @@
         lv2:maximum 0 ;
         lv2:portProperty lv2:integer ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:reverb#duck>
     ] ,
     [
@@ -296,6 +302,7 @@
         lv2:maximum 2000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:reverb#duck>
     ] ,
     [
@@ -320,6 +327,7 @@
         lv2:portProperty lv2:integer ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation param:frequency ;
         pg:group <urn:openmixer:reverb#deess>
     ] ,
     [
@@ -331,6 +339,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:reverb#deess>
     ] .
 

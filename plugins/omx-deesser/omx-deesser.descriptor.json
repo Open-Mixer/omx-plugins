@@ -1,8 +1,5 @@
 {
-  "$schema": "https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.9.0"
-  },
+  "$schema": "../schema/omx-contract.schema.json",
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.deesser",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:deesser",
     "name": "omx deesser",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.22.3",
     "doc": "The console's de-esser: a detector on a band around the sibilance drives the compressor's gain computer, and the reduction lands on that band alone or on the whole signal.",
     "features": [
       "audio-effect"
@@ -38,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_FREQ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -63,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_WIDTH_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -88,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -113,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_RATIO_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -138,7 +135,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_RANGE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -163,7 +160,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_ATTACK_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -188,7 +185,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_RELEASE_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -218,7 +215,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_MODES",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }
@@ -265,10 +262,12 @@
       "min": -24,
       "max": 0,
       "scale": "linear",
+      "measurement": "gain-reduction",
+      "held": true,
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#readouts[gainReductionDb]",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -282,6 +281,9 @@
       "min": -60,
       "max": 6,
       "scale": "linear",
+      "measurement": "peak",
+      "held": true,
+      "clip": true,
       "source": {
         "impl": "plugins/omx-deesser/omx_deesser_clap.c#clap_entry"
       }
@@ -296,6 +298,9 @@
       "min": -60,
       "max": 6,
       "scale": "linear",
+      "measurement": "peak",
+      "held": true,
+      "clip": true,
       "source": {
         "impl": "plugins/omx-deesser/omx_deesser_clap.c#clap_entry"
       }

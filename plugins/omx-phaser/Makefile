@@ -5,46 +5,37 @@
 #
 # omx-phaser as CLAP and LV2, in plain C, from ONE declaration (omx-phaser.decl.json).
 #
-#   make            build/omx-phaser.clap and build/omx-phaser.lv2/ (binary, TTL, MOD GUI)
+#   make            build/omx-phaser.clap and build/omx-phaser.lv2/ (binary, TTL)
 #   make test       freshness of every generated file, the parameters as declared, every parameter
 #                   live, the CLAP state's round trip, the phaser kernel-identity oracle, the panel
 #                   description both faces serve, the CLAP face's parameter contract, remote controls
-#                   and track-info, the LV2 port groups, the MOD GUI checks, the factory
+#                   and track-info, the LV2 port groups, the factory
 #                   presets as hosts find and load them (CLAP preset discovery and preset-load, lilv), and
 #                   the host checks (omx-clap-scan, lv2info) where installed
 #   make gen        regenerate generated/ from the declaration (commit the result)
 #   make install    DESTDIR/PREFIX/LIBDIR/CLAPDIR: $(CLAPDIR)/omx-phaser.clap, $(LIBDIR)/lv2/omx-phaser.lv2/
 #
-# Build deps: omx-dsp (pkg-config omxdsp, >= OMXDSP_MIN, the floor packaging/omx-plugins.spec declares),
-# omx-contract (its resource-hints header), omx-clap-core (the CLAP ABI's openmixer extensions), clap, lv2; for the
-# tests lilv and node. The MOD GUI is omx-panel's (the omx-panel command, its tree $(OMX_PANEL_DIR)).
+# Build deps: omx-dsp (pkg-config omxdsp),
+# omx-contract (its resource-hints header), omx-clap (the CLAP ABI's openmixer extensions), clap, lv2; for the
+# tests lilv and node.
 
 NAME       := omx-phaser
 URI        := urn:openmixer:phaser
 CLAP_ID    := org.openmixer.phaser
-OMXDSP_MIN ?= 0.32.0
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build
 BUNDLE     := $(B)/$(NAME).lv2
 
-# The MOD GUI: omx-panel over the plugin's descriptor and its declared panel (tools/panel-file.mjs writes the panel file)
-OMX_PANEL     ?= omx-panel
-OMX_PANEL_DIR ?= /usr/share/omx-panel
-PANEL_FILE    := $(B)/$(NAME).panel.json
-MODGUI_SOURCE := plugins/$(NAME)/$(NAME).decl.json (its panel block) and tools/look.json
-MODGUI        := --descriptor $(NAME).descriptor.json --panel $(PANEL_FILE) --out $(GEN)/$(NAME).lv2 --source '$(MODGUI_SOURCE)'
-
-
 PKG_CONFIG ?= pkg-config
-ifeq ($(shell $(PKG_CONFIG) --atleast-version=$(OMXDSP_MIN) omxdsp && echo y),)
-$(error omx-dsp >= $(OMXDSP_MIN) is required (packaging/omx-plugins.spec); `$(PKG_CONFIG) omxdsp` finds $(or $(shell $(PKG_CONFIG) --modversion omxdsp 2>/dev/null),none): install omx-dsp-devel or libomxdsp-dev from the channel (BUILDING.md))
+ifeq ($(shell $(PKG_CONFIG) --exists omxdsp && echo y),)
+$(error omx-dsp is not installed: install omx-dsp-devel or libomxdsp-dev from the channel (BUILDING.md))
 endif
 # omx-contract's headers: <omxcontract/omx_resource_hints.h>, which the generated parameter header includes
 CONTRACT_CFLAGS := $(shell $(PKG_CONFIG) --cflags omx-contract)
 DSP_CFLAGS := $(shell $(PKG_CONFIG) --cflags omxdsp) $(CONTRACT_CFLAGS)
 DSP_LIBS   := $(shell $(PKG_CONFIG) --libs omxdsp)
-ABI_CFLAGS := $(shell $(PKG_CONFIG) --cflags omx-clap-core clap 2>/dev/null)
+ABI_CFLAGS := $(shell $(PKG_CONFIG) --cflags omx-clap clap 2>/dev/null)
 LV2_CFLAGS := $(shell $(PKG_CONFIG) --cflags lv2 2>/dev/null)
 LILV       := $(shell $(PKG_CONFIG) --cflags --libs lilv-0 2>/dev/null)
 
@@ -75,14 +66,11 @@ $(BUNDLE)/$(NAME).so: omx_phaser_lv2.c $(ROOT)/lib/omx_lv2_face.c $(ROOT)/includ
 	@mkdir -p $(BUNDLE)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(WARN) $(PLUGIN) $(LV2_CFLAGS) -o $@ $(filter %.c,$^) $(LDFLAGS) $(LDLIBS)
 
-# The bundle's text and images are generated and committed; the build copies them beside the binary.
-# The film strips are omx-panel's render of its look, the same in every bundle: never committed, omx-panel writes them
-# into the built bundle.
+# The bundle's text is generated and committed; the build copies it beside the binary. No MOD GUI is built or shipped here:
+# a host generates it from the plugin's description (omx-modgui-sync).
 $(BUNDLE)/manifest.ttl: $(TTL_SRCS) | $(B)
 	@mkdir -p $(BUNDLE)
 	cp -r $(TTL)/. $(BUNDLE)/
-	node $(ROOT)/tools/panel-file.mjs $(CURDIR) $(PANEL_FILE)
-	$(OMX_PANEL) modgui --films-only --descriptor $(NAME).descriptor.json --panel $(PANEL_FILE) --out $(BUNDLE)
 
 $(B):
 	@mkdir -p $@
@@ -107,13 +95,8 @@ $(B)/phaser-oracle: test/phaser-oracle.c $(CORE) | $(B)
 
 gen:
 	node $(ROOT)/tools/gen.mjs $(CURDIR)
-	node $(ROOT)/tools/panel-file.mjs $(CURDIR) $(PANEL_FILE)
-	$(OMX_PANEL) modgui --no-films $(MODGUI)
-
 check:
 	node $(ROOT)/tools/gen.mjs --check $(CURDIR)
-	node $(ROOT)/tools/panel-file.mjs $(CURDIR) $(PANEL_FILE)
-	$(OMX_PANEL) modgui --check --no-films $(MODGUI)
 
 # The parameter test: the built CLAP face's parameters are the declaration's, and every one of them
 # reaches the kernel. The state test: a saved state, loaded into a fresh instance, gives back every
@@ -130,7 +113,7 @@ check:
 # Every test runs, and the target fails if any failed, so a new plugin shows all its red tests at
 # once. `test` is the fast set a package build runs (in-process probes and declaration checks);
 # `test-heavy` runs the built faces through a host: the kernel-identity oracle (both faces, every
-# declared rate, every parameter a step off), the hand-written oracles, the MOD GUI test and the
+# declared rate, every parameter a step off), the hand-written oracles and the
 # external scanners of host-check.sh. Both run on every pull request (tools/test/test-split.json).
 test: all check $(B)/clap-probe $(B)/panel-probe $(B)/clap-ext-probe $(B)/port-groups-probe $(B)/preset-probe
 	@fail=0; \
@@ -154,7 +137,6 @@ test-heavy: all check $(B)/phaser-oracle
 	@fail=0; \
 	$(B)/phaser-oracle clap $(B)/$(NAME).clap || fail=1; \
 	$(B)/phaser-oracle lv2 $(BUNDLE) $(URI) || fail=1; \
-	MODGUI_SOURCE='$(MODGUI_SOURCE)' sh $(OMX_PANEL_DIR)/tools/modgui-test.sh $(BUNDLE) $(NAME).descriptor.json $(PANEL_FILE) || fail=1; \
 	sh $(ROOT)/tools/host-check.sh $(B)/$(NAME).clap $(BUNDLE) $(URI) $(CLAP_ID) || fail=1; \
 	exit $$fail
 

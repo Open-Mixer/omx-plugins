@@ -194,15 +194,15 @@ static const char *const *const OMX_REVERB_PARAM_LABELS[OMX_REVERB_PARAM_COUNT] 
 /* The identity every face publishes. */
 #define OMX_REVERB_NAME "omx reverb"
 #define OMX_REVERB_VENDOR "openmixer"
-#define OMX_REVERB_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_REVERB_VERSION "0.19.3"
+#define OMX_REVERB_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_REVERB_VERSION "0.22.3"
 #define OMX_REVERB_DESCRIPTION "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal; the early reflections and the tail set apart, the wet ducked under the dry and de-essed in its band."
 #define OMX_REVERB_CLAP_ID "org.openmixer.reverb"
 #define OMX_REVERB_CLAP_FEATURES "audio-effect", "reverb", "stereo"
 #define OMX_REVERB_LV2_URI "urn:openmixer:reverb"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_REVERB_DECL_SOURCE "omx reverb: Plate Mod Depth 0 to 400 %, Mix 0 to 1, Size 0 to 1, Damping 0 to 1, Width 0 to 1, Predelay 0 to 100 ms, Lowcut 0 to 20000 Hz, Highcut 0 to 20000 Hz, Reverse 50 to 500 ms, Hold 10 to 2000 ms, Release 1 to 500 ms, Gate Threshold -80 to 0 dBFS, Algorithm 0 to 4, Early -60 to 0 dB, Tail -60 to 0 dB, Early Size 0 to 100 %, Duck -24 to 0 dB, Duck Threshold -60 to 0 dB, Duck Release 20 to 2000 ms, Wet De-ess 0 to 1, De-ess Freq 2000 to 16000 Hz, De-ess Threshold -60 to 0 dB"
-#define OMX_REVERB_DECL_DIGEST "866cf73c756e73371f6d9c25064e9658a03ad325a803fffe572f8d226ec9ff64"
+#define OMX_REVERB_DECL_DIGEST "18c7c2fbff43a42b771c09b03dda58cf73eeadc3207ac480a098089ad79edc36"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
@@ -244,7 +244,7 @@ static const omx_resource_hints_t OMX_REVERB_RESOURCE_HINTS = {
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family reverb. */
-#define OMX_REVERB_PANEL_FINGERPRINT "07a58828dbb8796cc24e118102c6411cf2132c0929565f4bb21825c1a1f614da"
+#define OMX_REVERB_PANEL_FINGERPRINT "a4274963586025125dc2e469eb0805db51bd4eae0572f04f7e2c279a4c4c9b0c"
 static const struct omx_panel_section_row OMX_REVERB_PANEL_SECTIONS[] = {
   { "reverb", "fx.reverb.section.reverb", "Reverb" },
   { "reverse", "fx.reverb.section.reverse", "Reverse" },
@@ -288,6 +288,9 @@ static const struct omx_panel_role_row OMX_REVERB_PANEL_ROLES[] = {
   { "high_cut", 0u, 7u },
   { "mix", 0u, 1u },
 };
+static const struct omx_panel_display_row OMX_REVERB_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_TIME_RESPONSE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.reverb.display.time_response", "Reverb" },
+};
 static const struct omx_panel_default_row OMX_REVERB_PANEL_DEFAULTS[] = {
   { OMX_CLAP_PLACEMENT_RETURN, 1u, 1 },
 };
@@ -309,7 +312,7 @@ static const struct omx_panel_rows OMX_REVERB_PANEL = {
   OMX_REVERB_PANEL_SECTIONS, 7u,
   OMX_REVERB_PANEL_CONTROLS, 22u,
   OMX_REVERB_PANEL_ROLES, 8u,
-  NULL, 0u,
+  OMX_REVERB_PANEL_DISPLAYS, 1u,
   OMX_REVERB_PANEL_DEFAULTS, 1u,
 };
 

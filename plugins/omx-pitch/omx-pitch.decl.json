@@ -5,7 +5,8 @@
   "kernels": [
     "pitch"
   ],
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "category": "pitch",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "portHints": {
     "enabled": {

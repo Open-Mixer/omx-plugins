@@ -26,29 +26,87 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
+/** The `$schema` an install writes: the major's URL, read off omx-contract's OWN package (the one that installs it), and only
+ * when every file of it names the same one: another package's files may still carry an older URL, so none is read. */
+export function installedSchemaOf(dirs) {
+  const urls = new Set();
+  for (const src of dirs) {
+    const pkg = join(src, 'omx-contract');
+    if (!existsSync(pkg)) continue;
+    for (const f of readdirSync(pkg).filter((n) => n.endsWith('.json') && n !== 'MANIFEST.json')) {
+      const u = JSON.parse(readFileSync(join(pkg, f), 'utf8')).$schema;
+      if (typeof u === 'string' && u.startsWith('https://')) urls.add(u);
+    }
+  }
+  if (urls.size !== 1) throw new Error(`role-meanings-source: omx-contract's own files name ${urls.size} different $schema URLs (${[...urls].join(', ') || 'none'}), exactly one is needed`);
+  return [...urls][0];
+}
+
+/** Mirror installed contract roots into `at`: every package and every domain directory of a root but omx-plugins (each
+ * sits one level under the contract directory, no schema-major level), the first root that holds a name winning, as the
+ * reader's search order does. */
+export function mirrorContract(contractRoots, at) {
+  mkdirSync(at, { recursive: true });
+  for (const root of contractRoots) for (const e of readdirSync(root, { withFileTypes: true })) {
+    if (!e.isDirectory() || e.name === 'omx-plugins' || existsSync(join(at, e.name))) continue;
+    symlinkSync(join(root, e.name), join(at, e.name));
+  }
+}
+
+if (process.argv.includes('--self-test')) {
+  const t = mkdtempSync(join(tmpdir(), 'rms-self-'));
+  const put = (name, urls) => {
+    const d = join(t, name, 'omx-contract');
+    mkdirSync(d, { recursive: true });
+    urls.forEach((u, i) => writeFileSync(join(d, `f${i}.json`), JSON.stringify({ $schema: u })));
+    return join(t, name);
+  };
+  const bad = [];
+  try {
+    if (installedSchemaOf([put('one', ['https://x/v3.json', 'https://x/v3.json'])]) !== 'https://x/v3.json') bad.push('one URL is not returned');
+    for (const [arm, urls] of [['two URLs', ['https://x/v3.json', 'https://old/raw/v3.json']], ['no URL', []]]) {
+      try { installedSchemaOf([put(arm.replace(' ', '-'), urls)]); bad.push(`${arm}: not refused`); } catch (e) { if (!/exactly one is needed/.test(e.message)) bad.push(`${arm}: ${e.message}`); }
+    }
+    // the mirror carries a domain (param/param.json) beside the packages, and leaves omx-plugins out
+    const root = join(t, 'root');
+    for (const [f, text] of [['omx-contract/a.json', '{}'], ['omx-plugins/b.json', '{}'], ['param/param.json', '{}']]) {
+      mkdirSync(dirname(join(root, f)), { recursive: true });
+      writeFileSync(join(root, f), text);
+    }
+    mirrorContract([root], join(t, 'mirror'));
+    if (!existsSync(join(t, 'mirror', 'param', 'param.json'))) bad.push('mirror: the param domain is not carried');
+    if (!existsSync(join(t, 'mirror', 'omx-contract', 'a.json'))) bad.push('mirror: a package is not carried');
+    if (existsSync(join(t, 'mirror', 'omx-plugins'))) bad.push('mirror: omx-plugins is carried');
+  } finally { rmSync(t, { recursive: true, force: true }); }
+  for (const b of bad) console.error(`FAIL self-test: ${b}`);
+  if (bad.length) process.exit(1);
+  console.log('role-meanings-source self-test: one URL read, two URLs and none refused by name; the mirror carries the param domain beside the packages');
+  process.exit(0);
+}
+
 const { contractDirs } = await import('../omx-panel.mjs').then(() => import(join(process.env.OMX_PANEL_DIR || '/usr/share/omx-panel', 'tools', 'vocabulary.mjs')));
-const sources = contractDirs().map((d) => join(d, '3')).filter((d) => existsSync(d));
+const roots = contractDirs().filter((d) => existsSync(join(d, 'omx-contract')));
+const sources = roots;
 if (!sources.length) { console.error('role-meanings-source: no installed contract directory to build from'); process.exit(2); }
+let installedSchema;
+try { installedSchema = installedSchemaOf(sources); } catch (e) { console.error(e.message); process.exit(2); }
 
 const tmp = mkdtempSync(join(tmpdir(), 'role-meanings-source-'));
-/** A contract directory holding every installed package but omx-plugins, plus `omxPlugins` files when given. */
+/** A contract directory holding every installed package but omx-plugins and every installed domain (param's PARAM_UNITS,
+ * which omx-panel's layout reads, among them), plus `omxPlugins` files when given. */
 function contractDir(name, omxPlugins) {
-  const major = join(tmp, name, '3');
-  mkdirSync(major, { recursive: true });
-  for (const src of sources) for (const pkg of readdirSync(src, { withFileTypes: true })) {
-    if (!pkg.isDirectory() || pkg.name === 'omx-plugins' || existsSync(join(major, pkg.name))) continue;
-    symlinkSync(join(src, pkg.name), join(major, pkg.name));
-  }
+  mirrorContract(roots, join(tmp, name));
   if (omxPlugins) {
-    const at = join(major, 'omx-plugins');
+    const at = join(tmp, name, 'omx-plugins');
     mkdirSync(at);
     const files = {};
     for (const [f, doc] of Object.entries(omxPlugins)) {
-      const text = `${JSON.stringify(doc, null, 2)}\n`;
+      // as an install writes it: the major's URL, which omx-contract's reader requires of every file of the directory
+      const text = `${JSON.stringify({ ...doc, $schema: installedSchema }, null, 2)}\n`;
       writeFileSync(join(at, f), text);
       files[f] = createHash('sha256').update(text).digest('hex');
     }
-    writeFileSync(join(at, 'MANIFEST.json'), `${JSON.stringify({ package: 'omx-plugins', version: '0.0.1', schemaMajor: 3, files }, null, 2)}\n`);
+    writeFileSync(join(at, 'MANIFEST.json'), `${JSON.stringify({ package: 'omx-plugins', version: '0.0.1', files }, null, 2)}\n`);
   }
   return join(tmp, name);
 }

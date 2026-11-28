@@ -6,12 +6,13 @@
     "balancer"
   ],
   "noun": "spectral balancer",
+  "category": "utility",
   "engaged": {
     "amountPct": 100
   },
   "stretch": 256,
   "liveStretch": 8,
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "resourceHints": {
     "threads-spawned": 0,
@@ -55,9 +56,6 @@
       "unit": "units:pc"
     },
     "rangeDb": {
-      "unit": "units:db"
-    },
-    "speedDbPerS": {
       "unit": "units:db"
     },
     "enabled": {

@@ -5,6 +5,7 @@
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix omxres: <https://www.openmixer.org/ns/resource-hints#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
 @prefix pg:    <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
 @prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -12,7 +13,7 @@
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<https://github.com/FreeMixer/omx-plugins>
+<https://github.com/Open-Mixer/omx-plugins>
     a doap:Project ;
     doap:name "omx-plugins" ;
     doap:maintainer [ a foaf:Person ; foaf:name "Pau Aliagas" ; foaf:homepage <https://github.com/linuxnow> ] .
@@ -21,8 +22,8 @@
     a lv2:Plugin , lv2:UtilityPlugin ;
     doap:name "omx width" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
-    lv2:project <https://github.com/FreeMixer/omx-plugins> ;
-    lv2:minorVersion 19 ;
+    lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
+    lv2:minorVersion 22 ;
     lv2:microVersion 3 ;
     rdfs:comment "Widens or narrows the stereo image, with an optional pseudo-stereo spread for a mono source and a bass-mono cutoff that keeps the lows centred." ;
     lv2:optionalFeature lv2:hardRTCapable ;
@@ -110,6 +111,7 @@
         lv2:minimum 0 ;
         lv2:maximum 30 ;
         units:unit units:ms ;
+        lv2:designation param:delay ;
         pg:group <urn:openmixer:width#width>
     ] ,
     [
@@ -134,6 +136,7 @@
         lv2:portProperty lv2:integer ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation param:frequency ;
         pg:group <urn:openmixer:width#width>
     ] .
 

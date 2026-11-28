@@ -372,27 +372,27 @@ static const char *const *const OMX_EQ8_PARAM_LABELS[OMX_EQ8_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_EQ8_NAME "omx eq8"
 #define OMX_EQ8_VENDOR "openmixer"
-#define OMX_EQ8_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_EQ8_VERSION "0.19.3"
+#define OMX_EQ8_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_EQ8_VERSION "0.22.3"
 #define OMX_EQ8_DESCRIPTION "The OpenMixer console's channel EQ, 8-band form: 8 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire."
 #define OMX_EQ8_CLAP_ID "org.openmixer.eq8"
 #define OMX_EQ8_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
 #define OMX_EQ8_LV2_URI "urn:openmixer:eq8"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_EQ8_DECL_SOURCE "omx eq8: HPF On 0 to 1, HPF Frequency 20 to 1000 Hz, HPF Slope 12 to 24 dB/oct, LPF On 0 to 1, LPF Frequency 1000 to 20000 Hz, LPF Slope 12 to 24 dB/oct, Band 1 Type 0 to 5, Band 1 Frequency 20 to 20000 Hz, Band 1 Gain -15 to 15 dB, Band 1 Q 0.3 to 116, Band 1 On 0 to 1, Band 2 Type 0 to 5, Band 2 Frequency 20 to 20000 Hz, Band 2 Gain -15 to 15 dB, Band 2 Q 0.3 to 116, Band 2 On 0 to 1, Band 3 Type 0 to 5, Band 3 Frequency 20 to 20000 Hz, Band 3 Gain -15 to 15 dB, Band 3 Q 0.3 to 116, Band 3 On 0 to 1, Band 4 Type 0 to 5, Band 4 Frequency 20 to 20000 Hz, Band 4 Gain -15 to 15 dB, Band 4 Q 0.3 to 116, Band 4 On 0 to 1, Band 5 Type 0 to 5, Band 5 Frequency 20 to 20000 Hz, Band 5 Gain -15 to 15 dB, Band 5 Q 0.3 to 116, Band 5 On 0 to 1, Band 6 Type 0 to 5, Band 6 Frequency 20 to 20000 Hz, Band 6 Gain -15 to 15 dB, Band 6 Q 0.3 to 116, Band 6 On 0 to 1, Band 7 Type 0 to 5, Band 7 Frequency 20 to 20000 Hz, Band 7 Gain -15 to 15 dB, Band 7 Q 0.3 to 116, Band 7 On 0 to 1, Band 8 Type 0 to 5, Band 8 Frequency 20 to 20000 Hz, Band 8 Gain -15 to 15 dB, Band 8 Q 0.3 to 116, Band 8 On 0 to 1"
-#define OMX_EQ8_DECL_DIGEST "c3aed8574463db0f192ce1c2001a47944578978db7ebdfd2cadcd5602dc271a0"
+#define OMX_EQ8_DECL_DIGEST "5e71cb912fb9b5a407e52379cbbe3711a2dd4993327422eb4116aa6530611fca"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_EQ8_PARAM_CONTRACT_VERSION 3u
-#define OMX_EQ8_PARAM_CONTRACT_FINGERPRINT "348966afd7c299e636a03c4c91e8f9156aed056f68d41bcd2677d23944bc2921"
+#define OMX_EQ8_PARAM_CONTRACT_VERSION 5u
+#define OMX_EQ8_PARAM_CONTRACT_FINGERPRINT "a10f95349d6a17cba4d4b97af3546ff53ece92d0d3a82bacfe3cccdc4a05194d"
 static const struct omx_param_contract_row OMX_EQ8_PARAM_CONTRACT[OMX_EQ8_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_on none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* hpf_freq hz */
-  { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_slope none */
+  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_slope dbPerOct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_on none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* lpf_freq hz */
-  { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_slope none */
+  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_slope dbPerOct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* b1_type none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* b1_freq hz */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* b1_gain db */
@@ -445,11 +445,8 @@ static const omx_resource_hints_t OMX_EQ8_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family eq.
- * Declared roles not published:
- *   hpf_slope (hpf_slope): the hpf_slope role takes none, db, not dB/oct
- *   lpf_slope (lpf_slope): the lpf_slope role takes none, db, not dB/oct */
-#define OMX_EQ8_PANEL_FINGERPRINT "b2160f0a294ed44a7dbdf639aeb5739d508cc718af12ecd6706f275d55318f25"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family eq. */
+#define OMX_EQ8_PANEL_FINGERPRINT "745994afeb6fdc9534caf8e497f176fedce2a8de2bcf6b0e02c6ba74c0222948"
 static const struct omx_panel_section_row OMX_EQ8_PANEL_SECTIONS[] = {
   { "bands", "fx.eq.section.bands", "Bands" },
   { "hpf", "fx.eq.section.hpf", "HPF" },
@@ -545,8 +542,10 @@ static const struct omx_panel_role_row OMX_EQ8_PANEL_ROLES[] = {
   { "band_on", 6u, 40u },
   { "band_on", 7u, 45u },
   { "hpf_freq", 0u, 1u },
+  { "hpf_slope", 0u, 2u },
   { "hpf_on", 0u, 0u },
   { "lpf_freq", 0u, 4u },
+  { "lpf_slope", 0u, 5u },
   { "lpf_on", 0u, 3u },
 };
 static const struct omx_panel_display_row OMX_EQ8_PANEL_DISPLAYS[] = {
@@ -569,7 +568,7 @@ static const struct omx_panel_rows OMX_EQ8_PANEL = {
   OMX_EQ8_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_EQ,
   OMX_EQ8_PANEL_SECTIONS, 3u,
   OMX_EQ8_PANEL_CONTROLS, 46u,
-  OMX_EQ8_PANEL_ROLES, 44u,
+  OMX_EQ8_PANEL_ROLES, 46u,
   OMX_EQ8_PANEL_DISPLAYS, 1u,
   NULL, 0u,
 };

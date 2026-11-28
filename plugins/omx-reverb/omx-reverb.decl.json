@@ -5,7 +5,8 @@
   "kernels": [
     "reverb"
   ],
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "category": "time",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "engaged": {
     "deessThresholdDb": -60

@@ -8,7 +8,7 @@
 <urn:openmixer:strip>
     a lv2:Plugin ;
     lv2:binary <omx-strip.so> ;
-    rdfs:seeAlso <modgui.ttl> , <omx-strip.ttl> .
+    rdfs:seeAlso <omx-strip.ttl> .
 
 <urn:openmixer:strip#preset-bass>
     a pset:Preset ;

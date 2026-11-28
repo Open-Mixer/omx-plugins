@@ -2,7 +2,7 @@
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
  * clap-ext-probe.c — a CLAP host that reads the extensions a built omx plugin serves beyond its
- * parameters, as a host would: it knows no plugin, only CLAP, omx-clap-core's <omx-clap-host/omx_clap_ext.h>
+ * parameters, as a host would: it knows no plugin, only CLAP, omx-clap's <omx-clap-host/omx_clap_ext.h>
  * and omx-contract's <omxcontract/omx_resource_hints.h>.
  *
  *   clap-ext-probe <x.clap>

@@ -19,7 +19,7 @@
     },
     {
       "symbol": "speedDbPerS",
-      "unit": "dB",
+      "unit": "dBPerS",
       "value": 3
     },
     {
@@ -29,7 +29,7 @@
     },
     {
       "symbol": "window",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Momentary"
     }

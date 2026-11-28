@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * meters-abi-test.c — the clap.meters/1 declarations omx-clap-core installs as
+ * meters-abi-test.c — the clap.meters/1 declarations omx-clap installs as
  * <omx-clap-host/clap_meters.h> are the layout the plugins here are built for: the extension id, the
- * enum values, and sizeof/offsetof of every structure they use. A change in omx-clap-core, or in the
+ * enum values, and sizeof/offsetof of every structure they use. A change in omx-clap, or in the
  * SDK header it prefers once the SDK has one, stops this compiling (FreeMixer/omx-plugins#119).
  * Compile-only: `make meters-abi`, part of `make test`.
  */

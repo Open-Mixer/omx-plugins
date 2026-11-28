@@ -5,13 +5,14 @@
 @prefix foaf:  <http://xmlns.com/foaf/0.1/> .
 @prefix lv2:   <http://lv2plug.in/ns/lv2core#> .
 @prefix omxres: <https://www.openmixer.org/ns/resource-hints#> .
+@prefix param: <http://lv2plug.in/ns/ext/parameters#> .
 @prefix pg:    <http://lv2plug.in/ns/ext/port-groups#> .
 @prefix pprops: <http://lv2plug.in/ns/ext/port-props#> .
 @prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<https://github.com/FreeMixer/omx-plugins>
+<https://github.com/Open-Mixer/omx-plugins>
     a doap:Project ;
     doap:name "omx-plugins" ;
     doap:maintainer [ a foaf:Person ; foaf:name "Pau Aliagas" ; foaf:homepage <https://github.com/linuxnow> ] .
@@ -20,8 +21,8 @@
     a lv2:Plugin , lv2:DynamicsPlugin ;
     doap:name "omx plosive" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
-    lv2:project <https://github.com/FreeMixer/omx-plugins> ;
-    lv2:minorVersion 19 ;
+    lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
+    lv2:minorVersion 22 ;
     lv2:microVersion 3 ;
     rdfs:comment "Softens the p pops and hard t and k consonants of a voice, cutting each only while it bursts." ;
     lv2:optionalFeature lv2:hardRTCapable ;
@@ -93,6 +94,7 @@
         lv2:minimum 0 ;
         lv2:maximum 30 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:plosive#plosive>
     ] ,
     [
@@ -104,6 +106,7 @@
         lv2:minimum 2 ;
         lv2:maximum 50 ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:plosive#plosive>
     ] ,
     [
@@ -117,6 +120,7 @@
         lv2:portProperty lv2:integer ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation param:frequency ;
         pg:group <urn:openmixer:plosive#plosive>
     ] ,
     [
@@ -150,6 +154,7 @@
         lv2:minimum 0 ;
         lv2:maximum 30 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:plosive#plosive>
     ] ,
     [
@@ -162,6 +167,7 @@
         lv2:maximum 200 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:plosive#plosive>
     ] ,
     [
@@ -175,6 +181,7 @@
         lv2:portProperty lv2:integer ;
         lv2:portProperty pprops:logarithmic ;
         units:unit units:hz ;
+        lv2:designation param:cutoffFrequency ;
         pg:group <urn:openmixer:plosive#plosive>
     ] .
 

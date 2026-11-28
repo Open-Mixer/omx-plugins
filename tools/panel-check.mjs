@@ -12,13 +12,18 @@
  *   - the family, widgets, label keys, roles, displays and placement defaults are the description
  *     omx-panel's layout derives from the declaration;
  *   - the fingerprint is the SHA-256 of the canonical serialisation of what was served, and that of
- *     the declaration's.
+ *     the declaration's;
+ *   - every meter a served display reads is one the built face serves: on CLAP a clap.meters/1 meter
+ *     of that id (the probe's `meter` rows) named as the declaration names it, on LV2 the output
+ *     port(s) the declaration gives that meter (docs/meters.md). A display that indexes past what
+ *     the face serves is what a console reads as a meter that never moves (#65); the declaration
+ *     alone cannot show it.
  *
  * Usage: node tools/panel-check.mjs plugins/<stem> clap|lv2 <probe output>
  */
 import { readFileSync } from 'node:fs';
 import { panelDescription } from './descriptor.mjs';
-import { loadDecl } from './gen.mjs';
+import { loadDecl, metersOf } from './gen.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, panelCanonical, panelFingerprint } from './omx-panel.mjs';
 
 const [dir, face, dump] = process.argv.slice(2);
@@ -89,6 +94,27 @@ const disp = (v) => [v.kind, v.sectionKey, v.source, v.meters, v.curve, v.floor 
 check(same(served.displays.map(disp), want.displays.map(disp)), `displays (${want.displays.length})`, JSON.stringify(served.displays.map(disp)));
 const def = (p) => [p.placement, p.symbol, p.value];
 check(same(served.defaults.map(def), want.defaults.map(def)), `placement defaults (${want.defaults.length})`, JSON.stringify(served.defaults.map(def)));
+// the forward check: each meter id a served display reads names a meter the BUILT face serves — through clap.meters/1
+// (a `meter` row of that id, named as the declaration's meter of that index) or as the LV2 output port(s) of that meter
+const declaredMeters = metersOf(d);
+const servedMeters = new Map(of('meter').map(([id, name]) => [Number(id), name]));
+const portSymbols = new Set(ports.values());
+const readIds = [...new Set(served.displays.flatMap((v) => v.meters.filter((m) => m !== null)))].sort((a, b) => a - b);
+const unserved = readIds.flatMap((id) => {
+  const m = declaredMeters[id];
+  if (!m) return [`meter ${id}: the declaration has no meter ${id}`];
+  if (face === 'lv2') {
+    const missing = m.symbols.filter((s) => !portSymbols.has(s));
+    return missing.length ? [`meter ${id} (${m.id}): no port ${missing.join(', ')}`] : [];
+  }
+  const name = servedMeters.get(id);
+  return name === m.id ? [] : [`meter ${id}: ${name === undefined ? 'not served through clap.meters/1' : `served as ${JSON.stringify(name)}`}, declared ${m.id}`];
+});
+check(
+  unserved.length === 0,
+  `display meters are served ${face === 'lv2' ? 'as output ports' : 'through clap.meters/1'} (${readIds.length})`,
+  unserved.join('; '),
+);
 const fingerprint = of('fingerprint')[0]?.[0];
 check(fingerprint === panelFingerprint(served), 'the fingerprint is that of what it serves', `${fingerprint} served, ${panelFingerprint(served)} computed over:\n${panelCanonical(served)}`);
 check(fingerprint === panelFingerprint(want), "the fingerprint is the declaration's", `${fingerprint}, the declaration's ${panelFingerprint(want)}`);

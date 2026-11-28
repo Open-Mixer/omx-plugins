@@ -1,3 +1,96 @@
+omx-plugins (0.22.3) unstable; urgency=medium
+
+  * Contract: each installed descriptor carries integrity, its version and the
+    source commit of the build (the RPM's tarball, the deb's checkout), and
+    the package build holds every shipped descriptor to them (#32).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 06:24:00 +0100
+
+omx-plugins (0.22.2) unstable; urgency=medium
+
+  * Release: release.yml publishes only by tagging; a dispatch is a dry run,
+    and the qualification and Zynthian artifacts no longer read
+    inputs.publish (#109).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 06:19:31 +0100
+
+omx-plugins (0.22.1) unstable; urgency=medium
+
+  * Release: the trixie DEBs are built for amd64 beside arm64; the Zynthian
+    tarball stays arm64 (#238).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 02:55:38 +0100
+
+omx-plugins (0.22.0) unstable; urgency=medium
+
+  * CLAP face: every plugin serves its panel cut down as
+    org.openmixer.control-layout.draft/1, drawn whole by omx-clap-scan's
+    host rules (#233).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Fri, 27 Nov 2026 03:27:39 +0100
+
+omx-plugins (0.21.1) unstable; urgency=medium
+
+  * The RPMs are built for Fedora aarch64 as well as x86_64: the release
+    matrix is Open-Mixer/.github's shared releases and architectures, with
+    no list of this repository's own.
+  * Published by the devel release of the full matrix, with every change
+    merged to devel since 0.21.0.
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Thu, 26 Nov 2026 23:09:48 +0100
+
+omx-plugins (0.21.0) unstable; urgency=medium
+
+  * The version moves to 0.21.0 (chain 3).
+  * Section titles, choice labels and preset names are translatable: the
+    omx-plugin-labels domain in omx-plugins-contract, generated from the
+    declarations (each a key and its English source sentence; parameter
+    names stay English), and one language pack per listed language,
+    omx-plugins-l10n-<lang>, each /usr/share/omx-plugins/catalogs/<lang>.json
+    (#18).
+  * Floors: omx-clap-devel and omx-clap-contract >= 0.35.0 (Debian:
+    libomx-clap-dev, omx-clap-contract).
+  * Floors: omx-dsp-devel and omx-dsp-contract >= 0.34.1 (Debian:
+    libomxdsp-dev, omx-dsp-contract), the release whose ROTARY_ACCEL_RANGE
+    travels in coef; the rotary's accel is coef.
+  * V23d: the unit codes are read from omx-clap's domain omx-param-contract
+    and its render; make units refuses an include of omx-contract's old unit
+    header.
+  * Floors: plugin-hostd-contract >= 0.22.0 and plugin-db-contract >= 0.5.1:
+    the format tables are x-kind map items, their unit and meaning pairs read
+    from omx-clap and plugin-db (plugin-hostd V19, M5).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Mon, 23 Nov 2026 22:00:00 +0100
+
+omx-plugins (0.20.0) unstable; urgency=medium
+
+  * The version moves to 0.20.0.
+  * Floors: omx-clap-devel, omx-clap-contract and omx-clap-host >= 0.34.1
+    (Debian: libomx-clap-dev, omx-clap-contract, omx-clap-host; 0.34.1 carries
+    the rename's Breaks and Replaces an upgrade needs), omx-contract >= 3.21.0,
+    omx-dsp >= 0.34.0.
+  * The sorting pass: the moves into the owner domains.
+  * Units: the vendor block is omx-contract 3.21.0's eight (dbfs, dbu, ratio,
+    lufs, dbPerOct, dbPerS, dbtp, lu), and a slope is served: dB/oct writes the
+    sheet's own token dbPerOct (260) in the param contract, the token a host
+    fingerprints, so the balancer, comp, eq8, eq16, eq32 and strip contracts
+    each move on (clap#163, omx-plugins#213); each of the six gained two
+    entries in tools/param-contract-versions.json, the first (lowercased
+    dbperoct) never served, kept because the list is append-only.
+  * No shipped pins: the pins.d route (plugin-hostd#42) is retired, and
+    tools/gen-pins.sh, the packaged
+    /usr/share/plugin-hostd/pins.d/omx-plugins.pins, tools/pins-check.sh and
+    the build dependency on plugin-qualify go; our plugins are qualified like
+    any plugin, plugin-qualify measuring them into the qualification records
+    once the release is served (omx-plugins#211).
+  * CLAP remote controls: a page whose every slot the governing values hide is
+    not served (omx-panel's page rule, no screen has zero visible items), so
+    omx-strip at 4 bands serves 11 pages, not 39 (omx-plugins#212).
+  * make test runs every part whatever an earlier part answered, and runs
+    strip-pages-follow; git is a build dependency of the checks.
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sun, 22 Nov 2026 12:00:00 +0100
+
 omx-plugins (0.19.3) unstable; urgency=medium
 
   * omx-plugins-contract installs role-meanings.json (the meaning each panel

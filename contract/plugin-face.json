@@ -1,8 +1,5 @@
 {
-  "$schema": "https://github.com/FreeMixer/omx-contract/raw/v3/schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.13.0"
-  },
+  "$schema": "../schema/omx-contract.schema.json",
   "render": {
     "c": [
       {

@@ -13,7 +13,7 @@
 @prefix units: <http://lv2plug.in/ns/extensions/units#> .
 @prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
 
-<https://github.com/FreeMixer/omx-plugins>
+<https://github.com/Open-Mixer/omx-plugins>
     a doap:Project ;
     doap:name "omx-plugins" ;
     doap:maintainer [ a foaf:Person ; foaf:name "Pau Aliagas" ; foaf:homepage <https://github.com/linuxnow> ] .
@@ -22,8 +22,8 @@
     a lv2:Plugin , lv2:ParaEQPlugin ;
     doap:name "omx dyneq" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
-    lv2:project <https://github.com/FreeMixer/omx-plugins> ;
-    lv2:minorVersion 19 ;
+    lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
+    lv2:minorVersion 22 ;
     lv2:microVersion 3 ;
     rdfs:comment "A six-band dynamic EQ: each band is an EQ bell or shelf whose gain also moves with the level of its own band, cutting above a threshold (down) or lifting below it (up), held to a range, so a harsh or boomy band is tamed only while it is too loud." ;
     lv2:optionalFeature lv2:hardRTCapable ;
@@ -600,6 +600,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:dyneq#band1>
     ] ,
     [
@@ -611,6 +612,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:dyneq#band2>
     ] ,
     [
@@ -622,6 +624,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:dyneq#band3>
     ] ,
     [
@@ -633,6 +636,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:dyneq#band4>
     ] ,
     [
@@ -644,6 +648,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:dyneq#band5>
     ] ,
     [
@@ -655,6 +660,7 @@
         lv2:minimum -60 ;
         lv2:maximum 0 ;
         units:unit units:db ;
+        lv2:designation param:threshold ;
         pg:group <urn:openmixer:dyneq#band6>
     ] ,
     [
@@ -666,6 +672,7 @@
         lv2:minimum 1 ;
         lv2:maximum 20 ;
         units:unit <urn:openmixer:unit#ratio> ;
+        lv2:designation param:ratio ;
         pg:group <urn:openmixer:dyneq#band1>
     ] ,
     [
@@ -677,6 +684,7 @@
         lv2:minimum 1 ;
         lv2:maximum 20 ;
         units:unit <urn:openmixer:unit#ratio> ;
+        lv2:designation param:ratio ;
         pg:group <urn:openmixer:dyneq#band2>
     ] ,
     [
@@ -688,6 +696,7 @@
         lv2:minimum 1 ;
         lv2:maximum 20 ;
         units:unit <urn:openmixer:unit#ratio> ;
+        lv2:designation param:ratio ;
         pg:group <urn:openmixer:dyneq#band3>
     ] ,
     [
@@ -699,6 +708,7 @@
         lv2:minimum 1 ;
         lv2:maximum 20 ;
         units:unit <urn:openmixer:unit#ratio> ;
+        lv2:designation param:ratio ;
         pg:group <urn:openmixer:dyneq#band4>
     ] ,
     [
@@ -710,6 +720,7 @@
         lv2:minimum 1 ;
         lv2:maximum 20 ;
         units:unit <urn:openmixer:unit#ratio> ;
+        lv2:designation param:ratio ;
         pg:group <urn:openmixer:dyneq#band5>
     ] ,
     [
@@ -721,6 +732,7 @@
         lv2:minimum 1 ;
         lv2:maximum 20 ;
         units:unit <urn:openmixer:unit#ratio> ;
+        lv2:designation param:ratio ;
         pg:group <urn:openmixer:dyneq#band6>
     ] ,
     [
@@ -798,6 +810,7 @@
         lv2:minimum 0.5 ;
         lv2:maximum 100 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:dyneq#band1>
     ] ,
     [
@@ -809,6 +822,7 @@
         lv2:minimum 0.5 ;
         lv2:maximum 100 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:dyneq#band2>
     ] ,
     [
@@ -820,6 +834,7 @@
         lv2:minimum 0.5 ;
         lv2:maximum 100 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:dyneq#band3>
     ] ,
     [
@@ -831,6 +846,7 @@
         lv2:minimum 0.5 ;
         lv2:maximum 100 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:dyneq#band4>
     ] ,
     [
@@ -842,6 +858,7 @@
         lv2:minimum 0.5 ;
         lv2:maximum 100 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:dyneq#band5>
     ] ,
     [
@@ -853,6 +870,7 @@
         lv2:minimum 0.5 ;
         lv2:maximum 100 ;
         units:unit units:ms ;
+        lv2:designation param:attack ;
         pg:group <urn:openmixer:dyneq#band6>
     ] ,
     [
@@ -865,6 +883,7 @@
         lv2:maximum 3000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:dyneq#band1>
     ] ,
     [
@@ -877,6 +896,7 @@
         lv2:maximum 3000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:dyneq#band2>
     ] ,
     [
@@ -889,6 +909,7 @@
         lv2:maximum 3000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:dyneq#band3>
     ] ,
     [
@@ -901,6 +922,7 @@
         lv2:maximum 3000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:dyneq#band4>
     ] ,
     [
@@ -913,6 +935,7 @@
         lv2:maximum 3000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:dyneq#band5>
     ] ,
     [
@@ -925,6 +948,7 @@
         lv2:maximum 3000 ;
         lv2:portProperty lv2:integer ;
         units:unit units:ms ;
+        lv2:designation param:release ;
         pg:group <urn:openmixer:dyneq#band6>
     ] ,
     [
@@ -1003,6 +1027,7 @@
         lv2:maximum 100 ;
         lv2:portProperty lv2:integer ;
         units:unit units:pc ;
+        lv2:designation param:wetDryRatio ;
         pg:group <urn:openmixer:dyneq#output>
     ] .
 

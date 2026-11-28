@@ -96,15 +96,15 @@ static const char *const *const OMX_DEESSER_PARAM_LABELS[OMX_DEESSER_PARAM_COUNT
 /* The identity every face publishes. */
 #define OMX_DEESSER_NAME "omx deesser"
 #define OMX_DEESSER_VENDOR "openmixer"
-#define OMX_DEESSER_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DEESSER_VERSION "0.19.3"
+#define OMX_DEESSER_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_DEESSER_VERSION "0.22.3"
 #define OMX_DEESSER_DESCRIPTION "The console's de-esser: a detector on a band around the sibilance drives the compressor's gain computer, and the reduction lands on that band alone or on the whole signal."
 #define OMX_DEESSER_CLAP_ID "org.openmixer.deesser"
 #define OMX_DEESSER_CLAP_FEATURES "audio-effect", "de-esser", "stereo"
 #define OMX_DEESSER_LV2_URI "urn:openmixer:deesser"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_DEESSER_DECL_SOURCE "omx deesser: Freq 2000 to 16000 Hz, Width 0.25 to 4 oct, Threshold -60 to 0 dB, Ratio 1 to 20, Range -24 to 0 dB, Attack 0.1 to 50 ms, Release 5 to 500 ms, Mode 0 to 1"
-#define OMX_DEESSER_DECL_DIGEST "5229f9c0817d98fea312f088c1f8519628c36ef5f1d2b453b22f3ba0571f097f"
+#define OMX_DEESSER_DECL_DIGEST "3d35c190313f15768c7ded5dc00a703ccc483fff4cb998408711ab9827574db6"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

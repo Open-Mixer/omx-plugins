@@ -8,7 +8,7 @@
  * arithmetic on the audio path: drain the events, resolve, run.
  *
  * Extensions: params, latency, audio-ports, state, preset-load; org.openmixer.declaration/1, panel-description/1
- * and param-contract/1; clap.remote-controls (the panel's sections as pages of eight) and
+ * (and the same panel cut down as org.openmixer.control-layout.draft/1) and param-contract/1; clap.remote-controls (the panel's sections as pages of eight) and
  * clap.track-info (a placement's defaults, the contract's per-kind ones, on every parameter the host
  * or a state has not set); org.openmixer.resource-hints.draft/0 (the declaration's resource hints).
  * clap.meters/1, for a plugin that declares meters: every one coherent: after each block the face publishes
@@ -53,6 +53,8 @@
 #include <omx-clap-host/omx_clap_ext.h>
 #include <omx-clap-host/clap_meters.h>
 #include "omx_meter_ring.h"
+
+#include <omx-clap-host/clap_host.h>  /* OMX_CLAP_METER_IS_HELD and OMX_CLAP_METER_HAS_CLIP, the flags its host reads */
 #include "omx_preset_file.h"
 #include <omxdsp/omx_denormal.h>    /* omx_denormals_off, per callback */
 #include "omx_face_meters.h"         /* one block's meter values, the LV2 face's too */
@@ -193,7 +195,12 @@ static bool g_init(const clap_plugin_t *p) {
     g->host_pages = (const clap_host_remote_controls_t *)g->host->get_extension(g->host, CLAP_EXT_REMOTE_CONTROLS);
   g_place(g, g_placement(g));
   g_publish(g);
-  if (g->face->meter_count) omx_meter_ring_init(&g->meters);
+  if (g->face->meter_count) {
+    unsigned long long deep, hold;
+    omx_meter_ring_init(&g->meters);
+    omx_face_meter_masks(g->face, &deep, &hold);
+    omx_meter_ring_policy(&g->meters, deep, hold);
+  }
   return true;
 }
 
@@ -269,9 +276,12 @@ static clap_process_status g_process(const clap_plugin_t *p, const clap_process_
     f->tempo(g->core, bpm);
   }
   if (dirty) f->core->resolve(g->core, g->values, bypassed);
-  double mv[OMX_METER_RING_MAX];
+  double mv[OMX_METER_RING_MAX], cv[OMX_METER_RING_MAX] = {0};
   /* the inputs' peak, before the kernel runs (the outputs may be the inputs) */
-  if (f->meter_count) omx_face_meter_levels(f, OMX_FACE_METER_IN, ai->data32[0], ai->data32[1], pr->frames_count, mv);
+  if (f->meter_count) {
+    omx_face_meter_levels(f, OMX_FACE_METER_IN, ai->data32[0], ai->data32[1], pr->frames_count, mv);
+    omx_face_meter_clips(f, OMX_FACE_METER_IN, ai->data32[0], ai->data32[1], pr->frames_count, cv);
+  }
   const float *key = NULL;
   if (f->key_symbol) {
     const clap_audio_buffer_t *ak = pr->audio_inputs_count > 1 ? &pr->audio_inputs[1] : NULL;
@@ -282,7 +292,8 @@ static clap_process_status g_process(const clap_plugin_t *p, const clap_process_
   if (f->meter_count) {
     omx_face_meter_readings(f, g->core, bypassed, mv);
     omx_face_meter_levels(f, OMX_FACE_METER_OUT, ao->data32[0], ao->data32[1], pr->frames_count, mv);
-    omx_meter_ring_publish(&g->meters, mv, f->meter_values);
+    omx_face_meter_clips(f, OMX_FACE_METER_OUT, ao->data32[0], ao->data32[1], pr->frames_count, cv);
+    omx_meter_ring_publish_clip(&g->meters, mv, cv, f->meter_values);
   }
   /* A parameter that moves the kernel's latency (as the pitch shifter's mix crossing 100 % does):
    * the reported latency holds until the next activation, and the host is asked, once, for the
@@ -535,13 +546,74 @@ static bool g_panel_get(const clap_plugin_t *p, uint32_t table, uint32_t index, 
 static const omx_clap_plugin_panel_description_t G_PANEL_EXT = {g_panel_fingerprint, g_panel_family, g_panel_count,
                                                                 g_panel_get};
 
-/* ---- org.openmixer.param-contract/1: the declaration's contract, the bypass last --------------- */
+/* ---- org.openmixer.control-layout.draft/1: the panel cut down ---------------------------------- */
+/* The cut-down shape OpenMixer would propose to CLAP (omx-clap's omx_clap_ext.h owns it), served from the same panel
+ * rows: a section's id is its index and its name the section's label; a control is the panel's control without its
+ * label key; a display is served only when the face offers what it reads, which today is clap.meters/1: a display
+ * the family's house view draws (FAMILY), and one that reads a clap.mini-curve-display/3 curve or
+ * clap.gain-adjustment-metering, which no face answers yet, would be left out by the host, so it is not served. No
+ * family, roles, placement defaults or fingerprint. */
 
-/* The scale codes the generator writes into the rows (include/omx_param_contract.h) are the owner's OMX_CLAP_PARAM_SCALES,
- * one each: tools/test/param-units-check.mjs holds their numbers to omx-contract's PARAM_SCALES words. */
-#define G_ONE_SCALE(code, name) +1
-_Static_assert(0 OMX_CLAP_PARAM_SCALES(G_ONE_SCALE) == OMX_CLAP_SCALE_COUNT, "omx_param_contract.h's scales are not omx-clap-core's");
-#undef G_ONE_SCALE
+/** The layout's source for a panel display source the face can serve; UINT32_MAX for one it cannot. */
+static uint32_t g_layout_source(uint32_t panel_source) {
+  return panel_source == OMX_CLAP_DISPLAY_FROM_METERS ? OMX_CLAP_LAYOUT_DISPLAY_METER : UINT32_MAX;
+}
+
+static uint32_t g_layout_section_count(const clap_plugin_t *p) { return G_OF(p)->face->panel->section_count; }
+
+static uint32_t g_layout_control_count(const clap_plugin_t *p) { return G_OF(p)->face->panel->control_count; }
+
+static uint32_t g_layout_display_count(const clap_plugin_t *p) {
+  const struct omx_panel_rows *r = G_OF(p)->face->panel;
+  uint32_t n = 0;
+  for (uint32_t i = 0; i < r->display_count; ++i) n += g_layout_source(r->displays[i].source) != UINT32_MAX;
+  return n;
+}
+
+static bool g_layout_get_section(const clap_plugin_t *p, uint32_t index, omx_clap_control_layout_section_t *out) {
+  const struct omx_panel_rows *r = G_OF(p)->face->panel;
+  if (!out || index >= r->section_count) return false;
+  out->id = index;
+  omx_panel_copy(out->name, sizeof out->name, r->sections[index].label);
+  return true;
+}
+
+static bool g_layout_get_control(const clap_plugin_t *p, uint32_t index, omx_clap_control_layout_control_t *out) {
+  const struct omx_panel_rows *r = G_OF(p)->face->panel;
+  if (!out || index >= r->control_count) return false;
+  const struct omx_panel_control_row *c = &r->controls[index];
+  out->param_id = c->param;
+  out->section_id = c->section;
+  out->widget = c->widget;
+  omx_panel_copy(out->label, sizeof out->label, c->label);
+  out->visible_if_param_id = c->visible_param;
+  out->visible_mask = c->visible_mask;
+  return true;
+}
+
+/* the index-th display the layout carries, the ones the face cannot serve skipped */
+static bool g_layout_get_display(const clap_plugin_t *p, uint32_t index, omx_clap_control_layout_display_t *out) {
+  const struct omx_panel_rows *r = G_OF(p)->face->panel;
+  if (!out) return false;
+  for (uint32_t i = 0; i < r->display_count; ++i) {
+    const struct omx_panel_display_row *d = &r->displays[i];
+    const uint32_t source = g_layout_source(d->source);
+    if (source == UINT32_MAX || index-- != 0) continue;
+    out->section_id = d->section;
+    out->source = source;
+    out->ids[0] = d->meter_ids[0];
+    out->ids[1] = d->meter_ids[1];
+    omx_panel_copy(out->label, sizeof out->label, d->label);
+    return true;
+  }
+  return false;
+}
+
+static const omx_clap_plugin_control_layout_t G_LAYOUT_EXT = {g_layout_section_count, g_layout_control_count,
+                                                              g_layout_display_count, g_layout_get_section,
+                                                              g_layout_get_control, g_layout_get_display};
+
+/* ---- org.openmixer.param-contract/1: the declaration's contract, the bypass last --------------- */
 
 static uint32_t g_contract_version(const clap_plugin_t *p) { return G_OF(p)->face->contract_version; }
 
@@ -590,8 +662,10 @@ static bool g_shown(const G *g, const struct omx_panel_control_row *c) {
 }
 
 /** Whether the control of parameter `param` is shown at the governing values now: a slot of a hidden control is blank. The
- * page rule is omx-panel's pagesOf: the pages and their boundaries are fixed (the generated table holds every control's
- * id), and a control the governing values hide keeps its slot, blank, so the slots after it do not move. */
+ * page rule is omx-panel's pagesOf: the page boundaries are fixed (the generated table holds every control's id), a
+ * control the governing values hide keeps its slot, blank, so the slots after it do not move, and a page whose every
+ * slot is blank is not served (no screen has zero visible items, omx-panel docs/panel-layout.md): a section the values
+ * empty has no page, and the host is told when that changes (g_publish). */
 static bool g_slot_shown(const G *g, clap_id param) {
   const struct omx_panel_rows *r = g->face->panel;
   for (uint32_t c = 0; c < r->control_count; ++c)
@@ -599,22 +673,40 @@ static bool g_slot_shown(const G *g, clap_id param) {
   return true;
 }
 
+/* The id a slot of table page `r` serves now: the control's, or CLAP_INVALID_ID when the slot is empty or hidden. */
+static clap_id g_slot_id(const G *g, const struct omx_panel_page_row *r, uint32_t k) {
+  return r->ids[k] != OMX_CLAP_PANEL_INVALID_ID && g->gov_count && !g_slot_shown(g, r->ids[k]) ? OMX_CLAP_PANEL_INVALID_ID : r->ids[k];
+}
+
+/* Whether table page `r` holds a control the governing values show: a page of blank slots alone is not served. */
+static bool g_page_served(const G *g, const struct omx_panel_page_row *r) {
+  for (uint32_t k = 0; k < CLAP_REMOTE_CONTROLS_COUNT; ++k)
+    if (g_slot_id(g, r, k) != OMX_CLAP_PANEL_INVALID_ID) return true;
+  return false;
+}
+
 static uint32_t g_pages_count(const clap_plugin_t *p) {
   const G *g = G_OF(p);
-  return g->face->page_count;
+  uint32_t n = 0;
+  for (uint32_t t = 0; t < g->face->page_count; ++t) n += g_page_served(g, &g->face->pages[t]);
+  return n;
 }
 
 static bool g_pages_get(const clap_plugin_t *p, uint32_t index, clap_remote_controls_page_t *page) {
   const G *g = G_OF(p);
   const struct omx_face *f = g->face;
-  if (index >= f->page_count) return false;
-  const struct omx_panel_page_row *r = &f->pages[index];
+  /* the index-th served page of the table, the pages of blank slots alone skipped */
+  uint32_t t = 0;
+  for (uint32_t seen = 0; t < f->page_count; ++t)
+    if (g_page_served(g, &f->pages[t]) && seen++ == index) break;
+  if (t >= f->page_count) return false;
+  const struct omx_panel_page_row *r = &f->pages[t];
   memset(page, 0, sizeof *page);
   snprintf(page->section_name, sizeof page->section_name, "%s", r->section_name);
   page->page_id = index;
   snprintf(page->page_name, sizeof page->page_name, "%s", r->page_name);
   for (uint32_t k = 0; k < CLAP_REMOTE_CONTROLS_COUNT; ++k)
-    page->param_ids[k] = r->ids[k] != OMX_CLAP_PANEL_INVALID_ID && g->gov_count && !g_slot_shown(g, r->ids[k]) ? OMX_CLAP_PANEL_INVALID_ID : r->ids[k];
+    page->param_ids[k] = g_slot_id(g, r, k);
   page->is_for_preset = false;
   return true;
 }
@@ -647,21 +739,34 @@ static bool g_meters_info(const clap_plugin_t *p, uint32_t index, clap_meter_inf
   info->id = index;
   snprintf(info->name, sizeof info->name, "%s", f->meters[index].name);
   info->kind = f->meters[index].kind;
-  info->flags = CLAP_METER_IS_COHERENT;
+  info->flags = CLAP_METER_IS_COHERENT | (f->meters[index].held ? OMX_CLAP_METER_IS_HELD : 0u) |
+                (f->meters[index].clip ? OMX_CLAP_METER_HAS_CLIP : 0u);
   info->channel_count = f->meters[index].channels;
   info->min_value = f->meters[index].min;
   info->max_value = f->meters[index].max;
   return true;
 }
 
-/** The last block's values of meter `id`, all of that one block, from any thread; nothing before a block
- * since activation. */
+/** Meter `id`'s values since the host's last read: each channel's largest (a gain reduction's deepest) since then,
+ * as docs/meters.md rules, all of the same block's publication; nothing before a block since activation. From any
+ * thread but the audio role, one reader per instance. A meter with a clip word writes it as one more value after its
+ * channels when the host gave room for it (omx-clap's <omx-clap-host/clap_host.h>, OMX_CLAP_METER_HAS_CLIP): 1 if a run of
+ * samples over full scale ran since the last read, else 0; the count returned includes it. */
 static uint32_t g_meters_values(const clap_plugin_t *p, clap_id id, double *values, uint32_t capacity) {
   G *g = G_OF(p);
   const struct omx_face *f = g->face;
   if (id >= f->meter_count || capacity < 1 || !values) return 0;
-  const uint32_t n = capacity < f->meters[id].channels ? capacity : f->meters[id].channels;
-  return omx_meter_ring_read(&g->meters, f->meters[id].at, values, n);
+  const struct omx_face_meter *row = &f->meters[id];
+  const uint32_t n = capacity < row->channels ? capacity : row->channels;
+  double clips[OMX_METER_RING_MAX];
+  if (omx_meter_ring_take(&g->meters, row->at, NULL, values, clips, n) != n) return 0;
+  if (n == row->channels && row->clip && capacity > n) {
+    double any = 0.0;
+    for (uint32_t i = 0; i < n; ++i) any = clips[i] > any ? clips[i] : any;
+    values[n] = any > 0.0 ? 1.0 : 0.0;
+    return n + 1u;
+  }
+  return n;
 }
 
 static const clap_plugin_meters_t G_METERS_EXT = {g_meters_count, g_meters_info, g_meters_values};
@@ -674,6 +779,7 @@ static const void *g_get_extension(const clap_plugin_t *p, const char *id) {
   if (strcmp(id, CLAP_EXT_PRESET_LOAD) == 0 || strcmp(id, CLAP_EXT_PRESET_LOAD_COMPAT) == 0) return &G_PRESET_LOAD_EXT;
   if (strcmp(id, OMX_CLAP_EXT_DECLARATION) == 0) return &G_DECL_EXT;
   if (strcmp(id, OMX_PANEL_DESCRIPTION_ID) == 0) return &G_PANEL_EXT;
+  if (strcmp(id, OMX_CLAP_EXT_CONTROL_LAYOUT) == 0) return &G_LAYOUT_EXT;
   if (strcmp(id, OMX_CLAP_EXT_PARAM_CONTRACT) == 0) return &G_CONTRACT_EXT;
   if (strcmp(id, CLAP_EXT_REMOTE_CONTROLS) == 0) return &G_PAGES_EXT;
   if (strcmp(id, CLAP_EXT_TRACK_INFO) == 0) return &G_TRACK_INFO_EXT;

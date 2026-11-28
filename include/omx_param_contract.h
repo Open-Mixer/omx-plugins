@@ -6,7 +6,7 @@
  * parameter's plain value, how the value maps to a control's travel and the quantum the plugin resolves.
  *
  * The extension itself (its id, the entry a host reads, the structure a plugin serves and the symbol size)
- * is omx-clap-core's, <omx-clap-host/omx_clap_ext.h>: lib/omx_clap_face.c includes it and fills a host's
+ * is omx-clap's, <omx-clap-host/omx_clap_ext.h>: lib/omx_clap_face.c includes it and fills a host's
  * entry from a row (the bypass, the last parameter at omx-contract's permanent CLAP id
  * OMX_PLUGIN_FACE_BYPASS_CLAP_ID, is `bypass`, no unit, stepped). The fingerprint is the lowercase hex
  * SHA-256 of the canonical serialisation that header states (tools/param-contract.mjs writes it).
@@ -19,22 +19,16 @@
 #include <stdint.h>
 
 /* The unit of a parameter's plain value: the OMX_CLAP_UNIT_* codes, 0..24 the LV2 units one to one, 0x100.. the vendor
- * block. Declared in omx-contract (OMX_PARAM_CONTRACT_UNITS, data/param-contract.json) and rendered there. */
-#include <omxcontract/omx_param_units.h>
+ * block. Declared in omx-clap (OMX_PARAM_CONTRACT_UNITS, its domain omx-param-contract) and rendered there. */
+#include <omx-clap-host/omx_param_units.h>
+/* How the plain value maps to a control's travel: the OMX_CLAP_SCALE_* codes, one per word of omx-contract's PARAM_SCALES.
+ * Declared in omx-clap (OMX_CLAP_SCALE_CODES, its domain omx-clap-scale) and rendered there; the generator writes these
+ * names into the rows (tools/test/param-units-check.mjs holds them to PARAM_SCALES). */
+#include <omx-clap-host/omx_param_scales.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/** How the plain value maps to a control's travel: the codes of omx-clap-core's OMX_CLAP_PARAM_SCALES, in the order
- * omx-contract's PARAM_SCALES words them (tools/test/param-units-check.mjs holds the numbers to the words,
- * lib/omx_clap_face.c the count to the owner's list). The generator writes these names into the rows. */
-enum omx_clap_param_scale {
-  OMX_CLAP_SCALE_LINEAR = 0,  /* value linear in position */
-  OMX_CLAP_SCALE_LOG = 1,     /* geometric in position; min and max positive */
-  OMX_CLAP_SCALE_STEPPED = 2, /* integers min..max, CLAP_PARAM_IS_STEPPED, step 1 */
-  OMX_CLAP_SCALE_COUNT,       /* one past the last */
-};
 
 /** One declared parameter's contract; its symbol is the parameter table's. */
 struct omx_param_contract_row {

@@ -9,67 +9,67 @@
   "params": [
     {
       "symbol": "bandOn1",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "bandOn2",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "bandOn3",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "bandOn4",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "bandOn5",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "bandOn6",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "bandType1",
-      "unit": "",
+      "unit": "none",
       "value": 1,
       "label": "Low Shelf"
     },
     {
       "symbol": "bandType2",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
     {
       "symbol": "bandType3",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
     {
       "symbol": "bandType4",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
     {
       "symbol": "bandType5",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
     {
       "symbol": "bandType6",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Bell"
     },
@@ -135,67 +135,67 @@
     },
     {
       "symbol": "q1",
-      "unit": "",
+      "unit": "none",
       "value": 0.7
     },
     {
       "symbol": "q2",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "q3",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "q4",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "q5",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "q6",
-      "unit": "",
+      "unit": "none",
       "value": 1
     },
     {
       "symbol": "dynMode1",
-      "unit": "",
+      "unit": "none",
       "value": 1,
       "label": "Down"
     },
     {
       "symbol": "dynMode2",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Off"
     },
     {
       "symbol": "dynMode3",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Off"
     },
     {
       "symbol": "dynMode4",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Off"
     },
     {
       "symbol": "dynMode5",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Off"
     },
     {
       "symbol": "dynMode6",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Off"
     },
@@ -231,32 +231,32 @@
     },
     {
       "symbol": "ratio1",
-      "unit": "",
+      "unit": "none",
       "value": 2.5
     },
     {
       "symbol": "ratio2",
-      "unit": "",
+      "unit": "none",
       "value": 2
     },
     {
       "symbol": "ratio3",
-      "unit": "",
+      "unit": "none",
       "value": 2
     },
     {
       "symbol": "ratio4",
-      "unit": "",
+      "unit": "none",
       "value": 2
     },
     {
       "symbol": "ratio5",
-      "unit": "",
+      "unit": "none",
       "value": 2
     },
     {
       "symbol": "ratio6",
-      "unit": "",
+      "unit": "none",
       "value": 2
     },
     {
@@ -351,37 +351,37 @@
     },
     {
       "symbol": "listen1",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "listen2",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "listen3",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "listen4",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "listen5",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "listen6",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
       "symbol": "mixPct",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     }
   ],

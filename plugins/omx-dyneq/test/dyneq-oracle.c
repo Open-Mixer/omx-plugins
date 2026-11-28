@@ -57,6 +57,7 @@
 
 #include <omxdsp/fx/omx_dyneq_instance.h>
 #include <omxdsp/omx_denormal.h>
+#include <omx-clap-host/clap_host.h>  /* OMX_CLAP_METER_IS_HELD, OMX_CLAP_METER_HAS_CLIP */
 #include <omx-clap-host/clap_meters.h>
 
 _Static_assert(6 == OMX_DYNEQ_INSTANCE_BANDS, "the declaration names one band_on parameter per band of the face");
@@ -314,13 +315,14 @@ static const struct {
   const char *name;
   uint32_t kind, channels, at;
   double min, max;
+  uint32_t flags;
 } METERS[NM] = {
-    {"band1Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 0u, (double)OMX_DYNEQ_READOUT_BAND1_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND1_GAIN_DB_MAX},
-    {"band2Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 1u, (double)OMX_DYNEQ_READOUT_BAND2_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND2_GAIN_DB_MAX},
-    {"band3Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 2u, (double)OMX_DYNEQ_READOUT_BAND3_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND3_GAIN_DB_MAX},
-    {"band4Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 3u, (double)OMX_DYNEQ_READOUT_BAND4_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND4_GAIN_DB_MAX},
-    {"band5Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 4u, (double)OMX_DYNEQ_READOUT_BAND5_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND5_GAIN_DB_MAX},
-    {"band6Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 5u, (double)OMX_DYNEQ_READOUT_BAND6_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND6_GAIN_DB_MAX},
+    {"band1Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 0u, (double)OMX_DYNEQ_READOUT_BAND1_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND1_GAIN_DB_MAX, CLAP_METER_IS_COHERENT | OMX_CLAP_METER_IS_HELD},
+    {"band2Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 1u, (double)OMX_DYNEQ_READOUT_BAND2_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND2_GAIN_DB_MAX, CLAP_METER_IS_COHERENT | OMX_CLAP_METER_IS_HELD},
+    {"band3Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 2u, (double)OMX_DYNEQ_READOUT_BAND3_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND3_GAIN_DB_MAX, CLAP_METER_IS_COHERENT | OMX_CLAP_METER_IS_HELD},
+    {"band4Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 3u, (double)OMX_DYNEQ_READOUT_BAND4_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND4_GAIN_DB_MAX, CLAP_METER_IS_COHERENT | OMX_CLAP_METER_IS_HELD},
+    {"band5Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 4u, (double)OMX_DYNEQ_READOUT_BAND5_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND5_GAIN_DB_MAX, CLAP_METER_IS_COHERENT | OMX_CLAP_METER_IS_HELD},
+    {"band6Gain", CLAP_METER_KIND_GAIN_REDUCTION, 1u, 5u, (double)OMX_DYNEQ_READOUT_BAND6_GAIN_DB_MIN, (double)OMX_DYNEQ_READOUT_BAND6_GAIN_DB_MAX, CLAP_METER_IS_COHERENT | OMX_CLAP_METER_IS_HELD},
 };
 static double *meters_want, *meters_got;
 static bool meters_early, meters_listed;
@@ -636,7 +638,7 @@ static bool meters_listed_ok(const clap_plugin_meters_t *mx, const clap_plugin_t
   for (uint32_t m = 0; m < NM; m++) {
     clap_meter_info_t info;
     if (!mx->get_info(p, m, &info) || info.id != m || strcmp(info.name, METERS[m].name) != 0 ||
-        info.kind != METERS[m].kind || info.flags != CLAP_METER_IS_COHERENT || info.channel_count != METERS[m].channels ||
+        info.kind != METERS[m].kind || info.flags != METERS[m].flags || info.channel_count != METERS[m].channels ||
         info.min_value != METERS[m].min || info.max_value != METERS[m].max)
       return false;
   }

@@ -23,8 +23,7 @@
  * The bags (`extensions.<format>`) are equal: every source field the authored bag holds, the scanned one holds with the
  * same value (an LV2 field's values a set, as RDF states them).
  *
- * Pass: no `differs`, every bag equal, and the lost words the ones LOSSES names, by count (a new loss is red until it
- * is named there). LOSSES is counted against the versions LOSSES_COUNTED names, in a clean build environment (the
+ * Pass: no `differs`, every bag equal, and the lost words the ones LOSSES names, by count (a new loss is red until the ledger is regenerated). LOSSES is counted against the versions LOSSES_COUNTED names, in a clean build environment (the
  * channel's BuildRequires only): a run where one of them is another version, or a package absent from the count is
  * installed, and losses moved, says so once, `ledger for <package> <counted>, installed <found>`, and the ledger is
  * counted again there.
@@ -34,11 +33,11 @@
  * sabotage arm's). Exit 1 when it does not pass.
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { descriptorFile } from './descriptor.mjs';
-import { lookupValues, tableRows, tableWords } from './format-tables.mjs';
-import { compareVersions } from './omx-contract.mjs';
+import { lookupValues, pairedOnly, tableWords } from './format-tables.mjs';
+import { compareVersions, isMain } from './omx-contract.mjs';
 
 /** `cmd args`' trimmed output, or undefined when it fails or says nothing. */
 function output(cmd, args) {
@@ -60,7 +59,7 @@ function hostdVersion() {
  * contractdir), or null when none does. */
 function contractVersion(pkg) {
   const dirs = process.env.OMX_CONTRACT_PATH?.split(':').filter(Boolean) ?? [pkgConfig('--variable=contractdir', 'omx-contract')].filter(Boolean);
-  const manifest = dirs.map((d) => join(d, '3', pkg, 'MANIFEST.json')).find((f) => existsSync(f));
+  const manifest = dirs.map((d) => join(d, pkg, 'MANIFEST.json')).find((f) => existsSync(f));
   return manifest ? JSON.parse(readFileSync(manifest, 'utf8')).version ?? null : null;
 }
 
@@ -81,29 +80,32 @@ export const FORMATS = ['clap', 'lv2'];
  * and an LV2 term for some meanings; LV2 has no unit for ""). Each other entry is a word the format's table has no
  * row for, or one its face states otherwise, named in the header above. */
 /**
- * The versions LOSSES is counted against, in a clean fedora:44 with the channel's BuildRequires only: plugin-hostd's
+ * The versions LOSSES is counted against, in a clean fedora:45 with the channel's BuildRequires only: plugin-hostd's
  * format tables and probe, omx-contract's parameter contract, the CLAP host the probe loads through, and
  * omx-plugins-contract, whose installed descriptors lend a scan the meanings a face does not carry (null: not installed,
  * as in a build of omx-plugins).
  */
 export const LOSSES_COUNTED = Object.freeze({
-  'plugin-hostd': '0.20.7',
-  'omx-contract': '3.18.1',
-  'omx-clap-host': '0.32.5',
+  'plugin-hostd': '0.20.8',
+  'omx-contract': '3.20.2',
+  'omx-clap-host': '0.33.1',
   'omx-plugins-contract': null,
 });
 
 export const LOSSES = {
-  // OR2: a meaning has a CLAP word only for the bypass, an LV2 term only for some (lv2:designation); LV2 has no unit
-  // for "" (a plain number)
-  'clap controls[].meaning': 10,
+  // OR2: a meaning has a CLAP word for the bypass and, with plugin-hostd 0.20.8's tables, the few more that table rows read (10
+  // before 0.20.8, 4 now); an LV2 term only for some (lv2:designation); LV2 has no unit
+  // for none (a plain number). A unit is keyed by its PARAM_UNITS id, the word the descriptor states (C2), never its
+  // symbol (tools/test/round-trip-loss-units-check.mjs)
+  'clap controls[].meaning': 4,
   'lv2 controls[].meaning': 116,
-  'lv2 controls[].travel.unit ""': 123,
-  // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt (dB/oct, omx-contract 3.1.0)
-  'lv2 controls[].travel.unit "dB/oct"': 2,
-  // CLAP: plugin-hostd 0.20.7 reads a control's scale and, through the parameter contract, most units and steps; no
-  // row reads the rest of the units and steps, the session symbol, the LV2 URI, a side-chain's role or what an LV2
-  // host may lend. A choice whose points are every whole step is CLAP_PARAM_IS_ENUM with its labels as value texts
+  'lv2 controls[].travel.unit "none"': 123,
+  // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt and the balancer's slope (dBPerOct, shown
+  // dB/oct; omx-contract 3.1.0)
+  'lv2 controls[].travel.unit "dBPerOct"': 2,
+  // CLAP: plugin-hostd 0.20.3 reads a control's scale and, through the parameter contract, most units and steps; no
+  // row reads the rest of the units and steps, the session symbol, the LV2 URI, a side-chain's role or what an LV2 host
+  // may lend. A choice whose points are every whole step is CLAP_PARAM_IS_ENUM with its labels as value texts
   // (omx-plugins#97), so its kind, labels, values and default come back; a scan's point ids are its labels, so our ids
   // (the values as text) are no CLAP word; the choices with gaps (the HPF/LPF slopes' 12 and 24 dB/oct of omx-eq8,
   // omx-eq16, omx-eq32 and omx-strip) stay stepped travels, their kind, labels, values and default lost with the toggles'
@@ -141,6 +143,12 @@ export const LOSSES = {
   'lv2 controls[].doc': 10,
   'clap needs.tempo': 1,
   'lv2 needs.tempo': 1,
+  // a modulated delay's sweep (omx-rotary's, omx-contract 3.21.0): neither face states it, and a scan reads the
+  // latency the face reports, never the range its lag lies in (each end a ref to an omx-dsp scalar in ms)
+  'clap latency.sweep.min.ref': 1,
+  'clap latency.sweep.max.ref': 1,
+  'lv2 latency.sweep.min.ref': 1,
+  'lv2 latency.sweep.max.ref': 1,
   // a meter: plugin-hostd's CLAP table has no row for clap.meters/1 (one word a meter: 20 meters); an LV2 output
   // control port carries its symbol, range, unit and scale, and no word for its CLAP id, kind, channel count or
   // readout doc; a two-channel level is two ports, each named for its channel (4 meters, 8 ports)
@@ -212,8 +220,7 @@ export function compareFace(format, authored, scanned) {
   const words = tableWords(format);
   // a value no row of the table gives the word is describe's own when no row set it (a CLAP control a `travel`, a CLAP
   // port that is not main `aux`): the face stated nothing
-  const lookupOnly = (word) => Object.values(tableRows(format)).every((r) => r.word?.word !== word || r.word.transform === 'lookup');
-  const defaulted = (word, s) => lookupOnly(word) && words.has(word) && !Object.values(lookupValues(format, word)).some((v) => same(v, s));
+  const defaulted = (word, s) => pairedOnly(format, word) && words.has(word) && !Object.values(lookupValues(format, word)).some((v) => same(v, s));
   const emit = (where, word, a, s, carried = true) => {
     // CLAP states an integer travel's step (CLAP_PARAM_IS_STEPPED, scanned stepped) and has no word for its law: the log
     // of an integer frequency is lost on the CLAP face, as every log and linear scale is there
@@ -321,7 +328,7 @@ export function compareFace(format, authored, scanned) {
 /** The lines of a whole run: `{ lines, losses, fails }`. */
 export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
   const { inside, outside } = described(root);
-  const lines = [], losses = {}, upstream = {};
+  const lines = [], losses = {}, upstream = {}, perPlugin = {};
   let fails = 0;
   for (const stem of inside) {
     const authored = JSON.parse(readFileSync(authoredFiles[stem] ?? join(root, 'plugins', stem, descriptorFile(stem)), 'utf8'));
@@ -339,6 +346,8 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
           lines.push(`lost ${format} ${stem} ${r.where} ${r.word} ${show(r.authored)}`);
           const k = r.word === 'controls[].travel.unit' && format === 'lv2' ? `${format} ${r.word} ${show(r.authored)}` : `${format} ${r.word}`;
           losses[k] = (losses[k] ?? 0) + 1;
+          perPlugin[stem] = perPlugin[stem] ?? {};
+          perPlugin[stem][k] = (perPlugin[stem][k] ?? 0) + 1;
         } else if (excused(UPSTREAM[`${format} ${r.word} ${show(r.authored)} ${show(r.scanned)}`], stem, r.where)) {
           const k = `${format} ${r.word} ${show(r.authored)} ${show(r.scanned)}`;
           lines.push(`differs ${format} ${stem} ${r.where} ${r.word}: authored ${show(r.authored)}, scanned ${show(r.scanned)} (upstream: ${UPSTREAM[k].why})`);
@@ -351,9 +360,16 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
     }
   }
   for (const stem of outside) lines.push(`outside ${stem}: no descriptor, outside the round trip`);
+  for (const stem of inside) perPlugin[stem] = perPlugin[stem] ?? {};
   const ledger = ledgerLines(losses, installedVersions());
   lines.push(...ledger.lines);
   fails += ledger.fails;
+  // which plugin moved: the totals above fail once; a count that moved BETWEEN plugins leaves the totals equal
+  const had = readLedger();
+  const drift = ledgerDrift(had, inside);
+  for (const s of inside) for (const k of new Set([...Object.keys(had[s] ?? {}), ...Object.keys(perPlugin[s]), ])) if ((had[s]?.[k] ?? 0) !== (perPlugin[s][k] ?? 0)) drift.push(`ledger for ${s} ${k}: ${had[s]?.[k] ?? 0}, run ${perPlugin[s][k] ?? 0}`);
+  lines.push(...drift.map((l) => `drift ${l}`));
+  if (ledger.fails === 0 && drift.length > 0) fails++;
   for (const [k, { count: named, at, through }] of Object.entries(UPSTREAM)) {
     const count = at?.length ?? named;
     if (through !== undefined) {
@@ -368,14 +384,31 @@ export function roundTrip(scansDir, { root = ROOT, authoredFiles = {} } = {}) {
     lines.push(`${ok ? 'upstream' : 'unnamed upstream'} ${k}: ${upstream[k] ?? 0} word(s)${ok ? '' : `, UPSTREAM names ${count} (fixed upstream? remove the entry)`}`);
     if (!ok) fails++;
   }
-  return { lines, losses, fails, inside, outside };
+  return { lines, losses, perPlugin, fails, inside, outside };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === resolve(new URL(import.meta.url).pathname)) {
+if (isMain(import.meta.url)) {
   const args = process.argv.slice(2);
+  // --check: the ledger names exactly the tree's described plugins (no run, no scans); --write-losses <scans>: the
+  // ledger written from a run (tools/round-trip.sh --write-losses)
+  if (args[0] === '--check') {
+    const root = args[1] === '--root' ? resolve(args[2]) : ROOT;
+    const drift = ledgerDrift(readLedger(), described(root).inside);
+    for (const l of drift) console.log(`drift ${l}`);
+    console.log(drift.length ? `FAIL round-trip ledger: ${drift.length} drift(s); regenerate with tools/round-trip.sh --write-losses` : 'round-trip ledger: names every described plugin');
+    process.exit(drift.length ? 1 : 0);
+  }
+  const write = args.includes('--write-losses');
+  const rest = args.filter((a) => a !== '--write-losses');
   const authoredFiles = {};
-  for (let i = 1; i < args.length; i += 2) if (args[i] === '--authored') { const [s, f] = args[i + 1].split('='); authoredFiles[s] = f; }
-  const { lines, fails, inside, outside } = roundTrip(args[0], { authoredFiles });
+  for (let i = 1; i < rest.length; i += 2) if (rest[i] === '--authored') { const [s, f] = rest[i + 1].split('='); authoredFiles[s] = f; }
+  const run = roundTrip(rest[0], { authoredFiles });
+  if (write) {
+    writeFileSync(LEDGER_FILE, ledgerText(run.perPlugin));
+    console.log(`round-trip: wrote ${LEDGER_NAME} for ${run.inside.length} plugins`);
+    process.exit(0);
+  }
+  const { lines, fails, inside, outside } = run;
   for (const l of lines) console.log(l);
   const count = (v) => lines.filter((l) => l.startsWith(`${v} `)).length;
   const up = lines.filter((l) => l.startsWith('differs ') && l.includes(' (upstream: ')).length;

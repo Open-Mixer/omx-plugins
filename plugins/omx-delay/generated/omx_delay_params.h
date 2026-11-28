@@ -206,15 +206,15 @@ static const char *const *const OMX_DELAY_PARAM_LABELS[OMX_DELAY_PARAM_COUNT] = 
 /* The identity every face publishes. */
 #define OMX_DELAY_NAME "omx delay"
 #define OMX_DELAY_VENDOR "openmixer"
-#define OMX_DELAY_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DELAY_VERSION "0.19.3"
+#define OMX_DELAY_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_DELAY_VERSION "0.22.3"
 #define OMX_DELAY_DESCRIPTION "The OpenMixer console's stereo delay: one time, free or synced to the host's tempo, feedback through a tone filter, ping-pong, read taps, a tape or analog colour, a wet/dry mix and a duck under the input."
 #define OMX_DELAY_CLAP_ID "org.openmixer.delay"
 #define OMX_DELAY_CLAP_FEATURES "audio-effect", "delay", "stereo"
 #define OMX_DELAY_LV2_URI "urn:openmixer:delay"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_DELAY_DECL_SOURCE "omx delay: Time 0 to 2000 ms, Feedback 0 to 0.99, Tone 0 to 1, Mix 0 to 1, Pingpong 0 to 1, Taps 1 to 4, Tap 1 Gain 0 to 1, Tap 1 Pan -1 to 1, Tap 2 Time 0 to 10, Tap 2 Gain 0 to 1, Tap 2 Pan -1 to 1, Tap 3 Time 0 to 10, Tap 3 Gain 0 to 1, Tap 3 Pan -1 to 1, Tap 4 Time 0 to 10, Tap 4 Gain 0 to 1, Tap 4 Pan -1 to 1, Sync 0 to 1, Division 0 to 17, Mode 0 to 2, Duck -24 to 0 dB, Duck Threshold -60 to 0 dB, Duck Release 20 to 2000 ms"
-#define OMX_DELAY_DECL_DIGEST "3185a8fe2345bf9f9b48598b83c02556320301a873ac36ea4c18236ee59829e3"
+#define OMX_DELAY_DECL_DIGEST "79371bd580c84db94b280fe252fb75991e84a8ef928ca4e65c64be6ec14505be"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
@@ -257,7 +257,7 @@ static const omx_resource_hints_t OMX_DELAY_RESOURCE_HINTS = {
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
  * include/omx_panel_description.h serves, parameter ids the declaration's. Family delay. */
-#define OMX_DELAY_PANEL_FINGERPRINT "a801adf0482b982181e8648ec892281e38f8ed2f7f8a17a071f216e6346d2cae"
+#define OMX_DELAY_PANEL_FINGERPRINT "baa6f260f8edf420be0fec712ceae55a39ea46e7b427f3431c881bce57a72fa1"
 static const struct omx_panel_section_row OMX_DELAY_PANEL_SECTIONS[] = {
   { "delay", "fx.delay.section.delay", "Delay" },
   { "tempo", "fx.delay.section.tempo", "Tempo" },
@@ -296,6 +296,9 @@ static const struct omx_panel_role_row OMX_DELAY_PANEL_ROLES[] = {
   { "pingpong", 0u, 4u },
   { "mix", 0u, 3u },
 };
+static const struct omx_panel_display_row OMX_DELAY_PANEL_DISPLAYS[] = {
+  { OMX_CLAP_DISPLAY_TIME_RESPONSE, 0u, OMX_CLAP_DISPLAY_FROM_FAMILY, { OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID }, 0u, OMX_CLAP_PANEL_INVALID_ID, 0.0, "fx.delay.display.time_response", "Delay" },
+};
 static const struct omx_panel_default_row OMX_DELAY_PANEL_DEFAULTS[] = {
   { OMX_CLAP_PLACEMENT_RETURN, 3u, 1 },
 };
@@ -315,7 +318,7 @@ static const struct omx_panel_rows OMX_DELAY_PANEL = {
   OMX_DELAY_PANEL_SECTIONS, 4u,
   OMX_DELAY_PANEL_CONTROLS, 23u,
   OMX_DELAY_PANEL_ROLES, 5u,
-  NULL, 0u,
+  OMX_DELAY_PANEL_DISPLAYS, 1u,
   OMX_DELAY_PANEL_DEFAULTS, 1u,
 };
 

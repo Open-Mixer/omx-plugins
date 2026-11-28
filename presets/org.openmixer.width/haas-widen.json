@@ -9,12 +9,12 @@
   "params": [
     {
       "symbol": "widthPct",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {
       "symbol": "pseudo",
-      "unit": "",
+      "unit": "none",
       "value": 2,
       "label": "Haas"
     },
@@ -25,7 +25,7 @@
     },
     {
       "symbol": "bassMono",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {

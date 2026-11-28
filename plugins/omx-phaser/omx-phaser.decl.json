@@ -5,7 +5,8 @@
   "kernels": [
     "phaser"
   ],
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "category": "modulation",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "portHints": {
     "rateHz": {

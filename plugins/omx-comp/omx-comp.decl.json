@@ -5,7 +5,8 @@
   "kernels": [
     "comp"
   ],
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "category": "dynamics",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "sidechain": {
     "symbol": "key",
@@ -205,6 +206,7 @@
         "key": "comp",
         "label": "Comp",
         "graph": "dynamics-curve",
+        "basis": "exact",
         "controls": [
           "thresholdDb",
           "ratio",

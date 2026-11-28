@@ -83,10 +83,15 @@ const hint = (member, f) => (rows) => {
   return rows.map((r, k) => (k === i ? [r[0], r[1], f(r[2])] : r));
 };
 const bit = (m) => (v) => `${Number(v) ^ m}`;
+/** The `port <index> <symbol>` row of `symbol` dropped: an LV2 face that lost that port. */
+const dropPort = (symbol) => (rows) => {
+  const at = rows.findIndex((r) => r[0] === 'port' && r[2] === symbol);
+  return rows.filter((_, i) => i !== need(at < 0 ? undefined : at, `port ${symbol} row`));
+};
 const flip = (v) => `${v.slice(0, -1)}${v.endsWith('0') ? '1' : '0'}`;
 
 // ---- the arms: [what changed, change, the FAIL line that must name it] ----
-// the clap-probe `params` dump has no kind column: rows are `id name min max default flags texts`
+// the clap-probe `params` dump has no kind column: rows are `id name min max default flags text texts`
 const paramsRows = (text) => text.trim().split('\n').map((l) => l.split('\t'));
 const paramArms = [
   ['a parameter renamed', (r) => r.map((x, i) => (i === 0 ? [x[0], 'Renamed', ...x.slice(2)] : x)), /FAIL clap-params /],
@@ -119,6 +124,14 @@ const displayArms = (face) => [
   ['a floor in dB given to the transfer curve', set('display', 0, 8, '-60'), new RegExp(`FAIL panel ${face} displays`)],
   ['a floor in dB given to the gain-reduction bar', set('display', 1, 8, '-60'), new RegExp(`FAIL panel ${face} displays`)],
   ['a floor parameter given to the gain-reduction bar', set('display', 1, 7, '0'), new RegExp(`FAIL panel ${face} displays`)],
+  // the forward check (#65): the meter a display reads is one the BUILT face serves, through clap.meters/1 on CLAP (the
+  // probe's `meter` rows) and as the declared output port on LV2 — not only one the declaration names
+  ...(face === 'clap'
+    ? [
+        ['the meter the gain-reduction bar reads not served through clap.meters/1', drop('meter', 0), /FAIL panel clap display meters are served/],
+        ['the meter the gain-reduction bar reads served under another name', set('meter', 0, 2, 'other'), /FAIL panel clap display meters are served/],
+      ]
+    : [['the output port of the meter the gain-reduction bar reads lost', dropPort('gateGr'), /FAIL panel lv2 display meters are served/]]),
 ];
 
 const extArms = [
@@ -215,8 +228,9 @@ const named = (name, f) => (r) => {
   return r.map((x) => (x[1] === name ? f(x) : x));
 };
 const enumArms = [
+  ["a travel's default shown with the unit's id, not its symbol (C2)", named('Threshold', (x) => [...x.slice(0, 6), x[6].replace(/ .*$/, ' dB-id'), ...x.slice(7)]), /FAIL clap-params Threshold: value_to_text/],
   ['an enumeration flag lost (a two-option choice built as a plain stepped 0..1 reads as a toggle)', named('Kind', (x) => [...x.slice(0, 5), bit(1 << 16)(x[5]), ...x.slice(6)]), /FAIL clap-params /],
-  ["a choice's value texts lost (the numbers, not the labels)", named('Kind', (x) => [...x.slice(0, 6), '0|1']), /FAIL clap-params /],
+  ["a choice's value texts lost (the numbers, not the labels)", named('Kind', (x) => [...x.slice(0, 7), '0|1']), /FAIL clap-params /],
   ['a toggle flagged an enumeration', named('Key Listen', (x) => [...x.slice(0, 5), bit(1 << 16)(x[5]), ...x.slice(6)]), /FAIL clap-params /],
 ];
 arms('clap-params', 'clap-params-check.mjs', [compDir], comp.dumps.params, enumArms, (change, t) => toText(change(paramsRows(t))));

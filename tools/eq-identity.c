@@ -52,8 +52,7 @@
 #include <omxdsp/fx/omx_eq_instance.h>
 #include <omxdsp/omx_biquad.h>
 #include <omxdsp/omx_denormal.h>
-#include <omxcontract/omx_contract_limits.h> /* the oracle rates, omx-contract's own */
-#include <omxdsp/omxdsp_definitions.h>       /* the EQ's travels and band count, omx-dsp's */
+#include <omxdsp/omxdsp_definitions.h>       /* the EQ's travels and band count and the oracle rates, omx-dsp's */
 #include <omxdsp/omx_eq_design.h>
 
 #define BANDS ((uint32_t)OMX_EQ_LV2_BANDS)

@@ -75,15 +75,15 @@ static const char *const *const OMX_UPWARD_PARAM_LABELS[OMX_UPWARD_PARAM_COUNT] 
 /* The identity every face publishes. */
 #define OMX_UPWARD_NAME "omx upward"
 #define OMX_UPWARD_VENDOR "openmixer"
-#define OMX_UPWARD_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_UPWARD_VERSION "0.19.3"
+#define OMX_UPWARD_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_UPWARD_VERSION "0.22.3"
 #define OMX_UPWARD_DESCRIPTION "Lifts what is quiet toward a threshold, by a ratio and up to a limit, and leaves the loud alone."
 #define OMX_UPWARD_CLAP_ID "org.openmixer.upward"
 #define OMX_UPWARD_CLAP_FEATURES "audio-effect", "compressor", "stereo"
 #define OMX_UPWARD_LV2_URI "urn:openmixer:upward"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_UPWARD_DECL_SOURCE "omx upward: Threshold -70 to 0 dB, Ratio 1 to 10, Range 0 to 24 dB, Attack 0.1 to 100 ms, Release 5 to 3000 ms"
-#define OMX_UPWARD_DECL_DIGEST "c3af33da420f6e4fa8933bbd1d4cde26bff717ba1eeb11161ca378aafaffe5df"
+#define OMX_UPWARD_DECL_DIGEST "4218034d9c305c8f318901103adac14d97b07bfd35a1600a5516e2fd69a50c23"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
@@ -107,8 +107,8 @@ static const omx_resource_hints_t OMX_UPWARD_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family none. */
-#define OMX_UPWARD_PANEL_FINGERPRINT "67d036aa4eed8fee4fea6b48f88df4433a8c603496bb0f326c55840618497ee7"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family dynamics. */
+#define OMX_UPWARD_PANEL_FINGERPRINT "b7dc55f12caa07334a63edc10be9114109022a58e898d309e48179f735f5df96"
 static const struct omx_panel_section_row OMX_UPWARD_PANEL_SECTIONS[] = {
   { "upward", "fx.upward.section.upward", "Upward" },
 };
@@ -119,18 +119,24 @@ static const struct omx_panel_control_row OMX_UPWARD_PANEL_CONTROLS[] = {
   { 3u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.upward.attack_ms", "Attack", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
   { 4u, 0u, OMX_CLAP_WIDGET_KNOB, "fx.upward.release_ms", "Release", OMX_CLAP_PANEL_INVALID_ID, 0x0u },
 };
+static const struct omx_panel_role_row OMX_UPWARD_PANEL_ROLES[] = {
+  { "threshold", 0u, 0u },
+  { "ratio", 0u, 1u },
+  { "attack", 0u, 3u },
+  { "release", 0u, 4u },
+};
 /* clap.remote-controls/2: the pages of the page rule over the sections, every control's id in its slot; a face blanks the
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_UPWARD_PANEL_PAGES[] = {
-  { "Easy", "Easy", { 0u, 1u, 2u, 3u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Upward", "Upward", { 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Easy", "Easy", { 0u, 1u, 3u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Upward", "Upward", { 2u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_UPWARD_PANEL_PAGE_COUNT 2u
 static const struct omx_panel_rows OMX_UPWARD_PANEL = {
-  OMX_UPWARD_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_NONE,
+  OMX_UPWARD_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_DYNAMICS,
   OMX_UPWARD_PANEL_SECTIONS, 1u,
   OMX_UPWARD_PANEL_CONTROLS, 5u,
-  NULL, 0u,
+  OMX_UPWARD_PANEL_ROLES, 4u,
   NULL, 0u,
   NULL, 0u,
 };

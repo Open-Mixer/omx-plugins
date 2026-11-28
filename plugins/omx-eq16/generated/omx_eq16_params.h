@@ -660,27 +660,27 @@ static const char *const *const OMX_EQ16_PARAM_LABELS[OMX_EQ16_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_EQ16_NAME "omx eq16"
 #define OMX_EQ16_VENDOR "openmixer"
-#define OMX_EQ16_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_EQ16_VERSION "0.19.3"
+#define OMX_EQ16_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_EQ16_VERSION "0.22.3"
 #define OMX_EQ16_DESCRIPTION "The OpenMixer console's channel EQ, 16-band form: 16 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire."
 #define OMX_EQ16_CLAP_ID "org.openmixer.eq16"
 #define OMX_EQ16_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
 #define OMX_EQ16_LV2_URI "urn:openmixer:eq16"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_EQ16_DECL_SOURCE "omx eq16: HPF On 0 to 1, HPF Frequency 20 to 1000 Hz, HPF Slope 12 to 24 dB/oct, LPF On 0 to 1, LPF Frequency 1000 to 20000 Hz, LPF Slope 12 to 24 dB/oct, Band 1 Type 0 to 5, Band 1 Frequency 20 to 20000 Hz, Band 1 Gain -15 to 15 dB, Band 1 Q 0.3 to 116, Band 1 On 0 to 1, Band 2 Type 0 to 5, Band 2 Frequency 20 to 20000 Hz, Band 2 Gain -15 to 15 dB, Band 2 Q 0.3 to 116, Band 2 On 0 to 1, Band 3 Type 0 to 5, Band 3 Frequency 20 to 20000 Hz, Band 3 Gain -15 to 15 dB, Band 3 Q 0.3 to 116, Band 3 On 0 to 1, Band 4 Type 0 to 5, Band 4 Frequency 20 to 20000 Hz, Band 4 Gain -15 to 15 dB, Band 4 Q 0.3 to 116, Band 4 On 0 to 1, Band 5 Type 0 to 5, Band 5 Frequency 20 to 20000 Hz, Band 5 Gain -15 to 15 dB, Band 5 Q 0.3 to 116, Band 5 On 0 to 1, Band 6 Type 0 to 5, Band 6 Frequency 20 to 20000 Hz, Band 6 Gain -15 to 15 dB, Band 6 Q 0.3 to 116, Band 6 On 0 to 1, Band 7 Type 0 to 5, Band 7 Frequency 20 to 20000 Hz, Band 7 Gain -15 to 15 dB, Band 7 Q 0.3 to 116, Band 7 On 0 to 1, Band 8 Type 0 to 5, Band 8 Frequency 20 to 20000 Hz, Band 8 Gain -15 to 15 dB, Band 8 Q 0.3 to 116, Band 8 On 0 to 1, Band 9 Type 0 to 5, Band 9 Frequency 20 to 20000 Hz, Band 9 Gain -15 to 15 dB, Band 9 Q 0.3 to 116, Band 9 On 0 to 1, Band 10 Type 0 to 5, Band 10 Frequency 20 to 20000 Hz, Band 10 Gain -15 to 15 dB, Band 10 Q 0.3 to 116, Band 10 On 0 to 1, Band 11 Type 0 to 5, Band 11 Frequency 20 to 20000 Hz, Band 11 Gain -15 to 15 dB, Band 11 Q 0.3 to 116, Band 11 On 0 to 1, Band 12 Type 0 to 5, Band 12 Frequency 20 to 20000 Hz, Band 12 Gain -15 to 15 dB, Band 12 Q 0.3 to 116, Band 12 On 0 to 1, Band 13 Type 0 to 5, Band 13 Frequency 20 to 20000 Hz, Band 13 Gain -15 to 15 dB, Band 13 Q 0.3 to 116, Band 13 On 0 to 1, Band 14 Type 0 to 5, Band 14 Frequency 20 to 20000 Hz, Band 14 Gain -15 to 15 dB, Band 14 Q 0.3 to 116, Band 14 On 0 to 1, Band 15 Type 0 to 5, Band 15 Frequency 20 to 20000 Hz, Band 15 Gain -15 to 15 dB, Band 15 Q 0.3 to 116, Band 15 On 0 to 1, Band 16 Type 0 to 5, Band 16 Frequency 20 to 20000 Hz, Band 16 Gain -15 to 15 dB, Band 16 Q 0.3 to 116, Band 16 On 0 to 1"
-#define OMX_EQ16_DECL_DIGEST "7b5f7b1f46ebc116414f68203cf8240c72c0154227d0169c0da832ee9aad2c56"
+#define OMX_EQ16_DECL_DIGEST "5788075b5c8c7baf786d1e289f60288ebf09dbc6e635430c1968a1afc7cb1ef3"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_EQ16_PARAM_CONTRACT_VERSION 3u
-#define OMX_EQ16_PARAM_CONTRACT_FINGERPRINT "bacb6a4c580610e41b0af62406b34aa14daf10c5c2e7ba87389803454f3f30fd"
+#define OMX_EQ16_PARAM_CONTRACT_VERSION 5u
+#define OMX_EQ16_PARAM_CONTRACT_FINGERPRINT "e401e1874e64c1998a83b420da0ddeaf091f92b7287f680ec0942d8968bce8ca"
 static const struct omx_param_contract_row OMX_EQ16_PARAM_CONTRACT[OMX_EQ16_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_on none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* hpf_freq hz */
-  { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_slope none */
+  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_slope dbPerOct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_on none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* lpf_freq hz */
-  { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_slope none */
+  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_slope dbPerOct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* b1_type none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* b1_freq hz */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* b1_gain db */
@@ -773,11 +773,8 @@ static const omx_resource_hints_t OMX_EQ16_RESOURCE_HINTS = {
 };
 
 /* org.openmixer.panel-description/1 (tools/panel-description.mjs): the declaration's panel as the rows
- * include/omx_panel_description.h serves, parameter ids the declaration's. Family eq.
- * Declared roles not published:
- *   hpf_slope (hpf_slope): the hpf_slope role takes none, db, not dB/oct
- *   lpf_slope (lpf_slope): the lpf_slope role takes none, db, not dB/oct */
-#define OMX_EQ16_PANEL_FINGERPRINT "6fda5dc0611874a6af3ee3c2dacaa72efea530b3cd5f19fd613f3a6d1ff76609"
+ * include/omx_panel_description.h serves, parameter ids the declaration's. Family eq. */
+#define OMX_EQ16_PANEL_FINGERPRINT "daa445576ffb7605a765ff92d684115280803850b7d93ec7491d9f2a9d22761a"
 static const struct omx_panel_section_row OMX_EQ16_PANEL_SECTIONS[] = {
   { "bands", "fx.eq.section.bands", "Bands" },
   { "hpf", "fx.eq.section.hpf", "HPF" },
@@ -953,8 +950,10 @@ static const struct omx_panel_role_row OMX_EQ16_PANEL_ROLES[] = {
   { "band_on", 14u, 80u },
   { "band_on", 15u, 85u },
   { "hpf_freq", 0u, 1u },
+  { "hpf_slope", 0u, 2u },
   { "hpf_on", 0u, 0u },
   { "lpf_freq", 0u, 4u },
+  { "lpf_slope", 0u, 5u },
   { "lpf_on", 0u, 3u },
 };
 static const struct omx_panel_display_row OMX_EQ16_PANEL_DISPLAYS[] = {
@@ -988,7 +987,7 @@ static const struct omx_panel_rows OMX_EQ16_PANEL = {
   OMX_EQ16_PANEL_FINGERPRINT, OMX_CLAP_FAMILY_EQ,
   OMX_EQ16_PANEL_SECTIONS, 3u,
   OMX_EQ16_PANEL_CONTROLS, 86u,
-  OMX_EQ16_PANEL_ROLES, 84u,
+  OMX_EQ16_PANEL_ROLES, 86u,
   OMX_EQ16_PANEL_DISPLAYS, 1u,
   NULL, 0u,
 };

@@ -9,6 +9,9 @@
  *      is an integer or a toggle, an enumeration (CLAP_PARAM_IS_ENUM, its value texts the declared labels) exactly
  *      when it is a choice whose points are every whole step of its travel, then the host's bypass last, at
  *      omx-contract's permanent id (OMX_PLUGIN_FACE_IDS.bypassClapId), never the id after the last parameter.
+ *      value_to_text shows a travel's or a toggle's default with its unit as a person reads it, the declared
+ *      PARAM_UNITS id's x-symbol (50 %, 12 dB/oct, a bare number for none), never the id (C2); an enumeration's
+ *      default shows its label, held with the labels.
  *   2. AS A HOST READS IT. A describing host reads a scanned CLAP parameter's kind by omx-contract's one rule
  *      (docs/descriptors.md, "A scanned CLAP parameter's kind"), held by the vectors the installed omx-contract
  *      ships, share/omx-contract/clap-kind-vectors.json. Each built parameter whose words (flags, range, default,
@@ -21,7 +24,8 @@
  *      (scale stepped, step 1, exactly when CLAP_PARAM_IS_STEPPED; tools/clap-ext-check.mjs holds that).
  *
  * Usage: node tools/clap-params-check.mjs plugins/<stem> <clap-params.txt>
- *   clap-params.txt: `id name min max default flags texts`, the clap-probe `params` dump; texts are the value texts of
+ *   clap-params.txt: `id name min max default flags text texts`, the clap-probe `params` dump; text is the default as
+ *   value_to_text shows it, texts are the value texts of
  *   a stepped parameter's whole steps, `|`-joined (at most 16 steps), and a text that is not the value's number, with
  *   or without the unit, is a point (a label), what omx-clap-scan carries as scale points.
  * The vectors file is $OMX_CONTRACT_KIND_VECTORS (a checkout's copy standing in for the install, as OMX_CONTRACT_SCHEMA
@@ -33,6 +37,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { enumLabelsOf, loadDecl } from './gen.mjs';
 import { installedDataDir } from './omx-contract.mjs';
+import { unitSymbol } from './format-tables.mjs';
 import { faceIds } from './param-contract.mjs';
 
 const [dir, dump] = process.argv.slice(2);
@@ -43,21 +48,27 @@ const FLAG_NAMES = { [STEPPED]: 'CLAP_PARAM_IS_STEPPED', [ENUM]: 'CLAP_PARAM_IS_
 const VECTORS_FILE = 'clap-kind-vectors.json';
 let bad = 0;
 const fail = (m) => (bad++, console.log(`FAIL clap-params ${m}`));
-const textsOf = (g) => (g[6] ? g[6].split('|') : []);
+const textsOf = (g) => (g[7] ? g[7].split('|') : []);
 
 // ---- 1. as declared ----
 const want = [
-  ...d.params.map((p, i) => [i, p.name, p.min, p.max, p.def, AUTOMATABLE | (p.kind ? STEPPED : 0) | (enumLabelsOf(p) ? ENUM : 0), enumLabelsOf(p) ?? []]),
-  [faceIds().bypassClapId, 'Bypass', 0, 1, 0, AUTOMATABLE | STEPPED | BYPASS, []],
+  ...d.params.map((p, i) => [i, p.name, p.min, p.max, p.def, AUTOMATABLE | (p.kind ? STEPPED : 0) | (enumLabelsOf(p) ? ENUM : 0), enumLabelsOf(p) ?? [], enumLabelsOf(p) ? null : unitSymbol(p.unit, d.units)]),
+  [faceIds().bypassClapId, 'Bypass', 0, 1, 0, AUTOMATABLE | STEPPED | BYPASS, [], ''],
 ];
 if (rows.length !== want.length) bad++, console.error(`FAIL clap-params: ${rows.length} parameters, the declaration has ${want.length}`);
 want.forEach((w, i) => {
   const g = rows[i] ?? [];
   const ok = Number(g[0]) === w[0] && g[1] === w[1] && [2, 3, 4].every((k) => Number(g[k]) === Math.fround(w[k])) && Number(g[5]) === w[5];
   const labelsOk = !w[6].length || w[6].join('|') === textsOf(g).join('|');
-  if (!ok || !labelsOk) bad++;
-  const why = ok ? (labelsOk ? 'as declared' : `value texts [${textsOf(g).join(', ')}], the declared labels are [${w[6].join(', ')}]`) : `got [${g.slice(0, 6).join(', ')}], want [${w.slice(0, 6).join(', ')}]`;
-  console.log(`${ok && labelsOk ? 'PASS' : 'FAIL'} clap-params ${w[1]}: ${why}`);
+  // value_to_text's "<number> <unit>", or the bare number: the unit part is the text after the number (an enumeration's
+  // default text is its label, held by labelsOk)
+  const text = g[6] ?? '', shown = text.includes(' ') ? text.slice(text.indexOf(' ') + 1) : '';
+  const unitOk = w[7] === null || shown === w[7];
+  if (!ok || !labelsOk || !unitOk) bad++;
+  const why = !ok ? `got [${g.slice(0, 6).join(', ')}], want [${w.slice(0, 6).join(', ')}]`
+    : !labelsOk ? `value texts [${textsOf(g).join(', ')}], the declared labels are [${w[6].join(', ')}]`
+    : !unitOk ? `value_to_text shows the default as ${JSON.stringify(text)}, its unit ${JSON.stringify(shown)}, want ${JSON.stringify(w[7])}` : 'as declared';
+  console.log(`${ok && labelsOk && unitOk ? 'PASS' : 'FAIL'} clap-params ${w[1]}: ${why}`);
 });
 
 // ---- 2. as a host reads it: omx-contract's vectors ----

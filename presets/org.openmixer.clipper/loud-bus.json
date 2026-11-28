@@ -19,7 +19,7 @@
     },
     {
       "symbol": "softnessPct",
-      "unit": "%",
+      "unit": "percent",
       "value": 30
     }
   ],
