@@ -7,7 +7,7 @@
     "uri": "urn:openmixer:loudlevel",
     "name": "omx loudlevel",
     "vendor": "openmixer",
-    "version": "0.21.1",
+    "version": "0.22.3",
     "doc": "Holds a signal at a loudness target by moving its gain slowly, with a gate so pauses are left alone.",
     "features": [
       "audio-effect"

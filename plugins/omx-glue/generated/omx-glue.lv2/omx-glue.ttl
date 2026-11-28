@@ -22,8 +22,8 @@
     doap:name "omx glue" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
-    lv2:minorVersion 21 ;
-    lv2:microVersion 1 ;
+    lv2:minorVersion 22 ;
+    lv2:microVersion 3 ;
     rdfs:comment "A bus compressor with the detents of a classic console: stepped ratio, attack and release, a key filter and a dry mix." ;
     lv2:optionalFeature lv2:hardRTCapable ;
     omxres:threadsSpawned "0"^^xsd:integer ;
