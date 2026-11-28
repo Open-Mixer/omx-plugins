@@ -28,7 +28,7 @@
 #include <string.h>
 
 #include <clap/clap.h>
-#include <omxcontract/omx_contract_limits.h>
+#include <omxcontract/omx_contract.h>
 
 #define MAXP 512
 #define BLOCK 256u
