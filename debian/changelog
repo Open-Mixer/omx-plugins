@@ -1,3 +1,10 @@
+omx-plugins (0.22.1) unstable; urgency=medium
+
+  * Release: the trixie DEBs are built for amd64 beside arm64; the Zynthian
+    tarball stays arm64 (#238).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 02:55:38 +0100
+
 omx-plugins (0.22.0) unstable; urgency=medium
 
   * CLAP face: every plugin serves its panel cut down as
