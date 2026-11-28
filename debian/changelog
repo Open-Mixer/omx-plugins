@@ -1,3 +1,13 @@
+omx-plugins (0.22.5) unstable; urgency=medium
+
+  * the served remote-controls pages are named by omx-panel's labels rule
+    (Gate, Gate 2/3, EQ: EQ 1)
+  * ci, release: every add-openmixer step reads the wave's devel channel and
+    its base wave
+  * Debian is trixie only
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 16:17:44 +0100
+
 omx-plugins (0.22.4) unstable; urgency=medium
 
   * CLAP face: a choice whose points are every whole step is an enumeration
