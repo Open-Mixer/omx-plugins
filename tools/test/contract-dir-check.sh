@@ -264,7 +264,7 @@ fi
 spec_hands_commit "$SPEC" || exit 1
 install_into "$scratch/dir" || { echo "contract-dir: make install-contract failed" >&2; exit 2; }
 if out=$(check "$scratch/dir"); then
-  echo "contract-dir: $(described | wc -l) descriptors installed under 3/omx-plugins/plugins/, stamped with ${COMMIT:0:12}, listed in MANIFEST.json, read by omx-contract's reader"
+  echo "contract-dir: $(described | wc -l) descriptors installed under omx-plugins/plugins/, stamped with ${COMMIT:0:12}, listed in MANIFEST.json, read by omx-contract's reader"
 else
   printf '%s\n' "$out"; exit 1
 fi
