@@ -44,6 +44,15 @@ on:
       staged:
         type: boolean
         default: false
+      # ci.yml's dry run of a wave line (a dispatch off main): it builds against staging and the wave's own devel channel,
+      # devel/<wave>, as the merge to devel will (build-rpm.yml and build-deb.yml refuse both on a tag or with publish;
+      # devel wave 2026-11-27-n3: the dry run read the real channel alone and found none of the wave's packages)
+      staging:
+        type: boolean
+        default: false
+      channel-level:
+        type: string
+        default: ''
       same_pass:
         type: string
         default: ''
@@ -169,6 +178,8 @@ jobs:
     with:
       same-pass: ${{ inputs.same_pass || needs.samepass.outputs.list }}
       staged: ${{ inputs.staged == true }}
+      staging: ${{ inputs.staging == true }}
+      channel-level: ${{ inputs.channel-level || '' }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
       publish: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
@@ -184,6 +195,8 @@ jobs:
     with:
       same-pass: ${{ inputs.same_pass || needs.samepass.outputs.list }}
       staged: ${{ inputs.staged == true }}
+      staging: ${{ inputs.staging == true }}
+      channel-level: ${{ inputs.channel-level || '' }}
       package-name: omx-plugins
       binary-names: omx-plugins omx-plugins-clap omx-plugins-lv2
       publish: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}

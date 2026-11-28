@@ -733,4 +733,8 @@ jobs:
       actions: read
     uses: ./.github/workflows/release.yml
     with:
+      # a wave line's run (a dispatch off main, a pull request into devel) builds against staging and the wave's devel
+      # channel, as its merge to devel will; its base waves come with it (build-rpm.yml's level step)
+      staging: ${{ (startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main') }}
+      channel-level: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
       arm: false  # the arm64 DEB and the Zynthian tarball build at release only; aarch64 RPMs are off (owner ruling 2026-11-19)
