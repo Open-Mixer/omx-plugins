@@ -407,12 +407,16 @@ jobs:
           done
           # one descriptor per shipped plugin that has one, in omx-contract's contract directory, with its manifest: in
           # omx-plugins-contract, a package of their own that the metapackage and the devel package require at their
-          # version, read at run time with no -devel installed
+          # version, read at run time with no -devel installed; beside it the labels domain the spec ships there too
+          # (contract.d/omx-plugin-labels: its document and one catalog per language of catalogs/)
           cdir=/usr/share/omx-contract/contract.d/omx-plugins
+          ldir=/usr/share/omx-contract/contract.d/omx-plugin-labels
           rpm -qlp rpms/omx-plugins-contract-[0-9]*.noarch.rpm | sort > files-contract.txt
           { printf '%s\n' "$cdir" "$cdir/MANIFEST.json" "$cdir/plugin-face.json" "$cdir/role-meanings.json" "$cdir/plugins" \
+              "$ldir" "$ldir/omx-plugin-labels.json" "$ldir/catalogs" \
               /usr/share/doc/omx-plugins-contract /usr/share/doc/omx-plugins-contract/README.md \
               /usr/share/licenses/omx-plugins-contract /usr/share/licenses/omx-plugins-contract/LICENSE
+            for c in catalogs/*.json; do echo "$ldir/catalogs/$(basename "$c")"; done
             for d in plugins/*/*.descriptor.json; do echo "$cdir/plugins/$(basename "$d" .descriptor.json).json"; done; } | sort > expected-contract.txt
           diff -u expected-contract.txt files-contract.txt
           ! rpm -qlp "$devel" | grep -q '^/usr/share/omx-contract/'
