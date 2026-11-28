@@ -7,7 +7,7 @@
     "uri": "urn:openmixer:deesser",
     "name": "omx deesser",
     "vendor": "openmixer",
-    "version": "0.21.0",
+    "version": "0.21.1",
     "doc": "The console's de-esser: a detector on a band around the sibilance drives the compressor's gain computer, and the reduction lands on that band alone or on the whole signal.",
     "features": [
       "audio-effect"
@@ -35,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_FREQ_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -60,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_WIDTH_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_THRESHOLD_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -110,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_RATIO_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -135,7 +135,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_RANGE_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -160,7 +160,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_ATTACK_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -185,7 +185,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_RELEASE_RANGE",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -215,7 +215,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#DEESS_MODES",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }
@@ -267,7 +267,7 @@
       "source": {
         "from": {
           "link": "data/kernels/deesser.json#readouts[gainReductionDb]",
-          "at": "omx-dsp@0.34.2"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
