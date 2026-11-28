@@ -1,3 +1,12 @@
+omx-plugins (0.22.4) unstable; urgency=medium
+
+  * CLAP face: a choice whose points are every whole step is an enumeration
+    (CLAP_PARAM_IS_ENUM), its value texts the declared labels, so a host
+    draws it as a choice and not a switch; 18 parameter contracts move to
+    their next version (#97).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 06:37:42 +0100
+
 omx-plugins (0.22.3) unstable; urgency=medium
 
   * Contract: each installed descriptor carries integrity, its version and the

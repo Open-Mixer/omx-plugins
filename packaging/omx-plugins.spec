@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 Name: omx-plugins
-Version: 0.22.3
+Version: 0.22.4
 Release: 1%{?dist}
 License: GPL-3.0-or-later
 Summary: The OpenMixer console's delay, drive, EQ, channel strip, keyed gate and effects, as plugins for your DAW
@@ -389,6 +389,10 @@ English source sentence.
 # END langpacks
 
 %changelog
+* Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.4-1
+- CLAP face: a choice whose points are every whole step is an enumeration,
+  its value texts the declared labels; 18 parameter contracts move (#97)
+
 * Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.3-1
 - each installed descriptor carries integrity, its version and the source
   commit of the build, held by the package build (#32)
