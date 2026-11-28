@@ -104,7 +104,7 @@ static const char *const *const OMX_PLOSIVE_PARAM_LABELS[OMX_PLOSIVE_PARAM_COUNT
 #define OMX_PLOSIVE_NAME "omx plosive"
 #define OMX_PLOSIVE_VENDOR "openmixer"
 #define OMX_PLOSIVE_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_PLOSIVE_VERSION "0.22.3"
+#define OMX_PLOSIVE_VERSION "0.22.4"
 #define OMX_PLOSIVE_DESCRIPTION "Softens the p pops and hard t and k consonants of a voice, cutting each only while it bursts."
 #define OMX_PLOSIVE_CLAP_ID "org.openmixer.plosive"
 #define OMX_PLOSIVE_CLAP_FEATURES "audio-effect", "de-esser", "stereo"

@@ -76,7 +76,7 @@ static const char *const *const OMX_SPRING_PARAM_LABELS[OMX_SPRING_PARAM_COUNT] 
 #define OMX_SPRING_NAME "omx spring"
 #define OMX_SPRING_VENDOR "openmixer"
 #define OMX_SPRING_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_SPRING_VERSION "0.22.3"
+#define OMX_SPRING_VERSION "0.22.4"
 #define OMX_SPRING_DESCRIPTION "A spring reverb: a delay, a chain of all-passes and a darkening loop, with decay, length, tension and damping."
 #define OMX_SPRING_CLAP_ID "org.openmixer.spring"
 #define OMX_SPRING_CLAP_FEATURES "audio-effect", "reverb", "stereo"

@@ -90,7 +90,7 @@ static const char *const *const OMX_DOUBLER_PARAM_LABELS[OMX_DOUBLER_PARAM_COUNT
 #define OMX_DOUBLER_NAME "omx doubler"
 #define OMX_DOUBLER_VENDOR "openmixer"
 #define OMX_DOUBLER_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_DOUBLER_VERSION "0.22.3"
+#define OMX_DOUBLER_VERSION "0.22.4"
 #define OMX_DOUBLER_DESCRIPTION "Doubles a voice or an instrument with up to four slightly delayed, detuned and drifting copies spread across the stereo field, the double-tracked sound without a second take."
 #define OMX_DOUBLER_CLAP_ID "org.openmixer.doubler"
 #define OMX_DOUBLER_CLAP_FEATURES "audio-effect", "doubler", "stereo"

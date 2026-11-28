@@ -373,7 +373,7 @@ static const char *const *const OMX_EQ8_PARAM_LABELS[OMX_EQ8_PARAM_COUNT] = {
 #define OMX_EQ8_NAME "omx eq8"
 #define OMX_EQ8_VENDOR "openmixer"
 #define OMX_EQ8_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_EQ8_VERSION "0.22.3"
+#define OMX_EQ8_VERSION "0.22.4"
 #define OMX_EQ8_DESCRIPTION "The OpenMixer console's channel EQ, 8-band form: 8 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire."
 #define OMX_EQ8_CLAP_ID "org.openmixer.eq8"
 #define OMX_EQ8_CLAP_FEATURES "audio-effect", "equalizer", "stereo"

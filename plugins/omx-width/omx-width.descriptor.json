@@ -7,7 +7,7 @@
     "uri": "urn:openmixer:width",
     "name": "omx width",
     "vendor": "openmixer",
-    "version": "0.22.3",
+    "version": "0.22.4",
     "doc": "Widens or narrows the stereo image, with an optional pseudo-stereo spread for a mono source and a bass-mono cutoff that keeps the lows centred.",
     "features": [
       "audio-effect"

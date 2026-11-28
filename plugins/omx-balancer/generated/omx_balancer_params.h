@@ -69,7 +69,7 @@ static const char *const *const OMX_BALANCER_PARAM_LABELS[OMX_BALANCER_PARAM_COU
 #define OMX_BALANCER_NAME "omx balancer"
 #define OMX_BALANCER_VENDOR "openmixer"
 #define OMX_BALANCER_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_BALANCER_VERSION "0.22.3"
+#define OMX_BALANCER_VERSION "0.22.4"
 #define OMX_BALANCER_DESCRIPTION "Walks four bands slowly toward a target tone, so a mix settles toward a pink-noise balance without chasing notes."
 #define OMX_BALANCER_CLAP_ID "org.openmixer.balancer"
 #define OMX_BALANCER_CLAP_FEATURES "audio-effect", "equalizer", "stereo"

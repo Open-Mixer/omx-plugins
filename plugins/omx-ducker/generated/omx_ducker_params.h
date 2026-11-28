@@ -111,7 +111,7 @@ static const char *const *const OMX_DUCKER_PARAM_LABELS[OMX_DUCKER_PARAM_COUNT] 
 #define OMX_DUCKER_NAME "omx ducker"
 #define OMX_DUCKER_VENDOR "openmixer"
 #define OMX_DUCKER_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_DUCKER_VERSION "0.22.3"
+#define OMX_DUCKER_VERSION "0.22.4"
 #define OMX_DUCKER_DESCRIPTION "Pulls the programme down while a key is heard, music under a voice, by a set depth with attack, hold and release, the console ducker."
 #define OMX_DUCKER_CLAP_ID "org.openmixer.ducker"
 #define OMX_DUCKER_CLAP_FEATURES "audio-effect", "compressor", "stereo"
