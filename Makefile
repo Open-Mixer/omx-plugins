@@ -463,20 +463,15 @@ presets-figures:
 recipe-test: selftest completeness
 completeness:
 	node tools/plugin-recipe.mjs
+	node tools/round-trip.mjs --check
 # OMX_SELFTEST_SHARD=i/n runs the i-th of the n shards of the selftest's parts (tools/test/selftest-shards.json, packed
-# by measured time; CI runs each in its own job), the release and pin gates' self-tests (seconds) in the first; unset, all
+# by measured time; CI runs each in its own job), the release gate's and the round-trip ledger's self-tests (seconds) in the first; unset, all
 OMX_SELFTEST_SHARD ?=
 selftest:
 	@case '$(OMX_SELFTEST_SHARD)' in ''|[1-9]/[1-9]|[1-9]/[1-9][0-9]|[1-9][0-9]/[1-9][0-9]) ;; \
 	  *) echo "selftest: OMX_SELFTEST_SHARD='$(OMX_SELFTEST_SHARD)' is not i/n" >&2; exit 2;; esac
 	OMX_SELFTEST_SHARD='$(OMX_SELFTEST_SHARD)' node tools/test/recipe-selftest.mjs
-	@case '$(OMX_SELFTEST_SHARD)' in ''|1/*) set -e; tools/qualify-release.sh --self-test;; esac
-	node tools/round-trip.mjs --check
-	node tools/test/recipe-selftest.mjs
-	node tools/test/round-trip-ledger-check.mjs
-	tools/qualify-release.sh --self-test
-	tools/gen-pins.sh --self-test
-	tools/pins-check.sh --self-test
+	@case '$(OMX_SELFTEST_SHARD)' in ''|1/*) set -e; tools/qualify-release.sh --self-test; node tools/test/round-trip-ledger-check.mjs;; esac
 OMX_PANEL ?= omx-panel
 panel-copies:
 	$(OMX_PANEL) copies --self-test

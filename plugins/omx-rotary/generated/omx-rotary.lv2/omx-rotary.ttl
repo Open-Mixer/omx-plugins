@@ -23,8 +23,8 @@
     doap:name "omx rotary" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
-    lv2:minorVersion 21 ;
-    lv2:microVersion 1 ;
+    lv2:minorVersion 22 ;
+    lv2:microVersion 0 ;
     rdfs:comment "The console's rotary speaker: a drum rotor on the low band and a horn rotor on the high band, with stop, slow and fast speeds, mixed with the dry signal." ;
     lv2:optionalFeature lv2:hardRTCapable ;
     omxres:threadsSpawned "0"^^xsd:integer ;
