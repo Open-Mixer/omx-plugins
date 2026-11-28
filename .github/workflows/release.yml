@@ -186,15 +186,17 @@ jobs:
       publish: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
       dependencies: 'clap-headers'
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
-      arch-matrix: '["arm64"]'
+      # the full matrix, amd64 and arm64, in the dry run and at release (owner 2026-11-26: every package in every
+      # cell): a trixie amd64 host installs omx-plugins-clap:amd64, never the arm64 deb
+      arch-matrix: '["amd64", "arm64"]'
       requires: ''
       channel-deps: true
     secrets: inherit
 
-  # The trixie DEBs just built, repacked as one tarball laid out for a Zynthian's plugin directories
+  # The trixie arm64 DEBs just built, repacked as one tarball laid out for a Zynthian's plugin directories
   # (tools/zynthian-bundle.sh): no rebuild, the same files the packages carry, checked and every LV2
-  # plugin instantiated on the target architecture. The development matrix is trixie arm64 and fc45 x86_64: the
-  # DEBs are arm64 only, in the dry run and at release.
+  # plugin instantiated on the target architecture. A Zynthian is arm64, so the tarball is arm64 only; the amd64
+  # DEBs built beside them are not bundled.
   zynthian:
     name: Zynthian tarball (trixie, arm64)
     needs: deb
