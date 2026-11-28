@@ -134,6 +134,9 @@ jobs:
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
         with:
+          # a pull request into devel, or a dispatch off main, in a wave reads that wave's devel channel and its base above staging
+          devel-channel: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          devel-base: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
           # a devel push stages its build, so its proof reads the staging channel, as build-rpm.yml's jobs do
           staging: ${{ inputs.staged == true || (github.event_name == 'push' && github.ref == 'refs/heads/devel') }}
 
