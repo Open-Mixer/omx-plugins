@@ -3,13 +3,13 @@
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 #
 # tools/integrity-check.sh <contractdir> <version> <commit> — a package build's hold on the descriptors it ships (#32):
-# every <contractdir>/3/omx-plugins/plugins/*.json carries integrity { version, commit }, its version this release's
+# every <contractdir>/omx-plugins/plugins/*.json carries integrity { version, commit }, its version this release's
 # and its plugin's own, its commit the one the build's source was made from (the RPM's tarball, the deb's checkout,
 # which the build scripts hold to the release tag). Run by the spec's %check and by debian/rules after the install.
 # Exit: 0 pass, 1 refused (one line per descriptor), 2 the check could not run.
 set -euo pipefail
 [ $# = 3 ] || { echo "usage: integrity-check.sh <contractdir> <version> <commit>" >&2; exit 2; }
-dir=$1/3/omx-plugins/plugins version=$2 commit=$3
+dir=$1/omx-plugins/plugins version=$2 commit=$3
 [[ $commit =~ ^[0-9a-f]{40}$ ]] || { echo "integrity-check: $commit is no full commit" >&2; exit 2; }
 [ -d "$dir" ] || { echo "integrity-check: $dir does not exist" >&2; exit 2; }
 node -e '

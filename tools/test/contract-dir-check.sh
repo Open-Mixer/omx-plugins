@@ -13,8 +13,8 @@
 #   tools/test/contract-dir-check.sh               `make install-contract` into a scratch directory, then the check
 #   tools/test/contract-dir-check.sh --self-test   the check over sabotaged installs: a descriptor left out of the
 #                                                  install list, one missing, one changed, one not stamped, one
-#                                                  stamped with another commit or another version, one whose
-#                                                  schema floor is below 3.14.0, one extra file, a manifest
+#                                                  stamped with another commit or another version, one extra
+#                                                  file, a manifest
 #                                                  hash that is not the file's and another version each refuse; the
 #                                                  right install passes
 # The RPM's %check runs `make test` in the unpacked source tarball, which has no git tree: the spec must hand it the
@@ -22,7 +22,7 @@
 # The check reads the spec for it (SPEC, the self-test's copy); the self-test removes it from a copy and goes red.
 # Each installed descriptor is the plugin folder's descriptor and nothing else but its integrity, stamped at install (#32):
 # { version, the plugin's own; commit, the source commit the build was made from (SOURCE_COMMIT, else the tree's HEAD) },
-# the schema floor raised to 3.14.0 where lower (the first schema with the word), and its $schema line rewritten (below).
+# and its $schema line rewritten (below); the stamp writes no floor (a descriptor states none).
 # The stamp is made on the SOURCE form, before the install script rewrites line 2: it is a function of the version and the
 # commit alone, so the rewrite cannot move it, and the check holds the installed file to source + stamp + rewrite.
 # Each source file names the contract schema by the RELATIVE address the install script rewrites (the install of omx-contract
@@ -109,13 +109,8 @@ check() {
       const want = JSON.parse(fs.readFileSync(src, "utf8")); const have = JSON.parse(fs.readFileSync(inst, "utf8"));
       const stamp = { version: want.plugin?.version, commit };
       if (JSON.stringify(have.integrity) !== JSON.stringify(stamp)) console.log(`its integrity is ${JSON.stringify(have.integrity)}, not ${JSON.stringify(stamp)}`);
-      // the stamp raises the schema floor to the first schema with the word (tools/stamp-integrity.mjs), never lowers it
-      const floor = have.requires?.["omx-contract-schema"];
-      const v = /^>= (\d+)\.(\d+)\.(\d+)$/.exec(floor ?? "")?.slice(1).map(Number);
-      if (!v) console.log("it states no schema floor");
-      else if (v[0] * 1e6 + v[1] * 1e3 + v[2] < 3014000) console.log(`it states ${floor}, below the first schema with integrity, 3.14.0`);
-      // the rest is the source, but for the $schema the install rewrote (line 2, held by same_but_schema below) and the floor
-      const rest = { ...have, "$schema": want["$schema"], requires: { ...have.requires, "omx-contract-schema": want.requires?.["omx-contract-schema"] } }; delete rest.integrity;
+      // the rest is the source, but for the $schema the install rewrote (line 2, held below)
+      const rest = { ...have, "$schema": want["$schema"] }; delete rest.integrity;
       const canon = (v) => JSON.stringify(v, (k, x) => (x && typeof x === "object" && !Array.isArray(x) ? Object.fromEntries(Object.entries(x).sort()) : x));
       if (canon(rest) !== canon(want)) console.log("it differs from the descriptor in more than its integrity");
     ' "$HERE/plugins/$stem/$stem.descriptor.json" "$pkg/$rel" "$COMMIT")
@@ -205,7 +200,7 @@ if [ "${1:-}" = --self-test ]; then
     node -e 'const fs = require("fs"); const [p, r, h] = process.argv.slice(1); const m = JSON.parse(fs.readFileSync(p, "utf8"));
       m.files[r] = h; fs.writeFileSync(p, JSON.stringify(m, null, 2) + "\n");' "$m" "$2" "$h"
   }
-  for s in left-out missing changed unstamped commit stamp-version floor extra hash version unrewritten $(for r in $REQUIRED_DEFS; do printf 'owned-%s ' "$r"; done) $(for r in $REQUIRED; do printf 'unlisted-%s ' "$r"; done); do
+  for s in left-out missing changed unstamped commit stamp-version extra hash version unrewritten $(for r in $REQUIRED_DEFS; do printf 'owned-%s ' "$r"; done) $(for r in $REQUIRED; do printf 'unlisted-%s ' "$r"; done); do
     t=$scratch/$s; rm -rf "$t"
     case $s in
       left-out) install_into "$t" DESCRIPTORS="$rest" ;;
@@ -215,9 +210,8 @@ if [ "${1:-}" = --self-test ]; then
     case $s in
       missing) rm "$p/plugins/$first.json" ;;
       changed) sed -i '0,/"name": "/s//"name": "x/' "$p/plugins/$first.json"; rehash "$t" "plugins/$first.json" ;;
-      unstamped|commit|stamp-version|floor) node -e 'const fs = require("fs"); const [f, s] = process.argv.slice(1); const d = JSON.parse(fs.readFileSync(f, "utf8"));
+      unstamped|commit|stamp-version) node -e 'const fs = require("fs"); const [f, s] = process.argv.slice(1); const d = JSON.parse(fs.readFileSync(f, "utf8"));
           if (s === "unstamped") delete d.integrity; else if (s === "commit") d.integrity = { ...d.integrity, commit: "0".repeat(40) };
-          else if (s === "floor") d.requires = { ...d.requires, "omx-contract-schema": ">= 3.9.0" };
           else d.integrity = { ...d.integrity, version: "0.0.1" };
           fs.writeFileSync(f, JSON.stringify(d, null, 2) + "\n");' "$p/plugins/$first.json" "$s"; rehash "$t" "plugins/$first.json" ;;
       extra) cp "$p/plugins/$first.json" "$p/plugins/omx-test-sine-voice.json"; rehash "$t" plugins/omx-test-sine-voice.json ;;
@@ -255,17 +249,6 @@ if [ "${1:-}" = --self-test ]; then
     if make -s -C "$HERE" install-contract DESTDIR= CONTRACTDIR="$scratch/nocommit" SOURCE_COMMIT="$bad" >/dev/null 2>&1; then
       echo "SABOTAGE install with SOURCE_COMMIT='$bad': STAYED GREEN"; fail=1
     else echo "SABOTAGE install with SOURCE_COMMIT='$bad': refused"; fi
-  done
-  # the stamp refuses a stated schema floor it cannot read, by name: it never reads it as 0.0.0 and overwrites it with 3.14.0
-  # (that would lower a stated floor)
-  for floor in '3.20.0~' '>=3.20' '>= 3.20' '>= 3.20.0~' ''; do
-    node -e 'const fs = require("fs"); const [f, o, v] = process.argv.slice(1); const d = JSON.parse(fs.readFileSync(f, "utf8"));
-        d.requires = { ...d.requires, "omx-contract-schema": v }; fs.writeFileSync(o, JSON.stringify(d, null, 2) + "\n");' \
-      "$HERE/plugins/$first/$first.descriptor.json" "$scratch/floor.json" "$floor"
-    if out=$(node "$HERE/tools/stamp-integrity.mjs" --commit "$COMMIT" "$scratch/floor.json" 2>&1); then
-      echo "SABOTAGE stated floor '$floor': STAYED GREEN (stamped over it)"; fail=1
-    elif grep -q 'omx-contract-schema' <<<"$out"; then echo "SABOTAGE stated floor '$floor': refused by name"
-    else echo "SABOTAGE stated floor '$floor': refused without naming it ($out)"; fail=1; fi
   done
   # the spec's %check without the tarball's commit on its make test
   grep -v '^%make_build test' "$SPEC" > "$scratch/no-commit.spec"; printf '%%check\n%%make_build test\n' >> "$scratch/no-commit.spec"
