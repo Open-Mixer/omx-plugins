@@ -5,7 +5,7 @@
  * oracle-rates-check.mjs — the nine oracle rates (ORACLE_FULL_RATES) are omx-dsp's (sorting row V25, RULED: RT_HARD_TARGET
  * and ORACLE_* go to omx-dsp; omx-contract keeps STANDARD_SAMPLE_RATES and STANDARD_QUANTA): no file of this tree reads
  * them from omx-contract. Held here: a C file that uses OMX_ORACLE_FULL_RATES* includes omx-dsp's
- * <omxdsp/omxdsp_definitions.h> and not <omxcontract/omx_contract_limits.h> for them; a tool reads the list as omx-dsp's
+ * <omxdsp/omxdsp_definitions.h> and not <omxcontract/omx_contract.h> for them; a tool reads the list as omx-dsp's
  * item (tools/clap-validate-summary.mjs), refused when another package holds it; no comment names omx-contract as
  * their owner. `make oracle-rates`, part of `make test`.
  */
@@ -22,7 +22,7 @@ for (const f of files) {
   const t = readFileSync(f, 'utf8');
   const rel = f.slice(root.length + 1);
   if (/\.(c|h)$/.test(f) && /OMX_ORACLE_FULL_RATES/.test(t)) {
-    if (/#include <omxcontract\/omx_contract_limits\.h>/.test(t)) errors.push(`${rel}: uses OMX_ORACLE_FULL_RATES and includes <omxcontract/omx_contract_limits.h>; the rates are omx-dsp's <omxdsp/omxdsp_definitions.h>`);
+    if (/#include <omxcontract\/omx_contract\.h>/.test(t)) errors.push(`${rel}: uses OMX_ORACLE_FULL_RATES and includes <omxcontract/omx_contract.h>; the rates are omx-dsp's <omxdsp/omxdsp_definitions.h>`);
   }
   if (/oracle rates, omx-contract|omx-contract's (nine )?ORACLE_FULL_RATES|omx-contract at .* has no ORACLE_FULL_RATES|no omx-contract to read ORACLE_FULL_RATES/.test(t)) errors.push(`${rel}: names omx-contract as the owner of ORACLE_FULL_RATES`);
   if (/\.mjs$/.test(f) && /ORACLE_FULL_RATES/.test(t) && !/ORACLE_OWNER|'omx-dsp'/.test(t)) errors.push(`${rel}: reads ORACLE_FULL_RATES without holding it to omx-dsp's package`);

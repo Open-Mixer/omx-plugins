@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <clap/clap.h>
-#include <omxcontract/omx_contract_limits.h>
+#include <omxcontract/omx_contract.h>
 
 #define MAXP 256
 #define MAXB 8
