@@ -10,6 +10,16 @@ The console's pitch shifter: shifts both channels up or down by semitones and ce
 - LV2 URI: `urn:openmixer:pitch`
 - Parameters: 3, plus the host's bypass
 
+## Panel
+
+![The panel of omx pitch, drawn from its declaration](../images/panels/omx-pitch.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Pitch | Semitones, Cents, Mix |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

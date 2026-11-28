@@ -10,6 +10,18 @@ The console's compressor: threshold, ratio and knee set how hard it holds the le
 - LV2 URI: `urn:openmixer:comp`
 - Parameters: 20, plus the host's bypass
 
+## Panel
+
+![The panel of omx comp, drawn from its declaration](../images/panels/omx-comp.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Comp | Threshold, Ratio, Knee, Attack, Release, Hold, Makeup, Mix, Kind, Detector Oversampling, Detector Topology, Release Mode |
+| Key | Key Source, Key HP, Key LP, Key Tilt, Detect Link, Key Listen |
+| Duck | Duck, Duck Range |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

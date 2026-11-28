@@ -10,6 +10,22 @@ A six-band dynamic EQ: each band is an EQ bell or shelf whose gain also moves wi
 - LV2 URI: `urn:openmixer:dyneq`
 - Parameters: 73, plus the host's bypass
 
+## Panel
+
+![The panel of omx dyneq, drawn from its declaration](../images/panels/omx-dyneq.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Band 1 | Band 1 On, Band 1 Type, Band 1 Freq, Band 1 Gain, Band 1 Q, Band 1 Dynamics, Band 1 Threshold, Band 1 Ratio, Band 1 Range, Band 1 Attack, Band 1 Release, Band 1 Listen |
+| Band 2 | Band 2 On, Band 2 Type, Band 2 Freq, Band 2 Gain, Band 2 Q, Band 2 Dynamics, Band 2 Threshold, Band 2 Ratio, Band 2 Range, Band 2 Attack, Band 2 Release, Band 2 Listen |
+| Band 3 | Band 3 On, Band 3 Type, Band 3 Freq, Band 3 Gain, Band 3 Q, Band 3 Dynamics, Band 3 Threshold, Band 3 Ratio, Band 3 Range, Band 3 Attack, Band 3 Release, Band 3 Listen |
+| Band 4 | Band 4 On, Band 4 Type, Band 4 Freq, Band 4 Gain, Band 4 Q, Band 4 Dynamics, Band 4 Threshold, Band 4 Ratio, Band 4 Range, Band 4 Attack, Band 4 Release, Band 4 Listen |
+| Band 5 | Band 5 On, Band 5 Type, Band 5 Freq, Band 5 Gain, Band 5 Q, Band 5 Dynamics, Band 5 Threshold, Band 5 Ratio, Band 5 Range, Band 5 Attack, Band 5 Release, Band 5 Listen |
+| Band 6 | Band 6 On, Band 6 Type, Band 6 Freq, Band 6 Gain, Band 6 Q, Band 6 Dynamics, Band 6 Threshold, Band 6 Ratio, Band 6 Range, Band 6 Attack, Band 6 Release, Band 6 Listen |
+| Output | Mix |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

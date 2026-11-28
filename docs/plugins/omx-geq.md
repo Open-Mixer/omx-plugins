@@ -10,6 +10,16 @@ The console's 31-band graphic EQ: one fader per ISO third-octave band from 20 Hz
 - LV2 URI: `urn:openmixer:geq`
 - Parameters: 31, plus the host's bypass
 
+## Panel
+
+![The panel of omx geq, drawn from its declaration](../images/panels/omx-geq.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Geq | 20 Hz, 25 Hz, 31.5 Hz, 40 Hz, 50 Hz, 63 Hz, 80 Hz, 100 Hz, 125 Hz, 160 Hz, 200 Hz, 250 Hz, 315 Hz, 400 Hz, 500 Hz, 630 Hz, 800 Hz, 1 kHz, 1.25 kHz, 1.6 kHz, 2 kHz, 2.5 kHz, 3.15 kHz, 4 kHz, 5 kHz, 6.3 kHz, 8 kHz, 10 kHz, 12.5 kHz, 16 kHz, 20 kHz |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

@@ -10,6 +10,16 @@ Adds a note one or two octaves below a single played line, by dividing its pitch
 - LV2 URI: `urn:openmixer:suboct`
 - Parameters: 5, plus the host's bypass
 
+## Panel
+
+![The panel of omx suboct, drawn from its declaration](../images/panels/omx-suboct.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Suboct | Range, Oct1, Oct2, Dry, Track Gate |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

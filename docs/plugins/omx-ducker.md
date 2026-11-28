@@ -10,6 +10,18 @@ Pulls the programme down while a key is heard, music under a voice, by a set dep
 - LV2 URI: `urn:openmixer:ducker`
 - Parameters: 10, plus the host's bypass
 
+## Panel
+
+![The panel of omx ducker, drawn from its declaration](../images/panels/omx-ducker.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Duck | Threshold, Depth, Ratio, Knee |
+| Timing | Attack, Hold, Release |
+| Key | Key High-Pass, Key Low-Pass, Key Listen |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

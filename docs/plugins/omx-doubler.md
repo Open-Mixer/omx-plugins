@@ -10,6 +10,18 @@ Doubles a voice or an instrument with up to four slightly delayed, detuned and d
 - LV2 URI: `urn:openmixer:doubler`
 - Parameters: 7, plus the host's bypass
 
+## Panel
+
+![The panel of omx doubler, drawn from its declaration](../images/panels/omx-doubler.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Voices | Voices, Delay, Detune |
+| Drift | Drift Rate, Drift Depth |
+| Output | Spread, Mix |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

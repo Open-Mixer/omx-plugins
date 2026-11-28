@@ -10,6 +10,18 @@ The OpenMixer console's channel EQ, 32-band form: 32 parametric bands (bell, she
 - LV2 URI: `urn:openmixer:eq32`
 - Parameters: 166, plus the host's bypass
 
+## Panel
+
+![The panel of omx eq32, drawn from its declaration](../images/panels/omx-eq32.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Bands | on, type, freq, gain, q |
+| HPF | HPF On, HPF Slope, HPF Frequency |
+| LPF | LPF On, LPF Slope, LPF Frequency |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

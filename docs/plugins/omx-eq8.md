@@ -10,6 +10,18 @@ The OpenMixer console's channel EQ, 8-band form: 8 parametric bands (bell, shelv
 - LV2 URI: `urn:openmixer:eq8`
 - Parameters: 46, plus the host's bypass
 
+## Panel
+
+![The panel of omx eq8, drawn from its declaration](../images/panels/omx-eq8.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Bands | on, type, freq, gain, q |
+| HPF | HPF On, HPF Slope, HPF Frequency |
+| LPF | LPF On, LPF Slope, LPF Frequency |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

@@ -10,6 +10,16 @@ The precision limiter: a look-ahead, true-peak, stereo-linked brickwall.
 - LV2 URI: `urn:openmixer:limiter`
 - Parameters: 3, plus the host's bypass
 
+## Panel
+
+![The panel of omx limiter, drawn from its declaration](../images/panels/omx-limiter.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Limiter | Ceiling, Lookahead, Release |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |
