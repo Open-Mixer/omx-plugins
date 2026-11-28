@@ -234,7 +234,7 @@ async function main() {
     `the draft has one parameter per resolve() argument, named by the contract (${draft.decl?.params.map((p) => `${p.symbol}:${p.name}`).join(' ')})`);
   expect(draft.decl?.params.every((p) => p.ref && !('min' in p) && !('def' in p)), 'the draft is by reference only');
   const marks = reviewMarks(draft.decl);
-  expect(marks.join(' ') === '/description /clap/features/1 /lv2/class /params/0/meaning /params/1/meaning /params/2/meaning /params/3/meaning /params/3/values/0 /params/3/values/1 /console/placement/group',
+  expect(marks.join(' ') === '/category /description /clap/features/1 /lv2/class /params/0/meaning /params/1/meaning /params/2/meaning /params/3/meaning /params/3/values/0 /params/3/values/1 /console/placement/group',
     `the draft marks every design choice REVIEW (${marks.join(' ')})`);
   const unsettled = await planPlugin(draft.decl, src, { root: tree, recipe });
   expect(!unsettled.ok && unsettled.refusals.length === marks.length, `a draft with REVIEW marks is refused, each named (${unsettled.refusals.map((r) => r.field).join(' ')})`);
