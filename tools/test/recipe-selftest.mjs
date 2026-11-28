@@ -408,6 +408,11 @@ async function main() {
     ['sharedListed', 'static-table', () => edit('lib/omx_clap_static.c', (s) => s.replace('{"org.openmixer.drive", &omx_clap_entry_drive},\n', ''))],
     ['sharedListed', 'catalogue-row', () => edit('docs/catalogue.md', (s) => s.replace('`org.openmixer.drive`', '`org.openmixer.x`'))],
     ['sharedListed', 'manual-section', () => edit('docs/catalogue.md', (s) => s.replace('### omx drive\n', '### drive\n'))],
+    ['labelsListed', 'labels-item', () => edit('contract.d/omx-plugin-labels/omx-plugin-labels.json', (s) => {
+      const doc = JSON.parse(s);
+      delete doc.components.schemas.OMX_PLUGIN_LABELS_DRIVE;
+      return `${JSON.stringify(doc, null, 2)}\n`;
+    })],
     ['noFiles', 'no-cpp', () => add(`${P}/shell.cpp`, '// SPDX-License-Identifier: GPL-3.0-or-later\n')],
     ['noText', 'no-dpf', () => add(`${P}/dpf_shell.h`, '#include "DistrhoPlugin.hpp"\n')],
     ['noCopiedDsp', 'no-copied-dsp', () => add(`${P}/copied.h`, `static inline float ${dspName}(float x) {\n  return x;\n}\n`)],
