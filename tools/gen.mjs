@@ -25,6 +25,9 @@
  * entries (include/omx_clap_static.h, lib/omx_clap_static.c). Adding a plugin touches only its
  * folder; two plugins' changes merge in either order.
  *
+ * and the labels domain contract.d/omx-plugin-labels/omx-plugin-labels.json (tools/plugin-labels.mjs): every shipped
+ * plugin's section titles, choice labels and preset names, each a key with its English source sentence;
+ *
  * and the hint view tools/test/port-hints.json (git-ignored), assembled from every declaration's
  * `portHints` (the pin of its LV2 port hints) for tools/port-hints.mjs.
  *
@@ -41,16 +44,17 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { releaseVersion } from './release-version.mjs';
 import { faceBinding } from './instance-face.mjs';
-import { descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
-import { lv2Designation, lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
+import { contractFormat, descriptorFile, descriptorOf, descriptorText, isWhole, panelDescription, portGroupsOf, travelUnit, viewOf } from './descriptor.mjs';
+import { declaredDesignation, lv2Designation, lv2UnitNames, lv2UnitRef, ownLv2Units, ownUnitOf, ownUnitRefusals, standardUnitOf, unitSymbol } from './format-tables.mjs';
 import { DISPLAY_KINDS, DISPLAY_SOURCES, FAMILIES, PLACEMENTS, WIDGETS, pagesOf, panelFingerprint } from './omx-panel.mjs';
 import { contractFingerprint, contractOf, contractVersionOf, faceIds } from './param-contract.mjs';
-import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, packagingRange, paramKernel, renderKernels, resolveParam, isMain } from './omx-contract.mjs';
+import { SPEC_FILE, controlOf, eqDefaultBands, findName, kernelControls, locateContract, paramKernel, renderKernels, resolveParam, isMain } from './omx-contract.mjs';
 import { bandsMacro, baseOf, expandVariant, variantStems } from './variants.mjs';
 import { omxdspInclude, render } from './template.mjs';
 import { generateTest, isTestDir, loadTestDecl, testPluginDirs } from './test-plugins.mjs';
 import { emitHintsC, hintPrefixes, hintTriples, statedHints } from './resource-hints.mjs';
 import { presetsManifest, presetsOf } from './preset-lib.mjs';
+import { LABELS_FILE, committedLabels, labelsDomain, labelsText } from './plugin-labels.mjs';
 
 export const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -109,7 +113,7 @@ export function prepareDecl(file, d, stem, dir = dirname(file)) {
   // the resource hints, by word, from the contract's RESOURCE_HINTS (tools/resource-hints.mjs)
   const hints = statedHints(file, d, () => {
     const where = locateContract(treeOf(file));
-    if (!where.dir) throw new Error(`${file}: its "resourceHints" are words of omx-contract's RESOURCE_HINTS and ${where.why}`);
+    if (!where.dir) throw new Error(`${file}: its "resourceHints" are words of plugin-hostd's RESOURCE_HINTS and ${where.why}`);
     return where.dir;
   });
   d.hints = hints.stated;
@@ -120,6 +124,7 @@ export function prepareDecl(file, d, stem, dir = dirname(file)) {
     d.subgroups = chainSubgroups(file, d, banded);
     d.panel = { ...d.panel, sections: d.panel.sections.map(({ subgroups: _subgroups, ...s }) => s) };
   }
+  unitsCheck(file, d);
   const seen = new Set();
   for (const p of d.params) {
     if (!/^[A-Za-z][A-Za-z0-9_]*$/.test(p.symbol)) throw new Error(`${file}: symbol '${p.symbol}' is not an LV2 symbol`);
@@ -145,6 +150,20 @@ export function prepareDecl(file, d, stem, dir = dirname(file)) {
     if (!existsSync(join(dir, 'test', `${o}.c`))) throw new Error(`${file}: oracle '${o}' names test/${o}.c, which does not exist`);
   }
   return { ...d, dir: resolve(dir), tree: treeOf(file) };
+}
+
+/** The plugin's own units (`units`, Open-Mixer/omx-plugins#172): each declared once, no PARAM_UNITS word's name
+ * (tools/format-tables.mjs ownUnitRefusals) and named by a parameter; and every parameter's unit, resolved, is a
+ * PARAM_UNITS id or one of them. Refused by name, every refusal at once. */
+function unitsCheck(file, d) {
+  const errs = ownUnitRefusals(d.units);
+  for (const p of d.params) {
+    if (p.unit !== undefined && standardUnitOf(p.unit) === undefined && !ownUnitOf(d.units, p.unit)) errs.push(`'${p.symbol}' names unit '${p.unit}', neither a PARAM_UNITS id nor one of its own "units"`);
+  }
+  (d.units ?? []).forEach((u, i) => {
+    if (!d.params.some((p) => p.unit === u.const)) errs.push(`units/${i}: '${u.const}' is named by no parameter`);
+  });
+  if (errs.length) throw new Error(`${file}: ${errs.join('; ')}`);
 }
 
 /** The panel family (schema `$defs.family`, the console's closed set) of a kernel whose own name is
@@ -208,6 +227,12 @@ const localParam = (p) => {
 };
 
 /**
+ * The meaning of each control a chain's generator makes itself, stated where it makes it (omx-contract docs/descriptors.md
+ * "Meanings"): an element's switch turns that element on (`enabled`), the stage order is `order`, a band count `number`.
+ */
+const OWN_MEANINGS = { switch: 'enabled', 'stage-order': 'order', 'band-count': 'number' };
+
+/**
  * The flattened parameter list of a chain: element by element in chain order, each element's
  * generated switch `<id>On` (its default the element's `on`) and then its parameters, each read from
  * the element's kernel; then, for `"order": "permutable"`, the plugin's own `order` over the
@@ -225,14 +250,14 @@ function flattenChain(file, d) {
     if (!/^[a-z][a-z0-9_]*$/.test(el.kernel ?? '')) throw new Error(`${file}: chain element '${el.id}' names no kernel`);
     if (typeof el.on !== 'boolean') throw new Error(`${file}: chain element '${el.id}': "on" (its switch's default) is true or false`);
     if (!Array.isArray(el.params) || !el.params.length) throw new Error(`${file}: chain element '${el.id}' has no "params"`);
-    out.push({ symbol: `${el.id}On`, name: elementName(el), unit: '', min: 0, max: 1, def: el.on ? 1 : 0, kind: 'toggle', own: 'switch', element: el.id });
+    out.push({ symbol: `${el.id}On`, name: elementName(el), unit: 'none', min: 0, max: 1, def: el.on ? 1 : 0, kind: 'toggle', own: 'switch', element: el.id, meaning: OWN_MEANINGS.switch });
     for (const p of el.params) {
       if (p.ref === undefined) throw new Error(`${file}: chain element '${el.id}': '${p.symbol}' has no ref; an element's parameters are its kernel's contract controls`);
       if (p.kernel !== undefined && p.kernel !== el.kernel) throw new Error(`${file}: chain element '${el.id}': '${p.symbol}' names kernel '${p.kernel}', not the element's '${el.kernel}'`);
       out.push({ ...p, kernel: el.kernel, element: el.id });
     }
   }
-  if (d.order === 'permutable') out.push({ symbol: 'order', name: 'Order', unit: '', min: 0, max: factorial(d.chain.length) - 1, def: 0, kind: 'integer', own: 'stage-order' });
+  if (d.order === 'permutable') out.push({ symbol: 'order', name: 'Order', unit: 'none', min: 0, max: factorial(d.chain.length) - 1, def: 0, kind: 'integer', own: 'stage-order', meaning: OWN_MEANINGS['stage-order'] });
   else if (d.order !== undefined) throw new Error(`${file}: "order" is "permutable" or left out (the declared order)`);
   // what an element gained after the plugin shipped comes AFTER every parameter it had, so no id and no LV2 parameter
   // port moves: element by element in chain order, its band count (`bandCount`), then its `appended` parameters
@@ -271,7 +296,7 @@ function bandCountParam(file, d, el) {
   if (!Number.isInteger(def) || def < 1 || def > max) throw new Error(`${file}: chain element '${el.id}': "bandCount" comes up at ${sheet}.${bc.default}.default (${def}), not a count from 1 to ${max}`);
   const gated = controls.find((c) => c.name === bc.gates);
   if (!gated?.count) throw new Error(`${file}: chain element '${el.id}': "bandCount" gates '${bc.gates}', no per-band control of the ${el.kernel} kernel`);
-  return { symbol: bc.symbol, name: bc.name, unit: '', min: 1, max, def, kind: 'integer', own: 'band-count', element: el.id, gates: bc.gates };
+  return { symbol: bc.symbol, name: bc.name, unit: 'none', min: 1, max, def, kind: 'integer', own: 'band-count', element: el.id, gates: bc.gates, meaning: OWN_MEANINGS['band-count'] };
 }
 
 /**
@@ -513,7 +538,7 @@ export function symbolTie(p, control, controls) {
 /** The declaration's plain description for org.openmixer.declaration/1: each parameter's name and
  * travel, in declaration order. */
 export function sourceOf(d) {
-  return `${d.name}: ${d.params.map((p) => `${p.name} ${p.min} to ${p.max}${p.unit ? ` ${p.unit}` : ''}`).join(', ')}`;
+  return `${d.name}: ${d.params.map((p) => `${p.name} ${p.min} to ${p.max}${unitSymbol(p.unit, d.units) ? ` ${unitSymbol(p.unit, d.units)}` : ''}`).join(', ')}`;
 }
 
 export function digestOf(params) {
@@ -521,17 +546,27 @@ export function digestOf(params) {
   return createHash('sha256').update(JSON.stringify(rows)).digest('hex');
 }
 
-/** The plugin-defined units, by name (urn:openmixer:unit#<name>): defined (units:Unit) in the plugin's own TTL, so a
- * host that reads units:unit finds the unit and how to write it. */
+/** How a plugin's TTL defines each OpenMixer unit it uses (units:Unit), by the PARAM_UNITS word F1 maps it to; its URI is
+ * F1's (tools/format-tables.mjs ownLv2Units, plugin-db's x-uri), never spelled here. The label, render and symbol are
+ * the TTL's own presentation. */
 export const LV2_CUSTOM_UNITS = {
   dBFS: { label: 'decibels (full scale)', render: '%f dBFS', symbol: 'dBFS' },
   dBu: { label: 'decibels (unloaded)', render: '%f dBu', symbol: 'dBu' },
   LUFS: { label: 'loudness units (full scale)', render: '%f LUFS', symbol: 'LUFS' },
-  dBoct: { label: 'decibels per octave', render: '%f dB/oct', symbol: 'dB/oct' },
+  dBPerOct: { label: 'decibels per octave', render: '%f dB/oct', symbol: 'dB/oct' },
+  dBPerS: { label: 'decibels per second', render: '%f dB/s', symbol: 'dB/s' },
   ratio: { label: 'ratio', render: '%f:1', symbol: ':1' },
 };
 
 export { lv2Designation, lv2UnitNames, lv2UnitRef };
+
+/** The URI of the plugin's own unit `unit` (its `units` block): under the plugin's LV2 URI, `<uri>#unit.<id>`, the
+ * plugin's as the unit is (a port group's fragment is a section key, which holds no dot). */
+export const ownUnitUri = (d, unit) => `${d.lv2.uri}#unit.${unit}`;
+
+/** The `units:unit` value a TTL writes for unit `unit` of plugin `d`: a PARAM_UNITS id's (lv2UnitRef), else the
+ * plugin's own unit's URI, else undefined. */
+export const unitRefOf = (d, unit) => lv2UnitRef(unit) ?? (ownUnitOf(d.units, unit) ? `<${ownUnitUri(d, unit)}>` : undefined);
 
 /** How a host draws a travel: as declared, else a frequency logarithmic (the console's every
  * frequency control is) when its travel is positive (a key filter whose 0 is off is not), else linear. */
@@ -574,7 +609,20 @@ export function meterLabel(id) {
 /** Each meter of declaration `d` as the faces publish it, in order: its id, kind, channels (one for a reading
  * of the kernel's, two for a level the face measures, left and right), label, display range and unit (a
  * readout's, else the declared range in dBFS), and the output symbol of each channel: the id for one channel,
- * `<id>_<channel>` from 0 for more, the names omx-clap-core derives from clap.meters/1 (doc/reference.md). */
+ * `<id>_<channel>` from 0 for more, the names omx-clap derives from clap.meters/1 (doc/reference.md). */
+/** A declared meter's words, the one rule the face rows and the descriptor read (docs/meters.md, omx-contract's
+ * descriptorMeter): `reads`, a reading of the kernel's (a gain reduction, or a level the kernel reads); `held`, unless
+ * the declaration says `held: false`; `clip`, a clip word, on a held level the face measures unless it says
+ * `clip: false`; `measurement`, what it measures where the plugin knows it: a gain reduction its own, a level the face
+ * measures a sample peak, and none for a level the kernel reads (its readout does not say what its detector measures). */
+export function meterWords(m) {
+  const reads = m.kind === 'gain_reduction' || 'read' in m;
+  const held = m.held !== false;
+  const clip = held && !reads && m.clip !== false;
+  const measurement = m.kind === 'gain_reduction' ? 'gain-reduction' : reads ? undefined : 'peak';
+  return { reads, held, clip, measurement };
+}
+
 export function metersOf(d) {
   const readouts = d.meterReadouts ?? (d.meters ?? []).map(() => null);
   return (d.meters ?? []).map((m, k) => {
@@ -582,7 +630,8 @@ export function metersOf(d) {
     const channels = m.kind === 'gain_reduction' || 'read' in m ? 1 : 2;
     const range = r ? { min: r.min, max: r.max, unit: r.unit, scale: r.scale } : { min: m.min, max: m.max, unit: 'dBFS', scale: 'linear' };
     const symbols = channels === 1 ? [m.id] : Array.from({ length: channels }, (_, c) => `${m.id}_${c}`);
-    return { id: m.id, kind: m.kind, channels, label: meterLabel(m.id), ...range, symbols, readout: r };
+    const { held, clip, measurement } = meterWords(m);
+    return { id: m.id, kind: m.kind, channels, label: meterLabel(m.id), ...range, symbols, readout: r, held, clip, measurement };
   });
 }
 
@@ -661,10 +710,16 @@ ${tables.map((t) => `  ${ref(t)},`).join('\n')}
 `;
 }
 
+/** Parameter `p`'s row of plugin `d`'s C table (OMX_<K>_PARAMS): its unit text the x-symbol, what the CLAP face's
+ * value_to_text shows. */
+export function paramTableRow(d, p) {
+  const flags = p.kind === 'integer' ? 'OMX_PLUGIN_PARAM_INTEGER' : p.kind === 'toggle' ? 'OMX_PLUGIN_PARAM_TOGGLE' : '0u';
+  return `{ "${p.symbol}", "${p.name}", "${unitSymbol(p.unit, d.units)}", ${cf(p.min)}, ${cf(p.max)}, ${cf(p.def)}, ${flags} },`;
+}
+
 export function emitParamsHeader(d) {
   const K = d.kernel.toUpperCase();
   const P = `OMX_${K}_PARAM`;
-  const flags = (p) => (p.kind === 'integer' ? 'OMX_PLUGIN_PARAM_INTEGER' : p.kind === 'toggle' ? 'OMX_PLUGIN_PARAM_TOGGLE' : '0u');
   const ports = lv2Ports(d);
   const firstParam = ports.find((p) => p.param).index;
   return `${BANNER}#ifndef OMX_${K}_PARAMS_H
@@ -696,7 +751,7 @@ ${d.params.map((p, i) => `  ${P}_${macro(p.symbol)} = ${i},`).join('\n')}
 };
 
 static const omx_plugin_param OMX_${K}_PARAMS[${P}_COUNT] = {
-${d.params.map((p) => `  { "${p.symbol}", "${p.name}", "${p.unit}", ${cf(p.min)}, ${cf(p.max)}, ${cf(p.def)}, ${flags(p)} },`).join('\n')}
+${d.params.map((p) => `  ${paramTableRow(d, p)}`).join('\n')}
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -773,9 +828,9 @@ ${presetsManifest(d.lv2.uri, presets)}`;
 }
 
 /** What a face states of parameter `i` beyond the declaration: its descriptor control's unit (a ratio's `ratio`, which
- * its link resolves to "") and meaning, for a plugin described in omx-contract's words; the declared unit otherwise. */
+ * its link resolves to none) and meaning, for a plugin described in omx-contract's words; the declared unit otherwise. */
 const faceUnit = (d, i) => travelUnit(d.params[i].unit, d.descriptor?.controls[i]?.travel?.unit);
-const faceDesignation = (d, i) => lv2Designation(d.descriptor?.controls[i]?.meaning);
+const faceDesignation = (d, i) => declaredDesignation(d.descriptor?.controls[i]?.meaning);
 
 export function emitPluginTtl(d) {
   const port = (p) => {
@@ -788,7 +843,7 @@ export function emitPluginTtl(d) {
       if (scaleOf(q) === 'log') lines.push('        lv2:portProperty pprops:logarithmic ;');
       if (q.kind === 'toggle') lines.push('        lv2:portProperty lv2:toggled ;');
       const i = d.params.indexOf(q);
-      if (lv2UnitRef(faceUnit(d, i))) lines.push(`        units:unit ${lv2UnitRef(faceUnit(d, i))} ;`);
+      if (unitRefOf(d, faceUnit(d, i))) lines.push(`        units:unit ${unitRefOf(d, faceUnit(d, i))} ;`);
       if (faceDesignation(d, i)) lines.push(`        lv2:designation ${faceDesignation(d, i)} ;`);
       if (choices) {
         const points = choices.map((c) => `            [ rdfs:label ${ttlStr(c.label)} ; rdf:value ${c.value} ]`);
@@ -805,7 +860,7 @@ export function emitPluginTtl(d) {
       lines.push('        lv2:designation lv2:latency ;', '        lv2:portProperty lv2:integer ;', '        units:unit units:frame ;');
     } else if (p.meter) {
       lines.push(`        lv2:minimum ${ttlNum(p.meter.min)} ;`, `        lv2:maximum ${ttlNum(p.meter.max)} ;`);
-      if (lv2UnitRef(p.meter.unit)) lines.push(`        units:unit ${lv2UnitRef(p.meter.unit)} ;`);
+      if (unitRefOf(d, p.meter.unit)) lines.push(`        units:unit ${unitRefOf(d, p.meter.unit)} ;`);
     } else if (p.time) {
       // the host's transport: time:Position objects, read for their time:beatsPerMinute; optional, no tempo without it
       lines.push('        atom:bufferType atom:Sequence ;', '        atom:supports time:Position ;', '        lv2:designation lv2:control ;', '        lv2:portProperty lv2:connectionOptional ;');
@@ -850,21 +905,44 @@ lv2:displayPriority
     lv2:name ${ttlStr(g.label)} ;
     lv2:displayPriority ${g.priority} ;
     rdfs:label ${ttlStr(g.label)} .
-`).join('')}${customUnitsOf(d).map((name) => `
-<urn:openmixer:unit#${name}>
+`).join('')}${customUnitsOf(d).map(([word, uri]) => `
+<${uri}>
     a units:Unit ;
-    rdfs:label ${ttlStr(LV2_CUSTOM_UNITS[name].label)} ;
-    units:render ${ttlStr(LV2_CUSTOM_UNITS[name].render)} ;
-    units:symbol ${ttlStr(LV2_CUSTOM_UNITS[name].symbol)} .
+    rdfs:label ${ttlStr(LV2_CUSTOM_UNITS[word].label)} ;
+    units:render ${ttlStr(LV2_CUSTOM_UNITS[word].render)} ;
+    units:symbol ${ttlStr(LV2_CUSTOM_UNITS[word].symbol)} .
+`).join('')}${meaningDesignationsOf(d).map(([meaning, uri]) => `
+<${uri}>
+    a <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property> ;
+    rdfs:label ${ttlStr(meaning)} ;
+    rdfs:comment "A control's standard meaning (omx-contract), which LV2's param: vocabulary has no term for." .
+`).join('')}${(d.units ?? []).map((u) => `
+<${ownUnitUri(d, u.const)}>
+    a units:Unit ;
+    rdfs:label ${ttlStr(u.description)} ;
+    units:render ${ttlStr(`%f ${u['x-symbol']}`)} ;
+    units:symbol ${ttlStr(u['x-symbol'])} .
 `).join('')}`;
 }
 
 /** The @prefix lines of the stated resource hints (tools/resource-hints.mjs) that `pick` keeps, in the TTL's column. */
 const hintPrefix = (d, pick) => hintPrefixes(d.hintVocabulary, d.hints ?? []).filter(([p]) => pick(p)).map(([p, ns]) => `@prefix ${`${p}:`.padEnd(6)} <${ns}> .\n`).join('');
 
-/** The plugin-defined units this plugin's ports use, in a fixed order. */
-const customUnitsOf = (d) => Object.keys(LV2_CUSTOM_UNITS).filter((name) =>
-  [...d.params.map((q, i) => faceUnit(d, i)), ...metersOf(d).map((m) => m.unit)].some((u) => lv2UnitRef(u) === `<urn:openmixer:unit#${name}>`));
+/** The OpenMixer units this plugin's ports use, `[[<PARAM_UNITS word>, <uri>], ...]` in LV2_CUSTOM_UNITS' order, each
+ * URI F1's (ownLv2Units). */
+const customUnitsOf = (d) => {
+  const uriOf = ownLv2Units();
+  return Object.keys(LV2_CUSTOM_UNITS).map((word) => {
+    if (!uriOf[word]) throw new Error(`tools/gen.mjs LV2_CUSTOM_UNITS: ${word} is no unit of F1's LV2_OPENMIXER_UNIT_IDS`);
+    return [word, uriOf[word]];
+  }).filter(([, uri]) => [...d.params.map((q, i) => faceUnit(d, i)), ...metersOf(d).map((m) => m.unit)].some((u) => lv2UnitRef(u) === `<${uri}>`));
+};
+
+/** The OpenMixer meaning designations this plugin's ports use (plugin-db's LV2_OPENMIXER_MEANING_IDS, read through
+ * lv2Designation; omx-plugins#12), `[[<meaning>, <uri>], ...]`, each once, in port order: the TTL defines each
+ * Property its lv2:designation names, as it defines each OpenMixer unit. */
+const meaningDesignationsOf = (d) => [...new Map(d.params.map((q, i) => [d.descriptor?.controls[i]?.meaning, faceDesignation(d, i)])
+  .filter(([, x]) => x?.startsWith('<urn:')).map(([m, x]) => [m, x.slice(1, -1)])).entries()];
 
 /** A control's group as a CLAP module path (plugin-hostd's group-path, written: the labels joined by "/"). */
 const moduleOf = (d, i) => (d.descriptor?.controls[i]?.group ?? []).join('/');
@@ -887,9 +965,10 @@ const cfloat = (n) => {
   return `${/[.e]/.test(t) ? t : `${t}.0`}f`;
 };
 
-/** How a catalogue row and section read a resolved parameter: its range and its default, in words. */
-export function paramRow(p) {
-  const unit = p.unit ? ` ${p.unit}` : '';
+/** How a catalogue row and section read a resolved parameter: its range and its default, in words, its unit shown by
+ * its x-symbol (`units`: the declaration's own units, its `units` block). */
+export function paramRow(p, units) {
+  const unit = unitSymbol(p.unit, units) ? ` ${unitSymbol(p.unit, units)}` : '';
   if (p.kind === 'toggle') return { name: p.name, range: 'off / on', default: p.def ? 'on' : 'off' };
   const choices = choicesOf(p);
   if (choices) return { name: p.name, range: choices.map((c) => c.label).join(' / '), default: choices.find((c) => c.value === p.def)?.label ?? `${p.def}` };
@@ -905,7 +984,7 @@ export function fillManual(d, line, what = 'manual') {
   const out = line.replace(/\{(range|default|min|max):([A-Za-z][A-Za-z0-9_]*)\}/g, (_m, what, symbol) => {
     const p = d.params.find((q) => q.symbol === symbol);
     if (!p) throw new Error(`plugins/${d.stem}: its ${what} reads '${symbol}', which is none of its parameters`);
-    return what === 'min' || what === 'max' ? `${p[what]}` : paramRow(p)[what];
+    return what === 'min' || what === 'max' ? `${p[what]}` : paramRow(p, d.units)[what];
   });
   const left = out.match(/\{[a-z]+:[^}]*\}/);
   if (left) throw new Error(`plugins/${d.stem}: its ${what}'s ${left[0]} is none of {range|default|min|max:<symbol>}`);
@@ -923,7 +1002,7 @@ export function templateView(d) {
   return {
     stem: d.stem, kernel: d.kernel, face: d.face ?? d.kernel, K: d.kernel.toUpperCase(), Kernel: d.kernel.replace(/(^|_)([a-z])/g, (_m, _u, c) => c.toUpperCase()),
     name: d.name, uri: d.lv2.uri, clapId: d.clap.id, description: d.description,
-    omxdspMin: packagingRange('omx-dsp-devel', d.tree ?? ROOT).floor, panel: Boolean(d.panel), params: d.params.map(paramRow),
+    panel: Boolean(d.panel), params: d.params.map((p) => paramRow(p, d.units)),
     oracles: (d.oracles ?? []).map((oracle) => ({ oracle })),
   };
 }
@@ -1087,6 +1166,12 @@ export function meterRows(d, face) {
     const at = 'read' in m ? 'read' : 'field';
     const own = m.kind === 'gain_reduction' ? [at, 'readout'] : reads ? ['read', 'readout'] : ['source', 'min', 'max'];
     if ('linear' in m && !(m.kind === 'gain_reduction' && at === 'field' && m.linear === true)) throw new Error(`${where}: 'linear' is true on a gain reduction read from a 'field'`);
+    // the meter words of docs/meters.md (omx-contract's `held` and `clip`): held, true unless the declaration says it is not;
+    // clip, a run of over-full-scale samples carried on the same publication, true for a level the face measures unless the
+    // declaration says `clip: false`, and never for a reading of the kernel's
+    for (const w of ['held', 'clip']) if (w in m && typeof m[w] !== 'boolean') throw new Error(`${where}: '${w}' is true or false`);
+    if (m.clip === true && reads) throw new Error(`${where}: a reading of the kernel's carries no clip word; the face counts samples over full scale only at the inputs or outputs`);
+    if (m.clip === true && m.held === false) throw new Error(`${where}: a clip word is a held meter's; it says since the last read, and 'held: false' has no last read to say it since`);
     for (const key of ['field', 'read', 'readout', 'source', 'min', 'max']) {
       if (own.includes(key) && !(key in m)) throw new Error(`${where}: a ${m.kind} meter names its '${key}'`);
       if (!own.includes(key) && key in m) throw new Error(`${where}: a ${m.kind} meter ${reads && m.kind === 'level' ? 'the kernel reads ' : ''}takes no '${key}'`);
@@ -1119,6 +1204,7 @@ export function meterRows(d, face) {
       if (!(Number.isFinite(m.min) && Number.isFinite(m.max) && m.min < m.max)) throw new Error(`${where}: the range ${m.min}..${m.max} is not a range`);
       row = { channels: 2, min: m.min, max: m.max, core: '', ref: '' };
     }
+    const { held, clip } = meterWords(m);
     const out = {
       meterIndex: k, meterName: m.id, meterKind: METER_KINDS[m.kind], meterFaceKind: FACE_METER_KINDS[m.kind], meterReadCore: row.core, meterReadRef: row.ref,
       meterChannels: row.channels, meterOffset: offset, meterRight: offset + 1, meterMin: cdouble(row.min), meterMax: cdouble(row.max),
@@ -1126,6 +1212,10 @@ export function meterRows(d, face) {
       // where the shared face reads it (include/omx_plugin_face.h); what a bypassed kernel's stale reading
       // publishes: no reduction, or a level's display minimum
       meterSource: reads ? 'OMX_FACE_METER_READ' : m.source === 'input' ? 'OMX_FACE_METER_IN' : 'OMX_FACE_METER_OUT',
+      meterHeld: held ? '1u' : '0u', meterClip: clip ? '1u' : '0u',
+      // the flags clap.meters/1 reports: the draft's coherent bit, and the held and clip bits omx-clap's host reads
+      // (<omx-clap-host/clap_host.h>)
+      meterFlags: `CLAP_METER_IS_COHERENT${held ? ' | OMX_CLAP_METER_IS_HELD' : ''}${clip ? ' | OMX_CLAP_METER_HAS_CLIP' : ''}`,
       meterBypassRef: m.kind === 'gain_reduction' ? '0.0' : `METERS[${k}].min`,
     };
     offset += row.channels;
@@ -1497,7 +1587,7 @@ export const SHARED = {
       '',
       `### ${d.name}`,
       '',
-      ...(d.manual?.map((l) => fillManual(d, l)) ?? ['| Parameter | Range | Default |', '|---|---|---|', ...d.params.map(paramRow).map((r) => `| ${r.name} | ${r.range} | ${r.default} |`), '', "Plus the host's bypass."]),
+      ...(d.manual?.map((l) => fillManual(d, l)) ?? ['| Parameter | Range | Default |', '|---|---|---|', ...d.params.map((p) => paramRow(p, d.units)).map((r) => `| ${r.name} | ${r.range} | ${r.default} |`), '', "Plus the host's bypass."]),
     ]).concat(['']),
   },
   'packaging/omx-plugins.spec': {
@@ -1559,6 +1649,14 @@ export function generateShared(root = ROOT, decls = pluginDirs(root).map((p) => 
   return Object.fromEntries(Object.entries(SHARED).map(([file, producers]) => [file, fillRegions(file, readFileSync(join(root, file), 'utf8'), producers, ds, ts)]));
 }
 
+/** The labels domain's text (tools/plugin-labels.mjs) for the shipped declarations among `decls`, in plugin order. */
+/** The labels domain's first version: a domain's version is its vocabulary's own (0.1.0, rising only when its words change), never the package's. */
+const LABELS_DOMAIN_FIRST_VERSION = '0.1.0';
+export function labelsDocText(root = ROOT, decls = pluginDirs(root).map((p) => loadDecl(p))) {
+  const ds = decls.filter(ships).sort(byStem);
+  return labelsText(labelsDomain(ds, { presetsOf: (d) => presetsOf(d.clap.id, root), choicesOf, version: committedLabels(root)?.info?.version ?? LABELS_DOMAIN_FIRST_VERSION, committed: committedLabels(root), format: contractFormat() }));
+}
+
 /** A declaration's pinned port hints (its `portHints`, tools/port-hints.mjs) in the view's shape,
  * `{props, unit, points}` by port symbol in LV2 port order, then any symbol no port has (which the
  * hint check names as gone); undefined when it pins none. */
@@ -1614,6 +1712,7 @@ function main(argv) {
     for (const [rel, text] of Object.entries(generateTest(d))) put(join(d.dir, rel), join('plugins', d.stem, rel), text, 'node tools/gen.mjs');
   }
   if (!dirs.length) for (const [rel, text] of Object.entries(generateShared(ROOT, decls, tests))) put(join(ROOT, rel), rel, text, 'node tools/gen.mjs');
+  if (!dirs.length) put(join(ROOT, LABELS_FILE), LABELS_FILE, labelsDocText(ROOT, decls), 'node tools/gen.mjs');
   if (!dirs.length) {
     // the pin is the declaration's `portHints`: a pin file beside it would be a second home
     for (const n of readdirSync(join(ROOT, 'plugins')).sort()) {

@@ -23,17 +23,6 @@ override_dh_auto_install:
 	@test -n '$(SOURCE_COMMIT)' || { echo 'debian/rules: no source commit (git rev-parse HEAD answered nothing)' >&2; exit 1; }
 	tools/integrity-check.sh $(CURDIR)/debian/tmp/usr/share/omx-contract/contract.d $(shell dpkg-parsechangelog -S Version | sed 's/-[^-]*$$//; s/[~+].*//') $(SOURCE_COMMIT)
 
-# the shipped .clap is the stripped one, so its pin is measured again after dh_strip: a pin taken at
-# dh_auto_install names bytes the package never ships. The binaries sit in omx-plugins-clap's tree,
-# the pins file in omx-plugins'; then the shipped pins.d file is held to the shipped binaries' own
-# hashes (sabotage: a changed binary goes red)
-override_dh_strip:
-	dh_strip
-	$(MAKE) -s install-pins DESTDIR=$(CURDIR)/debian/omx-plugins-clap PREFIX=/usr LIBDIR=/usr/lib
-	mv debian/omx-plugins-clap/usr/share/plugin-hostd/pins.d/omx-plugins.pins debian/omx-plugins/usr/share/plugin-hostd/pins.d/omx-plugins.pins
-	rm -r debian/omx-plugins-clap/usr/share/plugin-hostd
-	tools/pins-check.sh debian/omx-plugins/usr/share/plugin-hostd/pins.d/omx-plugins.pins debian/omx-plugins-clap/usr/lib/clap
-
 # The generators read omx-contract's contract directory through the omx-contract command, a build
 # dependency (omx-contract's .deb): make test runs whole, as it does in the RPM build.
 override_dh_auto_test:

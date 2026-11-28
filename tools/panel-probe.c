@@ -20,8 +20,15 @@
  *   display <kind> <section> <source> <meter0> <meter1> <curve> <floor_param_id> <floor_db> <label_key> <label>
  *   default <placement> <param_id> <value>
  *
- * tools/panel-check.mjs reads it back against the declaration. Exit 1 when the extension is absent,
- * a table answers past its end, or an unknown table is answered.
+ * and, from the CLAP face, the meters the displays index, as clap.meters/1 serves them (the ids a
+ * display's <meter0> <meter1> are, omx-clap-core's omx_clap_ext.h):
+ *
+ *   meter <id> <name> <kind> <channels> <min> <max>
+ *
+ * The LV2 face serves each meter as an output control port, one of the `port` lines, by the symbol
+ * the declaration gives it (docs/meters.md). tools/panel-check.mjs reads it all back against the
+ * declaration. Exit 1 when the extension is absent, a table answers past its end, an unknown table is
+ * answered, or a meter clap.meters/1 counts is not served.
  */
 #include <dlfcn.h>
 #include <inttypes.h>
@@ -35,6 +42,8 @@
 #include "clap/factory/plugin-factory.h"
 #include "clap/host.h"
 #include <lilv/lilv.h>
+
+#include <omx-clap-host/clap_meters.h>
 
 #include "omx_panel_description.h"
 
@@ -101,6 +110,27 @@ static int dump(const Panel *p) {
   return bad;
 }
 
+/** clap.meters/1, the meters a display's ids name: one `meter` line each, in the order served; 0 when every
+ * counted meter is served. A face with no meters may serve no extension at all: nothing to print. */
+static int dump_meters(const clap_plugin_t *plugin) {
+  const clap_plugin_meters_t *m = (const clap_plugin_meters_t *)plugin->get_extension(plugin, CLAP_EXT_METERS);
+  if (!m) return 0;
+  int bad = 0;
+  const uint32_t n = m->count(plugin);
+  for (uint32_t i = 0; i < n; ++i) {
+    clap_meter_info_t info;
+    memset(&info, 0xa5, sizeof info);
+    if (!m->get_info(plugin, i, &info)) {
+      fprintf(stderr, "panel-probe: clap.meters/1 meter %" PRIu32 " of %" PRIu32 " is not served\n", i, n);
+      bad = 1;
+      continue;
+    }
+    printf("meter\t%" PRIu32 "\t%s\t%" PRIu32 "\t%" PRIu32 "\t%.17g\t%.17g\n", info.id, info.name, info.kind, info.channel_count,
+           info.min_value, info.max_value);
+  }
+  return bad;
+}
+
 static const void *host_get_extension(const clap_host_t *h, const char *id) {
   (void)h, (void)id;
   return NULL;
@@ -120,7 +150,7 @@ static int probe_clap(const char *path) {
   const clap_plugin_t *plugin = fac->create_plugin(fac, &HOST, fac->get_plugin_descriptor(fac, 0)->id);
   if (!plugin || !plugin->init(plugin)) return fprintf(stderr, "%s: create/init\n", path), 1;
   Panel p = {(const omx_clap_plugin_panel_description_t *)plugin->get_extension(plugin, OMX_PANEL_DESCRIPTION_ID), plugin, NULL, NULL};
-  int rc = p.clap ? dump(&p) : (fprintf(stderr, "%s: no %s extension\n", path, OMX_PANEL_DESCRIPTION_ID), 1);
+  int rc = p.clap ? dump(&p) | dump_meters(plugin) : (fprintf(stderr, "%s: no %s extension\n", path, OMX_PANEL_DESCRIPTION_ID), 1);
   plugin->destroy(plugin);
   entry->deinit();
   dlclose(so);

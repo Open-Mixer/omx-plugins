@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.geq",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:geq",
     "name": "omx geq",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.21.1",
     "doc": "The console's 31-band graphic EQ: one fader per ISO third-octave band from 20 Hz to 20 kHz, each cutting or boosting by up to 15 dB.",
     "features": [
       "audio-effect"
@@ -34,11 +31,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -59,11 +57,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -84,11 +83,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -109,11 +109,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -134,11 +135,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -159,11 +161,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -184,11 +187,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -209,11 +213,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -234,11 +239,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -259,11 +265,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -284,11 +291,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -309,11 +317,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -334,11 +343,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -359,11 +369,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -384,11 +395,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -409,11 +421,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -434,11 +447,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -459,11 +473,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -484,11 +499,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -509,11 +525,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -534,11 +551,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -559,11 +577,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -584,11 +603,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -609,11 +629,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -634,11 +655,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -659,11 +681,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -684,11 +707,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -709,11 +733,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -734,11 +759,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -759,11 +785,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -784,11 +811,12 @@
         "Geq"
       ],
       "meaning": "gain",
+      "response": "peaking",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/geq.json#GEQ_BAND_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }

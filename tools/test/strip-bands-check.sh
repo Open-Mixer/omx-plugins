@@ -46,6 +46,13 @@ CC=${CC:-cc}
 # today's strip, from <ref>
 mkdir -p "$W/old"
 git -C "$ROOT" archive "$REF" include lib plugins/omx-strip presets/org.openmixer.strip | tar -x -C "$W/old"
+# <ref>'s tree names the installed headers where their owners kept them then; a header an owner has moved since is
+# included from its home today, the same declarations under another path (one row per move: old path, new path)
+while read -r was now; do
+  grep -rlF "<$was>" "$W/old" | while read -r f; do sed -i "s|<$was>|<$now>|" "$f"; done
+done <<'MOVED'
+omxcontract/omx_param_units.h omx-clap-host/omx_param_units.h
+MOVED
 make -s -C "$W/old/plugins/omx-strip" build/omx-strip.clap >/dev/null || { echo "strip-bands-check: $REF's omx-strip does not build" >&2; exit 2; }
 OLD=$W/old/plugins/omx-strip/build/omx-strip.clap
 # this tree's

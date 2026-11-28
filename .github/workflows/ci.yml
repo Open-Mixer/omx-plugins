@@ -6,7 +6,7 @@ name: ci
 # built (their own make test included), their file lists checked and the packages installed and loaded
 # by a CLAP and an LV2 scanner; and the release workflow as a dry run. Nothing is signed or published
 # here. The build dependencies come from the packaging (dnf builddep, apt-get build-dep), the ones
-# Fedora and Debian do not carry from the FreeMixer channel; nothing is pinned or fetched by version. A pull
+# Fedora and Debian do not carry from the OpenMixer channel; nothing is pinned or fetched by version. A pull
 # request into dedupe/all, and a push to it, take the siblings listed in .github/wave-deps from their own dedupe/all.
 
 on:
@@ -51,15 +51,55 @@ jobs:
             exit 0
           fi
           printf '%s\n' "$changed"
-          # the recipe selftest (about 80 minutes) runs when the change can move it: tools/ci-scope.sh
+          # the recipe selftest (15 to 25 minutes in CI) runs when the change can move it: tools/ci-scope.sh
           tools/ci-scope.sh <<<"$changed" >> "$GITHUB_OUTPUT"
 
+  # the Fedora cells every rpm-side job runs in, from Open-Mixer/.github's check-matrix (ruling D25: no Fedora release
+  # written into a job; omx-plugins#54): one container per cell, the job and its artifacts named by it
+  rpm-cells:
+    name: the rpm cells (check-matrix)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      rpm: ${{ steps.m.outputs.rpm }}
+      rpm-count: ${{ steps.m.outputs.rpm-count }}
+    steps:
+      - id: m
+        uses: Open-Mixer/.github/.github/actions/check-matrix@openmixer-v1
+        with:
+          wave: ${{ vars.OMX_RELEASE_MATRIX }}
+          rpm-releases: '["45"]'
+          rpm-arches: '["x86_64"]'  # no aarch64 RPMs: off by the owner ruling of 2026-11-19 until the full matrix returns
+          x86-runner: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+
+  # the lints run in a job of their own: a lint red never skips a step of the suite, which runs and reports whatever the
+  # lint says (a lint step before make test in the same job skipped the suite on its red, and hid every red behind it)
+  lint:
+    name: the licence headers and no private reference
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every file a comment can be written in opens with its licence
+        id: handback-spdx
+        uses: Open-Mixer/.github/.github/actions/spdx-check@main
+
+      - name: No tracked file points into a private repository
+        id: handback-private-refs
+        uses: Open-Mixer/.github/.github/actions/private-refs-check@openmixer-v1
+
   test:
-    name: make test (fedora:45, amd64)
-    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+    name: make test (fedora ${{ matrix.cell.fedora }}, ${{ matrix.cell.arch }})
+    needs: rpm-cells
+    if: needs.rpm-cells.outputs.rpm-count != '0'
+    runs-on: ${{ matrix.cell.runner }}
     timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        cell: ${{ fromJSON(needs.rpm-cells.outputs.rpm) }}
     container:
-      image: fedora:45
+      image: ${{ matrix.cell.image }}
     steps:
       - name: Install the build dependencies
         run: |
@@ -82,6 +122,10 @@ jobs:
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
 
+      # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
+      - name: Every omx package comes from the channel
+        run: tools/from-channel-check.sh
+
       - name: The version agrees everywhere it is written
         id: handback-version
         run: |
@@ -96,15 +140,6 @@ jobs:
           set -euo pipefail
           tools/deps-check.sh
           tools/deps-check.sh --self-test
-
-      - name: Every file a comment can be written in opens with its licence
-        id: handback-spdx
-        uses: Open-Mixer/.github/.github/actions/spdx-check@main
-
-      - name: No tracked file points into a private repository
-        id: handback-private-refs
-        uses: Open-Mixer/.github/.github/actions/private-refs-check@openmixer-v1
-
 
       - name: No source carries a copy of a function omx-dsp exports, and a planted copy goes red
         id: handback-dsp-copies
@@ -133,6 +168,19 @@ jobs:
         id: handback-completeness
         run: make completeness
 
+      # one pack per listed language from the spec and debian/control, and the labels' catalogs (catalogs/) through
+      # omx-contract's release gate (tools/catalogs-gate.sh, translate --check): a listed language with no catalog, a
+      # missing key or a stale entry is red (#18). Check only: the fill job below makes the entries
+      - name: The language packs
+        id: handback-langpacks
+        uses: Open-Mixer/.github/.github/actions/langpacks@openmixer-v1
+        with:
+          name: omx-plugins
+          owner: omx-plugins
+          spec: packaging/omx-plugins.spec
+          gate: tools/catalogs-gate.sh
+          fill: 'false'
+
       - name: include/omx_meter_ring.h never hands a reader two blocks at once, and each sabotage goes red
         id: handback-meter-ring
         run: |
@@ -141,17 +189,40 @@ jobs:
           command -v gcc >/dev/null || dnf install -y --setopt=install_weak_deps=False gcc
           make meter-ring
 
+  # the catalogs' gaps fill themselves on the organisation's own pool, where the router answers (owner ruling
+  # 2026-11-20): dispatched on a lane branch that heads one open pull request of this repository, the shared workflow
+  # makes the missing entries through the router, signs them and pushes them to that branch only. The gate installs the
+  # labels domain into a scratch contract directory (make install-labels-domain), so it needs make, pkg-config and
+  # omx-contract-devel's install script
+  fill:
+    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+    uses: Open-Mixer/.github/.github/workflows/langpacks-fill.yml@openmixer-v1
+    with:
+      name: omx-plugins
+      owner: omx-plugins
+      spec: packaging/omx-plugins.spec
+      gate: tools/catalogs-gate.sh
+      # the keys are the labels domain's: the gate script installs it into a scratch contract directory, for a language too
+      fill-command: tools/catalogs-gate.sh
+      packages: make pkgconf-pkg-config omx-contract-devel
+    secrets: inherit
+
   test-heavy:
     # Beside make test: the set that runs the built plugins through a host (each plugin's oracles on both faces, host-check.sh, the round trip), in four slices of the plugins in parallel, the round trip in the
     # first. The package build runs make test only; every check of both sets runs on every pull request
     # (tools/test/test-split.json). The slice comes from the job's environment, so the step itself is plain
     # `make test-heavy`, which runs every slice when OMX_HEAVY_SHARD is unset.
-    name: make test-heavy ${{ matrix.shard }} (fedora:45, amd64)
-    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+    name: make test-heavy ${{ matrix.shard }} (fedora ${{ matrix.cell.fedora }}, ${{ matrix.cell.arch }})
+    needs: rpm-cells
+    if: needs.rpm-cells.outputs.rpm-count != '0'
+    runs-on: ${{ matrix.cell.runner }}
     timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
+        cell: ${{ fromJSON(needs.rpm-cells.outputs.rpm) }}
         shard:
           - 1/4
           - 2/4
@@ -160,7 +231,7 @@ jobs:
     env:
       OMX_HEAVY_SHARD: ${{ matrix.shard }}
     container:
-      image: fedora:45
+      image: ${{ matrix.cell.image }}
     steps:
       - name: Install the build dependencies
         run: |
@@ -181,6 +252,10 @@ jobs:
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
 
+      # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
+      - name: Every omx package comes from the channel
+        run: tools/from-channel-check.sh
+
       - name: make test-heavy, and nothing skipped
         id: handback-test-heavy
         run: |
@@ -189,15 +264,26 @@ jobs:
           if grep -E '^SKIP' test-heavy.log; then echo "::error::a test was skipped"; exit 1; fi
 
   selftest:
-    # Its own job, beside make test: the two together outgrew one job's 30 minutes once the chain and the
-    # compressor landed. Same container and dependencies; nothing is dropped.
-    name: make selftest (fedora:45, amd64)
-    needs: changes
-    if: needs.changes.outputs.machinery == 'true'
-    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+    # Its own jobs, beside make test: the two together outgrew one job's 30 minutes once the chain and the
+    # compressor landed, and the selftest alone once took 82 to 115 minutes against this 120-minute guard. Its parts
+    # run in the shards of tools/test/selftest-shards.json, packed by measured time so each is estimated under 45
+    # minutes with its setup, the fewest that fit (tools/test/selftest-shards-check.mjs holds this matrix to it). Same
+    # container and dependencies; nothing is dropped. The step is plain `make selftest`, the shard from the job's environment.
+    name: make selftest ${{ matrix.shard }} (fedora ${{ matrix.cell.fedora }}, ${{ matrix.cell.arch }})
+    needs: [changes, rpm-cells]
+    if: needs.changes.outputs.machinery == 'true' && needs.rpm-cells.outputs.rpm-count != '0'
+    runs-on: ${{ matrix.cell.runner }}
     timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        cell: ${{ fromJSON(needs.rpm-cells.outputs.rpm) }}
+        shard:
+          - 1/1
+    env:
+      OMX_SELFTEST_SHARD: ${{ matrix.shard }}
     container:
-      image: fedora:45
+      image: ${{ matrix.cell.image }}
     steps:
       - name: Install the build dependencies
         run: |
@@ -220,22 +306,26 @@ jobs:
         run: |
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
 
+      # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
+      - name: Every omx package comes from the channel
+        run: tools/from-channel-check.sh
+
       - name: The recipe machinery, sabotaged arm by arm
         id: handback-selftest
         run: make selftest
 
   rpm:
-    name: omx-plugins RPMs (fc45, ${{ matrix.arch }})
-    needs: changes
-    if: needs.changes.outputs.packages == 'true'
-    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+    name: omx-plugins RPMs (fedora ${{ matrix.cell.fedora }}, ${{ matrix.cell.arch }})
+    needs: [changes, rpm-cells]
+    if: needs.changes.outputs.packages == 'true' && needs.rpm-cells.outputs.rpm-count != '0'
+    runs-on: ${{ matrix.cell.runner }}
     timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
-        arch: [x86_64]  # no aarch64 RPMs: off by the owner ruling of 2026-11-19 until the full matrix returns
+        cell: ${{ fromJSON(needs.rpm-cells.outputs.rpm) }}
     container:
-      image: fedora:45
+      image: ${{ matrix.cell.image }}
     steps:
       - name: Install the build tools
         run: |
@@ -257,7 +347,7 @@ jobs:
         run: |
           set -euo pipefail
           for sub in clap lv2; do
-            rpm=$(ls rpms/omx-plugins-$sub-[0-9]*.${{ matrix.arch }}.rpm)
+            rpm=$(ls rpms/omx-plugins-$sub-[0-9]*.${{ matrix.cell.arch }}.rpm)
             rpm -qlp "$rpm" | grep -v '^/usr/lib/.build-id' | sort > files-$sub.txt
           done
           # BEGIN GENERATED plugins: tools/gen.mjs, the shipped plugins' short names and kernels, the test plugins' ids
@@ -271,7 +361,7 @@ jobs:
             for p in $shorts; do echo "/usr/lib/clap/omx-$p.clap"; done; } | sort > expected-clap.txt
           diff -u expected-clap.txt files-clap.txt
           # the test instruments: omx-plugins-test, outside every CLAP search path
-          rpm -qlp rpms/omx-plugins-test-[0-9]*.${{ matrix.arch }}.rpm | grep -v '^/usr/lib/.build-id' | sort > files-test.txt
+          rpm -qlp rpms/omx-plugins-test-[0-9]*.${{ matrix.cell.arch }}.rpm | grep -v '^/usr/lib/.build-id' | sort > files-test.txt
           { printf '%s\n' /usr/libexec/omx-plugins /usr/libexec/omx-plugins/test \
               /usr/share/doc/omx-plugins-test /usr/share/doc/omx-plugins-test/README.md \
               /usr/share/licenses/omx-plugins-test /usr/share/licenses/omx-plugins-test/LICENSE
@@ -287,7 +377,7 @@ jobs:
           # one descriptor per shipped plugin that has one, in omx-contract's contract directory, with its manifest: in
           # omx-plugins-contract, a package of their own that the metapackage and the devel package require at their
           # version, read at run time with no -devel installed
-          cdir=/usr/share/omx-contract/contract.d/3/omx-plugins
+          cdir=/usr/share/omx-contract/contract.d/omx-plugins
           rpm -qlp rpms/omx-plugins-contract-[0-9]*.noarch.rpm | sort > files-contract.txt
           { printf '%s\n' "$cdir" "$cdir/MANIFEST.json" "$cdir/plugin-face.json" "$cdir/role-meanings.json" "$cdir/plugins" \
               /usr/share/doc/omx-plugins-contract /usr/share/doc/omx-plugins-contract/README.md \
@@ -296,7 +386,7 @@ jobs:
           diff -u expected-contract.txt files-contract.txt
           ! rpm -qlp "$devel" | grep -q '^/usr/share/omx-contract/'
           version=$(sed -n 's/^Version: *//p' packaging/omx-plugins.spec)
-          for rpm in rpms/omx-plugins-[0-9]*.${{ matrix.arch }}.rpm "$devel"; do
+          for rpm in rpms/omx-plugins-[0-9]*.${{ matrix.cell.arch }}.rpm "$devel"; do
             rpm -qp --requires "$rpm" | tee requires.txt
             grep -qx "omx-plugins-contract = $version-.*" requires.txt
           done
@@ -323,11 +413,11 @@ jobs:
             return 1
           }
           # the metapackage, with both formats beside it as the repository would offer them
-          dnf_retry --setopt=install_weak_deps=False rpms/omx-plugins-[0-9]*.${{ matrix.arch }}.rpm \
-            rpms/omx-plugins-clap-[0-9]*.${{ matrix.arch }}.rpm rpms/omx-plugins-lv2-[0-9]*.${{ matrix.arch }}.rpm \
+          dnf_retry --setopt=install_weak_deps=False rpms/omx-plugins-[0-9]*.${{ matrix.cell.arch }}.rpm \
+            rpms/omx-plugins-clap-[0-9]*.${{ matrix.cell.arch }}.rpm rpms/omx-plugins-lv2-[0-9]*.${{ matrix.cell.arch }}.rpm \
             rpms/omx-plugins-contract-[0-9]*.noarch.rpm
           # the descriptors come with the metapackage, no -devel installed
-          rpm -qf /usr/share/omx-contract/contract.d/3/omx-plugins/MANIFEST.json | grep -q '^omx-plugins-contract-'
+          rpm -qf /usr/share/omx-contract/contract.d/omx-plugins/MANIFEST.json | grep -q '^omx-plugins-contract-'
           # the unit codes are omx-contract's sheet (3.6.0), not this package's
           ! rpm -ql omx-plugins-contract | grep -q '/param-units\.json$'
           ! rpm -q omx-plugins-devel
@@ -350,7 +440,7 @@ jobs:
             out=$(lv2info "urn:openmixer:$p"); grep -q 'Binary:' <<<"$out"
           done
           # the test instruments open by path from outside the CLAP path, each with its id
-          dnf_retry --setopt=install_weak_deps=False rpms/omx-plugins-test-[0-9]*.${{ matrix.arch }}.rpm
+          dnf_retry --setopt=install_weak_deps=False rpms/omx-plugins-test-[0-9]*.${{ matrix.cell.arch }}.rpm
           for t in $teststems; do
             out=$(omx-clap-scan --json /usr/libexec/omx-plugins/test/$t.clap); grep -q "\"id\":\"org.openmixer.${t#omx-}\"" <<<"$out"
           done
@@ -383,16 +473,16 @@ jobs:
       # with merge-multiple, and two builds of one NEVRA collide in one directory.
       - uses: actions/upload-artifact@v4
         with:
-          name: ci-check-omx-plugins-fc45-${{ matrix.arch }}
+          name: ci-check-omx-plugins-fc${{ matrix.cell.fedora }}-${{ matrix.cell.arch }}
           path: rpms/*.rpm
           if-no-files-found: error
-          retention-days: 7
+          retention-days: ${{ (startsWith(github.ref, 'refs/tags/')) && 7 || 2 }}
 
   # The deb job's cells, from the shared check matrix (ruling D25): the quick set while a release wave is open
   # (OMX_RELEASE_MATRIX=quick: trixie arm64 alone, no amd64 cell), bookworm and trixie on amd64 and arm64 otherwise. Each
   # cell runs on the runner of its own architecture (arm64 on ubuntu-24.04-arm): a container of one architecture cannot
   # install the packages of another, and the channel's development debs are trixie arm64 only (omx-plugins ci
-  # 44594367073: libomxdsp-dev and libomx-clap-core-dev not installable in the amd64 container; omx-panel ci 44563540081).
+  # 44594367073: libomxdsp-dev and libomx-clap-dev not installable in the amd64 container; omx-panel ci 44563540081).
   deb-cells:
     name: the deb cells (check-matrix)
     needs: changes
@@ -464,15 +554,15 @@ jobs:
           # the descriptors are omx-plugins-contract's, which the metapackage and the dev package depend on at this
           # version, installed here with no -dev
           out=$(dpkg -L omx-plugins-contract)
-          grep -qx /usr/share/omx-contract/contract.d/3/omx-plugins/MANIFEST.json <<<"$out"
+          grep -qx /usr/share/omx-contract/contract.d/omx-plugins/MANIFEST.json <<<"$out"
           # the unit codes are omx-contract's sheet (3.6.0), not this package's
           ! grep -q '/param-units\.json$' <<<"$out"
-          test "$(grep -cE '^/usr/share/omx-contract/contract\.d/3/omx-plugins/plugins/[^/]+\.json$' <<<"$out")" = "$(ls plugins/*/*.descriptor.json | wc -l)"
+          test "$(grep -cE '^/usr/share/omx-contract/contract\.d/omx-plugins/plugins/[^/]+\.json$' <<<"$out")" = "$(ls plugins/*/*.descriptor.json | wc -l)"
           ! dpkg -s omx-plugins-dev >/dev/null 2>&1
           info=$(dpkg -I debs/omx-plugins-contract_*_all.deb)
           grep -qE '^ Architecture: all$' <<<"$info"
-          grep -qE '^ Breaks: omx-plugins-dev \(<< ' <<<"$info"
-          grep -qE '^ Replaces: omx-plugins-dev \(<< ' <<<"$info"
+          # no Breaks, Replaces or Conflicts between our packages (owner rule 2026-11-16, deps-check refuses them in the source)
+          ! grep -qE '^ (Breaks|Replaces|Conflicts):' <<<"$info"
           for deb in debs/omx-plugins_*.deb debs/omx-plugins-dev_*.deb; do
             info=$(dpkg -I "$deb"); grep -qE '^ Depends:.*omx-plugins-contract \(= ' <<<"$info"
           done
@@ -522,11 +612,17 @@ jobs:
     # A failed test fails the job, except the one accepted failure (activate refusing a rate outside the nine oracle
     # rates, tools/clap-validate-summary.mjs), which is printed as an `accepted` line. The factory presets are installed first, where the plugins declare them, because
     # the preset-discovery tests crawl that location.
-    name: clap-validator (fedora:45, amd64)
-    runs-on: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
+    name: clap-validator (fedora ${{ matrix.cell.fedora }}, ${{ matrix.cell.arch }})
+    needs: rpm-cells
+    if: needs.rpm-cells.outputs.rpm-count != '0'
+    runs-on: ${{ matrix.cell.runner }}
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        cell: ${{ fromJSON(needs.rpm-cells.outputs.rpm) }}
     container:
-      image: fedora:45
+      image: ${{ matrix.cell.image }}
     steps:
       - name: Install the build dependencies
         run: |
@@ -545,10 +641,17 @@ jobs:
           set -euo pipefail
           dnf builddep -y --setopt=install_weak_deps=False packaging/omx-plugins.spec
           dnf copr enable -y ycollet/audinux
-          dnf install -y --setopt=install_weak_deps=False clap-validator nodejs
+          # node comes with the builddep above (omx-contract requires it: nodejs22-bin); Fedora's own `nodejs` conflicts with it
+          dnf install -y --setopt=install_weak_deps=False clap-validator
+          command -v node >/dev/null || { echo "::error::no node after the builddep: the tools need it"; exit 1; }
 
+      # the parallel jobs from the job's CPU quota and the runner's declared CPUs, never the host's nproc
+      - name: The parallel jobs this runner may run
+        uses: Open-Mixer/.github/.github/actions/jobs@openmixer-v1
+        with:
+          max: ${{ vars.OMX_RUNNER_CPUS || '3' }}
       - name: Build every plugin
-        run: make -j"$(nproc)" all
+        run: make -j"$OMX_JOBS" all
 
       - name: Install the factory presets where the plugins declare them
         run: make install-presets
@@ -573,12 +676,12 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: clap-validator-reports
+          name: clap-validator-reports-fc${{ matrix.cell.fedora }}-${{ matrix.cell.arch }}
           path: |
             build/clap-validator/
             build/clap-validator.log
           if-no-files-found: error
-          retention-days: 30
+          retention-days: ${{ (startsWith(github.ref, 'refs/tags/')) && 30 || 2 }}
 
   release-dry-run:
     name: release workflow, dry run
@@ -590,5 +693,4 @@ jobs:
       actions: read
     uses: ./.github/workflows/release.yml
     with:
-      publish: false
       arm: false  # the arm64 DEB and the Zynthian tarball build at release only; aarch64 RPMs are off (owner ruling 2026-11-19)

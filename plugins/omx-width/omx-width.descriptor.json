@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.width",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:width",
     "name": "omx width",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.21.1",
     "doc": "Widens or narrows the stereo image, with an optional pseudo-stereo spread for a mono source and a bass-mono cutoff that keeps the lows centred.",
     "features": [
       "audio-effect"
@@ -26,18 +23,19 @@
         "min": 0,
         "max": 200,
         "step": 1,
-        "unit": "%",
+        "unit": "percent",
         "default": 100,
         "scale": "stepped"
       },
       "group": [
         "Width"
       ],
+      "meaning": "width",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_WIDTH_PCT_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -65,11 +63,12 @@
       "group": [
         "Width"
       ],
+      "meaning": "algorithm",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_PSEUDOS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -89,11 +88,12 @@
       "group": [
         "Width"
       ],
+      "meaning": "delay",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_PSEUDO_MS_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -106,11 +106,12 @@
       "group": [
         "Width"
       ],
+      "meaning": "enabled",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_BASS_MONOS",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -130,11 +131,12 @@
       "group": [
         "Width"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_BASS_MONO_HZ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }

@@ -19,7 +19,7 @@ static const char *G_FEATURES[] = {OMX_{{K}}_CLAP_FEATURES, NULL};
  * the {{meterValues}} values the face publishes after a block. */
 _Static_assert({{meterValues}}u <= OMX_METER_RING_MAX, "one publication holds every meter's values");
 static const struct omx_face_meter G_METERS[] = {
-{{#meters}}    {"{{meterName}}", {{meterFaceKind}}, {{meterChannels}}u, {{meterOffset}}u, {{meterMin}}, {{meterMax}}, {{meterSource}}},
+{{#meters}}    {"{{meterName}}", {{meterFaceKind}}, {{meterChannels}}u, {{meterOffset}}u, {{meterMin}}, {{meterMax}}, {{meterSource}}, {{meterHeld}}, {{meterClip}}},
 {{/meters}}};
 {{/metered}}
 static const struct omx_face G_FACE = {

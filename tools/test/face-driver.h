@@ -46,6 +46,8 @@ struct face_spec {
 /** The largest block an oracle runs. */
 #define FACE_BLOCK_MAX 4096u
 #define FACE_PARAMS_MAX 128u
+/* the most values one meter read writes: a level's two channels and its clip word, with room to spare */
+#define FACE_METER_VALUES_MAX 8u
 
 static const struct face_spec *g_spec;
 static int g_checks = 0, g_failed = 0;
@@ -165,10 +167,16 @@ static bool face_clap_run(Inst *in, const float *v, bool bypass, const float *ke
   clap_process_t pr = {.steady_time = (int64_t)in->steady, .frames_count = n, .audio_inputs = ai, .audio_outputs = &ao,
                        .audio_inputs_count = key ? 2u : 1u, .audio_outputs_count = 1, .in_events = &ie, .out_events = &oe};
   in->steady += n;
+  /* the face holds a meter until it is read (docs/meters.md): every meter is read before the block, as a host reading
+   * at each block would, so a read after it gives that block's value, as the LV2 face's output port does */
+  for (uint32_t m = 0; in->mx && m < in->mx->count(in->p); m++) {
+    double drop[FACE_METER_VALUES_MAX];
+    (void)in->mx->get_values(in->p, m, drop, FACE_METER_VALUES_MAX);
+  }
   return in->p->process(in->p, &pr) != CLAP_PROCESS_ERROR;
 }
 
-/* A meter by the symbol a host reads it by: its name, one channel (omx-clap-core doc/reference.md). */
+/* A meter by the symbol a host reads it by: its name, one channel (omx-clap doc/reference.md). */
 static bool face_clap_meter(Inst *in, const char *symbol, double *value) {
   if (!in->mx) return false;
   for (uint32_t m = 0; m < in->mx->count(in->p); m++) {

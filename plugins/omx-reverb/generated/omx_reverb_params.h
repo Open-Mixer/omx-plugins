@@ -166,15 +166,15 @@ static const char *const OMX_REVERB_PARAM_MODULES[OMX_REVERB_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_REVERB_NAME "omx reverb"
 #define OMX_REVERB_VENDOR "openmixer"
-#define OMX_REVERB_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_REVERB_VERSION "0.19.3"
+#define OMX_REVERB_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_REVERB_VERSION "0.21.1"
 #define OMX_REVERB_DESCRIPTION "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal; the early reflections and the tail set apart, the wet ducked under the dry and de-essed in its band."
 #define OMX_REVERB_CLAP_ID "org.openmixer.reverb"
 #define OMX_REVERB_CLAP_FEATURES "audio-effect", "reverb", "stereo"
 #define OMX_REVERB_LV2_URI "urn:openmixer:reverb"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_REVERB_DECL_SOURCE "omx reverb: Plate Mod Depth 0 to 400 %, Mix 0 to 1, Size 0 to 1, Damping 0 to 1, Width 0 to 1, Predelay 0 to 100 ms, Lowcut 0 to 20000 Hz, Highcut 0 to 20000 Hz, Reverse 50 to 500 ms, Hold 10 to 2000 ms, Release 1 to 500 ms, Gate Threshold -80 to 0 dBFS, Algorithm 0 to 4, Early -60 to 0 dB, Tail -60 to 0 dB, Early Size 0 to 100 %, Duck -24 to 0 dB, Duck Threshold -60 to 0 dB, Duck Release 20 to 2000 ms, Wet De-ess 0 to 1, De-ess Freq 2000 to 16000 Hz, De-ess Threshold -60 to 0 dB"
-#define OMX_REVERB_DECL_DIGEST "866cf73c756e73371f6d9c25064e9658a03ad325a803fffe572f8d226ec9ff64"
+#define OMX_REVERB_DECL_DIGEST "18c7c2fbff43a42b771c09b03dda58cf73eeadc3207ac480a098089ad79edc36"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

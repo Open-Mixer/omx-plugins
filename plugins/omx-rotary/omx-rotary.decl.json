@@ -5,7 +5,8 @@
   "kernels": [
     "rotary"
   ],
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "category": "modulation",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "controls": {
     "speed": {
@@ -79,6 +80,14 @@
     "streams-from-disk": false,
     "opens-sockets": false
   },
+  "latencyChecks": [
+    {
+      "values": {
+        "mix": 50
+      },
+      "reports": 0
+    }
+  ],
   "panel": {
     "family": "modulation",
     "roles": {

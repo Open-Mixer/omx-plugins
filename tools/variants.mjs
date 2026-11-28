@@ -53,6 +53,17 @@ export function baseOf(dir) {
   return undefined;
 }
 
+/** The declaration (raw) of plugin folder `dir`: its own <stem>.decl.json, or its base's for a variant's folder (which
+ * holds generated files only). Throws when it has neither. */
+export function rawDeclOf(dir) {
+  const stem = basename(resolve(dir));
+  const own = join(dir, `${stem}.decl.json`);
+  if (existsSync(own)) return JSON.parse(readFileSync(own, 'utf8'));
+  const base = baseOf(dir);
+  if (!base) throw new Error(`plugins/${stem}: no declaration and no base declaration names it`);
+  return base.decl;
+}
+
 /** The variant stems a base declaration names. */
 export const variantStems = (decl) => (decl.variants?.of ?? []).map((v) => v.stem);
 

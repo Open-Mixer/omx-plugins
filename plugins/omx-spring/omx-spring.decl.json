@@ -6,10 +6,11 @@
     "spring"
   ],
   "noun": "spring reverb",
+  "category": "time",
   "engaged": {
     "mixPct": 100
   },
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "resourceHints": {
     "threads-spawned": 0,
@@ -17,8 +18,12 @@
     "opens-sockets": false
   },
   "panel": {
-    "family": "none",
-    "roles": {},
+    "family": "reverb",
+    "roles": {
+      "decay": "decayS",
+      "damping": "dampHz",
+      "mix": "mixPct"
+    },
     "sections": [
       {
         "key": "spring",
@@ -34,7 +39,7 @@
     ]
   },
   "console": {
-    "$comment": "The OpenMixer console has no spring reverb stage. Racked as a plugin in a channel's insert rack, it is drawn by the generic plugin editor.",
+    "$comment": "The OpenMixer console has no spring reverb stage. Racked as a plugin in a channel's insert rack, it is drawn by the console's reverb view, through its panel family's roles.",
     "placement": {
       "group": "plugins"
     }

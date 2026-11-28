@@ -9,12 +9,12 @@
   "params": [
     {
       "symbol": "widthPct",
-      "unit": "%",
+      "unit": "percent",
       "value": 140
     },
     {
       "symbol": "pseudo",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Off"
     },
@@ -25,7 +25,7 @@
     },
     {
       "symbol": "bassMono",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {

@@ -5,7 +5,7 @@
   "role": "test",
   "name": "omx test-note-echo",
   "vendor": "openmixer",
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "version": "0.13.0",
   "description": "A test instrument: every note event it is handed comes out of its note output unchanged at the same frame, and its audio is silence.",
   "clap": {

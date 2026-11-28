@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.trim",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:trim",
     "name": "omx trim",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.21.1",
     "doc": "The OpenMixer console's input trim: one gain control, -24 to +24 dB in 0.1 dB steps, applied first in the channel as a click-free ramp, stereo, zero latency; at 0 dB a racked instance is a wire.",
     "features": [
       "audio-effect"
@@ -33,11 +30,12 @@
       "group": [
         "Trim"
       ],
+      "meaning": "gain",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/trim.json#TRIM_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }

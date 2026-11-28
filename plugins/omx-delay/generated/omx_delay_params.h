@@ -172,15 +172,15 @@ static const char *const OMX_DELAY_PARAM_MODULES[OMX_DELAY_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_DELAY_NAME "omx delay"
 #define OMX_DELAY_VENDOR "openmixer"
-#define OMX_DELAY_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_DELAY_VERSION "0.19.3"
+#define OMX_DELAY_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_DELAY_VERSION "0.21.1"
 #define OMX_DELAY_DESCRIPTION "The OpenMixer console's stereo delay: one time, free or synced to the host's tempo, feedback through a tone filter, ping-pong, read taps, a tape or analog colour, a wet/dry mix and a duck under the input."
 #define OMX_DELAY_CLAP_ID "org.openmixer.delay"
 #define OMX_DELAY_CLAP_FEATURES "audio-effect", "delay", "stereo"
 #define OMX_DELAY_LV2_URI "urn:openmixer:delay"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_DELAY_DECL_SOURCE "omx delay: Time 0 to 2000 ms, Feedback 0 to 0.99, Tone 0 to 1, Mix 0 to 1, Pingpong 0 to 1, Taps 1 to 4, Tap 1 Gain 0 to 1, Tap 1 Pan -1 to 1, Tap 2 Time 0 to 10, Tap 2 Gain 0 to 1, Tap 2 Pan -1 to 1, Tap 3 Time 0 to 10, Tap 3 Gain 0 to 1, Tap 3 Pan -1 to 1, Tap 4 Time 0 to 10, Tap 4 Gain 0 to 1, Tap 4 Pan -1 to 1, Sync 0 to 1, Division 0 to 17, Mode 0 to 2, Duck -24 to 0 dB, Duck Threshold -60 to 0 dB, Duck Release 20 to 2000 ms"
-#define OMX_DELAY_DECL_DIGEST "3185a8fe2345bf9f9b48598b83c02556320301a873ac36ea4c18236ee59829e3"
+#define OMX_DELAY_DECL_DIGEST "79371bd580c84db94b280fe252fb75991e84a8ef928ca4e65c64be6ec14505be"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */

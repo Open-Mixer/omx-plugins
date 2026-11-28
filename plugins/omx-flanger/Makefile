@@ -15,28 +15,27 @@
 #   make gen        regenerate generated/ from the declaration (commit the result)
 #   make install    DESTDIR/PREFIX/LIBDIR/CLAPDIR: $(CLAPDIR)/omx-flanger.clap, $(LIBDIR)/lv2/omx-flanger.lv2/
 #
-# Build deps: omx-dsp (pkg-config omxdsp, >= OMXDSP_MIN, the floor packaging/omx-plugins.spec declares),
-# omx-contract (its resource-hints header), omx-clap-core (the CLAP ABI's openmixer extensions), clap, lv2; for the
+# Build deps: omx-dsp (pkg-config omxdsp),
+# omx-contract (its resource-hints header), omx-clap (the CLAP ABI's openmixer extensions), clap, lv2; for the
 # tests lilv and node.
 
 NAME       := omx-flanger
 URI        := urn:openmixer:flanger
 CLAP_ID    := org.openmixer.flanger
-OMXDSP_MIN ?= 0.32.0
 ROOT       := $(abspath ../..)
 GEN        := generated
 B          := build
 BUNDLE     := $(B)/$(NAME).lv2
 
 PKG_CONFIG ?= pkg-config
-ifeq ($(shell $(PKG_CONFIG) --atleast-version=$(OMXDSP_MIN) omxdsp && echo y),)
-$(error omx-dsp >= $(OMXDSP_MIN) is required (packaging/omx-plugins.spec); `$(PKG_CONFIG) omxdsp` finds $(or $(shell $(PKG_CONFIG) --modversion omxdsp 2>/dev/null),none): install omx-dsp-devel or libomxdsp-dev from the channel (BUILDING.md))
+ifeq ($(shell $(PKG_CONFIG) --exists omxdsp && echo y),)
+$(error omx-dsp is not installed: install omx-dsp-devel or libomxdsp-dev from the channel (BUILDING.md))
 endif
 # omx-contract's headers: <omxcontract/omx_resource_hints.h>, which the generated parameter header includes
 CONTRACT_CFLAGS := $(shell $(PKG_CONFIG) --cflags omx-contract)
 DSP_CFLAGS := $(shell $(PKG_CONFIG) --cflags omxdsp) $(CONTRACT_CFLAGS)
 DSP_LIBS   := $(shell $(PKG_CONFIG) --libs omxdsp)
-ABI_CFLAGS := $(shell $(PKG_CONFIG) --cflags omx-clap-core clap 2>/dev/null)
+ABI_CFLAGS := $(shell $(PKG_CONFIG) --cflags omx-clap clap 2>/dev/null)
 LV2_CFLAGS := $(shell $(PKG_CONFIG) --cflags lv2 2>/dev/null)
 LILV       := $(shell $(PKG_CONFIG) --cflags --libs lilv-0 2>/dev/null)
 

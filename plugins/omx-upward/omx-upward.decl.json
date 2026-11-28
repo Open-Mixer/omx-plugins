@@ -6,7 +6,8 @@
     "upward"
   ],
   "noun": "upward compressor",
-  "url": "https://github.com/FreeMixer/omx-plugins",
+  "category": "dynamics",
+  "url": "https://github.com/Open-Mixer/omx-plugins",
   "binding": "instance",
   "resourceHints": {
     "threads-spawned": 0,
@@ -14,8 +15,13 @@
     "opens-sockets": false
   },
   "panel": {
-    "family": "none",
-    "roles": {},
+    "family": "dynamics",
+    "roles": {
+      "threshold": "thresholdDb",
+      "ratio": "ratio",
+      "attack": "attackMs",
+      "release": "releaseMs"
+    },
     "sections": [
       {
         "key": "upward",
@@ -31,7 +37,7 @@
     ]
   },
   "console": {
-    "$comment": "The OpenMixer console has no upward compressor stage. Racked as a plugin in a channel's insert rack, it is drawn by the generic plugin editor.",
+    "$comment": "The OpenMixer console has no upward compressor stage. Racked as a plugin in a channel's insert rack, it is drawn by the console's compressor view, through its panel family's roles.",
     "placement": {
       "group": "plugins"
     }

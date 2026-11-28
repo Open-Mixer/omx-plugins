@@ -21,10 +21,10 @@
 import { spawnSync } from 'node:child_process';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { DESCRIPTOR_SCHEMA_FLOOR, descriptorFile, descriptorOf, descriptorText, parseLink } from '../descriptor.mjs';
+import { descriptorFile, descriptorOf, descriptorText, parseLink } from '../descriptor.mjs';
 import { clapFeatureValue } from '../format-tables.mjs';
 import { ROOT, loadDecl, pluginDirs } from '../gen.mjs';
-import { OWNERS, compareVersions, findName, installedDataDir, items, locateContract } from '../omx-contract.mjs';
+import { OWNERS, findName, installedContractDir, installedDataDir, items, locateContract } from '../omx-contract.mjs';
 import { validate } from '../schema-validate.mjs';
 
 let bad = 0, n = 0;
@@ -83,8 +83,6 @@ const where = locateContract();
 // beside the render read, else in the installed data directory (a union render carries no schema)
 const schemaFile = [where.dir, installedDataDir()].filter(Boolean).map((d) => join(d, 'omx-contract.schema.json')).find((f) => existsSync(f));
 const schema = schemaFile && existsSync(schemaFile) ? JSON.parse(readFileSync(schemaFile, 'utf8')) : undefined;
-// from the release that added them on, the descriptor words are always checked: a schema not found is red
-const carriesWords = Boolean(where.version) && compareVersions(where.version, DESCRIPTOR_SCHEMA_FLOOR) >= 0;
 if (schema?.$defs?.descriptor) {
   for (const dir of described) {
     const stem = dir.split('/').pop();
@@ -93,20 +91,25 @@ if (schema?.$defs?.descriptor) {
   const broken = JSON.parse(readFileSync(join(described[0], descriptorFile(described[0].split('/').pop())), 'utf8'));
   broken.controls[0].ids = ['a'];
   check('arm: a travel carrying choice ids breaks the descriptor words', validate(schema, schema.$defs.descriptor, broken).length > 0, true);
-} else if (carriesWords) check(`omx-contract ${where.version} carries the descriptor words: its schema is found and holds $defs.descriptor`, schemaFile ? 'no $defs.descriptor' : 'no omx-contract.schema.json', 'found');
-else console.log(`NOTE descriptor-view: omx-contract ${where.version ?? '(none)'} predates the descriptor words (${DESCRIPTOR_SCHEMA_FLOOR}); its schema holds no descriptor`);
+} else check(`omx-contract ${where.version} carries the descriptor words: its schema is found and holds $defs.descriptor`, schemaFile ? 'no $defs.descriptor' : 'no omx-contract.schema.json', 'found');
 
 // the owners a descriptor's links name come with the render: read through OMX_CONTRACT_DIR alone, with no
 // installed omx-contract, a copy of the render with its owners.json gives the same descriptors, and one
 // without is refused by name (a build never reads the installed omx-plugins' owners in their place)
-if (carriesWords) {
+{
   const first = described[0], firstStem = first.split('/').pop();
+  // the render below hides the installed omx-contract from pkg-config; gen.mjs decides "run, not imported" with
+  // omx-contract's isMain, which reads the command's own directory, so that one directory stays named
+  const clidir = spawnSync('pkg-config', ['--variable=clidir', 'omx-contract'], { encoding: 'utf8' }).stdout.trim();
+  // the CLAP feature terms are omx-clap's domain clap, not in omx-contract's render (sorting row V24/27): the
+  // installed contract directory stays named for the domains, the owners still come from the render alone
+  const domains = installedContractDir();
   const lone = (dir) => {
     const r = spawnSync(process.execPath, ['--input-type=module', '-e', `
       const { loadDecl } = await import(${JSON.stringify(join(ROOT, 'tools', 'gen.mjs'))});
       const { descriptorText } = await import(${JSON.stringify(join(ROOT, 'tools', 'descriptor.mjs'))});
       process.stdout.write(descriptorText(loadDecl(${JSON.stringify(first)})));`],
-    { encoding: 'utf8', env: { ...process.env, OMX_CONTRACT_DIR: dir, OMX_CONTRACT_SCHEMA: schemaFile, PKG_CONFIG_PATH: '/nonexistent', PKG_CONFIG_LIBDIR: '/nonexistent' } });
+    { encoding: 'utf8', env: { ...process.env, OMX_CONTRACT_DIR: dir, OMX_CONTRACT_SCHEMA: schemaFile, PKG_CONFIG_PATH: '/nonexistent', PKG_CONFIG_LIBDIR: '/nonexistent', ...(domains ? { OMX_INSTALLED_CONTRACTDIR: domains } : {}), ...(clidir ? { OMX_CONTRACT_CLI: join(clidir, 'bin', 'omx-contract.mjs') } : {}) } });
     return r.status === 0 ? r.stdout : `refused: ${r.stderr.trim().split('\n').find((l) => l.startsWith('Error')) ?? r.stderr.trim()}`;
   };
   const render = join(ROOT, 'build', 'tmp', 'descriptor-view-render');
@@ -189,7 +192,7 @@ fresh();
 editJson(DESC, (x) => { x.extensions.lv2['rdf:type'] = 'lv2:DelayPlugin'; });
 check('arm: an LV2 bag without lv2:Plugin is refused', refusal(() => loadDecl(copy)), `extensions.lv2["rdf:type"] is the LV2 face's types, "lv2:Plugin" and at most its class`);
 
-const united = JSON.parse(readFileSync(join(dir, DESC), 'utf8')).controls.find((c) => c.kind === 'travel' && c.source?.from && c.travel.unit !== '');
+const united = JSON.parse(readFileSync(join(dir, DESC), 'utf8')).controls.find((c) => c.kind === 'travel' && c.source?.from && c.travel.unit !== 'none');
 fresh();
 editJson(DESC, (x) => { x.controls[united.id].travel.unit = 'ratio'; });
 check(`arm: ${united.symbol}, a ${united.travel.unit} travel stating ratio, is stale`, descriptorText(loadDecl(copy)) === readFileSync(join(copy, DESC), 'utf8'), false);

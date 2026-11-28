@@ -12,7 +12,8 @@
  * usage: no-modgui-check.mjs [--self-test]
  */
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -28,7 +29,21 @@ export function refusals({ files, manifests, texts }) {
   return out;
 }
 
-const tracked = () => execFileSync('git', ['ls-files', '-z'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1 << 26 }).split('\0').filter(Boolean);
+/** The files under `dir`, relative, without .git, node_modules and build: the listing of a tree that is no git checkout (a package build's unpacked sources). */
+export function walk(dir, rel = '') {
+  const out = [];
+  for (const e of readdirSync(join(dir, rel), { withFileTypes: true })) {
+    if (['.git', 'node_modules', 'build'].includes(e.name)) continue;
+    const r = rel ? `${rel}/${e.name}` : e.name;
+    if (e.isDirectory()) out.push(...walk(dir, r)); else out.push(r);
+  }
+  return out;
+}
+/** The tree's files: git's list when the tree is a checkout, else every file of it (an RPM or deb build has no .git). */
+export function tracked(root = ROOT) {
+  try { return execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8', maxBuffer: 1 << 26, stdio: ['ignore', 'pipe', 'ignore'] }).split('\0').filter(Boolean); }
+  catch { return walk(root); }
+}
 const read = (p) => readFileSync(join(ROOT, p), 'utf8');
 const BUILD_FILES = ['recipes/templates/plugin/Makefile.tmpl', 'Makefile', '.github/workflows/ci.yml'];
 
@@ -56,6 +71,13 @@ if (process.argv.includes('--self-test')) {
     'a make modgui step': { ...clean, texts: [{ path: 'ci.yml', text: '          make modgui\n' }] },
     'a modgui-test.sh call': { ...clean, texts: [{ path: 'T', text: '\tsh $(OMX_PANEL_DIR)/tools/modgui-test.sh $(BUNDLE)\n' }] },
   };
+  // a tree that is no git checkout (the package build's) is read from its files: a planted MOD GUI file in it is found
+  const bare = mkdtempSync(join(tmpdir(), 'no-modgui-'));
+  try {
+    mkdirSync(join(bare, 'plugins/omx-drive/generated/omx-drive.lv2'), { recursive: true });
+    writeFileSync(join(bare, 'plugins/omx-drive/generated/omx-drive.lv2/modgui.ttl'), '');
+    if (!refusals({ ...clean, files: tracked(bare) }).some((r) => /a tracked MOD GUI file/.test(r))) { console.error('no-modgui: SABOTAGE a tree without .git: STAYED GREEN'); bad = true; } else console.log('SABOTAGE a tree without .git: red');
+  } finally { rmSync(bare, { recursive: true, force: true }); }
   if (refusals(clean).length > 0) { console.error('no-modgui: self-test: the clean fixture is refused'); bad = true; }
   for (const [name, fixture] of Object.entries(arms)) {
     if (refusals(fixture).length === 0) { console.error(`no-modgui: SABOTAGE ${name}: STAYED GREEN`); bad = true; } else console.log(`SABOTAGE ${name}: red`);

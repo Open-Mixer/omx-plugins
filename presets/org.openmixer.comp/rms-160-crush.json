@@ -14,7 +14,7 @@
     },
     {
       "symbol": "ratio",
-      "unit": "",
+      "unit": "none",
       "value": 8
     },
     {
@@ -39,24 +39,24 @@
     },
     {
       "symbol": "mixPct",
-      "unit": "%",
+      "unit": "percent",
       "value": 100
     },
     {
       "symbol": "kind",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Compressor"
     },
     {
       "symbol": "detectorOversampling",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Auto"
     },
     {
       "symbol": "detectorTopology",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Feedforward"
     },
@@ -72,12 +72,12 @@
     },
     {
       "symbol": "keyTiltDb",
-      "unit": "dB/oct",
+      "unit": "dBPerOct",
       "value": 0
     },
     {
       "symbol": "keyListen",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
@@ -87,13 +87,13 @@
     },
     {
       "symbol": "detectLink",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Linked"
     },
     {
       "symbol": "duck",
-      "unit": "",
+      "unit": "none",
       "value": 0
     },
     {
@@ -103,7 +103,7 @@
     },
     {
       "symbol": "releaseMode",
-      "unit": "",
+      "unit": "none",
       "value": 0,
       "label": "Fixed"
     }

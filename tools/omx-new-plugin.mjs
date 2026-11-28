@@ -46,6 +46,10 @@ import { omxdspInclude } from './template.mjs';
 import { expandVariant } from './variants.mjs';
 
 const REVIEW = 'REVIEW';
+/** A drafted parameter's meaning, its ROLE: a person's reading, never guessed from a name or a unit (omx-contract
+ * docs/descriptors.md "Meanings", declare, don't infer). Settled to a word of PARAM_MEANINGS, or dropped for a
+ * parameter a panel role binds (its meaning is its role's). */
+const MEANING_REVIEW = `${REVIEW}: the control's role, a word of omx-contract's PARAM_MEANINGS (docs/declaration-as-descriptor.md), or drop it for a parameter a panel role binds`;
 
 // ---- the derived fields -----------------------------------------------------------------------
 
@@ -142,6 +146,7 @@ export function draftDeclaration(kernel, src, { root = ROOT, recipe = loadRecipe
     const p = { symbol: b.param.symbol, name: labelOf(b.param.symbol), ref: b.param.ref, ...(b.param.field ? { field: b.param.field } : {}) };
     const e = items(src.contract)[p.ref];
     if (e.kind === 'set' && !e.value.every((x) => typeof x === 'number') && !e.labels) p.values = e.value.map((id) => `${REVIEW}: the label of ${id}`);
+    p.meaning = MEANING_REVIEW;
     if (!b.extent) return [p];
     // a per-band array whose count is a sheet of variants (EQ_BAND_COUNTS): one declaration for the
     // variants (tools/variants.mjs), the parameter written once and repeated per band
@@ -161,6 +166,7 @@ export function draftDeclaration(kernel, src, { root = ROOT, recipe = loadRecipe
   const schema = loadSchema(root, recipe);
   const decl = {
     stem, kernel, kernels: [kernel],
+    category: `${REVIEW}: the row a console groups it under (the schema's $defs.category)`,
     description: `${REVIEW}: one plain sentence a host shows, what the effect does for you`,
     clap: { features: ['audio-effect', `${REVIEW}: the CLAP kind (delay, distortion, modulation, ...)`, 'stereo'] },
     lv2: { class: `${REVIEW}: the LV2 class (lv2:DelayPlugin, lv2:ModulatorPlugin, ...)` },
@@ -324,6 +330,7 @@ export function draftChain(kernels, chainSrc, { root = ROOT, recipe = loadRecipe
       const p = { symbol: `${id}${cap(b.param.symbol)}`, name: `${name} ${labelOf(b.param.symbol)}`, ref: b.param.ref, ...(b.param.field ? { field: b.param.field } : {}) };
       const e = items(src.contract)[p.ref];
       if (e.kind === 'set' && !e.value.every((x) => typeof x === 'number') && !e.labels) p.values = e.value.map((v) => `${REVIEW}: the label of ${v}`);
+      p.meaning = MEANING_REVIEW;
       return p;
     };
     const bands = bound.binding.filter((b) => b.extent);
@@ -351,6 +358,7 @@ export function draftChain(kernels, chainSrc, { root = ROOT, recipe = loadRecipe
   const schema = loadSchema(root, recipe);
   const decl = {
     stem, kernel: short.replace(/-/g, '_'),
+    category: `${REVIEW}: the row a console groups it under (the schema's $defs.category)`,
     description: `${REVIEW}: one plain sentence a host shows, what the effect does for you`,
     clap: { features: ['audio-effect', `${REVIEW}: the CLAP kind (mixing, dynamics, ...)`, 'stereo'] },
     lv2: { class: `${REVIEW}: the LV2 class (lv2:MixerPlugin, lv2:DynamicsPlugin, ...)` },

@@ -50,12 +50,13 @@ export function roleMeaningFiles() {
   const files = [fileURLToPath(new URL('../contract/role-meanings.json', import.meta.url))];
   const seen = new Set(['omx-plugins']);
   for (const dir of vocabulary.contractDirs()) {
-    const major = join(dir, '3');
-    if (!existsSync(major)) continue;
-    for (const pkg of readdirSync(major, { withFileTypes: true })) {
-      if (!pkg.isDirectory() || seen.has(pkg.name)) continue;
+    if (!existsSync(dir)) continue;
+    // a package is <dir>/<owner>/ with its MANIFEST.json; a directory without one is a domain, read by its own readers
+    for (const pkg of readdirSync(dir, { withFileTypes: true })) {
+      if (!pkg.isDirectory() || seen.has(pkg.name) || !existsSync(join(dir, pkg.name, 'MANIFEST.json'))) continue;
       seen.add(pkg.name);
-      for (const f of readdirSync(join(major, pkg.name))) if (f.endsWith('.json')) files.push(join(major, pkg.name, f));
+      const listed = Object.keys(JSON.parse(readFileSync(join(dir, pkg.name, 'MANIFEST.json'), 'utf8')).files ?? {});
+      for (const f of listed) if (f.endsWith('.json') && !f.includes('/')) files.push(join(dir, pkg.name, f));
     }
   }
   return files;
@@ -63,7 +64,8 @@ export function roleMeaningFiles() {
 process.env.OMX_ROLE_MEANINGS ||= roleMeaningFiles().join(':');
 
 /** omx-panel's declared lists (schema/panel.schema.json): the widgets a control is drawn with and the roles that repeat by
- * index. A plugin's declaration schema references its `$defs` by this schema's `$id`. */
+ * index. A plugin's declaration schema references its `$defs` by the document's name, `panel.schema.json#/$defs/<name>`
+ * (tools/schema-validate.mjs), never by the address its `$id` prints, which moves with its publisher. */
 export const PANEL_SCHEMA = JSON.parse(readFileSync(at('schema', 'panel.schema.json'), 'utf8'));
 
 /** Runs `omx-panel <args>`: `{ status, stdout, stderr }`. */

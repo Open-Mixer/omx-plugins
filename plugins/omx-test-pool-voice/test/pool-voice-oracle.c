@@ -36,7 +36,7 @@
 #include <time.h>
 
 #include <clap/clap.h>
-#include <omxcontract/omx_contract_limits.h>
+#include <omxdsp/omxdsp_definitions.h> /* the oracle rates, omx-dsp's ORACLE_FULL_RATES */
 
 #include "omx_test_pool_voice_decl.h"
 

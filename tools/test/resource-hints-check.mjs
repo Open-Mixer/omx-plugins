@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 /*
- * resource-hints-check.mjs — every shipped plugin declares its resource hints (omx-contract RESOURCE_HINTS,
+ * resource-hints-check.mjs — every shipped plugin declares its resource hints (omx-contract's RESOURCE_HINTS,
  * tools/resource-hints.mjs), and both carriers say what the declaration says:
  *
  *   1. the vocabulary: the installed contract names the LV2 prefix omxres and the namespace
@@ -16,7 +16,12 @@
  *      no other, and each stated member to the declaration's value. (What the BUILT face's get returns is
  *      tools/clap-ext-check.mjs's, in each plugin's `make test`.)
  *
- * `--self-test` adds the sabotage arms: each breaks one thing and must go red.
+ *   0. the words are omx-contract's until sorting row V28's design lands (%4 ruling 2026-11-22): the
+ *      vocabulary is read from the item omx-contract's package holds in the render read, its hints in bit order =
+ *      golden (omx-contract 3.20.2's RESOURCE_HINTS).
+ *
+ * `--self-test` adds the sabotage arms: each breaks one thing and must go red; one gives the item to plugin-hostd in a
+ * copy of the render read (its owners.json) and wants the vocabulary refused.
  *
  * `--binaries <plugin dir> <file>...` is the other half, run by each plugin's `make test` on its built faces: a
  * claim a binary's imports can refute is held to them. threads-spawned 0 imports no thread creation, opens-sockets
@@ -25,18 +30,22 @@
  * `make resource-hints`, part of `make test`. It reads omx-contract as `make test` does.
  */
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { loadDecl, pluginDirs, ROOT } from '../gen.mjs';
-import { installedDataDir, locateContract, isMain } from '../omx-contract.mjs';
+import { installedDataDir, locateContract, isMain, items, OWNERS } from '../omx-contract.mjs';
 import { presetsOf } from '../preset-lib.mjs';
-import { REQUIRED_HINTS, hintVocabulary, maskOf } from '../resource-hints.mjs';
+import { HINTS_OWNER, REQUIRED_HINTS, hintVocabulary, maskOf } from '../resource-hints.mjs';
 
 /** The pin: the LV2 prefix and namespace as #216 and omx-contract#140 settled them, which this check holds the installed
  * contract to. No generator reads them; tools/gen.mjs takes both from the contract (tools/resource-hints.mjs). */
 export const LV2_PREFIX = 'omxres';
 export const LV2_NAMESPACE = 'https://www.openmixer.org/ns/resource-hints#';
 const XSD = 'http://www.w3.org/2001/XMLSchema#';
+/** The hints in bit order as omx-contract 3.20.2 released them, frozen: the owner's item keeps every one at its bit. */
+export const GOLDEN_HINTS = Object.freeze(['footprint-at-rest', 'footprint-per-voice', 'shared-load', 'threads-spawned', 'streams-from-disk', 'opens-sockets', 'activate-time']);
+
 
 /** The imports that refute a claim, by the hint and the value whose claim they refute. */
 export const REFUTED_BY = {
@@ -137,6 +146,7 @@ function contractCarriers() {
   if (!where.dir) throw new Error(`resource-hints: ${where.why}`);
   const includedir = execFileSync(process.env.PKG_CONFIG || 'pkg-config', ['--variable=includedir', 'omx-contract'], { encoding: 'utf8' }).trim();
   return {
+    dir: where.dir,
     v: hintVocabulary(where.dir),
     header: readFileSync(join(includedir, 'omxcontract', 'omx_resource_hints.h'), 'utf8'),
     ttl: readFileSync(join(installedDataDir(), 'omx-resource-hints.ttl'), 'utf8'),
@@ -173,6 +183,10 @@ if (isMain(import.meta.url)) {
   const c = contractCarriers();
   const plugins = load();
   const errors = treeErrors(c, plugins);
+  // 0. the words are HINTS_OWNER's, golden in bit order
+  if (c.v.owner !== HINTS_OWNER) errors.push(`the hint vocabulary is read from ${c.v.owner ?? 'an item whose owner is not checked'}, not ${HINTS_OWNER}'s RESOURCE_HINTS`);
+  const words = c.v.hints.map((h) => h.word);
+  if (JSON.stringify(words.slice(0, GOLDEN_HINTS.length)) !== JSON.stringify(GOLDEN_HINTS)) errors.push(`the hints in bit order are ${words.join(', ')}; golden ${GOLDEN_HINTS.join(', ')}`);
   for (const e of errors) console.log(`FAIL resource-hints ${e}`);
   let bad = errors.length;
   if (args.includes('--self-test')) {
@@ -184,20 +198,36 @@ if (isMain(import.meta.url)) {
     const arms = {
       [`${delay.stem}'s declaration without opens-sockets`]: () => requiredErrors(withOne(dropped)),
       [`${delay.stem}'s TTL in another namespace (http, not https)`]: () => ttlErrors(c.v, delay, one.ttl.replace(`<${LV2_NAMESPACE}>`, `<${LV2_NAMESPACE.replace('https:', 'http:')}>`)),
-      [`${delay.stem}'s TTL in the retired namespace`]: () => ttlErrors(c.v, delay, one.ttl.replace(`<${LV2_NAMESPACE}>`, '<https://freemixer.github.io/ns/resource-hints#>')),
+      [`${delay.stem}'s TTL in the retired namespace`]: () => ttlErrors(c.v, delay, one.ttl.replace(`<${LV2_NAMESPACE}>`, '<https://open-mixer.github.io/ns/resource-hints#>')),
       [`${delay.stem}'s TTL with a hint's value flipped`]: () => ttlErrors(c.v, delay, one.ttl.replace(`${LV2_PREFIX}:opensSockets false`, `${LV2_PREFIX}:opensSockets true`)),
       [`${delay.stem}'s TTL with a figure left a plain string`]: () => ttlErrors(c.v, delay, one.ttl.replace(`${LV2_PREFIX}:threadsSpawned "0"^^xsd:integer`, `${LV2_PREFIX}:threadsSpawned "0"`)),
       [`${delay.stem}'s TTL without a stated hint`]: () => ttlErrors(c.v, delay, one.ttl.replace(/^ {4}omxres:streamsFromDisk .*\n/m, '')),
       [`${delay.stem}'s TTL with a hint the declaration leaves unknown`]: () => ttlErrors(c.v, delay, one.ttl.replace(`${LV2_PREFIX}:opensSockets false ;`, `${LV2_PREFIX}:opensSockets false ;\n    ${LV2_PREFIX}:activateTime "0"^^xsd:integer ;`)),
       [`${delay.stem}'s header with a bit dropped`]: () => headerErrors(c.v, delay, one.header.replace(' | OMX_RESOURCE_HINT_OPENS_SOCKETS', '')),
       [`${delay.stem}'s header with a member changed`]: () => headerErrors(c.v, delay, one.header.replace('.threads_spawned = 0u', '.threads_spawned = 2u')),
-      'a contract naming another LV2 namespace': () => vocabularyErrors({ ...c.v, namespace: 'https://freemixer.github.io/ns/resource-hints#' }, c.header, c.ttl),
+      'a contract naming another LV2 namespace': () => vocabularyErrors({ ...c.v, namespace: 'https://open-mixer.github.io/ns/resource-hints#' }, c.header, c.ttl),
       'an installed header whose bit order moved': () => vocabularyErrors(c.v, c.header.replace('OMX_RESOURCE_HINT_THREADS_SPAWNED (1u << 3)', 'OMX_RESOURCE_HINT_THREADS_SPAWNED (1u << 4)'), c.ttl),
       [`${delay.stem}'s face importing pthread_create`]: () => importErrors(delay, ['face.clap'], () => ['calloc', 'pthread_create']),
       [`${delay.stem}'s face importing fopen`]: () => importErrors(delay, ['face.so'], () => ['fopen']),
       [`${delay.stem}'s face importing open, with presets shipped`]: () => importErrors(delay, ['face.so'], () => ['open', 'fopen'], true),
       [`${delay.stem}'s face importing fread, no presets shipped`]: () => importErrors(delay, ['face.so'], () => ['fread'], false),
       [`${delay.stem}'s face importing socket`]: () => importErrors(delay, ['face.so'], () => ['socket']),
+    };
+    // (c) the item given to omx-contract in a copy of the render read: the vocabulary is refused
+    arms['a render whose RESOURCE_HINTS is plugin-hostd\'s, not omx-contract\'s'] = () => {
+      const tmp = mkdtempSync(join(tmpdir(), 'resource-hints-'));
+      try {
+        cpSync(join(c.dir, 'omx-contract.json'), join(tmp, 'omx-contract.json'));
+        const owners = JSON.parse(readFileSync(join(c.dir, OWNERS), 'utf8'));
+        owners[items(c.dir).RESOURCE_HINTS.rel] = { package: 'plugin-hostd', version: '0.21.0' };
+        writeFileSync(join(tmp, OWNERS), JSON.stringify(owners));
+        hintVocabulary(tmp);
+        return [];
+      } catch (e) {
+        return [e.message];
+      } finally {
+        rmSync(tmp, { recursive: true, force: true });
+      }
     };
     for (const [what, run] of Object.entries(arms)) {
       const red = run();

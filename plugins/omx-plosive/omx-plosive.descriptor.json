@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.plosive",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:plosive",
     "name": "omx plosive",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.21.1",
     "doc": "Softens the p pops and hard t and k consonants of a voice, cutting each only while it bursts.",
     "features": [
       "audio-effect"
@@ -33,11 +30,12 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/plosive.json#PLOSIVE_CONSONANT_DB_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -57,11 +55,12 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/plosive.json#PLOSIVE_SENSITIVITY_DB_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -81,11 +80,12 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/plosive.json#PLOSIVE_RECOVERY_MS_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -105,11 +105,12 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "frequency",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/plosive.json#PLOSIVE_BAND_HZ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -129,11 +130,12 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "width",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/plosive.json#PLOSIVE_BAND_WIDTH_OCT_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -153,11 +155,12 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/plosive.json#PLOSIVE_POP_DB_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -177,11 +180,12 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/plosive.json#PLOSIVE_POP_SENSITIVITY_DB_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -201,11 +205,12 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/plosive.json#PLOSIVE_POP_RECOVERY_MS_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -225,11 +230,12 @@
       "group": [
         "Plosive"
       ],
+      "meaning": "cutoffFrequency",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/plosive.json#PLOSIVE_POP_HZ_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }

@@ -1,8 +1,5 @@
 {
   "$schema": "../schema/omx-contract.schema.json",
-  "requires": {
-    "omx-contract-schema": ">= 3.7.0"
-  },
   "origin": "authored",
   "plugin": {
     "id": "org.openmixer.upward",
@@ -10,7 +7,7 @@
     "uri": "urn:openmixer:upward",
     "name": "omx upward",
     "vendor": "openmixer",
-    "version": "0.19.3",
+    "version": "0.21.1",
     "doc": "Lifts what is quiet toward a threshold, by a ratio and up to a limit, and leaves the loud alone.",
     "features": [
       "audio-effect"
@@ -33,11 +30,12 @@
       "group": [
         "Upward"
       ],
+      "meaning": "threshold",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_THRESHOLD_DB_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -57,11 +55,12 @@
       "group": [
         "Upward"
       ],
+      "meaning": "ratio",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_RATIO_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -81,11 +80,12 @@
       "group": [
         "Upward"
       ],
+      "meaning": "range",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_RANGE_DB_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -105,11 +105,12 @@
       "group": [
         "Upward"
       ],
+      "meaning": "attack",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_ATTACK_MS_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     },
@@ -129,11 +130,12 @@
       "group": [
         "Upward"
       ],
+      "meaning": "release",
       "automatable": true,
       "source": {
         "from": {
           "link": "data/kernels/upward.json#UPWARD_RELEASE_MS_RANGE",
-          "at": "omx-dsp@0.32.0"
+          "at": "omx-dsp@0.34.3"
         }
       }
     }

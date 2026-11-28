@@ -19,7 +19,7 @@
     },
     {
       "symbol": "tensionPct",
-      "unit": "%",
+      "unit": "percent",
       "value": 70
     },
     {
@@ -29,7 +29,7 @@
     },
     {
       "symbol": "mixPct",
-      "unit": "%",
+      "unit": "percent",
       "value": 35
     }
   ],

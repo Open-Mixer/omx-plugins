@@ -11,7 +11,13 @@
  * in its own CI jobs, sharded (OMX_HEAVY_SHARD=i/n), in parallel.
  *
  * tools/test/test-split.json lists every step once, under the target that runs it. This holds to that list:
- *   - the top Makefile: the prerequisites and the $(MAKE) -s steps of `test` and of `test-heavy`;
+ *   - the top Makefile: the fast checks (the prerequisites of `test-checks`), the $(MAKE) -s steps of `test` and of
+ *     `test-heavy`, and the prerequisites of `test-heavy`;
+ *   - `make test` runs every part whatever an earlier part answered: one shell command that runs `$(MAKE) -k test-checks`,
+ *     then every plugin's test, then each step, each call `|| { rc=1; ... }`, and ends `exit $$rc`. A red fast check
+ *     hid every plugin's test until 0.20.0 (omx-strip's remote-controls red, #212, behind role-meanings and debt-base);
+ *   - every Makefile target that runs a tools/test/ script is a fast check, a step, or listed under `elsewhere` with
+ *     where it runs (strip-pages-follow was written, said "part of make test", and was run by nothing);
  *   - the plugin Makefile template (recipes/templates/plugin/Makefile.tmpl): each `|| fail=1` step of a
  *     plugin's `test` and `test-heavy` recipes is one listed step, in the listed target, and every listed
  *     step is there;
@@ -20,7 +26,7 @@
  * A step dropped from both targets, moved without the list, or a shard left out is red.
  *
  * --self-test: each sabotage arm must be red, the unsabotaged tree green.
- * `make test-split`, part of `make test`.
+ * `make test-split`, part of `make test` (a fast check).
  */
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
@@ -66,29 +72,60 @@ function pluginSteps(r, markers, where, errors) {
   return found;
 }
 
+/** The targets whose own recipe runs a tools/test/ script. */
+function testTargets(makefile) {
+  const out = [];
+  for (const m of makefile.matchAll(/^([A-Za-z0-9_-]+):(?!=)/gm)) {
+    const r = rule(makefile, m[1]);
+    if (r && r.recipe.some((l) => l.includes('tools/test/'))) out.push(m[1]);
+  }
+  return [...new Set(out)];
+}
+
+/** `make test` runs every part whatever an earlier one answered: one shell command, `$(MAKE) -k test-checks`, then the
+ * plugin loop and the steps, each `|| { rc=1`, ending `exit $$rc`. */
+function keepGoingErrors(r) {
+  if (!r) return [];
+  const errors = [];
+  const runs = r.recipe.filter((l) => l.includes('$(MAKE)'));
+  if (!runs.some((l) => /\$\(MAKE\) -k test-checks\b/.test(l))) errors.push('Makefile `test`: does not run `$(MAKE) -k test-checks` (a red fast check would stop the others)');
+  for (const l of runs) if (!/\$\(MAKE\)[^|]*\|\| \{ rc=1;/.test(l)) errors.push(`Makefile \`test\`: a part stops the rest when it is red: ${l.trim()}`);
+  const first = r.recipe.findIndex((l) => l.includes('$(MAKE)'));
+  const last = r.recipe.length - 1;
+  if (first >= 0 && (r.recipe.slice(first, last).some((l) => !l.endsWith('\\')) || !/exit \$\$rc\s*$/.test(r.recipe[last]))) errors.push('Makefile `test`: its parts are not one shell command ending `exit $$rc` (a separate recipe line stops make at a red)');
+  return errors;
+}
+
 const sameSet = (a, b) => a.length === b.length && [...a].sort().join('\n') === [...b].sort().join('\n');
 
 /** Every defect, one line each, of the tree given as file texts. */
 export function splitErrors(t) {
   const errors = [];
   const list = JSON.parse(t.list);
-  // the top Makefile
+  // the top Makefile: the fast checks are test-checks' prerequisites, test-heavy's its own
   for (const target of ['test', 'test-heavy']) {
     const r = rule(t.makefile, target);
     if (!r) { errors.push(`Makefile: no \`${target}\` target`); continue; }
     const want = list[target];
-    if (!sameSet(r.prerequisites, want.prerequisites)) {
-      const gone = want.prerequisites.filter((p) => !r.prerequisites.includes(p));
-      const extra = r.prerequisites.filter((p) => !want.prerequisites.includes(p));
-      errors.push(`Makefile \`${target}\`: prerequisites differ from the list (missing: ${gone.join(' ') || '-'}; not listed: ${extra.join(' ') || '-'})`);
+    const pre = target === 'test' ? rule(t.makefile, 'test-checks') : r;
+    if (!pre) { errors.push('Makefile: no `test-checks` target'); continue; }
+    if (!sameSet(pre.prerequisites, want.prerequisites)) {
+      const gone = want.prerequisites.filter((p) => !pre.prerequisites.includes(p));
+      const extra = pre.prerequisites.filter((p) => !want.prerequisites.includes(p));
+      errors.push(`Makefile \`${target === 'test' ? 'test-checks' : target}\`: prerequisites differ from the list (missing: ${gone.join(' ') || '-'}; not listed: ${extra.join(' ') || '-'})`);
     }
     const steps = [...new Set(topSteps(r))];
     const gone = want.steps.filter((s) => !steps.includes(s));
     const extra = steps.filter((s) => !want.steps.includes(s));
     if (gone.length || extra.length) errors.push(`Makefile \`${target}\`: steps differ from the list (missing: ${gone.join(' ') || '-'}; not listed: ${extra.join(' ') || '-'})`);
   }
+  errors.push(...keepGoingErrors(rule(t.makefile, 'test')));
+  // every target that runs a tools/test/ script is run by one of the sets, or says where it runs
+  const listed = new Set([...list.test.prerequisites, ...list.test.steps, ...list['test-heavy'].steps, ...Object.keys(list.elsewhere ?? {})]);
+  for (const target of testTargets(t.makefile)) if (!listed.has(target)) errors.push(`Makefile \`${target}\` runs a tools/test/ script and neither make test nor make test-heavy runs it, and it is not under elsewhere`);
+  for (const target of Object.keys(list.elsewhere ?? {})) if (!rule(t.makefile, target)) errors.push(`test-split.json elsewhere: \`${target}\` is no Makefile target`);
   // nothing is listed twice
-  const all = [...list.test.prerequisites, ...list.test.steps, ...list['test-heavy'].steps,
+  const all = [...list.test.prerequisites, ...list.test.steps, ...list['test-heavy'].steps, ...Object.keys(list.elsewhere ?? {}),
     ...list.plugin.test, ...list.plugin['test-heavy']];
   for (const s of new Set(all)) if (all.filter((x) => x === s).length > 1 && s !== 'lib') errors.push(`test-split.json: "${s}" is listed twice`);
   // the plugin template
@@ -152,8 +189,12 @@ if (process.argv.includes('--self-test')) {
   const swap = (s, a, b) => { if (!s.includes(a)) throw new Error(`self-test: "${a}" is not in the text it sabotages`); return s.replace(a, b); };
   const arms = {
     'round-trip dropped from make test-heavy': { ...t, makefile: swap(t.makefile, '$(MAKE) -s round-trip;', 'true;') },
-    'hints dropped from make test': { ...t, makefile: swap(t.makefile, '\t@$(MAKE) -s hints\n', '') },
+    'hints dropped from make test': { ...t, makefile: swap(t.makefile, '\t$(MAKE) -s hints || { rc=1; red="$$red hints"; }; \\\n', '') },
     'a fast prerequisite dropped from make test': { ...t, makefile: swap(t.makefile, ' debt-base test-split\n', ' test-split\n') },
+    'the fast checks run without -k': { ...t, makefile: swap(t.makefile, '$(MAKE) -k test-checks', '$(MAKE) test-checks') },
+    'the plugin loop stops at the first red plugin': { ...t, makefile: swap(t.makefile, '$(MAKE) -C $$p test || { rc=1; red="$$red $$p"; }', '$(MAKE) -C $$p test || exit 1') },
+    'a step on a recipe line of its own': { ...t, makefile: swap(t.makefile, '\t$(MAKE) -s lib-test || { rc=1; red="$$red lib-test"; }; \\\n', '\t:\n\t@$(MAKE) -s lib-test || { rc=1; red="$$red lib-test"; }\n') },
+    'a check target run by nothing (strip-pages-follow out of test-checks)': { ...t, makefile: swap(t.makefile, ' strip-pages-follow face-dirty-order', ' face-dirty-order'), list: JSON.stringify({ ...JSON.parse(t.list), test: { ...JSON.parse(t.list).test, prerequisites: JSON.parse(t.list).test.prerequisites.filter((x) => x !== 'strip-pages-follow') } }) },
     'host-check.sh dropped from a plugin\'s test-heavy': { ...t, template: t.template.split('\n').filter((l) => !l.includes('host-check.sh')).join('\n') },
     'a plugin Makefile with no test-heavy': { ...t, plugins: { ...t.plugins, 'omx-x': 'all:\n\ttrue\ntest: all\n\ttrue\n' } },
     'a shard left out of the CI matrix': { ...t, ci: swap(t.ci, '          - 4/4\n', '') },

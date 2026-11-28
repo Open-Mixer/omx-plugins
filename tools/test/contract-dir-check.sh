@@ -3,9 +3,9 @@
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 #
 # tools/test/contract-dir-check.sh — `make install-contract` puts each shipped plugin's descriptor into omx-contract's
-# contract directory (omx-contract docs/contract-dir.md): <contractdir>/3/omx-plugins/plugins/<stem>.json, byte for
+# contract directory (omx-contract docs/contract-dir.md): <contractdir>/omx-plugins/plugins/<stem>.json, byte for
 # byte the plugin folder's <stem>.descriptor.json, one per shipped plugin that has one, and each definition file of
-# contract/ as <contractdir>/3/omx-plugins/<file>.json byte for byte, and nothing else, each listed in
+# contract/ as <contractdir>/omx-plugins/<file>.json byte for byte, and nothing else, each listed in
 # the package's MANIFEST.json with its sha256 and this release's version; and omx-contract's own reader reads the
 # installed tree beside the installed contract directory (`omx-contract validate --installed`, with
 # OMX_CONTRACT_PATH naming both), needing omx-plugins at this version.
@@ -69,7 +69,9 @@ cli() {
 }
 
 SCHEMA_SRC='^  "\$schema": "(\.\./)*schema/omx-contract\.schema\.json",$'
-SCHEMA_INSTALLED='  "$schema": "https://openmixer.org/schema/omx-contract/v3/omx-contract.schema.json",'
+# the URL an install writes is the installed schema's own $id (its major is the format's, never spelled here)
+SCHEMA_ID=$(sed -n 's/^  "\$id": "\(https:[^"]*\/omx-contract\.schema\.json\)",$/\1/p' "$(${PKG_CONFIG:-pkg-config} --variable=datadir omx-contract 2>/dev/null)/omx-contract.schema.json" 2>/dev/null | head -1)
+SCHEMA_INSTALLED="  \"\$schema\": \"$SCHEMA_ID\","
 
 # source_schema <file>...: one line per source file whose line 2 is not the relative $schema the install rewrites
 source_schema() {
@@ -87,7 +89,7 @@ same_but_schema() {
 
 # check <contractdir> [reader]: one line per refusal; the count is the exit status
 check() {
-  local dir=$1 reader=${2:-reader} pkg=$1/3/omx-plugins bad=0 stem f rel want got listed n=0 c sys stems
+  local dir=$1 reader=${2:-reader} pkg=$1/omx-plugins bad=0 stem f rel want got listed n=0 c sys stems
   stems=$(described)
   if [ ! -f "$pkg/MANIFEST.json" ]; then echo "contract-dir: $pkg holds no MANIFEST.json"; return 1; fi
   listed=$(node -e '
@@ -198,8 +200,8 @@ if [ "${1:-}" = --self-test ]; then
   all=$(described); first=${all%%$'\n'*}
   rest=$(for s in $all; do [ "$s" = "$first" ] || printf '%s ' "plugins/$s/$s.descriptor.json"; done)
   rehash() { # <contractdir> <rel>: the manifest lists the file's new sha256, so only the content check can see it
-    local m=$1/3/omx-plugins/MANIFEST.json h
-    h=$(sha256sum "$1/3/omx-plugins/$2" | cut -d' ' -f1)
+    local m=$1/omx-plugins/MANIFEST.json h
+    h=$(sha256sum "$1/omx-plugins/$2" | cut -d' ' -f1)
     node -e 'const fs = require("fs"); const [p, r, h] = process.argv.slice(1); const m = JSON.parse(fs.readFileSync(p, "utf8"));
       m.files[r] = h; fs.writeFileSync(p, JSON.stringify(m, null, 2) + "\n");' "$m" "$2" "$h"
   }
@@ -209,7 +211,7 @@ if [ "${1:-}" = --self-test ]; then
       left-out) install_into "$t" DESCRIPTORS="$rest" ;;
       *) cp -r "$scratch/good" "$t" ;;
     esac
-    p=$t/3/omx-plugins
+    p=$t/omx-plugins
     case $s in
       missing) rm "$p/plugins/$first.json" ;;
       changed) sed -i '0,/"name": "/s//"name": "x/' "$p/plugins/$first.json"; rehash "$t" "plugins/$first.json" ;;
@@ -220,7 +222,7 @@ if [ "${1:-}" = --self-test ]; then
           fs.writeFileSync(f, JSON.stringify(d, null, 2) + "\n");' "$p/plugins/$first.json" "$s"; rehash "$t" "plugins/$first.json" ;;
       extra) cp "$p/plugins/$first.json" "$p/plugins/omx-test-sine-voice.json"; rehash "$t" plugins/omx-test-sine-voice.json ;;
       hash) sed -i "s|\"plugins/$first.json\": \"[0-9a-f]*\"|\"plugins/$first.json\": \"$(printf '0%.0s' $(seq 64))\"|" "$p/MANIFEST.json" ;;
-      unrewritten) sed -i '2s|https://openmixer.org/schema/omx-contract/v3/omx-contract|../schema/omx-contract|' "$p/plugins/$first.json"; rehash "$t" "plugins/$first.json" ;;
+      unrewritten) sed -i '2s|https://openmixer.org/schema/omx-contract/v[0-9]*/omx-contract|../schema/omx-contract|' "$p/plugins/$first.json"; rehash "$t" "plugins/$first.json" ;;
       version) sed -i 's/"version": "[0-9.]*"/"version": "0.0.1"/' "$p/MANIFEST.json" ;;
       unlisted-*) node -e 'const fs = require("fs"); const [f, r] = process.argv.slice(1); const m = JSON.parse(fs.readFileSync(f, "utf8"));
           delete m.files[r]; fs.writeFileSync(f, JSON.stringify(m, null, 2) + "\n");' "$p/MANIFEST.json" "plugins/${s#unlisted-}.json" ;;
@@ -244,7 +246,7 @@ if [ "${1:-}" = --self-test ]; then
   done
   if [ -n "$(cli)" ]; then
     t=$scratch/reader; cp -r "$scratch/good" "$t"
-    printf ' ' >> "$t/3/omx-plugins/plugins/$first.json"
+    printf ' ' >> "$t/omx-plugins/plugins/$first.json"
     out=$(check "$t" reader 2>&1) || true
     if grep -q "reader refuses" <<<"$out"; then echo "SABOTAGE reader: red"; else echo "SABOTAGE reader: STAYED GREEN"; fail=1; fi
   fi

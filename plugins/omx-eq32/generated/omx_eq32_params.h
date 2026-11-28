@@ -1033,27 +1033,27 @@ static const char *const OMX_EQ32_PARAM_MODULES[OMX_EQ32_PARAM_COUNT] = {
 /* The identity every face publishes. */
 #define OMX_EQ32_NAME "omx eq32"
 #define OMX_EQ32_VENDOR "openmixer"
-#define OMX_EQ32_URL "https://github.com/FreeMixer/omx-plugins"
-#define OMX_EQ32_VERSION "0.19.3"
+#define OMX_EQ32_URL "https://github.com/Open-Mixer/omx-plugins"
+#define OMX_EQ32_VERSION "0.21.1"
 #define OMX_EQ32_DESCRIPTION "The OpenMixer console's channel EQ, 32-band form: 32 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire."
 #define OMX_EQ32_CLAP_ID "org.openmixer.eq32"
 #define OMX_EQ32_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
 #define OMX_EQ32_LV2_URI "urn:openmixer:eq32"
 /* org.openmixer.declaration/1: the declaration's plain description and the digest of its parameters. */
 #define OMX_EQ32_DECL_SOURCE "omx eq32: HPF On 0 to 1, HPF Frequency 20 to 1000 Hz, HPF Slope 12 to 24 dB/oct, LPF On 0 to 1, LPF Frequency 1000 to 20000 Hz, LPF Slope 12 to 24 dB/oct, Band 1 Type 0 to 5, Band 1 Frequency 20 to 20000 Hz, Band 1 Gain -15 to 15 dB, Band 1 Q 0.3 to 116, Band 1 On 0 to 1, Band 2 Type 0 to 5, Band 2 Frequency 20 to 20000 Hz, Band 2 Gain -15 to 15 dB, Band 2 Q 0.3 to 116, Band 2 On 0 to 1, Band 3 Type 0 to 5, Band 3 Frequency 20 to 20000 Hz, Band 3 Gain -15 to 15 dB, Band 3 Q 0.3 to 116, Band 3 On 0 to 1, Band 4 Type 0 to 5, Band 4 Frequency 20 to 20000 Hz, Band 4 Gain -15 to 15 dB, Band 4 Q 0.3 to 116, Band 4 On 0 to 1, Band 5 Type 0 to 5, Band 5 Frequency 20 to 20000 Hz, Band 5 Gain -15 to 15 dB, Band 5 Q 0.3 to 116, Band 5 On 0 to 1, Band 6 Type 0 to 5, Band 6 Frequency 20 to 20000 Hz, Band 6 Gain -15 to 15 dB, Band 6 Q 0.3 to 116, Band 6 On 0 to 1, Band 7 Type 0 to 5, Band 7 Frequency 20 to 20000 Hz, Band 7 Gain -15 to 15 dB, Band 7 Q 0.3 to 116, Band 7 On 0 to 1, Band 8 Type 0 to 5, Band 8 Frequency 20 to 20000 Hz, Band 8 Gain -15 to 15 dB, Band 8 Q 0.3 to 116, Band 8 On 0 to 1, Band 9 Type 0 to 5, Band 9 Frequency 20 to 20000 Hz, Band 9 Gain -15 to 15 dB, Band 9 Q 0.3 to 116, Band 9 On 0 to 1, Band 10 Type 0 to 5, Band 10 Frequency 20 to 20000 Hz, Band 10 Gain -15 to 15 dB, Band 10 Q 0.3 to 116, Band 10 On 0 to 1, Band 11 Type 0 to 5, Band 11 Frequency 20 to 20000 Hz, Band 11 Gain -15 to 15 dB, Band 11 Q 0.3 to 116, Band 11 On 0 to 1, Band 12 Type 0 to 5, Band 12 Frequency 20 to 20000 Hz, Band 12 Gain -15 to 15 dB, Band 12 Q 0.3 to 116, Band 12 On 0 to 1, Band 13 Type 0 to 5, Band 13 Frequency 20 to 20000 Hz, Band 13 Gain -15 to 15 dB, Band 13 Q 0.3 to 116, Band 13 On 0 to 1, Band 14 Type 0 to 5, Band 14 Frequency 20 to 20000 Hz, Band 14 Gain -15 to 15 dB, Band 14 Q 0.3 to 116, Band 14 On 0 to 1, Band 15 Type 0 to 5, Band 15 Frequency 20 to 20000 Hz, Band 15 Gain -15 to 15 dB, Band 15 Q 0.3 to 116, Band 15 On 0 to 1, Band 16 Type 0 to 5, Band 16 Frequency 20 to 20000 Hz, Band 16 Gain -15 to 15 dB, Band 16 Q 0.3 to 116, Band 16 On 0 to 1, Band 17 Type 0 to 5, Band 17 Frequency 20 to 20000 Hz, Band 17 Gain -15 to 15 dB, Band 17 Q 0.3 to 116, Band 17 On 0 to 1, Band 18 Type 0 to 5, Band 18 Frequency 20 to 20000 Hz, Band 18 Gain -15 to 15 dB, Band 18 Q 0.3 to 116, Band 18 On 0 to 1, Band 19 Type 0 to 5, Band 19 Frequency 20 to 20000 Hz, Band 19 Gain -15 to 15 dB, Band 19 Q 0.3 to 116, Band 19 On 0 to 1, Band 20 Type 0 to 5, Band 20 Frequency 20 to 20000 Hz, Band 20 Gain -15 to 15 dB, Band 20 Q 0.3 to 116, Band 20 On 0 to 1, Band 21 Type 0 to 5, Band 21 Frequency 20 to 20000 Hz, Band 21 Gain -15 to 15 dB, Band 21 Q 0.3 to 116, Band 21 On 0 to 1, Band 22 Type 0 to 5, Band 22 Frequency 20 to 20000 Hz, Band 22 Gain -15 to 15 dB, Band 22 Q 0.3 to 116, Band 22 On 0 to 1, Band 23 Type 0 to 5, Band 23 Frequency 20 to 20000 Hz, Band 23 Gain -15 to 15 dB, Band 23 Q 0.3 to 116, Band 23 On 0 to 1, Band 24 Type 0 to 5, Band 24 Frequency 20 to 20000 Hz, Band 24 Gain -15 to 15 dB, Band 24 Q 0.3 to 116, Band 24 On 0 to 1, Band 25 Type 0 to 5, Band 25 Frequency 20 to 20000 Hz, Band 25 Gain -15 to 15 dB, Band 25 Q 0.3 to 116, Band 25 On 0 to 1, Band 26 Type 0 to 5, Band 26 Frequency 20 to 20000 Hz, Band 26 Gain -15 to 15 dB, Band 26 Q 0.3 to 116, Band 26 On 0 to 1, Band 27 Type 0 to 5, Band 27 Frequency 20 to 20000 Hz, Band 27 Gain -15 to 15 dB, Band 27 Q 0.3 to 116, Band 27 On 0 to 1, Band 28 Type 0 to 5, Band 28 Frequency 20 to 20000 Hz, Band 28 Gain -15 to 15 dB, Band 28 Q 0.3 to 116, Band 28 On 0 to 1, Band 29 Type 0 to 5, Band 29 Frequency 20 to 20000 Hz, Band 29 Gain -15 to 15 dB, Band 29 Q 0.3 to 116, Band 29 On 0 to 1, Band 30 Type 0 to 5, Band 30 Frequency 20 to 20000 Hz, Band 30 Gain -15 to 15 dB, Band 30 Q 0.3 to 116, Band 30 On 0 to 1, Band 31 Type 0 to 5, Band 31 Frequency 20 to 20000 Hz, Band 31 Gain -15 to 15 dB, Band 31 Q 0.3 to 116, Band 31 On 0 to 1, Band 32 Type 0 to 5, Band 32 Frequency 20 to 20000 Hz, Band 32 Gain -15 to 15 dB, Band 32 Q 0.3 to 116, Band 32 On 0 to 1"
-#define OMX_EQ32_DECL_DIGEST "abb7cd492c295eaa6fb5588beab68219fbe050173bc287f2a02f26670db1181c"
+#define OMX_EQ32_DECL_DIGEST "2c85c6fc062203d5f5031c79c4e84888ac0420599272cc453c62ed04dfd76447"
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_EQ32_PARAM_CONTRACT_VERSION 2u
-#define OMX_EQ32_PARAM_CONTRACT_FINGERPRINT "3829d7f527628dde379a6992187ca03d9c956366b98340df8f1d649056dfbe70"
+#define OMX_EQ32_PARAM_CONTRACT_VERSION 4u
+#define OMX_EQ32_PARAM_CONTRACT_FINGERPRINT "a526068b6c87758eb3e061f0bf7d65f8039ff0d24df8e792c3b70f3345b6c04f"
 static const struct omx_param_contract_row OMX_EQ32_PARAM_CONTRACT[OMX_EQ32_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_on none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* hpf_freq hz */
-  { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_slope none */
+  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_slope dbPerOct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_on none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* lpf_freq hz */
-  { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_slope none */
+  { 260u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* lpf_slope dbPerOct */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* b1_type none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* b1_freq hz */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* b1_gain db */

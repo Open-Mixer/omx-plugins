@@ -6,11 +6,11 @@
 
 | What | Fedora | Debian | Used for |
 |---|---|---|---|
-| omx-dsp ≥ 0.32.0 (`pkg-config omxdsp`) | `omx-dsp-devel` (channel) | `libomxdsp-dev` (channel) | the DSP: every kernel lives there, none here (since 0.26.0: the dynamic EQ, the multiband's controls and readouts, the compressor's key) |
+| omx-dsp ≥ 0.34.0 (`pkg-config omxdsp`) | `omx-dsp-devel` (channel) | `libomxdsp-dev` (channel) | the DSP: every kernel lives there, none here (since 0.26.0: the dynamic EQ, the multiband's controls and readouts, the compressor's key) |
 | omx-contract ≥ 3.12.0 (`pkg-config omx-contract`) | `omx-contract-devel` (channel) | `libomx-contract-dev` (channel) | the declarations: every parameter's travel, read from its installed `omx-contract.json`, and the EQ default rule (its C render; the generators build a small probe, so they need the C compiler too) |
-| openmixer CLAP extensions | `omx-clap-core-devel` (channel) | `libomx-clap-core-dev` (channel) | `<omx-clap-host/omx_clap_ext.h>` |
+| openmixer CLAP extensions | `omx-clap-devel` (channel) | `libomx-clap-dev` (channel) | `<omx-clap-host/omx_clap_ext.h>` |
 | the omx-contract command ≥ 3.12.0 | `omx-contract` (channel) | `omx-contract` (channel) | the generators: the union of the contract directory, read through `omx-contract render --installed` |
-| CLAP 1.2 headers | `clap-devel` | `clap-headers` (built from the pinned CLAP, see FreeMixer/.github) | the CLAP face |
+| CLAP 1.2 headers | `clap-devel` | `clap-headers` (built from the pinned CLAP, see Open-Mixer/.github) | the CLAP face |
 | LV2 headers | `lv2-devel` | `lv2-dev` | the LV2 face |
 | C compiler, make, pkg-config | `gcc make pkgconf-pkg-config` | `build-essential pkgconf` | |
 | lilv | `lilv lilv-devel` | `lilv-utils liblilv-dev` | tests: the oracles' LV2 host, `lv2ls`, `lv2info` |
@@ -36,7 +36,7 @@ The channel is the OpenMixer package repository, added by installing the openmix
 everything above.
 
 The floors are written once, in the packaging: `packaging/omx-plugins.spec` (`BuildRequires`, a floor and no ceiling:
-`BuildRequires: omx-dsp-devel >= 0.32.0`) and `debian/control` (the same floor: `(>= 0.32.0~)`); `tools/deps-check.sh`
+`BuildRequires: omx-dsp-devel >= 0.34.1`) and `debian/control` (the same floor: `(>= 0.34.1~)`); `tools/deps-check.sh`
 holds the two equal and fails on any ceiling. Nothing else names a version: the Makefile reads the floors from the spec,
 and building the archive stops, naming the dependency, the floor and what `pkg-config` finds installed, when an installed
 release is below it.
@@ -49,7 +49,7 @@ make test                 # the fast set the package builds run: declaration che
 make test-heavy           # the built faces through a host: oracles, host-check, round trip (CI, every PR)
 make install DESTDIR=/tmp/stage LIBDIR=/usr/lib64   # <CLAPDIR>/*.clap (default /usr/lib/clap, any LIBDIR), <LIBDIR>/lv2/*.lv2/
 make install-devel DESTDIR=/tmp/stage LIBDIR=/usr/lib64   # headers, <LIBDIR>/libomxplugins.a, <LIBDIR>/pkgconfig/omxplugins.pc, and each plugin's descriptor
-                                                         # in <DATADIR>/omx-contract/contract.d/3/omx-plugins/ (make install-contract, CONTRACTDIR=)
+                                                         # in <DATADIR>/omx-contract/contract.d/omx-plugins/ (make install-contract, CONTRACTDIR=)
 make version              # the release version
 ```
 
@@ -63,11 +63,11 @@ entries by CLAP id that `include/omx_clap_static.h` declares. A host links it th
 CLAP id is in the table once, and each one is created through its factory, activated and run.
 
 Before the plugins, `make test` runs `make units` (the param-contract units are the header's), `make panel-words`
-(`tools/test/panel-words-check.mjs`: the enums of `include/omx_panel_description.h` are omx-contract's PANEL_FAMILIES and
-PANEL_WIDGETS, omx-panel's display kinds, sources and placements, and omx-clap-core's lists, code for code) and
+(`tools/test/panel-words-check.mjs`: the five panel enums of `include/omx_panel_description.h` are omx-panel's panel
+domain, expanded from its render `omxdomain/panel_codes.h` with no code spelled, and the table enum is omx-clap's list) and
 `make panel-layout` (`tools/test/panel-layout-test.mjs`: our plugins' descriptors state no unknown word, and
 omx-panel's layout of each finds the declared family and roles; the layout's own rules are omx-panel's
-[docs/panel-layout.md](https://github.com/FreeMixer/omx-panel/blob/main/docs/panel-layout.md)) and `make descriptor-view`
+[docs/panel-layout.md](https://github.com/Open-Mixer/omx-panel/blob/main/docs/panel-layout.md)) and `make descriptor-view`
 (`tools/test/descriptor-view-test.mjs`: each described plugin's descriptor fresh and in omx-contract's
 words, and the declaration its view) and `make descriptor-features` (`tools/test/descriptor-features-check.mjs`: the
 descriptor's feature words are read from the installed schema, and no tool lists them) and `make placement-strips`
@@ -115,8 +115,9 @@ Makefiles and CI to it, so a step cannot fall out of both. Together they run, in
 8. **panel description** (`tools/panel-probe.c`, `tools/panel-check.mjs`): each built face is opened
    as a host opens it (the `.clap` through `clap_entry`, the LV2 bundle through lilv) and its
    `org.openmixer.panel-description/1` read back: the family, the sections, every listed parameter as
-   a control in its section and order, the roles and displays equal the declaration's panel, and the
-   fingerprint is the SHA-256 of what it serves.
+   a control in its section and order, the roles and displays equal the declaration's panel, the
+   fingerprint is the SHA-256 of what it serves, and every meter a display reads is one the face
+   serves (a `clap.meters/1` meter of that id on CLAP, the meter's output port on LV2).
 8. **CLAP extensions** (`tools/clap-ext-probe.c`, `tools/clap-ext-check.mjs`): the CLAP face's
    `org.openmixer.param-contract/1` (each parameter's symbol, unit, scale and step, version 1, the
    fingerprint of what it serves), its `clap.remote-controls` pages (each section's controls, eight
@@ -196,7 +197,15 @@ missing from omx-contract, or without a face of that shape, is refused with the 
 `node tools/gen.mjs` also refills the shared files' generated regions from every plugin folder: the
 README's catalogue and sections (a declaration's `summary` and `manual`, else its description and
 parameters), the RPM `%files` lists, CI's installed-file lists and libomxplugins' table of CLAP
-entries. The package descriptions are
+entries; and the labels domain, `contract.d/omx-plugin-labels/omx-plugin-labels.json`
+(`tools/plugin-labels.mjs`): every shipped plugin's section titles, choice labels and preset names,
+each a key `<ITEM>.<word>` with its English source sentence, which the catalogs,
+`catalogs/<lang>.json`, translate (installed with the domain, as its `catalogs/`, and to
+`/usr/share/omx-plugins/catalogs/`, one language pack each). CI's `fill` job (Open-Mixer/.github's
+langpacks-fill.yml) makes their missing entries when ci.yml is dispatched on a branch that heads an open pull request. A parameter's name stays English and
+has no key. `make plugin-labels` holds the domain to the declarations; `make catalogs-gate` is
+omx-contract's release gate over the catalogs (`omx-contract translate --check`), and
+`tools/catalogs-gate.sh --lang <xx> --model <alias>` makes a language's missing entries. The package descriptions are
 prose; the completeness test checks they name every shipped plugin. The older plugins (delay,
 drive, the EQs, strip, keyed gate) keep their hand-written faces and bindings.
 
@@ -221,7 +230,7 @@ unless `nocheck` is set. The version lives in three places that CI keeps equal: 
 `Makefile` (`make version`), the spec's `Version:` and the top of `debian/changelog`.
 
 A `v<version>` tag runs `.github/workflows/release.yml`: RPMs for Fedora 44 (x86_64, aarch64)
-and DEBs for bookworm and trixie (amd64, arm64), signed and published into the FreeMixer package
+and DEBs for bookworm and trixie (amd64, arm64), signed and published into the OpenMixer package
 channel and attached to the GitHub release. Beside them goes
 `omx-plugins-zynthian-<version>-arm64.tar.gz`: the files of the trixie arm64 `omx-plugins-lv2` and
 `omx-plugins-clap` packages, repacked by `tools/zynthian-bundle.sh` as `lv2/` and `clap/` directories for
