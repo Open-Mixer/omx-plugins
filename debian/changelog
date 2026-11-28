@@ -1,3 +1,11 @@
+omx-plugins (0.22.2) unstable; urgency=medium
+
+  * Release: release.yml publishes only by tagging; a dispatch is a dry run,
+    and the qualification and Zynthian artifacts no longer read
+    inputs.publish (#109).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 06:19:31 +0100
+
 omx-plugins (0.22.1) unstable; urgency=medium
 
   * Release: the trixie DEBs are built for amd64 beside arm64; the Zynthian

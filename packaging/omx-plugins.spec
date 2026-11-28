@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 Name: omx-plugins
-Version: 0.22.1
+Version: 0.22.2
 Release: 1%{?dist}
 License: GPL-3.0-or-later
 Summary: The OpenMixer console's delay, drive, EQ, channel strip, keyed gate and effects, as plugins for your DAW
@@ -383,6 +383,10 @@ English source sentence.
 # END langpacks
 
 %changelog
+* Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.2-1
+- release.yml publishes only by tagging; a dispatch is a dry run, and the
+  qualification and Zynthian artifacts no longer read inputs.publish (#109).
+
 * Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.1-1
 - Release: the trixie DEBs are built for amd64 beside arm64; the Zynthian
   tarball stays arm64 (#238).
