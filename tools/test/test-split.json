@@ -34,6 +34,7 @@
       "ci-scope",
       "no-ci-bridge",
       "deb-cells",
+      "full-matrix",
       "probe-checks",
       "eq-probe-race",
       "band-groups",
