@@ -51,7 +51,7 @@
       "core-init-answers",
       "selftest-shards",
       "meter-words",
-      "artifact-retention", "test-no-host-nproc", "release-same-pass", "from-channel", "debt-base",
+      "artifact-retention", "test-no-host-nproc", "release-same-pass", "release-publish-gate", "from-channel", "debt-base",
       "test-split"
     ],
     "steps": [
@@ -66,6 +66,7 @@
       "param-contract-abi",
       "panel-abi",
       "host-contract",
+      "control-layout",
       "meter-level",
       "comp-published-scan",
       "meter-held",
