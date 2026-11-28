@@ -131,6 +131,8 @@ jobs:
         env:
           # a wave's run builds against its devel channel and staging (Open-Mixer/.github#329)
           OMX_WAVE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          # and the base waves add-openmixer's devel-base added beneath it
+          OMX_DEVEL_BASE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
         run: tools/from-channel-check.sh
 
       - name: The version agrees everywhere it is written
@@ -268,6 +270,8 @@ jobs:
         env:
           # a wave's run builds against its devel channel and staging (Open-Mixer/.github#329)
           OMX_WAVE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          # and the base waves add-openmixer's devel-base added beneath it
+          OMX_DEVEL_BASE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
         run: tools/from-channel-check.sh
 
       - name: make test-heavy, and nothing skipped
@@ -329,6 +333,8 @@ jobs:
         env:
           # a wave's run builds against its devel channel and staging (Open-Mixer/.github#329)
           OMX_WAVE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          # and the base waves add-openmixer's devel-base added beneath it
+          OMX_DEVEL_BASE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
         run: tools/from-channel-check.sh
 
       - name: The recipe machinery, sabotaged arm by arm
