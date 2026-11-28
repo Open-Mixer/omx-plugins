@@ -10,6 +10,22 @@ The console's reverb: room, plate, hall, reverse and gated algorithms with pre-d
 - LV2 URI: `urn:openmixer:reverb`
 - Parameters: 22, plus the host's bypass
 
+## Panel
+
+![The panel of omx reverb, drawn from its declaration](../images/panels/omx-reverb.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Reverb | Algorithm, Size, Damping, Predelay, Width, Mix, Lowcut, Highcut |
+| Reverse | Reverse |
+| Gated | Hold, Release, Gate Threshold |
+| Plate | Plate Mod Depth |
+| Early | Early, Tail, Early Size |
+| Duck | Duck, Duck Threshold, Duck Release |
+| De-ess | Wet De-ess, De-ess Freq, De-ess Threshold |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

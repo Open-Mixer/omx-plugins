@@ -44,6 +44,17 @@ static const char *const OMX_CHORUS_PARAM_MODULES[OMX_CHORUS_PARAM_COUNT] = {
   "Chorus",
 };
 
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+
+static const char *const *const OMX_CHORUS_PARAM_LABELS[OMX_CHORUS_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+};
+
 /* One macro per declared bound: what a C face reads where a constant is needed. */
 #define OMX_CHORUS_PARAM_SPREAD_MIN 0.0f
 #define OMX_CHORUS_PARAM_SPREAD_MAX 0.5f
@@ -65,7 +76,7 @@ static const char *const OMX_CHORUS_PARAM_MODULES[OMX_CHORUS_PARAM_COUNT] = {
 #define OMX_CHORUS_NAME "omx chorus"
 #define OMX_CHORUS_VENDOR "openmixer"
 #define OMX_CHORUS_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_CHORUS_VERSION "0.21.1"
+#define OMX_CHORUS_VERSION "0.22.4"
 #define OMX_CHORUS_DESCRIPTION "The console's chorus: up to four voices read one modulated delay line, the right leg's sweep offset by the spread, mixed with the dry signal."
 #define OMX_CHORUS_CLAP_ID "org.openmixer.chorus"
 #define OMX_CHORUS_CLAP_FEATURES "audio-effect", "chorus", "stereo"

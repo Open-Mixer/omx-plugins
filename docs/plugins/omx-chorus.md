@@ -10,6 +10,16 @@ The console's chorus: up to four voices read one modulated delay line, the right
 - LV2 URI: `urn:openmixer:chorus`
 - Parameters: 5, plus the host's bypass
 
+## Panel
+
+![The panel of omx chorus, drawn from its declaration](../images/panels/omx-chorus.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Chorus | Rate, Depth, Voices, Mix, Spread |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

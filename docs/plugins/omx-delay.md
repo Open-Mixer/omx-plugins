@@ -10,6 +10,19 @@ The OpenMixer console's stereo delay: one time, free or synced to the host's tem
 - LV2 URI: `urn:openmixer:delay`
 - Parameters: 23, plus the host's bypass
 
+## Panel
+
+![The panel of omx delay, drawn from its declaration](../images/panels/omx-delay.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Delay | Pingpong, Time, Feedback, Mix, Tone, Mode |
+| Tempo | Sync, Division |
+| Taps | Taps, Tap 1 Gain, Tap 1 Pan, Tap 2 Time, Tap 2 Gain, Tap 2 Pan, Tap 3 Time, Tap 3 Gain, Tap 3 Pan, Tap 4 Time, Tap 4 Gain, Tap 4 Pan |
+| Duck | Duck, Duck Threshold, Duck Release |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

@@ -687,6 +687,13 @@ pages a host shows (LV2 port groups, CLAP modules) and a table of every paramete
 steps or values and flags. The pages are generated from the declarations by `tools/params-doc.mjs` (`make params-doc`),
 and `make check-params-doc` fails when a committed page differs from what they say.
 
+Each page shows the plugin's panel, `docs/images/panels/<stem>.png`, drawn from its declaration alone: `make panel-images`
+(`tools/panel-images.mjs`) hands omx-panel's `omx-panel picture` the descriptor and the declared panel, which lays it out as
+every host does and draws it with omx-panel's renderer, each control at its default. Nothing is drawn by hand or taken from a
+running host. `make check-panel-images` fails on a picture missing, of no plugin, or not what its declaration draws now (pixels
+compared, not bytes), after its self-test has made each of those red on purpose. It needs omx-panel 0.17.3 or later and its
+renderer (`$OMX_PANEL_DIR`, `$OMX_PANEL_RENDER` name a tree's).
+
 ## Factory presets
 
 Every plugin ships a set of factory presets, one JSON file each, in `presets/<plugin id>/<preset id>.json`

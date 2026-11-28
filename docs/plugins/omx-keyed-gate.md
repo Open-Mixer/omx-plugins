@@ -10,6 +10,17 @@ The OpenMixer console's channel gate with an external key: the stereo signal is 
 - LV2 URI: `urn:openmixer:keyed-gate`
 - Parameters: 12, plus the host's bypass
 
+## Panel
+
+![The panel of omx keyed-gate, drawn from its declaration](../images/panels/omx-keyed-gate.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Gate | Threshold, Range, Ratio, Attack, Hold, Release, Hysteresis, Knee Start, Knee End |
+| Key | Key, Key High-pass, Key Low-pass |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

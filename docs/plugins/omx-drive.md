@@ -10,6 +10,16 @@ The console's drive: one waveshaper (soft, tape, tube or exciter) run inside the
 - LV2 URI: `urn:openmixer:drive`
 - Parameters: 11, plus the host's bypass
 
+## Panel
+
+![The panel of omx drive, drawn from its declaration](../images/panels/omx-drive.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Drive | Curve, Band, HF Roll-off, Oversampling, Drive, Character, Band Frequency, Mix, Trim, Auto Gain, Stereo Link |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

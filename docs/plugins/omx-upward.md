@@ -10,6 +10,16 @@ Lifts what is quiet toward a threshold, by a ratio and up to a limit, and leaves
 - LV2 URI: `urn:openmixer:upward`
 - Parameters: 5, plus the host's bypass
 
+## Panel
+
+![The panel of omx upward, drawn from its declaration](../images/panels/omx-upward.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Upward | Threshold, Ratio, Range, Attack, Release |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

@@ -118,6 +118,11 @@ Makefiles and CI to it, so a step cannot fall out of both. Together they run, in
    a control in its section and order, the roles and displays equal the declaration's panel, the
    fingerprint is the SHA-256 of what it serves, and every meter a display reads is one the face
    serves (a `clap.meters/1` meter of that id on CLAP, the meter's output port on LV2).
+   The CLAP face also serves the same panel cut down, `org.openmixer.control-layout.draft/1` (the shape OpenMixer
+   would propose to CLAP: sections, controls and the displays that read `clap.meters/1`; no family, roles,
+   placement defaults or fingerprint). `make control-layout` (`tools/test/control-layout-check.mjs`, part of
+   `make test`) reads every shipped face with `omx-clap-scan --json`, whose host rules leave none of it out, and
+   holds it equal to the panel description cut down.
 8. **CLAP extensions** (`tools/clap-ext-probe.c`, `tools/clap-ext-check.mjs`): the CLAP face's
    `org.openmixer.param-contract/1` (each parameter's symbol, unit, scale and step, version 1, the
    fingerprint of what it serves), its `clap.remote-controls` pages (each section's controls, eight
@@ -188,7 +193,9 @@ REFERENCE into the kernel's file in omx-contract (`"ref"`, `"field"`); no number
 declaration. The release read is the installed one, through its JSON render (`omx-contract.json` in
 `pkg-config --variable=datadir omx-contract`), and its version must lie in the spec's range;
 `$OMX_CONTRACT_DIR`, a directory holding an `omx-contract.json`, stands in for it (the perturbation
-proofs point it at a moved copy). The kernel must
+proofs point it at a moved copy); `$OMX_CONTRACT_KIND_VECTORS` names a checkout's `clap-kind-vectors.json` (the rule a
+describing host reads a CLAP parameter's kind by, shipped from omx-contract 3.19.0) for `tools/clap-params-check.mjs`
+when the installed one lacks it. The kernel must
 have its instance face in omx-dsp (`<omxdsp/fx/omx_<kernel>_instance.h>`): each parameter binds to
 the `resolve()` argument named after its contract control, and `"binding": "instance"` makes
 `tools/gen.mjs` write the binding, the kernel-identity test, both faces and the Makefile. A kernel

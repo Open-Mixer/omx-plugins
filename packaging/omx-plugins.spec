@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # Copyright (C) 2026 Pau Aliagas <linuxnow@gmail.com>
 Name: omx-plugins
-Version: 0.21.1
+Version: 0.22.4
 Release: 1%{?dist}
 License: GPL-3.0-or-later
 Summary: The OpenMixer console's delay, drive, EQ, channel strip, keyed gate and effects, as plugins for your DAW
@@ -45,6 +45,7 @@ BuildRequires: nodejs >= 20.19
 BuildRequires: python3
 # make selftest copies the tree with tar
 BuildRequires: tar
+# git get-tar-commit-id: the source commit the tarball was made from, stamped into each installed descriptor (#32);
 # %%check: make debt-base runs git (tools/test/debt-base-test.mjs builds its fixture repositories with it)
 BuildRequires: git-core
 BuildRequires: diffutils
@@ -171,11 +172,16 @@ Its documentation is on openmixer.org.
 
 %install
 %make_install PREFIX=%{_prefix} LIBDIR=%{_libdir} CLAPDIR=/usr/lib/clap
-%{__make} install-devel DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir}
+# each installed descriptor carries the commit the source tarball was made from (git archive records it): #32
+%{__make} install-devel DESTDIR=%{buildroot} PREFIX=%{_prefix} LIBDIR=%{_libdir} SOURCE_COMMIT=$(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 %{__make} install-test DESTDIR=%{buildroot} PREFIX=%{_prefix} TESTCLAPDIR=%{_libexecdir}/omx-plugins/test
 
 %check
-%make_build test
+# make test runs in the unpacked tarball, which has no git tree: it is handed the tarball's commit to stamp (#32)
+%make_build test SOURCE_COMMIT=$(gzip -dc %{SOURCE0} | git get-tar-commit-id)
+# every shipped descriptor carries this release's version and the source tarball's commit (sabotage: one unstamped,
+# another commit or another version goes red)
+tools/integrity-check.sh %{buildroot}%{_datadir}/omx-contract/contract.d %{version} $(gzip -dc %{SOURCE0} | git get-tar-commit-id)
 
 %files
 %license LICENSE
@@ -383,6 +389,27 @@ English source sentence.
 # END langpacks
 
 %changelog
+* Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.4-1
+- CLAP face: a choice whose points are every whole step is an enumeration,
+  its value texts the declared labels; 18 parameter contracts move (#97)
+
+* Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.3-1
+- each installed descriptor carries integrity, its version and the source
+  commit of the build, held by the package build (#32)
+
+* Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.2-1
+- release.yml publishes only by tagging; a dispatch is a dry run, and the
+  qualification and Zynthian artifacts no longer read inputs.publish (#109).
+
+* Sat Nov 28 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.1-1
+- Release: the trixie DEBs are built for amd64 beside arm64; the Zynthian
+  tarball stays arm64 (#238).
+
+* Fri Nov 27 2026 Pau Aliagas <linuxnow@gmail.com> - 0.22.0-1
+- CLAP face: every plugin serves its panel cut down as
+  org.openmixer.control-layout.draft/1, drawn whole by omx-clap-scan's host
+  rules (#233).
+
 * Thu Nov 26 2026 Pau Aliagas <linuxnow@gmail.com> - 0.21.1-1
 - The RPMs are built for Fedora aarch64 as well as x86_64: the release
   matrix is Open-Mixer/.github's shared releases and architectures, with no

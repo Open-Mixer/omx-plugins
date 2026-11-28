@@ -10,6 +10,16 @@ The console's rotary speaker: a drum rotor on the low band and a horn rotor on t
 - LV2 URI: `urn:openmixer:rotary`
 - Parameters: 8, plus the host's bypass
 
+## Panel
+
+![The panel of omx rotary, drawn from its declaration](../images/panels/omx-rotary.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Rotary | Horn Slow, Horn Fast, Drum Slow, Drum Fast, Accel, Balance, Mix, Speed |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

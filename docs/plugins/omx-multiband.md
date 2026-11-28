@@ -10,6 +10,22 @@ A multiband compressor: two to five bands split by Linkwitz-Riley crossovers, ea
 - LV2 URI: `urn:openmixer:multiband`
 - Parameters: 42, plus the host's bypass
 
+## Panel
+
+![The panel of omx multiband, drawn from its declaration](../images/panels/omx-multiband.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Split | Bands, Crossover 1, Crossover 2, Crossover 3, Crossover 4 |
+| Band 1 | Band 1 Threshold, Band 1 Ratio, Band 1 Attack, Band 1 Release, Band 1 Makeup, Band 1 Solo, Band 1 Bypass |
+| Band 2 | Band 2 Threshold, Band 2 Ratio, Band 2 Attack, Band 2 Release, Band 2 Makeup, Band 2 Solo, Band 2 Bypass |
+| Band 3 | Band 3 Threshold, Band 3 Ratio, Band 3 Attack, Band 3 Release, Band 3 Makeup, Band 3 Solo, Band 3 Bypass |
+| Band 4 | Band 4 Threshold, Band 4 Ratio, Band 4 Attack, Band 4 Release, Band 4 Makeup, Band 4 Solo, Band 4 Bypass |
+| Band 5 | Band 5 Threshold, Band 5 Ratio, Band 5 Attack, Band 5 Release, Band 5 Makeup, Band 5 Solo, Band 5 Bypass |
+| Output | Mix, Output |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

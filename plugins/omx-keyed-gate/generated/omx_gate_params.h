@@ -34,7 +34,7 @@ enum {
 };
 
 static const omx_plugin_param OMX_GATE_PARAMS[OMX_GATE_PARAM_COUNT] = {
-  { "key_external", "Key", "", 0.0f, 1.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "key_external", "Key", "", 0.0f, 1.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "threshold", "Threshold", "dB", -80.0f, 0.0f, -40.0f, 0u },
   { "ratio", "Ratio", "", 1.0f, 100.0f, 16.0f, 0u },
   { "range", "Range", "dB", -90.0f, 0.0f, -90.0f, 0u },
@@ -63,6 +63,24 @@ static const char *const OMX_GATE_PARAM_MODULES[OMX_GATE_PARAM_COUNT] = {
   "Gate",
   "Key",
   "Key",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_GATE_PARAM_KEY_EXTERNAL_LABELS[] = { "Self", "Sidechain" };
+static const char *const *const OMX_GATE_PARAM_LABELS[OMX_GATE_PARAM_COUNT] = {
+  OMX_GATE_PARAM_KEY_EXTERNAL_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -107,7 +125,7 @@ static const char *const OMX_GATE_PARAM_MODULES[OMX_GATE_PARAM_COUNT] = {
 #define OMX_GATE_NAME "omx keyed-gate"
 #define OMX_GATE_VENDOR "openmixer"
 #define OMX_GATE_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_GATE_VERSION "0.21.1"
+#define OMX_GATE_VERSION "0.22.4"
 #define OMX_GATE_DESCRIPTION "The OpenMixer console's channel gate with an external key: the stereo signal is gated while the detector listens to the sidechain input the host routes to it, or to the signal itself with the key unconnected or set to Self. One gain drives both legs. An attack under 0.5 ms engages 4x detector oversampling, which adds 72 frames of latency, reported to the host. The DSP is omx-dsp's <omxdsp/fx/omx_gate_instance.h>, the console's own gate."
 #define OMX_GATE_CLAP_ID "org.openmixer.keyed-gate"
 #define OMX_GATE_CLAP_FEATURES "audio-effect", "gate", "stereo"
@@ -118,8 +136,8 @@ static const char *const OMX_GATE_PARAM_MODULES[OMX_GATE_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_GATE_PARAM_CONTRACT_VERSION 3u
-#define OMX_GATE_PARAM_CONTRACT_FINGERPRINT "5b1c1de696eb5a9be6973c2ca62cc1de55f797d360193e760b5f6923b4f64db4"
+#define OMX_GATE_PARAM_CONTRACT_VERSION 4u
+#define OMX_GATE_PARAM_CONTRACT_FINGERPRINT "1f54d249d8d8d1a89220fecb4fd02b031c5b3c58f352b50a4b07c07338597f9f"
 static const struct omx_param_contract_row OMX_GATE_PARAM_CONTRACT[OMX_GATE_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* key_external none */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* threshold db */

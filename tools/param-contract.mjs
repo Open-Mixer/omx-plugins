@@ -19,6 +19,7 @@ import { fileURLToPath } from 'node:url';
 import { lv2UnitNames, lv2UnitRef } from './format-tables.mjs';
 import { domainDocument, items } from './omx-contract.mjs';
 import { travelUnit } from './descriptor.mjs';
+import { enumLabelsOf } from './gen.mjs';
 
 export const CONTRACT_ID = 'org.openmixer.param-contract/1';
 /** The contract version of plugin `stem` whose contract fingerprint is `fingerprint` (tools/param-contract-versions.json). */
@@ -140,7 +141,7 @@ export function scalesOf(dir) {
   if (!Array.isArray(scales) || scales.length === 0) throw new Error(`${dir}: the resolved contract has no PARAM_SCALES list`);
   return scales;
 }
-const STEPPED = 0x1, BYPASS = 0x10;
+const STEPPED = 0x1, BYPASS = 0x10, ENUM = 0x10000; // clap/ext/params.h flag bits
 
 /** Each parameter's contract, in id order, the host's bypass last: `{ id, symbol, unit, unitEnum, scale,
  * min, max, def, step, flags }`, `id` the CLAP id the face serves it under (a declared parameter its index, the bypass
@@ -153,8 +154,10 @@ export function contractOf(d, scaleOf) {
     // an integer travel is stepped, or log when its law is (an integer frequency, plugin-hostd#142); its step is 1 either way
     const choice = p.values !== undefined || p.points !== undefined;
     const scale = !choice && scaleOf(p) === 'log' ? 'log' : p.kind ? 'stepped' : 'linear';
+    // a choice whose points are every whole step is the CLAP face's enumeration (CLAP_PARAM_IS_ENUM, gen.mjs enumLabelsOf), a flag a host hashes
+    const flags = p.kind ? STEPPED | (enumLabelsOf(p) ? ENUM : 0) : 0;
     if (scale === 'log' && !(p.min > 0 && p.max > 0)) throw new Error(`${where}: '${p.symbol}' is logarithmic over ${p.min}..${p.max}; a log scale needs a positive travel`);
-    return { id: i, symbol: p.symbol, unit, unitEnum, scale, min: Math.fround(p.min), max: Math.fround(p.max), def: Math.fround(p.def), step: p.kind ? 1 : 0, flags: p.kind ? STEPPED : 0 };
+    return { id: i, symbol: p.symbol, unit, unitEnum, scale, min: Math.fround(p.min), max: Math.fround(p.max), def: Math.fround(p.def), step: p.kind ? 1 : 0, flags };
   });
   if (rows.some((r) => r.symbol === 'bypass')) throw new Error(`${where}: 'bypass' is the host's bypass parameter's symbol; a declared parameter cannot take it`);
   rows.push({ id: faceIds().bypassClapId, symbol: 'bypass', unit: 'none', unitEnum: 0, scale: 'stepped', min: 0, max: 1, def: 0, step: 1, flags: STEPPED | BYPASS });

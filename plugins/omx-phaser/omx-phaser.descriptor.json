@@ -7,7 +7,7 @@
     "uri": "urn:openmixer:phaser",
     "name": "omx phaser",
     "vendor": "openmixer",
-    "version": "0.21.1",
+    "version": "0.22.4",
     "doc": "The console's phaser: identical all-pass sections swept in octaves by one oscillator, with feedback around the chain and a wet/dry mix.",
     "features": [
       "audio-effect"
@@ -35,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/phaser.json#PHASER_RATE_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -60,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/phaser.json#PHASER_BASE_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/phaser.json#PHASER_DEPTH_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -110,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/phaser.json#PHASER_STAGES_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -135,7 +135,7 @@
       "source": {
         "from": {
           "link": "data/kernels/phaser.json#PHASER_FEEDBACK_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -160,7 +160,7 @@
       "source": {
         "from": {
           "link": "data/kernels/phaser.json#PHASER_MIX_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     }

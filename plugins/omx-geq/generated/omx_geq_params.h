@@ -122,6 +122,43 @@ static const char *const OMX_GEQ_PARAM_MODULES[OMX_GEQ_PARAM_COUNT] = {
   "Geq",
 };
 
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+
+static const char *const *const OMX_GEQ_PARAM_LABELS[OMX_GEQ_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+};
+
 /* One macro per declared bound: what a C face reads where a constant is needed. */
 #define OMX_GEQ_PARAM_BAND01_MIN -15.0f
 #define OMX_GEQ_PARAM_BAND01_MAX 15.0f
@@ -221,7 +258,7 @@ static const char *const OMX_GEQ_PARAM_MODULES[OMX_GEQ_PARAM_COUNT] = {
 #define OMX_GEQ_NAME "omx geq"
 #define OMX_GEQ_VENDOR "openmixer"
 #define OMX_GEQ_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_GEQ_VERSION "0.21.1"
+#define OMX_GEQ_VERSION "0.22.4"
 #define OMX_GEQ_DESCRIPTION "The console's 31-band graphic EQ: one fader per ISO third-octave band from 20 Hz to 20 kHz, each cutting or boosting by up to 15 dB."
 #define OMX_GEQ_CLAP_ID "org.openmixer.geq"
 #define OMX_GEQ_CLAP_FEATURES "audio-effect", "equalizer", "stereo"

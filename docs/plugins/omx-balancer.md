@@ -10,6 +10,16 @@ Walks four bands slowly toward a target tone, so a mix settles toward a pink-noi
 - LV2 URI: `urn:openmixer:balancer`
 - Parameters: 4, plus the host's bypass
 
+## Panel
+
+![The panel of omx balancer, drawn from its declaration](../images/panels/omx-balancer.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Balancer | Amount, Range, Speed, Slope |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

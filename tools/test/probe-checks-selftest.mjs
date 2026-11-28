@@ -91,14 +91,14 @@ const dropPort = (symbol) => (rows) => {
 const flip = (v) => `${v.slice(0, -1)}${v.endsWith('0') ? '1' : '0'}`;
 
 // ---- the arms: [what changed, change, the FAIL line that must name it] ----
-// the clap-probe `params` dump has no kind column: rows are `id name min max default flags`
+// the clap-probe `params` dump has no kind column: rows are `id name min max default flags text texts`
 const paramsRows = (text) => text.trim().split('\n').map((l) => l.split('\t'));
 const paramArms = [
   ['a parameter renamed', (r) => r.map((x, i) => (i === 0 ? [x[0], 'Renamed', ...x.slice(2)] : x)), /FAIL clap-params /],
   ['a maximum moved', (r) => r.map((x, i) => (i === 1 ? [...x.slice(0, 3), plus(1)(x[3]), ...x.slice(4)] : x)), /FAIL clap-params /],
-  ['a default moved', (r) => r.map((x, i) => (i === 2 ? [...x.slice(0, 4), plus(1)(x[4]), x[5]] : x)), /FAIL clap-params /],
-  ['a stepped flag lost', (r) => r.map((x, i) => (i === 0 ? [...x.slice(0, 5), bit(1)(x[5])] : x)), /FAIL clap-params /],
-  ['the bypass flag lost', (r) => r.map((x, i, all) => (i === all.length - 1 ? [...x.slice(0, 5), bit(16)(x[5])] : x)), /FAIL clap-params /],
+  ['a default moved', (r) => r.map((x, i) => (i === 2 ? [...x.slice(0, 4), plus(1)(x[4]), ...x.slice(5)] : x)), /FAIL clap-params /],
+  ['a stepped flag lost', (r) => r.map((x, i) => (i === 0 ? [...x.slice(0, 5), bit(1)(x[5]), ...x.slice(6)] : x)), /FAIL clap-params /],
+  ['the bypass flag lost', (r) => r.map((x, i, all) => (i === all.length - 1 ? [...x.slice(0, 5), bit(16)(x[5]), ...x.slice(6)] : x)), /FAIL clap-params /],
   ['a parameter lost', (r) => r.filter((_, i) => i !== 1), /FAIL clap-params: \d+ parameters/],
   ['two parameters swapped', (r) => { const o = [...r]; [o[0], o[1]] = [o[1], o[0]]; return o; }, /FAIL clap-params /],
   ['the bypass at the id after the last parameter (the rule before omx-contract 3.9.0)', (r) => r.map((x, i, all) => (i === all.length - 1 ? [`${all.length - 1}`, ...x.slice(1)] : x)), /FAIL clap-params Bypass/],
@@ -217,9 +217,31 @@ function arms(name, script, argsOf, text, list, mutate = (change, t) => toText(c
 
 const reverb = dumpsOf('omx-reverb');
 const gate = dumpsOf('omx-keyed-gate');
-const reverbDir = reverb.dir, gateDir = gate.dir;
+const comp = dumpsOf('omx-comp');
+const reverbDir = reverb.dir, gateDir = gate.dir, compDir = comp.dir;
 
 arms('clap-params', 'clap-params-check.mjs', [reverbDir], reverb.dumps.params, paramArms, (change, t) => toText(change(paramsRows(t))));
+// a choice and a toggle on CLAP (omx-comp's kind, a two-option choice; keyListen, a toggle): the enumeration flag and the
+// value texts are what a describing host reads the kind by (omx-contract's clap-kind-vectors.json, omx-plugins#97)
+const named = (name, f) => (r) => {
+  need(r.findIndex((x) => x[1] === name) >= 0 ? 0 : undefined, `${name} row`);
+  return r.map((x) => (x[1] === name ? f(x) : x));
+};
+const enumArms = [
+  ["a travel's default shown with the unit's id, not its symbol (C2)", named('Threshold', (x) => [...x.slice(0, 6), x[6].replace(/ .*$/, ' dB-id'), ...x.slice(7)]), /FAIL clap-params Threshold: value_to_text/],
+  ['an enumeration flag lost (a two-option choice built as a plain stepped 0..1 reads as a toggle)', named('Kind', (x) => [...x.slice(0, 5), bit(1 << 16)(x[5]), ...x.slice(6)]), /FAIL clap-params /],
+  ["a choice's value texts lost (the numbers, not the labels)", named('Kind', (x) => [...x.slice(0, 7), '0|1']), /FAIL clap-params /],
+  ['a toggle flagged an enumeration', named('Key Listen', (x) => [...x.slice(0, 5), bit(1 << 16)(x[5]), ...x.slice(6)]), /FAIL clap-params /],
+];
+arms('clap-params', 'clap-params-check.mjs', [compDir], comp.dumps.params, enumArms, (change, t) => toText(change(paramsRows(t))));
+// the reading a host makes is held to omx-contract's vectors only when they are there: without them the checker says so
+// in a NOTE and this gate is red by name (clap-kind-vectors.json ships from omx-contract 3.19.0, Open-Mixer/omx-contract#67;
+// OMX_CONTRACT_KIND_VECTORS names a checkout's copy)
+{
+  const r = check('clap-params-check.mjs', [compDir], 'clap-params', comp.dumps.params, 'clap-params-vectors.txt');
+  const held = /PASS clap-params omx-comp: (\d+) readings held to/.exec(r.out);
+  report(r.status === 0 && held && Number(held[1]) >= 4, 'clap-params: omx-comp\'s kind, keySource (choices) and keyListen, duck (toggles) are read as declared by omx-contract\'s clap-kind-vectors.json', r.out.split('\n').filter((l) => /^(FAIL|NOTE)/.test(l)).join(' | ').slice(0, 400) || `exit ${r.status}`);
+}
 for (const face of ['clap', 'lv2']) {
   const text = reverb.dumps[face === 'clap' ? 'panelClap' : 'panelLv2'];
   arms(`panel-${face}`, 'panel-check.mjs', [reverbDir, face], text, panelArms(face));

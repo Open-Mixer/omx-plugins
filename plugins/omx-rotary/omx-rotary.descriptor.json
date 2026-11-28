@@ -10,7 +10,7 @@
     "uri": "urn:openmixer:rotary",
     "name": "omx rotary",
     "vendor": "openmixer",
-    "version": "0.21.1",
+    "version": "0.22.4",
     "doc": "The console's rotary speaker: a drum rotor on the low band and a horn rotor on the high band, with stop, slow and fast speeds, mixed with the dry signal.",
     "features": [
       "audio-effect"
@@ -38,7 +38,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_HORN_SLOW_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -63,7 +63,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_HORN_FAST_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -88,7 +88,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_DRUM_SLOW_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -113,7 +113,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_DRUM_FAST_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -138,7 +138,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_ACCEL_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -163,7 +163,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_BALANCE_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -188,7 +188,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_MIX_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -221,7 +221,7 @@
       "source": {
         "from": {
           "link": "data/kernels/rotary.json#ROTARY_SPEEDS",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     }

@@ -1,3 +1,43 @@
+omx-plugins (0.22.4) unstable; urgency=medium
+
+  * CLAP face: a choice whose points are every whole step is an enumeration
+    (CLAP_PARAM_IS_ENUM), its value texts the declared labels, so a host
+    draws it as a choice and not a switch; 18 parameter contracts move to
+    their next version (#97).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 06:37:42 +0100
+
+omx-plugins (0.22.3) unstable; urgency=medium
+
+  * Contract: each installed descriptor carries integrity, its version and the
+    source commit of the build (the RPM's tarball, the deb's checkout), and
+    the package build holds every shipped descriptor to them (#32).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 06:24:00 +0100
+
+omx-plugins (0.22.2) unstable; urgency=medium
+
+  * Release: release.yml publishes only by tagging; a dispatch is a dry run,
+    and the qualification and Zynthian artifacts no longer read
+    inputs.publish (#109).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 06:19:31 +0100
+
+omx-plugins (0.22.1) unstable; urgency=medium
+
+  * Release: the trixie DEBs are built for amd64 beside arm64; the Zynthian
+    tarball stays arm64 (#238).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 02:55:38 +0100
+
+omx-plugins (0.22.0) unstable; urgency=medium
+
+  * CLAP face: every plugin serves its panel cut down as
+    org.openmixer.control-layout.draft/1, drawn whole by omx-clap-scan's
+    host rules (#233).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Fri, 27 Nov 2026 03:27:39 +0100
+
 omx-plugins (0.21.1) unstable; urgency=medium
 
   * The RPMs are built for Fedora aarch64 as well as x86_64: the release

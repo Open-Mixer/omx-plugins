@@ -107,6 +107,10 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # a pull request into devel, or a dispatch off main, in a wave reads that wave's devel channel above staging (Open-Mixer/.github#329)
+          devel-channel: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          devel-base: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
 
       - uses: actions/checkout@v4
         with:
@@ -124,6 +128,11 @@ jobs:
 
       # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
       - name: Every omx package comes from the channel
+        env:
+          # a wave's run builds against its devel channel and staging (Open-Mixer/.github#329)
+          OMX_WAVE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          # and the base waves add-openmixer's devel-base added beneath it
+          OMX_DEVEL_BASE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
         run: tools/from-channel-check.sh
 
       - name: The version agrees everywhere it is written
@@ -239,6 +248,10 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # a pull request into devel, or a dispatch off main, in a wave reads that wave's devel channel above staging (Open-Mixer/.github#329)
+          devel-channel: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          devel-base: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
 
       - uses: actions/checkout@v4
 
@@ -254,6 +267,11 @@ jobs:
 
       # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
       - name: Every omx package comes from the channel
+        env:
+          # a wave's run builds against its devel channel and staging (Open-Mixer/.github#329)
+          OMX_WAVE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          # and the base waves add-openmixer's devel-base added beneath it
+          OMX_DEVEL_BASE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
         run: tools/from-channel-check.sh
 
       - name: make test-heavy, and nothing skipped
@@ -291,6 +309,10 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # a pull request into devel, or a dispatch off main, in a wave reads that wave's devel channel above staging (Open-Mixer/.github#329)
+          devel-channel: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          devel-base: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
 
       - uses: actions/checkout@v4
         with:
@@ -308,6 +330,11 @@ jobs:
 
       # an ordinary run builds against the channel, never staging (D25): tools/from-channel-check.sh
       - name: Every omx package comes from the channel
+        env:
+          # a wave's run builds against its devel channel and staging (Open-Mixer/.github#329)
+          OMX_WAVE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          # and the base waves add-openmixer's devel-base added beneath it
+          OMX_DEVEL_BASE: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
         run: tools/from-channel-check.sh
 
       - name: The recipe machinery, sabotaged arm by arm
@@ -333,6 +360,10 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # a pull request into devel, or a dispatch off main, in a wave reads that wave's devel channel above staging (Open-Mixer/.github#329)
+          devel-channel: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          devel-base: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
 
       - uses: actions/checkout@v4
         with:
@@ -376,12 +407,16 @@ jobs:
           done
           # one descriptor per shipped plugin that has one, in omx-contract's contract directory, with its manifest: in
           # omx-plugins-contract, a package of their own that the metapackage and the devel package require at their
-          # version, read at run time with no -devel installed
+          # version, read at run time with no -devel installed; beside it the labels domain the spec ships there too
+          # (contract.d/omx-plugin-labels: its document and one catalog per language of catalogs/)
           cdir=/usr/share/omx-contract/contract.d/omx-plugins
+          ldir=/usr/share/omx-contract/contract.d/omx-plugin-labels
           rpm -qlp rpms/omx-plugins-contract-[0-9]*.noarch.rpm | sort > files-contract.txt
           { printf '%s\n' "$cdir" "$cdir/MANIFEST.json" "$cdir/plugin-face.json" "$cdir/role-meanings.json" "$cdir/plugins" \
+              "$ldir" "$ldir/omx-plugin-labels.json" "$ldir/catalogs" \
               /usr/share/doc/omx-plugins-contract /usr/share/doc/omx-plugins-contract/README.md \
               /usr/share/licenses/omx-plugins-contract /usr/share/licenses/omx-plugins-contract/LICENSE
+            for c in catalogs/*.json; do echo "$ldir/catalogs/$(basename "$c")"; done
             for d in plugins/*/*.descriptor.json; do echo "$cdir/plugins/$(basename "$d" .descriptor.json).json"; done; } | sort > expected-contract.txt
           diff -u expected-contract.txt files-contract.txt
           ! rpm -qlp "$devel" | grep -q '^/usr/share/omx-contract/'
@@ -479,7 +514,8 @@ jobs:
           retention-days: ${{ (startsWith(github.ref, 'refs/tags/')) && 7 || 2 }}
 
   # The deb job's cells, from the shared check matrix (ruling D25): the quick set while a release wave is open
-  # (OMX_RELEASE_MATRIX=quick: trixie arm64 alone, no amd64 cell), bookworm and trixie on amd64 and arm64 otherwise. Each
+  # (OMX_RELEASE_MATRIX=quick: trixie arm64 alone, no amd64 cell), trixie on amd64 and arm64 otherwise (bookworm is dropped
+  # from the matrix, owner 2026-11-27). Each
   # cell runs on the runner of its own architecture (arm64 on ubuntu-24.04-arm): a container of one architecture cannot
   # install the packages of another, and the channel's development debs are trixie arm64 only (omx-plugins ci
   # 44594367073: libomxdsp-dev and libomx-clap-dev not installable in the amd64 container; omx-panel ci 44563540081).
@@ -497,7 +533,7 @@ jobs:
         uses: Open-Mixer/.github/.github/actions/check-matrix@openmixer-v1
         with:
           wave: ${{ vars.OMX_RELEASE_MATRIX }}
-          deb-releases: '["bookworm", "trixie"]'
+          deb-releases: '["trixie"]'
           deb-arches: '["amd64", "arm64"]'
           x86-runner: ${{ github.event.pull_request.head.repo.fork && 'ubuntu-latest' || vars.OMX_RUNNER || 'ubuntu-latest' }}
 
@@ -532,6 +568,10 @@ jobs:
 
       - name: Take build dependencies from the OpenMixer channel
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # a pull request into devel, or a dispatch off main, in a wave reads that wave's devel channel above staging (Open-Mixer/.github#329)
+          devel-channel: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          devel-base: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
 
       # a dedupe/all run builds on its siblings' dedupe/all (.github/wave-deps); @main until Open-Mixer/.github moves v1 past it
       - uses: Open-Mixer/.github/.github/actions/wave-deps@openmixer-v1
@@ -630,6 +670,10 @@ jobs:
 
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
+        with:
+          # a pull request into devel, or a dispatch off main, in a wave reads that wave's devel channel above staging (Open-Mixer/.github#329)
+          devel-channel: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          devel-base: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
 
       - uses: actions/checkout@v4
 
@@ -693,4 +737,8 @@ jobs:
       actions: read
     uses: ./.github/workflows/release.yml
     with:
+      # a wave line's run (a dispatch off main, a pull request into devel) builds against staging and the wave's devel
+      # channel, as its merge to devel will; its base waves come with it (build-rpm.yml's level step)
+      staging: ${{ (startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main') }}
+      channel-level: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
       arm: false  # the arm64 DEB and the Zynthian tarball build at release only; aarch64 RPMs are off (owner ruling 2026-11-19)

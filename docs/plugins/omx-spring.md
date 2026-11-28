@@ -10,6 +10,16 @@ A spring reverb: a delay, a chain of all-passes and a darkening loop, with decay
 - LV2 URI: `urn:openmixer:spring`
 - Parameters: 5, plus the host's bypass
 
+## Panel
+
+![The panel of omx spring, drawn from its declaration](../images/panels/omx-spring.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Spring | Decay, Length, Tension, Damping, Mix |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

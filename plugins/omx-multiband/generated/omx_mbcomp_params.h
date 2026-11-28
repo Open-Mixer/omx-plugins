@@ -64,7 +64,7 @@ enum {
 };
 
 static const omx_plugin_param OMX_MBCOMP_PARAMS[OMX_MBCOMP_PARAM_COUNT] = {
-  { "bands", "Bands", "", 2.0f, 5.0f, 3.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "bands", "Bands", "", 2.0f, 5.0f, 3.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "xoverHz1", "Crossover 1", "Hz", 40.0f, 16000.0f, 200.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "xoverHz2", "Crossover 2", "Hz", 40.0f, 16000.0f, 2000.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "xoverHz3", "Crossover 3", "Hz", 40.0f, 16000.0f, 5000.0f, OMX_PLUGIN_PARAM_INTEGER },
@@ -153,6 +153,54 @@ static const char *const OMX_MBCOMP_PARAM_MODULES[OMX_MBCOMP_PARAM_COUNT] = {
   "Band 5",
   "Output",
   "Output",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_MBCOMP_PARAM_BANDS_LABELS[] = { "2", "3", "4", "5" };
+static const char *const *const OMX_MBCOMP_PARAM_LABELS[OMX_MBCOMP_PARAM_COUNT] = {
+  OMX_MBCOMP_PARAM_BANDS_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -287,7 +335,7 @@ static const char *const OMX_MBCOMP_PARAM_MODULES[OMX_MBCOMP_PARAM_COUNT] = {
 #define OMX_MBCOMP_NAME "omx multiband"
 #define OMX_MBCOMP_VENDOR "openmixer"
 #define OMX_MBCOMP_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_MBCOMP_VERSION "0.21.1"
+#define OMX_MBCOMP_VERSION "0.22.4"
 #define OMX_MBCOMP_DESCRIPTION "A multiband compressor: two to five bands split by Linkwitz-Riley crossovers, each band its own compressor with threshold, ratio, attack, release, make-up, solo and bypass, then a mix and an output gain, for in-ear mixes, vocals and playback buses."
 #define OMX_MBCOMP_CLAP_ID "org.openmixer.multiband"
 #define OMX_MBCOMP_CLAP_FEATURES "audio-effect", "compressor", "stereo"
@@ -298,8 +346,8 @@ static const char *const OMX_MBCOMP_PARAM_MODULES[OMX_MBCOMP_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_MBCOMP_PARAM_CONTRACT_VERSION 3u
-#define OMX_MBCOMP_PARAM_CONTRACT_FINGERPRINT "5f536368c7d13f57ab9e11c675ff26d31c7b2e6e75ed4094e6740fde16dbfbf4"
+#define OMX_MBCOMP_PARAM_CONTRACT_VERSION 4u
+#define OMX_MBCOMP_PARAM_CONTRACT_FINGERPRINT "85aaa9607130b985597bf28e86e9aaf2dc99262471b44a15ec1cdea9d4478314"
 static const struct omx_param_contract_row OMX_MBCOMP_PARAM_CONTRACT[OMX_MBCOMP_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* bands none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* xoverHz1 hz */

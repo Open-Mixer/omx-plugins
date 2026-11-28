@@ -56,7 +56,7 @@ static const omx_plugin_param OMX_REVERB_PARAMS[OMX_REVERB_PARAM_COUNT] = {
   { "hold", "Hold", "ms", 10.0f, 2000.0f, 120.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "release", "Release", "ms", 1.0f, 500.0f, 20.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "gateThreshold", "Gate Threshold", "dBFS", -80.0f, 0.0f, -40.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "algorithm", "Algorithm", "", 0.0f, 4.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "algorithm", "Algorithm", "", 0.0f, 4.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "earlyDb", "Early", "dB", -60.0f, 0.0f, -60.0f, 0u },
   { "tailDb", "Tail", "dB", -60.0f, 0.0f, 0.0f, 0u },
   { "earlySizePct", "Early Size", "%", 0.0f, 100.0f, 50.0f, OMX_PLUGIN_PARAM_INTEGER },
@@ -93,6 +93,34 @@ static const char *const OMX_REVERB_PARAM_MODULES[OMX_REVERB_PARAM_COUNT] = {
   "De-ess",
   "De-ess",
   "De-ess",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_REVERB_PARAM_ALGORITHM_LABELS[] = { "Room", "Plate", "Hall", "Reverse", "Gated" };
+static const char *const *const OMX_REVERB_PARAM_LABELS[OMX_REVERB_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_REVERB_PARAM_ALGORITHM_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -167,7 +195,7 @@ static const char *const OMX_REVERB_PARAM_MODULES[OMX_REVERB_PARAM_COUNT] = {
 #define OMX_REVERB_NAME "omx reverb"
 #define OMX_REVERB_VENDOR "openmixer"
 #define OMX_REVERB_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_REVERB_VERSION "0.21.1"
+#define OMX_REVERB_VERSION "0.22.4"
 #define OMX_REVERB_DESCRIPTION "The console's reverb: room, plate, hall, reverse and gated algorithms with pre-delay, size, damping, width and low and high cuts, mixed with the dry signal; the early reflections and the tail set apart, the wet ducked under the dry and de-essed in its band."
 #define OMX_REVERB_CLAP_ID "org.openmixer.reverb"
 #define OMX_REVERB_CLAP_FEATURES "audio-effect", "reverb", "stereo"
@@ -178,8 +206,8 @@ static const char *const OMX_REVERB_PARAM_MODULES[OMX_REVERB_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_REVERB_PARAM_CONTRACT_VERSION 3u
-#define OMX_REVERB_PARAM_CONTRACT_FINGERPRINT "4ba02d00b3f036e5c1ef5382391c23bfdc4d4d4263923d9a05f5493f40a1eaf8"
+#define OMX_REVERB_PARAM_CONTRACT_VERSION 4u
+#define OMX_REVERB_PARAM_CONTRACT_FINGERPRINT "d85b13c28ed4208b4ad01794a442b94c22348978d48ce66c18a935f5fb658735"
 static const struct omx_param_contract_row OMX_REVERB_PARAM_CONTRACT[OMX_REVERB_PARAM_COUNT] = {
   { 14u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* plateModDepth pc */
   { 0u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* mix none */

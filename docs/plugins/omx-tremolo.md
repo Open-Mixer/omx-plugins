@@ -10,6 +10,16 @@ The console's tremolo and auto-pan: one oscillator turned into a level change on
 - LV2 URI: `urn:openmixer:tremolo`
 - Parameters: 4, plus the host's bypass
 
+## Panel
+
+![The panel of omx tremolo, drawn from its declaration](../images/panels/omx-tremolo.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Tremolo | Rate, Depth, Mix, Mode |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

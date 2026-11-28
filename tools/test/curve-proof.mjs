@@ -61,10 +61,11 @@ export const PROOF = {
   'omx-eq32': EQ_SETTINGS,
 };
 
-/** omx-dsp's curve unit word for a description's unit id: its id in lower case, but for the three omx-dsp spells
- * otherwise (omx-panel's MOD GUI generator reads them the same). */
-const CURVE_UNIT = { percent: 'pc', x: 'coef', dBPerOct: 'db' };
-const curveUnit = (id) => CURVE_UNIT[id] ?? String(id).toLowerCase();
+/** omx-dsp's curve unit word for a description's unit id: the id itself, as the description gives it (omx-dsp 0.34.3,
+ * f18302c1: the curve's unit words are the PARAM_UNITS ids, and any other spelling, `db`, `hz`, is refused), but for
+ * the two ids no curve word names: a coefficient (x) is coef, a slope per octave (dBPerOct) a level in dB. */
+const CURVE_UNIT = { x: 'coef', dBPerOct: 'dB' };
+const curveUnit = (id) => CURVE_UNIT[id] ?? String(id);
 
 /** Every curve display of our declarations, in the description our faces serve (omx-panel's layout of the descriptor
  * under the declared panel, tools/descriptor.mjs panelDescription): `{ stem, descriptor, layout, display }`. */

@@ -10,6 +10,16 @@ The console's flanger: one modulated short delay with signed feedback, swept by 
 - LV2 URI: `urn:openmixer:flanger`
 - Parameters: 4, plus the host's bypass
 
+## Panel
+
+![The panel of omx flanger, drawn from its declaration](../images/panels/omx-flanger.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Flanger | Rate, Depth, Feedback, Mix |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |
