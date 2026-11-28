@@ -7,7 +7,7 @@
     "uri": "urn:openmixer:width",
     "name": "omx width",
     "vendor": "openmixer",
-    "version": "0.21.1",
+    "version": "0.22.4",
     "doc": "Widens or narrows the stereo image, with an optional pseudo-stereo spread for a mono source and a bass-mono cutoff that keeps the lows centred.",
     "features": [
       "audio-effect"
@@ -35,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_WIDTH_PCT_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -68,7 +68,7 @@
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_PSEUDOS",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -93,7 +93,7 @@
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_PSEUDO_MS_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -111,7 +111,7 @@
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_BASS_MONOS",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -136,7 +136,7 @@
       "source": {
         "from": {
           "link": "data/kernels/width.json#WIDTH_BASS_MONO_HZ_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     }

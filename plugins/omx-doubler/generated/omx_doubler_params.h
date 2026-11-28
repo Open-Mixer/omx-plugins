@@ -50,6 +50,19 @@ static const char *const OMX_DOUBLER_PARAM_MODULES[OMX_DOUBLER_PARAM_COUNT] = {
   "Output",
 };
 
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+
+static const char *const *const OMX_DOUBLER_PARAM_LABELS[OMX_DOUBLER_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+};
+
 /* One macro per declared bound: what a C face reads where a constant is needed. */
 #define OMX_DOUBLER_PARAM_VOICES_MIN 1.0f
 #define OMX_DOUBLER_PARAM_VOICES_MAX 4.0f
@@ -77,7 +90,7 @@ static const char *const OMX_DOUBLER_PARAM_MODULES[OMX_DOUBLER_PARAM_COUNT] = {
 #define OMX_DOUBLER_NAME "omx doubler"
 #define OMX_DOUBLER_VENDOR "openmixer"
 #define OMX_DOUBLER_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_DOUBLER_VERSION "0.21.1"
+#define OMX_DOUBLER_VERSION "0.22.4"
 #define OMX_DOUBLER_DESCRIPTION "Doubles a voice or an instrument with up to four slightly delayed, detuned and drifting copies spread across the stereo field, the double-tracked sound without a second take."
 #define OMX_DOUBLER_CLAP_ID "org.openmixer.doubler"
 #define OMX_DOUBLER_CLAP_FEATURES "audio-effect", "doubler", "stereo"

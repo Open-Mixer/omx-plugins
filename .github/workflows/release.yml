@@ -3,7 +3,7 @@
 name: release
 
 # A version tag builds omx-plugins-clap and omx-plugins-lv2 as RPMs (Fedora 45, x86_64) and
-# DEBs (bookworm and trixie, amd64 and arm64), signs them, publishes them into the rpm/ and deb/ trees of
+# DEBs (Debian trixie, amd64 and arm64), signs them, publishes them into the rpm/ and deb/ trees of
 # the OpenMixer Pages repository and attaches them to the GitHub release, with the trixie arm64 DEBs
 # repacked as a Zynthian tarball beside them. Anything else builds unsigned trees and publishes nothing. Everything is in Open-Mixer/.github; the secrets are the organisation's.
 # The build dependencies the distributions do not carry (omx-dsp-devel, omx-clap-devel,
@@ -134,6 +134,9 @@ jobs:
       - name: Add the OpenMixer repository
         uses: Open-Mixer/.github/.github/actions/add-openmixer@openmixer-v1
         with:
+          # a pull request into devel, or a dispatch off main, in a wave reads that wave's devel channel and its base above staging
+          devel-channel: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_CHANNEL || '' }}
+          devel-base: ${{ ((startsWith(github.event_name, 'pull_request') && github.base_ref == 'devel') || (github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main')) && vars.OMX_DEVEL_BASE || '' }}
           # a devel push stages its build, so its proof reads the staging channel, as build-rpm.yml's jobs do
           staging: ${{ inputs.staged == true || (github.event_name == 'push' && github.ref == 'refs/heads/devel') }}
 
@@ -158,7 +161,7 @@ jobs:
             qualification/*.qualification.json
             qualification/*.probe.json
           if-no-files-found: warn
-          retention-days: ${{ (startsWith(github.ref, 'refs/tags/') || inputs.publish || inputs.staged) && 90 || 2 }}
+          retention-days: ${{ (startsWith(github.ref, 'refs/tags/') || inputs.staged) && 90 || 2 }}
 
   rpm:
     needs: [qualify, samepass]
@@ -186,15 +189,17 @@ jobs:
       publish: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
       dependencies: 'clap-headers'
       runner: ${{ inputs.runner || 'ubuntu-latest' }}
-      arch-matrix: '["arm64"]'
+      # the full matrix, amd64 and arm64, in the dry run and at release (owner 2026-11-26: every package in every
+      # cell): a trixie amd64 host installs omx-plugins-clap:amd64, never the arm64 deb
+      arch-matrix: '["amd64", "arm64"]'
       requires: ''
       channel-deps: true
     secrets: inherit
 
-  # The trixie DEBs just built, repacked as one tarball laid out for a Zynthian's plugin directories
+  # The trixie arm64 DEBs just built, repacked as one tarball laid out for a Zynthian's plugin directories
   # (tools/zynthian-bundle.sh): no rebuild, the same files the packages carry, checked and every LV2
-  # plugin instantiated on the target architecture. The development matrix is trixie arm64 and fc45 x86_64: the
-  # DEBs are arm64 only, in the dry run and at release.
+  # plugin instantiated on the target architecture. A Zynthian is arm64, so the tarball is arm64 only; the amd64
+  # DEBs built beside them are not bundled.
   zynthian:
     name: Zynthian tarball (trixie, arm64)
     needs: deb
@@ -233,7 +238,7 @@ jobs:
           name: omx-plugins-zynthian-${{ env.ARCH }}
           path: zynthian/*
           if-no-files-found: error
-          retention-days: ${{ (startsWith(github.ref, 'refs/tags/') || inputs.publish || inputs.staged) && 30 || 2 }}
+          retention-days: ${{ (startsWith(github.ref, 'refs/tags/') || inputs.staged) && 30 || 2 }}
 
   # attached beside the DEBs; the deb job's own release step has created the release by now
   zynthian-release:

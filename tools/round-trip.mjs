@@ -86,75 +86,77 @@ export const FORMATS = ['clap', 'lv2'];
  * as in a build of omx-plugins).
  */
 export const LOSSES_COUNTED = Object.freeze({
-  'plugin-hostd': '0.20.8',
-  'omx-contract': '3.20.2',
-  'omx-clap-host': '0.33.1',
+  'plugin-hostd': '0.22.2',
+  'omx-contract': '0.24.0',
+  'omx-clap-host': '0.36.0',
   'omx-plugins-contract': null,
 });
 
-export const LOSSES = {
-  // OR2: a meaning has a CLAP word for the bypass and, with plugin-hostd 0.20.8's tables, the few more that table rows read (10
-  // before 0.20.8, 4 now); an LV2 term only for some (lv2:designation); LV2 has no unit
-  // for none (a plain number). A unit is keyed by its PARAM_UNITS id, the word the descriptor states (C2), never its
-  // symbol (tools/test/round-trip-loss-units-check.mjs)
-  'clap controls[].meaning': 4,
-  'lv2 controls[].meaning': 116,
-  'lv2 controls[].travel.unit "none"': 123,
-  // nor for urn:openmixer:unit#dBoct, the unit of the compressor's key tilt and the balancer's slope (dBPerOct, shown
-  // dB/oct; omx-contract 3.1.0)
-  'lv2 controls[].travel.unit "dBPerOct"': 2,
-  // CLAP: plugin-hostd 0.20.3 reads a control's scale and, through the parameter contract, most units and steps; no
-  // row reads the rest of the units and steps, a choice (our faces set no CLAP_PARAM_IS_ENUM), the session symbol, the
-  // LV2 URI, a side-chain's role or what an LV2 host may lend
-  'clap controls[].travel.unit': 125,
-  'clap controls[].travel.step': 381,
-  'clap controls[].kind': 270,
-  'clap controls[].ids': 139,
-  'clap controls[].values': 139,
-  'clap controls[].labels': 139,
-  'clap controls[].default': 270,
-  'clap controls[].symbol': 841,
-  'clap plugin.uri': 34,
-  'clap ports[].role': 3,
-  'clap needs.extensions.optional': 34,
-  // LV2: no row reads a step, automation, the plugin's version or vendor (our .ttl writes no doap:maintainer); a
-  // control's id is its symbol and a point's id its label, so the CLAP id and our point ids are no LV2 word; the
-  // audio ports are one per channel, with the generator's symbols and names
-  'lv2 controls[].travel.step': 571,
-  'lv2 controls[].automatable': 841,
-  'lv2 controls[].id': 841,
-  'lv2 controls[].ids': 139,
-  'lv2 plugin.version': 34,
-  'lv2 plugin.vendor': 34,
-  'lv2 ports[].id': 71,
-  'lv2 ports[].name': 71,
-  // LV2 port groups are flat: a control in a section's subgroup (an EQ's band, #257) carries the group, not the
-  // section above it (five controls a band: omx-eq8, omx-eq16 and omx-eq32, 8 + 16 + 32 bands; omx-strip, 32 bands)
-  'lv2 controls[].group (panel section)': 440,
-  // the toggles UPSTREAM names, scanned as travels, carry no toggle's default
-  'lv2 controls[].default': 131,
-  // neither face carries a control's prose (omx-delay's sync), nor states that it reads the tempo: CLAP has no static
-  // word for it, and the LV2 face's control port supports time:Position, which a scan reads as no tempo word
-  'clap controls[].doc': 10,
-  'lv2 controls[].doc': 10,
-  'clap needs.tempo': 1,
-  'lv2 needs.tempo': 1,
-  // a modulated delay's sweep (omx-rotary's, omx-contract 3.21.0): neither face states it, and a scan reads the
-  // latency the face reports, never the range its lag lies in (each end a ref to an omx-dsp scalar in ms)
-  'clap latency.sweep.min.ref': 1,
-  'clap latency.sweep.max.ref': 1,
-  'lv2 latency.sweep.min.ref': 1,
-  'lv2 latency.sweep.max.ref': 1,
-  // a meter: plugin-hostd's CLAP table has no row for clap.meters/1 (one word a meter: 20 meters); an LV2 output
-  // control port carries its symbol, range, unit and scale, and no word for its CLAP id, kind, channel count or
-  // readout doc; a two-channel level is two ports, each named for its channel (4 meters, 8 ports)
-  'clap meters[]': 20,
-  'lv2 meters[].id': 20,
-  'lv2 meters[].kind': 20,
-  'lv2 meters[].channels': 20,
-  'lv2 meters[].doc': 16,
-  'lv2 meters[].name': 8,
-};
+/** What the ledger's losses are, by word; how many, per plugin, is the run's (LEDGER_FILE), never written here:
+ * - a meaning (OR2): CLAP carries one only where plugin-hostd's tables have a row for it, LV2 one only where it has an
+ *   lv2:designation; LV2 has no unit for none (a plain number). A unit is keyed by its PARAM_UNITS id, the word the
+ *   descriptor states (C2), never its symbol (tools/test/round-trip-loss-units-check.mjs);
+ * - CLAP: no row reads the units and steps the parameter contract does not, the session symbol, the LV2 URI, a
+ *   side-chain's role or what an LV2 host may lend. A choice whose points are every whole step is CLAP_PARAM_IS_ENUM
+ *   with its labels as value texts (omx-plugins#97), so its kind, labels, values and default come back; a scan's point
+ *   ids are its labels, so our ids (the values as text) are no CLAP word; the choices with gaps (the HPF/LPF slopes'
+ *   12 and 24 dB/oct of omx-eq8, omx-eq16, omx-eq32 and omx-strip) stay stepped travels, their kind, labels, values
+ *   and default lost with the toggles' defaults (a scan reads no default of a toggle);
+ * - LV2: no row reads a step, automation, the plugin's version or vendor (our .ttl writes no doap:maintainer); a
+ *   control's id is its symbol and a point's id its label, so the CLAP id and our point ids are no LV2 word; the audio
+ *   ports are one per channel, with the generator's symbols and names;
+ * - LV2 port groups are flat: a control in a section's subgroup (an EQ's band, #257) carries the group, not the section
+ *   above it;
+ * - a filter section's response (an EQ's highpass) is no word of either face;
+ * - the toggles UPSTREAM names, scanned as travels, carry no toggle's default;
+ * - neither face carries a control's prose (omx-delay's sync), nor states that it reads the tempo: CLAP has no static
+ *   word for it, and the LV2 face's control port supports time:Position, which a scan reads as no tempo word;
+ * - a modulated delay's sweep (omx-rotary's, omx-contract 3.21.0): neither face states it, and a scan reads the latency
+ *   the face reports, never the range its lag lies in;
+ * - a meter: plugin-hostd's CLAP table has no row for clap.meters/1; an LV2 output control port carries its symbol,
+ *   range, unit and scale, and no word for its CLAP id, kind, channel count or readout doc; a two-channel level is two
+ *   ports, each named for its channel.
+ */
+/** The ledger: how many words each face of each described plugin loses, `{ <stem>: { '<format> <word>': n } }`. GENERATED
+ * from the round-trip run into LEDGER_FILE (`tools/round-trip.sh --write-losses`), never raised by hand: a new plugin adds
+ * its own entry, and `node tools/round-trip.mjs --check` (make completeness) names a plugin the file lacks or holds
+ * beside none in the tree (omx-plugins#77). The losses are the words a format's table has no row for, or one its face
+ * states otherwise, named above; what a count means is the run's lost lines. */
+const LEDGER_NAME = 'tools/round-trip-losses.generated.json';
+export const LEDGER_FILE = join(ROOT, LEDGER_NAME);
+
+/** The ledger's per-plugin counts, read from a ledger file. */
+export function readLedger(file = LEDGER_FILE) {
+  return JSON.parse(readFileSync(file, 'utf8')).plugins;
+}
+
+/** The ledger's counts summed over its plugins, `<format> <word>` -> how many words. */
+export function sumLosses(plugins) {
+  const total = {};
+  for (const counts of Object.values(plugins)) for (const [k, n] of Object.entries(counts)) total[k] = (total[k] ?? 0) + n;
+  return Object.fromEntries(Object.entries(total).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
+}
+
+export const LOSSES = sumLosses(readLedger());
+
+/** The ledger file's text for per-plugin counts: plugins and words sorted, one line a count, so two lanes that each add a
+ * plugin touch different lines. */
+export function ledgerText(plugins) {
+  const sort = (o) => Object.fromEntries(Object.entries(o).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
+  const body = Object.entries(sort(plugins))
+    .map(([stem, counts]) => `    ${JSON.stringify(stem)}: {\n${Object.entries(sort(counts)).map(([k, n]) => `      ${JSON.stringify(k)}: ${n}`).join(',\n')}\n    }`)
+    .join(',\n');
+  return `{\n  "generated": "GENERATED by tools/round-trip.sh --write-losses from the round-trip run: do not edit; regenerate and commit (node tools/round-trip.mjs --check names the drift)",\n  "plugins": {\n${body}\n  }\n}\n`;
+}
+
+/** The plugins the ledger and the tree disagree on, as lines: a described plugin with no ledger entry, an entry for
+ * none. No run is needed: which plugins are in the round trip is the tree's, and the counts are the run's (roundTrip). */
+export function ledgerDrift(plugins, inside) {
+  const lines = [];
+  for (const s of inside) if (!(s in plugins)) lines.push(`ledger lacks ${s}: a described plugin with no entry in ${LEDGER_NAME}`);
+  for (const s of Object.keys(plugins)) if (!inside.includes(s)) lines.push(`ledger holds ${s}: no described plugin of that name in the tree`);
+  return lines;
+}
 
 /**
  * The ledger's lines and failures for the losses a run counted, against the `installed` versions of the packages

@@ -10,6 +10,17 @@ Tilts the whole tone darker or brighter about a pivot, and sweeps a resonant DJ 
 - LV2 URI: `urn:openmixer:tone`
 - Parameters: 4, plus the host's bypass
 
+## Panel
+
+![The panel of omx tone, drawn from its declaration](../images/panels/omx-tone.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Tilt | Tilt, Pivot |
+| DJ Filter | DJ Filter, Resonance |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

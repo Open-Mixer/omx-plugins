@@ -10,6 +10,21 @@ The OpenMixer console's channel strip in one plugin: input trim, high- and low-p
 - LV2 URI: `urn:openmixer:strip`
 - Parameters: 192, plus the host's bypass
 
+## Panel
+
+![The panel of omx strip, drawn from its declaration](../images/panels/omx-strip.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Input | Input, Trim |
+| Filters | Filters, HPF, HPF Freq, HPF Slope, LPF, LPF Freq, LPF Slope |
+| Gate | Gate, Gate Threshold, Gate Ratio, Gate Range, Gate Attack, Gate Release, Gate Knee Start, Gate Knee End, Gate Hold, Gate Hysteresis |
+| EQ | EQ, EQ Bands, EQ 1 Type, EQ 1 Freq, EQ 1 Gain, EQ 1 Q, EQ 1, EQ 2 Type, EQ 2 Freq, EQ 2 Gain, EQ 2 Q, EQ 2, EQ 3 Type, EQ 3 Freq, EQ 3 Gain, EQ 3 Q, EQ 3, EQ 4 Type, EQ 4 Freq, EQ 4 Gain, EQ 4 Q, EQ 4, EQ 5 Type, EQ 5 Freq, EQ 5 Gain, EQ 5 Q, EQ 5, EQ 6 Type, EQ 6 Freq, EQ 6 Gain, EQ 6 Q, EQ 6, EQ 7 Type, EQ 7 Freq, EQ 7 Gain, EQ 7 Q, EQ 7, EQ 8 Type, EQ 8 Freq, EQ 8 Gain, EQ 8 Q, EQ 8, EQ 9 Type, EQ 9 Freq, EQ 9 Gain, EQ 9 Q, EQ 9, EQ 10 Type, EQ 10 Freq, EQ 10 Gain, EQ 10 Q, EQ 10, EQ 11 Type, EQ 11 Freq, EQ 11 Gain, EQ 11 Q, EQ 11, EQ 12 Type, EQ 12 Freq, EQ 12 Gain, EQ 12 Q, EQ 12, EQ 13 Type, EQ 13 Freq, EQ 13 Gain, EQ 13 Q, EQ 13, EQ 14 Type, EQ 14 Freq, EQ 14 Gain, EQ 14 Q, EQ 14, EQ 15 Type, EQ 15 Freq, EQ 15 Gain, EQ 15 Q, EQ 15, EQ 16 Type, EQ 16 Freq, EQ 16 Gain, EQ 16 Q, EQ 16, EQ 17 Type, EQ 17 Freq, EQ 17 Gain, EQ 17 Q, EQ 17, EQ 18 Type, EQ 18 Freq, EQ 18 Gain, EQ 18 Q, EQ 18, EQ 19 Type, EQ 19 Freq, EQ 19 Gain, EQ 19 Q, EQ 19, EQ 20 Type, EQ 20 Freq, EQ 20 Gain, EQ 20 Q, EQ 20, EQ 21 Type, EQ 21 Freq, EQ 21 Gain, EQ 21 Q, EQ 21, EQ 22 Type, EQ 22 Freq, EQ 22 Gain, EQ 22 Q, EQ 22, EQ 23 Type, EQ 23 Freq, EQ 23 Gain, EQ 23 Q, EQ 23, EQ 24 Type, EQ 24 Freq, EQ 24 Gain, EQ 24 Q, EQ 24, EQ 25 Type, EQ 25 Freq, EQ 25 Gain, EQ 25 Q, EQ 25, EQ 26 Type, EQ 26 Freq, EQ 26 Gain, EQ 26 Q, EQ 26, EQ 27 Type, EQ 27 Freq, EQ 27 Gain, EQ 27 Q, EQ 27, EQ 28 Type, EQ 28 Freq, EQ 28 Gain, EQ 28 Q, EQ 28, EQ 29 Type, EQ 29 Freq, EQ 29 Gain, EQ 29 Q, EQ 29, EQ 30 Type, EQ 30 Freq, EQ 30 Gain, EQ 30 Q, EQ 30, EQ 31 Type, EQ 31 Freq, EQ 31 Gain, EQ 31 Q, EQ 31, EQ 32 Type, EQ 32 Freq, EQ 32 Gain, EQ 32 Q, EQ 32 |
+| Comp | Comp, Comp Threshold, Comp Ratio, Comp Knee, Comp Attack, Comp Release, Comp Makeup, Comp Kind, Comp Mix, Comp Detector Oversampling |
+| Order | Order |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

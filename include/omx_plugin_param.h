@@ -13,6 +13,10 @@
 #define OMX_PLUGIN_PARAM_INTEGER 1u
 /** A declared boolean: domain {0, 1}, the come-up value declared. */
 #define OMX_PLUGIN_PARAM_TOGGLE 2u
+/** A choice whose points are every whole step of its travel (with OMX_PLUGIN_PARAM_INTEGER): the CLAP face's
+ * enumeration (CLAP_PARAM_IS_ENUM, a value text per step from the face's labels table), the LV2 face's scale points.
+ * A choice with gaps (a slope's 12 and 24) carries no flag and stays a stepped travel on CLAP. */
+#define OMX_PLUGIN_PARAM_CHOICE 4u
 
 typedef struct {
   const char *symbol; /* the declared field name — the LV2 symbol, the CLAP param's identity */

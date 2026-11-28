@@ -77,42 +77,42 @@ static const omx_plugin_param OMX_EQ8_PARAMS[OMX_EQ8_PARAM_COUNT] = {
   { "lpf_on", "LPF On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
   { "lpf_freq", "LPF Frequency", "Hz", 1000.0f, 20000.0f, 18000.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "lpf_slope", "LPF Slope", "dB/oct", 12.0f, 24.0f, 12.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "b1_type", "Band 1 Type", "", 0.0f, 5.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "b1_type", "Band 1 Type", "", 0.0f, 5.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "b1_freq", "Band 1 Frequency", "Hz", 20.0f, 20000.0f, 31.5f, OMX_PLUGIN_PARAM_INTEGER },
   { "b1_gain", "Band 1 Gain", "dB", -15.0f, 15.0f, 0.0f, 0u },
   { "b1_q", "Band 1 Q", "", 0.3f, 116.0f, 1.0f, 0u },
   { "b1_on", "Band 1 On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
-  { "b2_type", "Band 2 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "b2_type", "Band 2 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "b2_freq", "Band 2 Frequency", "Hz", 20.0f, 20000.0f, 80.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "b2_gain", "Band 2 Gain", "dB", -15.0f, 15.0f, 0.0f, 0u },
   { "b2_q", "Band 2 Q", "", 0.3f, 116.0f, 1.0f, 0u },
   { "b2_on", "Band 2 On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
-  { "b3_type", "Band 3 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "b3_type", "Band 3 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "b3_freq", "Band 3 Frequency", "Hz", 20.0f, 20000.0f, 160.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "b3_gain", "Band 3 Gain", "dB", -15.0f, 15.0f, 0.0f, 0u },
   { "b3_q", "Band 3 Q", "", 0.3f, 116.0f, 1.0f, 0u },
   { "b3_on", "Band 3 On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
-  { "b4_type", "Band 4 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "b4_type", "Band 4 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "b4_freq", "Band 4 Frequency", "Hz", 20.0f, 20000.0f, 400.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "b4_gain", "Band 4 Gain", "dB", -15.0f, 15.0f, 0.0f, 0u },
   { "b4_q", "Band 4 Q", "", 0.3f, 116.0f, 1.0f, 0u },
   { "b4_on", "Band 4 On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
-  { "b5_type", "Band 5 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "b5_type", "Band 5 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "b5_freq", "Band 5 Frequency", "Hz", 20.0f, 20000.0f, 1000.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "b5_gain", "Band 5 Gain", "dB", -15.0f, 15.0f, 0.0f, 0u },
   { "b5_q", "Band 5 Q", "", 0.3f, 116.0f, 1.0f, 0u },
   { "b5_on", "Band 5 On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
-  { "b6_type", "Band 6 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "b6_type", "Band 6 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "b6_freq", "Band 6 Frequency", "Hz", 20.0f, 20000.0f, 2500.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "b6_gain", "Band 6 Gain", "dB", -15.0f, 15.0f, 0.0f, 0u },
   { "b6_q", "Band 6 Q", "", 0.3f, 116.0f, 1.0f, 0u },
   { "b6_on", "Band 6 On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
-  { "b7_type", "Band 7 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "b7_type", "Band 7 Type", "", 0.0f, 5.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "b7_freq", "Band 7 Frequency", "Hz", 20.0f, 20000.0f, 5000.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "b7_gain", "Band 7 Gain", "dB", -15.0f, 15.0f, 0.0f, 0u },
   { "b7_q", "Band 7 Q", "", 0.3f, 116.0f, 1.0f, 0u },
   { "b7_on", "Band 7 On", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
-  { "b8_type", "Band 8 Type", "", 0.0f, 5.0f, 2.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "b8_type", "Band 8 Type", "", 0.0f, 5.0f, 2.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "b8_freq", "Band 8 Frequency", "Hz", 20.0f, 20000.0f, 12500.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "b8_gain", "Band 8 Gain", "dB", -15.0f, 15.0f, 0.0f, 0u },
   { "b8_q", "Band 8 Q", "", 0.3f, 116.0f, 1.0f, 0u },
@@ -168,6 +168,65 @@ static const char *const OMX_EQ8_PARAM_MODULES[OMX_EQ8_PARAM_COUNT] = {
   "Bands/Band 8",
   "Bands/Band 8",
   "Bands/Band 8",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_EQ8_PARAM_B1_TYPE_LABELS[] = { "Bell", "Low Shelf", "High Shelf", "Notch", "All-pass 1st", "All-pass 2nd" };
+static const char *const OMX_EQ8_PARAM_B2_TYPE_LABELS[] = { "Bell", "Low Shelf", "High Shelf", "Notch", "All-pass 1st", "All-pass 2nd" };
+static const char *const OMX_EQ8_PARAM_B3_TYPE_LABELS[] = { "Bell", "Low Shelf", "High Shelf", "Notch", "All-pass 1st", "All-pass 2nd" };
+static const char *const OMX_EQ8_PARAM_B4_TYPE_LABELS[] = { "Bell", "Low Shelf", "High Shelf", "Notch", "All-pass 1st", "All-pass 2nd" };
+static const char *const OMX_EQ8_PARAM_B5_TYPE_LABELS[] = { "Bell", "Low Shelf", "High Shelf", "Notch", "All-pass 1st", "All-pass 2nd" };
+static const char *const OMX_EQ8_PARAM_B6_TYPE_LABELS[] = { "Bell", "Low Shelf", "High Shelf", "Notch", "All-pass 1st", "All-pass 2nd" };
+static const char *const OMX_EQ8_PARAM_B7_TYPE_LABELS[] = { "Bell", "Low Shelf", "High Shelf", "Notch", "All-pass 1st", "All-pass 2nd" };
+static const char *const OMX_EQ8_PARAM_B8_TYPE_LABELS[] = { "Bell", "Low Shelf", "High Shelf", "Notch", "All-pass 1st", "All-pass 2nd" };
+static const char *const *const OMX_EQ8_PARAM_LABELS[OMX_EQ8_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_EQ8_PARAM_B1_TYPE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_EQ8_PARAM_B2_TYPE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_EQ8_PARAM_B3_TYPE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_EQ8_PARAM_B4_TYPE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_EQ8_PARAM_B5_TYPE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_EQ8_PARAM_B6_TYPE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_EQ8_PARAM_B7_TYPE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_EQ8_PARAM_B8_TYPE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -314,7 +373,7 @@ static const char *const OMX_EQ8_PARAM_MODULES[OMX_EQ8_PARAM_COUNT] = {
 #define OMX_EQ8_NAME "omx eq8"
 #define OMX_EQ8_VENDOR "openmixer"
 #define OMX_EQ8_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_EQ8_VERSION "0.21.1"
+#define OMX_EQ8_VERSION "0.22.4"
 #define OMX_EQ8_DESCRIPTION "The OpenMixer console's channel EQ, 8-band form: 8 parametric bands (bell, shelves, notch, all-pass) and a high-pass and a low-pass filter at 12 or 24 dB/oct, stereo, zero latency; every band ships off, so a racked instance is a wire."
 #define OMX_EQ8_CLAP_ID "org.openmixer.eq8"
 #define OMX_EQ8_CLAP_FEATURES "audio-effect", "equalizer", "stereo"
@@ -325,8 +384,8 @@ static const char *const OMX_EQ8_PARAM_MODULES[OMX_EQ8_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_EQ8_PARAM_CONTRACT_VERSION 4u
-#define OMX_EQ8_PARAM_CONTRACT_FINGERPRINT "ef01c2de069f39e6f5d1827c8ddf744d540d6fd7b305647a10cf1cd64454b4a0"
+#define OMX_EQ8_PARAM_CONTRACT_VERSION 5u
+#define OMX_EQ8_PARAM_CONTRACT_FINGERPRINT "a10f95349d6a17cba4d4b97af3546ff53ece92d0d3a82bacfe3cccdc4a05194d"
 static const struct omx_param_contract_row OMX_EQ8_PARAM_CONTRACT[OMX_EQ8_PARAM_COUNT] = {
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* hpf_on none */
   { 16u, OMX_CLAP_SCALE_LOG, 1.0 }, /* hpf_freq hz */
@@ -496,11 +555,11 @@ static const struct omx_panel_display_row OMX_EQ8_PANEL_DISPLAYS[] = {
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_EQ8_PANEL_PAGES[] = {
   { "Easy", "Easy", { 8u, 13u, 23u, 28u, 38u, 43u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Bands", "Bands: Band 1 On - Band 2 Q", { 10u, 6u, 7u, 9u, 15u, 11u, 12u, 14u } },
-  { "Bands", "Bands: Band 3 On - Band 3 Q", { 20u, 16u, 17u, 18u, 19u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Bands", "Bands: Band 4 On - Band 5 Q", { 25u, 21u, 22u, 24u, 30u, 26u, 27u, 29u } },
-  { "Bands", "Bands: Band 6 On - Band 6 Q", { 35u, 31u, 32u, 33u, 34u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Bands", "Bands: Band 7 On - Band 8 Q", { 40u, 36u, 37u, 39u, 45u, 41u, 42u, 44u } },
+  { "Bands", "Bands: Band 1 – Band 2", { 10u, 6u, 7u, 9u, 15u, 11u, 12u, 14u } },
+  { "Bands", "Bands: Band 3", { 20u, 16u, 17u, 18u, 19u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 4 – Band 5", { 25u, 21u, 22u, 24u, 30u, 26u, 27u, 29u } },
+  { "Bands", "Bands: Band 6", { 35u, 31u, 32u, 33u, 34u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 7 – Band 8", { 40u, 36u, 37u, 39u, 45u, 41u, 42u, 44u } },
   { "HPF", "HPF", { 0u, 2u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "LPF", "LPF", { 3u, 5u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };

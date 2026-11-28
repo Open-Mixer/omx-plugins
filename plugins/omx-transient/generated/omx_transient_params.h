@@ -44,6 +44,17 @@ static const char *const OMX_TRANSIENT_PARAM_MODULES[OMX_TRANSIENT_PARAM_COUNT] 
   "Transient",
 };
 
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+
+static const char *const *const OMX_TRANSIENT_PARAM_LABELS[OMX_TRANSIENT_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+};
+
 /* One macro per declared bound: what a C face reads where a constant is needed. */
 #define OMX_TRANSIENT_PARAM_ATTACK_DB_MIN -24.0f
 #define OMX_TRANSIENT_PARAM_ATTACK_DB_MAX 24.0f
@@ -65,7 +76,7 @@ static const char *const OMX_TRANSIENT_PARAM_MODULES[OMX_TRANSIENT_PARAM_COUNT] 
 #define OMX_TRANSIENT_NAME "omx transient"
 #define OMX_TRANSIENT_VENDOR "openmixer"
 #define OMX_TRANSIENT_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_TRANSIENT_VERSION "0.21.1"
+#define OMX_TRANSIENT_VERSION "0.22.4"
 #define OMX_TRANSIENT_DESCRIPTION "The console's transient designer: more or less attack and sustain, from two envelope contrasts, with no threshold to set."
 #define OMX_TRANSIENT_CLAP_ID "org.openmixer.transient"
 #define OMX_TRANSIENT_CLAP_FEATURES "audio-effect", "transient-shaper", "stereo"

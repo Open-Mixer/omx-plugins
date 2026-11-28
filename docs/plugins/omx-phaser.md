@@ -10,6 +10,16 @@ The console's phaser: identical all-pass sections swept in octaves by one oscill
 - LV2 URI: `urn:openmixer:phaser`
 - Parameters: 6, plus the host's bypass
 
+## Panel
+
+![The panel of omx phaser, drawn from its declaration](../images/panels/omx-phaser.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Phaser | Rate, Base, Depth, Stages, Feedback, Mix |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

@@ -10,6 +10,16 @@ Widens or narrows the stereo image, with an optional pseudo-stereo spread for a 
 - LV2 URI: `urn:openmixer:width`
 - Parameters: 5, plus the host's bypass
 
+## Panel
+
+![The panel of omx width, drawn from its declaration](../images/panels/omx-width.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Width | Width, Pseudo, Pseudo Delay, Bass Mono, Bass Mono Frequency |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

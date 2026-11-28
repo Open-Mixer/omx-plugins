@@ -49,19 +49,19 @@ static const omx_plugin_param OMX_COMP_PARAMS[OMX_COMP_PARAM_COUNT] = {
   { "releaseMs", "Release", "ms", 5.0f, 3000.0f, 200.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "makeupDb", "Makeup", "dB", 0.0f, 24.0f, 0.0f, 0u },
   { "mixPct", "Mix", "%", 0.0f, 100.0f, 100.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "kind", "Kind", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "detectorOversampling", "Detector Oversampling", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "detectorTopology", "Detector Topology", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "keySource", "Key Source", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "kind", "Kind", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "detectorOversampling", "Detector Oversampling", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "detectorTopology", "Detector Topology", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "keySource", "Key Source", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "keyHpHz", "Key HP", "Hz", 0.0f, 2000.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "keyLpHz", "Key LP", "Hz", 0.0f, 20000.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "keyTiltDb", "Key Tilt", "dB/oct", -6.0f, 6.0f, 0.0f, 0u },
   { "keyListen", "Key Listen", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
   { "holdMs", "Hold", "ms", 0.0f, 2000.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "detectLink", "Detect Link", "", 0.0f, 3.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "detectLink", "Detect Link", "", 0.0f, 3.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "duck", "Duck", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_TOGGLE },
   { "rangeDb", "Duck Range", "dB", -40.0f, 0.0f, -12.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "releaseMode", "Release Mode", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "releaseMode", "Release Mode", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -87,6 +87,37 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
   "Duck",
   "Duck",
   "Comp",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_COMP_PARAM_KIND_LABELS[] = { "Compressor", "Limiter" };
+static const char *const OMX_COMP_PARAM_DETECTOR_OVERSAMPLING_LABELS[] = { "Auto", "Off", "4x" };
+static const char *const OMX_COMP_PARAM_DETECTOR_TOPOLOGY_LABELS[] = { "Feedforward", "Feedback" };
+static const char *const OMX_COMP_PARAM_KEY_SOURCE_LABELS[] = { "Self", "Sidechain" };
+static const char *const OMX_COMP_PARAM_DETECT_LINK_LABELS[] = { "Linked", "Mid", "Side", "Max" };
+static const char *const OMX_COMP_PARAM_RELEASE_MODE_LABELS[] = { "Fixed", "Opto", "Auto" };
+static const char *const *const OMX_COMP_PARAM_LABELS[OMX_COMP_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_COMP_PARAM_KIND_LABELS,
+  OMX_COMP_PARAM_DETECTOR_OVERSAMPLING_LABELS,
+  OMX_COMP_PARAM_DETECTOR_TOPOLOGY_LABELS,
+  OMX_COMP_PARAM_KEY_SOURCE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_COMP_PARAM_DETECT_LINK_LABELS,
+  NULL,
+  NULL,
+  OMX_COMP_PARAM_RELEASE_MODE_LABELS,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -155,7 +186,7 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 #define OMX_COMP_NAME "omx comp"
 #define OMX_COMP_VENDOR "openmixer"
 #define OMX_COMP_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_COMP_VERSION "0.21.1"
+#define OMX_COMP_VERSION "0.22.4"
 #define OMX_COMP_DESCRIPTION "The console's compressor: threshold, ratio and knee set how hard it holds the level down, attack and release how fast, with makeup gain and a dry/wet mix. Kind picks the RMS detector (Compressor) or the peak detector (Limiter), and detector oversampling can run the control path at 4x; detector topology has it hear the input (feedforward) or its own output (feedback). Its detector can listen to a key routed to its sidechain input instead, through a high-pass, a low-pass and a tilt, on the louder leg, the mid or the side, with a hold; key listen puts what the detector hears on the output, and duck holds the reduction to a set depth. The DSP is omx-dsp's <omxdsp/fx/omx_comp_instance.h>, the console's own compressor."
 #define OMX_COMP_CLAP_ID "org.openmixer.comp"
 #define OMX_COMP_CLAP_FEATURES "audio-effect", "compressor", "stereo"
@@ -166,8 +197,8 @@ static const char *const OMX_COMP_PARAM_MODULES[OMX_COMP_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_COMP_PARAM_CONTRACT_VERSION 6u
-#define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "2e6421f6270613736ddddcf7bcf7061a4c746e015e1127312bda8e56ca21c691"
+#define OMX_COMP_PARAM_CONTRACT_VERSION 7u
+#define OMX_COMP_PARAM_CONTRACT_FINGERPRINT "8f29ea50561c06fd91bcdcfe8f348342fd02877e51fe2bbaa7c7c7c1c881e755"
 static const struct omx_param_contract_row OMX_COMP_PARAM_CONTRACT[OMX_COMP_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* thresholdDb db */
   { 258u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* ratio ratio */

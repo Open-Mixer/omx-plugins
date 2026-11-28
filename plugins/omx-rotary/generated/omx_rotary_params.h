@@ -37,7 +37,7 @@ static const omx_plugin_param OMX_ROTARY_PARAMS[OMX_ROTARY_PARAM_COUNT] = {
   { "accel", "Accel", "coef", 0.25f, 4.0f, 1.0f, 0u },
   { "balance", "Balance", "%", -100.0f, 100.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "mix", "Mix", "%", 0.0f, 100.0f, 100.0f, 0u },
-  { "speed", "Speed", "", 0.0f, 2.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "speed", "Speed", "", 0.0f, 2.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -51,6 +51,20 @@ static const char *const OMX_ROTARY_PARAM_MODULES[OMX_ROTARY_PARAM_COUNT] = {
   "Rotary",
   "Rotary",
   "Rotary",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_ROTARY_PARAM_SPEED_LABELS[] = { "Stop", "Slow", "Fast" };
+static const char *const *const OMX_ROTARY_PARAM_LABELS[OMX_ROTARY_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_ROTARY_PARAM_SPEED_LABELS,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -83,7 +97,7 @@ static const char *const OMX_ROTARY_PARAM_MODULES[OMX_ROTARY_PARAM_COUNT] = {
 #define OMX_ROTARY_NAME "omx rotary"
 #define OMX_ROTARY_VENDOR "openmixer"
 #define OMX_ROTARY_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_ROTARY_VERSION "0.21.1"
+#define OMX_ROTARY_VERSION "0.22.4"
 #define OMX_ROTARY_DESCRIPTION "The console's rotary speaker: a drum rotor on the low band and a horn rotor on the high band, with stop, slow and fast speeds, mixed with the dry signal."
 #define OMX_ROTARY_CLAP_ID "org.openmixer.rotary"
 #define OMX_ROTARY_CLAP_FEATURES "audio-effect", "stereo"
@@ -94,8 +108,8 @@ static const char *const OMX_ROTARY_PARAM_MODULES[OMX_ROTARY_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_ROTARY_PARAM_CONTRACT_VERSION 2u
-#define OMX_ROTARY_PARAM_CONTRACT_FINGERPRINT "c8df04231f5071d1830fa6e67ac6e067f46b7bb659db9eafb2a76f8d779846e8"
+#define OMX_ROTARY_PARAM_CONTRACT_VERSION 4u
+#define OMX_ROTARY_PARAM_CONTRACT_FINGERPRINT "f83512a1f94f8151e94066b0d08f5ec8908ff4da59094ebdb947e3e05d13e899"
 static const struct omx_param_contract_row OMX_ROTARY_PARAM_CONTRACT[OMX_ROTARY_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* hornSlowHz hz */
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* hornFastHz hz */

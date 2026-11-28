@@ -31,13 +31,13 @@ enum {
 
 static const omx_plugin_param OMX_GLUE_PARAMS[OMX_GLUE_PARAM_COUNT] = {
   { "thresholdDb", "Threshold", "dB", -40.0f, 0.0f, -10.0f, 0u },
-  { "ratio", "Ratio", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "attack", "Attack", "", 0.0f, 5.0f, 4.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "release", "Release", "", 0.0f, 4.0f, 4.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "ratio", "Ratio", "", 0.0f, 2.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "attack", "Attack", "", 0.0f, 5.0f, 4.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
+  { "release", "Release", "", 0.0f, 4.0f, 4.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
   { "makeupDb", "Makeup", "dB", 0.0f, 24.0f, 0.0f, 0u },
   { "keyHpHz", "Key High-pass", "Hz", 0.0f, 500.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
   { "mixPct", "Mix", "%", 0.0f, 100.0f, 100.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "detectorTopology", "Detector Topology", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "detectorTopology", "Detector Topology", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -51,6 +51,23 @@ static const char *const OMX_GLUE_PARAM_MODULES[OMX_GLUE_PARAM_COUNT] = {
   "Glue",
   "Glue",
   "Glue",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_GLUE_PARAM_RATIO_LABELS[] = { "2:1", "4:1", "10:1" };
+static const char *const OMX_GLUE_PARAM_ATTACK_LABELS[] = { "0.1 ms", "0.3 ms", "1 ms", "3 ms", "10 ms", "30 ms" };
+static const char *const OMX_GLUE_PARAM_RELEASE_LABELS[] = { "0.1 s", "0.3 s", "0.6 s", "1.2 s", "Auto" };
+static const char *const OMX_GLUE_PARAM_DETECTOR_TOPOLOGY_LABELS[] = { "Feedforward", "Feedback" };
+static const char *const *const OMX_GLUE_PARAM_LABELS[OMX_GLUE_PARAM_COUNT] = {
+  NULL,
+  OMX_GLUE_PARAM_RATIO_LABELS,
+  OMX_GLUE_PARAM_ATTACK_LABELS,
+  OMX_GLUE_PARAM_RELEASE_LABELS,
+  NULL,
+  NULL,
+  NULL,
+  OMX_GLUE_PARAM_DETECTOR_TOPOLOGY_LABELS,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -83,7 +100,7 @@ static const char *const OMX_GLUE_PARAM_MODULES[OMX_GLUE_PARAM_COUNT] = {
 #define OMX_GLUE_NAME "omx glue"
 #define OMX_GLUE_VENDOR "openmixer"
 #define OMX_GLUE_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_GLUE_VERSION "0.21.1"
+#define OMX_GLUE_VERSION "0.22.4"
 #define OMX_GLUE_DESCRIPTION "A bus compressor with the detents of a classic console: stepped ratio, attack and release, a key filter and a dry mix."
 #define OMX_GLUE_CLAP_ID "org.openmixer.glue"
 #define OMX_GLUE_CLAP_FEATURES "audio-effect", "compressor", "stereo"
@@ -94,8 +111,8 @@ static const char *const OMX_GLUE_PARAM_MODULES[OMX_GLUE_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_GLUE_PARAM_CONTRACT_VERSION 2u
-#define OMX_GLUE_PARAM_CONTRACT_FINGERPRINT "0d7112e4b0cdbdd2d87e1cc276fa30ee1c8b7e9c527ff618b9df7f2cf67ecc8b"
+#define OMX_GLUE_PARAM_CONTRACT_VERSION 3u
+#define OMX_GLUE_PARAM_CONTRACT_FINGERPRINT "ae6a0d0f619d613ca7f337005f6891e61488c3c6511c79768416a6b6e5dddfef"
 static const struct omx_param_contract_row OMX_GLUE_PARAM_CONTRACT[OMX_GLUE_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* thresholdDb db */
   { 0u, OMX_CLAP_SCALE_STEPPED, 1.0 }, /* ratio none */

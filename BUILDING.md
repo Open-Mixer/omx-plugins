@@ -118,6 +118,11 @@ Makefiles and CI to it, so a step cannot fall out of both. Together they run, in
    a control in its section and order, the roles and displays equal the declaration's panel, the
    fingerprint is the SHA-256 of what it serves, and every meter a display reads is one the face
    serves (a `clap.meters/1` meter of that id on CLAP, the meter's output port on LV2).
+   The CLAP face also serves the same panel cut down, `org.openmixer.control-layout.draft/1` (the shape OpenMixer
+   would propose to CLAP: sections, controls and the displays that read `clap.meters/1`; no family, roles,
+   placement defaults or fingerprint). `make control-layout` (`tools/test/control-layout-check.mjs`, part of
+   `make test`) reads every shipped face with `omx-clap-scan --json`, whose host rules leave none of it out, and
+   holds it equal to the panel description cut down.
 8. **CLAP extensions** (`tools/clap-ext-probe.c`, `tools/clap-ext-check.mjs`): the CLAP face's
    `org.openmixer.param-contract/1` (each parameter's symbol, unit, scale and step, version 1, the
    fingerprint of what it serves), its `clap.remote-controls` pages (each section's controls, eight
@@ -188,7 +193,9 @@ REFERENCE into the kernel's file in omx-contract (`"ref"`, `"field"`); no number
 declaration. The release read is the installed one, through its JSON render (`omx-contract.json` in
 `pkg-config --variable=datadir omx-contract`), and its version must lie in the spec's range;
 `$OMX_CONTRACT_DIR`, a directory holding an `omx-contract.json`, stands in for it (the perturbation
-proofs point it at a moved copy). The kernel must
+proofs point it at a moved copy); `$OMX_CONTRACT_KIND_VECTORS` names a checkout's `clap-kind-vectors.json` (the rule a
+describing host reads a CLAP parameter's kind by, shipped from omx-contract 3.19.0) for `tools/clap-params-check.mjs`
+when the installed one lacks it. The kernel must
 have its instance face in omx-dsp (`<omxdsp/fx/omx_<kernel>_instance.h>`): each parameter binds to
 the `resolve()` argument named after its contract control, and `"binding": "instance"` makes
 `tools/gen.mjs` write the binding, the kernel-identity test, both faces and the Makefile. A kernel
@@ -223,14 +230,14 @@ metapackage that requires both, `omx-plugins-devel` (the headers, `libomxplugins
 `omxplugins.pc`), `omx-plugins-contract` (noarch; each plugin's descriptor, the param-contract units
 and the manifest in omx-contract's contract directory, which a host and the console read at run time; `omx-plugins` and
 `omx-plugins-devel` require it at their own version) and `omx-plugins-test` (the test instruments, in `/usr/libexec/omx-plugins/test`,
-outside every CLAP search path, for host tests and for measuring them on a console), and runs `make test` in `%check`; `debian/` builds the same packages for bookworm
-and trixie (`omx-plugins-dev`, with the archive in the multiarch directory, and `omx-plugins-contract`,
+outside every CLAP search path, for host tests and for measuring them on a console), and runs `make test` in `%check`; `debian/` builds the same packages for Debian
+trixie (`omx-plugins-dev`, with the archive in the multiarch directory, and `omx-plugins-contract`,
 `Architecture: all`) and runs `make test`
 unless `nocheck` is set. The version lives in three places that CI keeps equal: the top-level
 `Makefile` (`make version`), the spec's `Version:` and the top of `debian/changelog`.
 
-A `v<version>` tag runs `.github/workflows/release.yml`: RPMs for Fedora 44 (x86_64, aarch64)
-and DEBs for bookworm and trixie (amd64, arm64), signed and published into the OpenMixer package
+A `v<version>` tag runs `.github/workflows/release.yml`: RPMs for Fedora 45 (x86_64, aarch64)
+and DEBs for Debian trixie (amd64, arm64), signed and published into the OpenMixer package
 channel and attached to the GitHub release. Beside them goes
 `omx-plugins-zynthian-<version>-arm64.tar.gz`: the files of the trixie arm64 `omx-plugins-lv2` and
 `omx-plugins-clap` packages, repacked by `tools/zynthian-bundle.sh` as `lv2/` and `clap/` directories for

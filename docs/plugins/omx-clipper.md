@@ -10,6 +10,16 @@ Clips the peaks at a ceiling, with drive in front and an adjustable softness of 
 - LV2 URI: `urn:openmixer:clipper`
 - Parameters: 3, plus the host's bypass
 
+## Panel
+
+![The panel of omx clipper, drawn from its declaration](../images/panels/omx-clipper.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Clipper | Drive, Ceiling, Softness |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

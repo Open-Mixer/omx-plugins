@@ -41,6 +41,16 @@ static const char *const OMX_BALANCER_PARAM_MODULES[OMX_BALANCER_PARAM_COUNT] = 
   "Balancer",
 };
 
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+
+static const char *const *const OMX_BALANCER_PARAM_LABELS[OMX_BALANCER_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+};
+
 /* One macro per declared bound: what a C face reads where a constant is needed. */
 #define OMX_BALANCER_PARAM_AMOUNT_PCT_MIN 0.0f
 #define OMX_BALANCER_PARAM_AMOUNT_PCT_MAX 100.0f
@@ -59,7 +69,7 @@ static const char *const OMX_BALANCER_PARAM_MODULES[OMX_BALANCER_PARAM_COUNT] = 
 #define OMX_BALANCER_NAME "omx balancer"
 #define OMX_BALANCER_VENDOR "openmixer"
 #define OMX_BALANCER_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_BALANCER_VERSION "0.21.1"
+#define OMX_BALANCER_VERSION "0.22.4"
 #define OMX_BALANCER_DESCRIPTION "Walks four bands slowly toward a target tone, so a mix settles toward a pink-noise balance without chasing notes."
 #define OMX_BALANCER_CLAP_ID "org.openmixer.balancer"
 #define OMX_BALANCER_CLAP_FEATURES "audio-effect", "equalizer", "stereo"

@@ -31,7 +31,7 @@ static const omx_plugin_param OMX_LOUDLEVEL_PARAMS[OMX_LOUDLEVEL_PARAM_COUNT] = 
   { "rangeDb", "Range", "dB", 0.0f, 24.0f, 0.0f, 0u },
   { "speedDbPerS", "Speed", "dB/s", 0.1f, 6.0f, 1.0f, 0u },
   { "gateLufs", "Gate", "dB", -70.0f, -30.0f, -50.0f, OMX_PLUGIN_PARAM_INTEGER },
-  { "window", "Window", "", 0.0f, 1.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "window", "Window", "", 0.0f, 1.0f, 1.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -42,6 +42,17 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
   "Loudlevel",
   "Loudlevel",
   "Loudlevel",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_LOUDLEVEL_PARAM_WINDOW_LABELS[] = { "Momentary", "Short-term" };
+static const char *const *const OMX_LOUDLEVEL_PARAM_LABELS[OMX_LOUDLEVEL_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+  OMX_LOUDLEVEL_PARAM_WINDOW_LABELS,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -65,7 +76,7 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
 #define OMX_LOUDLEVEL_NAME "omx loudlevel"
 #define OMX_LOUDLEVEL_VENDOR "openmixer"
 #define OMX_LOUDLEVEL_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_LOUDLEVEL_VERSION "0.21.1"
+#define OMX_LOUDLEVEL_VERSION "0.22.4"
 #define OMX_LOUDLEVEL_DESCRIPTION "Holds a signal at a loudness target by moving its gain slowly, with a gate so pauses are left alone."
 #define OMX_LOUDLEVEL_CLAP_ID "org.openmixer.loudlevel"
 #define OMX_LOUDLEVEL_CLAP_FEATURES "audio-effect", "utility", "stereo"
@@ -76,8 +87,8 @@ static const char *const OMX_LOUDLEVEL_PARAM_MODULES[OMX_LOUDLEVEL_PARAM_COUNT] 
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 4u
-#define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "7bbc60b541436f45ede0dc84a704d220557837ca070990ec80f4c7a010fce8af"
+#define OMX_LOUDLEVEL_PARAM_CONTRACT_VERSION 5u
+#define OMX_LOUDLEVEL_PARAM_CONTRACT_FINGERPRINT "86663b52680cf2614942539b76c03b22794504a0567375c075be41586db475fc"
 static const struct omx_param_contract_row OMX_LOUDLEVEL_PARAM_CONTRACT[OMX_LOUDLEVEL_PARAM_COUNT] = {
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* targetLufs db */
   { 13u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* rangeDb db */

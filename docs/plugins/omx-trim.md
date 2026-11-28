@@ -10,6 +10,16 @@ The OpenMixer console's input trim: one gain control, -24 to +24 dB in 0.1 dB st
 - LV2 URI: `urn:openmixer:trim`
 - Parameters: 1, plus the host's bypass
 
+## Panel
+
+![The panel of omx trim, drawn from its declaration](../images/panels/omx-trim.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Trim | Trim |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |

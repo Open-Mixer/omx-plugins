@@ -29,7 +29,7 @@ static const omx_plugin_param OMX_TREMOLO_PARAMS[OMX_TREMOLO_PARAM_COUNT] = {
   { "rateHz", "Rate", "Hz", 0.1f, 20.0f, 4.0f, 0u },
   { "depth", "Depth", "%", 0.0f, 100.0f, 50.0f, 0u },
   { "mix", "Mix", "%", 0.0f, 100.0f, 100.0f, 0u },
-  { "mode", "Mode", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER },
+  { "mode", "Mode", "", 0.0f, 1.0f, 0.0f, OMX_PLUGIN_PARAM_INTEGER | OMX_PLUGIN_PARAM_CHOICE },
 };
 
 /* Each parameter's CLAP module (clap_param_info.module): its descriptor control's group as a module path, "" for a
@@ -39,6 +39,16 @@ static const char *const OMX_TREMOLO_PARAM_MODULES[OMX_TREMOLO_PARAM_COUNT] = {
   "Tremolo",
   "Tremolo",
   "Tremolo",
+};
+
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+static const char *const OMX_TREMOLO_PARAM_MODE_LABELS[] = { "Tremolo", "Pan" };
+static const char *const *const OMX_TREMOLO_PARAM_LABELS[OMX_TREMOLO_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  OMX_TREMOLO_PARAM_MODE_LABELS,
 };
 
 /* One macro per declared bound: what a C face reads where a constant is needed. */
@@ -59,7 +69,7 @@ static const char *const OMX_TREMOLO_PARAM_MODULES[OMX_TREMOLO_PARAM_COUNT] = {
 #define OMX_TREMOLO_NAME "omx tremolo"
 #define OMX_TREMOLO_VENDOR "openmixer"
 #define OMX_TREMOLO_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_TREMOLO_VERSION "0.21.1"
+#define OMX_TREMOLO_VERSION "0.22.4"
 #define OMX_TREMOLO_DESCRIPTION "The console's tremolo and auto-pan: one oscillator turned into a level change on both legs, or into a left-right pan."
 #define OMX_TREMOLO_CLAP_ID "org.openmixer.tremolo"
 #define OMX_TREMOLO_CLAP_FEATURES "audio-effect", "tremolo", "stereo"
@@ -70,8 +80,8 @@ static const char *const OMX_TREMOLO_PARAM_MODULES[OMX_TREMOLO_PARAM_COUNT] = {
 
 /* org.openmixer.param-contract/1 (tools/param-contract.mjs): each parameter's unit, scale and step, in
  * id order; the host's bypass, CLAP id OMX_PLUGIN_FACE_BYPASS_CLAP_ID (contract/plugin-face.json), is the face's. */
-#define OMX_TREMOLO_PARAM_CONTRACT_VERSION 2u
-#define OMX_TREMOLO_PARAM_CONTRACT_FINGERPRINT "4869e2dd250aba1dafcc6dd592d8caab74e279f7caedc68c68a1a2f92432ce05"
+#define OMX_TREMOLO_PARAM_CONTRACT_VERSION 3u
+#define OMX_TREMOLO_PARAM_CONTRACT_FINGERPRINT "7f25f87cfe993d35ec73210d4c93332012f93399ca53e9a747097da9272705a2"
 static const struct omx_param_contract_row OMX_TREMOLO_PARAM_CONTRACT[OMX_TREMOLO_PARAM_COUNT] = {
   { 16u, OMX_CLAP_SCALE_LOG, 0.0 }, /* rateHz hz */
   { 14u, OMX_CLAP_SCALE_LINEAR, 0.0 }, /* depth pc */

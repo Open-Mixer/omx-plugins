@@ -7,7 +7,7 @@
     "uri": "urn:openmixer:comp",
     "name": "omx comp",
     "vendor": "openmixer",
-    "version": "0.21.1",
+    "version": "0.22.4",
     "doc": "The console's compressor: threshold, ratio and knee set how hard it holds the level down, attack and release how fast, with makeup gain and a dry/wet mix. Kind picks the RMS detector (Compressor) or the peak detector (Limiter), and detector oversampling can run the control path at 4x; detector topology has it hear the input (feedforward) or its own output (feedback). Its detector can listen to a key routed to its sidechain input instead, through a high-pass, a low-pass and a tilt, on the louder leg, the mid or the side, with a hold; key listen puts what the detector hears on the output, and duck holds the reduction to a set depth. The DSP is omx-dsp's <omxdsp/fx/omx_comp_instance.h>, the console's own compressor.",
     "features": [
       "audio-effect"
@@ -35,7 +35,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.thresholdDb",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -60,7 +60,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.ratio",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -85,7 +85,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.kneeDb",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -110,7 +110,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.attackMs",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -135,7 +135,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.releaseMs",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -160,7 +160,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.makeupDb",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -185,7 +185,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_LIMITS.mixPct",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -215,7 +215,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_KINDS",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -248,7 +248,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#DETECTOR_OVERSAMPLINGS",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -278,7 +278,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#DETECTOR_TOPOLOGY",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -308,7 +308,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_KEY_SOURCES",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -333,7 +333,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_KEY_HP_HZ_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -358,7 +358,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_KEY_LP_HZ_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -383,7 +383,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_KEY_TILT_DB_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -401,7 +401,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_KEY_LISTENS",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -426,7 +426,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_HOLD_MS_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -462,7 +462,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_DETECT_LINKS",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -480,7 +480,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_DUCKS",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -505,7 +505,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_RANGE_DB_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -538,7 +538,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#COMP_RELEASE_MODES",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     }
@@ -599,7 +599,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#readouts[gainReductionDb]",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -653,7 +653,7 @@
       "source": {
         "from": {
           "link": "data/kernels/comp.json#readouts[keyLevelDb]",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     }

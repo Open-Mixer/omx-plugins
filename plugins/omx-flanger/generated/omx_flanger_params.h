@@ -41,6 +41,16 @@ static const char *const OMX_FLANGER_PARAM_MODULES[OMX_FLANGER_PARAM_COUNT] = {
   "Flanger",
 };
 
+/* Each parameter's value texts, one per whole step from its min: a choice's labels (OMX_PLUGIN_PARAM_CHOICE), what the
+ * CLAP face answers to value_to_text and the LV2 face lists as scale points; NULL for a travel and a toggle. */
+
+static const char *const *const OMX_FLANGER_PARAM_LABELS[OMX_FLANGER_PARAM_COUNT] = {
+  NULL,
+  NULL,
+  NULL,
+  NULL,
+};
+
 /* One macro per declared bound: what a C face reads where a constant is needed. */
 #define OMX_FLANGER_PARAM_RATE_MIN 0.05f
 #define OMX_FLANGER_PARAM_RATE_MAX 5.0f
@@ -59,7 +69,7 @@ static const char *const OMX_FLANGER_PARAM_MODULES[OMX_FLANGER_PARAM_COUNT] = {
 #define OMX_FLANGER_NAME "omx flanger"
 #define OMX_FLANGER_VENDOR "openmixer"
 #define OMX_FLANGER_URL "https://github.com/Open-Mixer/omx-plugins"
-#define OMX_FLANGER_VERSION "0.21.1"
+#define OMX_FLANGER_VERSION "0.22.4"
 #define OMX_FLANGER_DESCRIPTION "The console's flanger: one modulated short delay with signed feedback, swept by one oscillator and mixed with the dry signal."
 #define OMX_FLANGER_CLAP_ID "org.openmixer.flanger"
 #define OMX_FLANGER_CLAP_FEATURES "audio-effect", "flanger", "stereo"

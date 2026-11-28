@@ -10,6 +10,16 @@ Softens the p pops and hard t and k consonants of a voice, cutting each only whi
 - LV2 URI: `urn:openmixer:plosive`
 - Parameters: 9, plus the host's bypass
 
+## Panel
+
+![The panel of omx plosive, drawn from its declaration](../images/panels/omx-plosive.png)
+
+The panel as a host draws it from the declaration alone, every control at its default (`make panel-images`: omx-panel lays it out and its renderer draws it). Its sections and their controls, in order:
+
+| Section | Controls |
+|---|---|
+| Plosive | Consonant Cut, Consonant Sensitivity, Consonant Recovery, Consonant Band, Consonant Band Width, Pop Cut, Pop Sensitivity, Pop Recovery, Pop Corner |
+
 ## Audio ports
 
 | Direction | Name | Role | Channels |
