@@ -33,6 +33,18 @@ sudo apt update && sudo apt install omx-plugins
 Rescan plugins in your host and look for the **omx** plugins under openmixer. They land where hosts
 look without configuration: `/usr/lib/clap`, and `/usr/lib64/lv2` on Fedora or `/usr/lib/lv2` on Debian.
 
+## In a host
+
+- **Controls as the console lays them out.** Every CLAP plugin serves its panel, cut down to sections, controls and
+  the displays that read its meters, as `org.openmixer.control-layout.draft/1`, so a host can draw the controls in
+  the console's sections and order; `omx-clap-scan --json` shows it.
+- **Choices are choices.** A parameter whose points are every whole step is a CLAP enumeration
+  (`CLAP_PARAM_IS_ENUM`) and answers its labels as its value text, so a host draws a selector with the names, not a
+  switch or a number.
+- **What is installed is what was built.** Each descriptor installed in the contract directory carries an integrity
+  stamp, the package version and the source commit of the build, and the package build holds every shipped
+  descriptor to it.
+
 ## Documentation
 
 <https://www.openmixer.org/projects/omx-plugins>, and the full documentation at
