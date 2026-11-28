@@ -1,3 +1,11 @@
+omx-plugins (0.22.3) unstable; urgency=medium
+
+  * Contract: each installed descriptor carries integrity, its version and the
+    source commit of the build (the RPM's tarball, the deb's checkout), and
+    the package build holds every shipped descriptor to them (#32).
+
+ -- Pau Aliagas <linuxnow@gmail.com>  Sat, 28 Nov 2026 06:24:00 +0100
+
 omx-plugins (0.22.2) unstable; urgency=medium
 
   * Release: release.yml publishes only by tagging; a dispatch is a dry run,
