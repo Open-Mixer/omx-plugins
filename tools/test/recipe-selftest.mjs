@@ -234,7 +234,7 @@ async function main() {
     `the draft has one parameter per resolve() argument, named by the contract (${draft.decl?.params.map((p) => `${p.symbol}:${p.name}`).join(' ')})`);
   expect(draft.decl?.params.every((p) => p.ref && !('min' in p) && !('def' in p)), 'the draft is by reference only');
   const marks = reviewMarks(draft.decl);
-  expect(marks.join(' ') === '/description /clap/features/1 /lv2/class /params/0/meaning /params/1/meaning /params/2/meaning /params/3/meaning /params/3/values/0 /params/3/values/1 /console/placement/group',
+  expect(marks.join(' ') === '/category /description /clap/features/1 /lv2/class /params/0/meaning /params/1/meaning /params/2/meaning /params/3/meaning /params/3/values/0 /params/3/values/1 /console/placement/group',
     `the draft marks every design choice REVIEW (${marks.join(' ')})`);
   const unsettled = await planPlugin(draft.decl, src, { root: tree, recipe });
   expect(!unsettled.ok && unsettled.refusals.length === marks.length, `a draft with REVIEW marks is refused, each named (${unsettled.refusals.map((r) => r.field).join(' ')})`);
@@ -408,6 +408,11 @@ async function main() {
     ['sharedListed', 'static-table', () => edit('lib/omx_clap_static.c', (s) => s.replace('{"org.openmixer.drive", &omx_clap_entry_drive},\n', ''))],
     ['sharedListed', 'catalogue-row', () => edit('docs/catalogue.md', (s) => s.replace('`org.openmixer.drive`', '`org.openmixer.x`'))],
     ['sharedListed', 'manual-section', () => edit('docs/catalogue.md', (s) => s.replace('### omx drive\n', '### drive\n'))],
+    ['labelsListed', 'labels-item', () => edit('contract.d/omx-plugin-labels/omx-plugin-labels.json', (s) => {
+      const doc = JSON.parse(s);
+      delete doc.components.schemas.OMX_PLUGIN_LABELS_DRIVE;
+      return `${JSON.stringify(doc, null, 2)}\n`;
+    })],
     ['noFiles', 'no-cpp', () => add(`${P}/shell.cpp`, '// SPDX-License-Identifier: GPL-3.0-or-later\n')],
     ['noText', 'no-dpf', () => add(`${P}/dpf_shell.h`, '#include "DistrhoPlugin.hpp"\n')],
     ['noCopiedDsp', 'no-copied-dsp', () => add(`${P}/copied.h`, `static inline float ${dspName}(float x) {\n  return x;\n}\n`)],
@@ -765,7 +770,7 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
       writeFileSync(decl8, JSON.stringify(d, null, 2));
       writeFileSync(ttl8, emitPluginTtl(loadDecl(dir8)));
     };
-    regen((ps) => ps.splice(ps.findIndex((p) => p.symbol === 'type'), 1, { symbol: 'type', name: 'Type', perBand: true, own: 'switch', unit: '', min: 0, max: 5, def: 0, kind: 'integer' }));
+    regen((ps) => ps.splice(ps.findIndex((p) => p.symbol === 'type'), 1, { symbol: 'type', name: 'Type', perBand: true, own: 'switch', unit: 'none', min: 0, max: 5, def: 0, kind: 'integer' }));
     named('a declaration that drops a band type\'s labels', 'omx-eq8: port "b1_type" lost the scale point 0 Bell');
     regen((ps) => (ps.find((p) => p.symbol === 'hpf_freq').scale = 'linear'));
     named('a frequency declared linear', 'omx-eq8: port "hpf_freq" lost pprops:logarithmic');

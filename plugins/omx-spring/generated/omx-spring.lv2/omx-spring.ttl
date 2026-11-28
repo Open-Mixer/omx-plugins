@@ -22,8 +22,8 @@
     doap:name "omx spring" ;
     doap:license <https://www.gnu.org/licenses/gpl-3.0.html> ;
     lv2:project <https://github.com/Open-Mixer/omx-plugins> ;
-    lv2:minorVersion 21 ;
-    lv2:microVersion 1 ;
+    lv2:minorVersion 22 ;
+    lv2:microVersion 2 ;
     rdfs:comment "A spring reverb: a delay, a chain of all-passes and a darkening loop, with decay, length, tension and damping." ;
     lv2:optionalFeature lv2:hardRTCapable ;
     omxres:threadsSpawned "0"^^xsd:integer ;
