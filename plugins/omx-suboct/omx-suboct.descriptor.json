@@ -43,7 +43,7 @@
       "source": {
         "from": {
           "link": "data/kernels/suboct.json#SUBOCT_RANGES",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -68,7 +68,7 @@
       "source": {
         "from": {
           "link": "data/kernels/suboct.json#SUBOCT_OCT1_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -93,7 +93,7 @@
       "source": {
         "from": {
           "link": "data/kernels/suboct.json#SUBOCT_OCT2_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -118,7 +118,7 @@
       "source": {
         "from": {
           "link": "data/kernels/suboct.json#SUBOCT_DRY_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     },
@@ -143,7 +143,7 @@
       "source": {
         "from": {
           "link": "data/kernels/suboct.json#SUBOCT_TRACK_GATE_DB_RANGE",
-          "at": "omx-dsp@0.34.3"
+          "at": "omx-dsp@0.34.4"
         }
       }
     }

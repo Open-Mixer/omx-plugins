@@ -608,8 +608,10 @@ INSTALL_CONTRACT_DIR = $(firstword $(wildcard $(shell $(PKG_CONFIG) --variable=d
 DESCRIPTORS = $(foreach p,$(SHIP_PLUGINS),$(wildcard $(p)$(notdir $(p:/=)).descriptor.json))
 CONTRACT_FILES = $(wildcard contract/*.json)
 # the source commit each installed descriptor is stamped with (#32): the build's (a package build passes the commit its
-# tarball or checkout was made from), else this tree's HEAD; none refuses the install (tools/stamp-integrity.mjs)
-SOURCE_COMMIT ?= $(shell git rev-parse HEAD 2>/dev/null)
+# tarball or checkout was made from), else this tree's HEAD; none refuses the install (tools/stamp-integrity.mjs). HEAD is
+# read whoever owns the checkout, as debian/rules reads it: a CI container runs as root over the runner's checkout, and
+# git's dubious-ownership refusal left it empty, so every union render refused (clap-validator, wave n3)
+SOURCE_COMMIT ?= $(shell git -c safe.directory='*' rev-parse HEAD 2>/dev/null)
 install-contract:
 	@test -n "$(INSTALL_CONTRACT_DIR)" || { echo "install-contract: no install-contract-dir.sh: install omx-contract-devel, or set OMX_CONTRACT_DIR to a checkout" >&2; exit 1; }
 	@stage=$$(mktemp -d) && trap 'rm -rf "$$stage"' EXIT && mkdir -p "$$stage/plugins" && \
