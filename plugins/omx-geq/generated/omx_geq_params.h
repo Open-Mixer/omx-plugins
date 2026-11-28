@@ -390,10 +390,10 @@ static const struct omx_panel_role_row OMX_GEQ_PANEL_ROLES[] = {
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_GEQ_PANEL_PAGES[] = {
   { "Easy", "Easy", { 0u, 6u, 12u, 18u, 24u, 30u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Geq", "Geq: 25 Hz - 160 Hz", { 1u, 2u, 3u, 4u, 5u, 7u, 8u, 9u } },
-  { "Geq", "Geq: 200 Hz - 1.6 kHz", { 10u, 11u, 13u, 14u, 15u, 16u, 17u, 19u } },
-  { "Geq", "Geq: 2 kHz - 12.5 kHz", { 20u, 21u, 22u, 23u, 25u, 26u, 27u, 28u } },
-  { "Geq", "Geq: 16 kHz", { 29u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Geq", "Geq", { 1u, 2u, 3u, 4u, 5u, 7u, 8u, 9u } },
+  { "Geq", "Geq 2/4", { 10u, 11u, 13u, 14u, 15u, 16u, 17u, 19u } },
+  { "Geq", "Geq 3/4", { 20u, 21u, 22u, 23u, 25u, 26u, 27u, 28u } },
+  { "Geq", "Geq 4/4", { 29u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
 #define OMX_GEQ_PANEL_PAGE_COUNT 5u
 static const struct omx_panel_rows OMX_GEQ_PANEL = {

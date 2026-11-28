@@ -555,11 +555,11 @@ static const struct omx_panel_display_row OMX_EQ8_PANEL_DISPLAYS[] = {
  * slot of a control its governing values hide (lib/omx_clap_face.c). */
 static const struct omx_panel_page_row OMX_EQ8_PANEL_PAGES[] = {
   { "Easy", "Easy", { 8u, 13u, 23u, 28u, 38u, 43u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Bands", "Bands: Band 1 On - Band 2 Q", { 10u, 6u, 7u, 9u, 15u, 11u, 12u, 14u } },
-  { "Bands", "Bands: Band 3 On - Band 3 Q", { 20u, 16u, 17u, 18u, 19u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Bands", "Bands: Band 4 On - Band 5 Q", { 25u, 21u, 22u, 24u, 30u, 26u, 27u, 29u } },
-  { "Bands", "Bands: Band 6 On - Band 6 Q", { 35u, 31u, 32u, 33u, 34u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
-  { "Bands", "Bands: Band 7 On - Band 8 Q", { 40u, 36u, 37u, 39u, 45u, 41u, 42u, 44u } },
+  { "Bands", "Bands: Band 1 – Band 2", { 10u, 6u, 7u, 9u, 15u, 11u, 12u, 14u } },
+  { "Bands", "Bands: Band 3", { 20u, 16u, 17u, 18u, 19u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 4 – Band 5", { 25u, 21u, 22u, 24u, 30u, 26u, 27u, 29u } },
+  { "Bands", "Bands: Band 6", { 35u, 31u, 32u, 33u, 34u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
+  { "Bands", "Bands: Band 7 – Band 8", { 40u, 36u, 37u, 39u, 45u, 41u, 42u, 44u } },
   { "HPF", "HPF", { 0u, 2u, 1u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
   { "LPF", "LPF", { 3u, 5u, 4u, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID, OMX_CLAP_PANEL_INVALID_ID } },
 };
