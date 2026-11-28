@@ -99,7 +99,7 @@ What the descriptor has no word for, found laying out our panels, and where each
 
 ## The faces, from plugin-hostd's tables read backwards
 
-One vocabulary, two directions (FreeMixer/omx-plugins#210, ruling B). plugin-hostd installs one mapping table per
+One vocabulary, two directions. plugin-hostd installs one mapping table per
 format as a domain of the contract directory, `plugin-hostd/clap` and `plugin-hostd/lv2` (named by their items' prefix,
 `PLUGIN_HOSTD_CLAP_MAP` and `PLUGIN_HOSTD_LV2_MAP`), `<contractdir>/plugin-hostd/<format>/<format>.json`: how each field a
 scan reads becomes a descriptor word. Each item is omx-contract's mapping-table kind, `x-kind: map` (sorting row V19):

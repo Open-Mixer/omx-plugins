@@ -223,18 +223,25 @@ metapackage that requires both, `omx-plugins-devel` (the headers, `libomxplugins
 `omxplugins.pc`), `omx-plugins-contract` (noarch; each plugin's descriptor, the param-contract units
 and the manifest in omx-contract's contract directory, which a host and the console read at run time; `omx-plugins` and
 `omx-plugins-devel` require it at their own version) and `omx-plugins-test` (the test instruments, in `/usr/libexec/omx-plugins/test`,
-outside every CLAP search path, for host tests and for measuring them on a console), and runs `make test` in `%check`; `debian/` builds the same packages for bookworm
-and trixie (`omx-plugins-dev`, with the archive in the multiarch directory, and `omx-plugins-contract`,
+outside every CLAP search path, for host tests and for measuring them on a console), and runs `make test` in `%check`; `debian/` builds the same packages for
+trixie (`omx-plugins-dev`, with the archive in the multiarch directory, and `omx-plugins-contract`,
 `Architecture: all`) and runs `make test`
 unless `nocheck` is set. The version lives in three places that CI keeps equal: the top-level
 `Makefile` (`make version`), the spec's `Version:` and the top of `debian/changelog`.
 
-A `v<version>` tag runs `.github/workflows/release.yml`: RPMs for Fedora 44 (x86_64, aarch64)
-and DEBs for bookworm and trixie (amd64, arm64), signed and published into the OpenMixer package
+A `v<version>` tag runs `.github/workflows/release.yml`: RPMs for Fedora 45 (x86_64, aarch64)
+and DEBs for trixie (amd64, arm64), signed and published into the OpenMixer package
 channel and attached to the GitHub release. Beside them goes
 `omx-plugins-zynthian-<version>-arm64.tar.gz`: the files of the trixie arm64 `omx-plugins-lv2` and
 `omx-plugins-clap` packages, repacked by `tools/zynthian-bundle.sh` as `lv2/` and `clap/` directories for
 a Zynthian's plugin directories, after checking every ELF (architecture, glibc no newer than trixie's
 2.41, no library a bare trixie lacks, `clap_entry` in every CLAP) and running every LV2 plugin
-through `lv2bench` on arm64. Pull requests run the same workflow as a dry run that signs and publishes
-nothing; there the tarball is packed and checked from the amd64 build.
+through `lv2bench` on arm64. Publishing is by tagging only: pull requests and a `workflow_dispatch` run the same
+workflow as a dry run that signs and publishes nothing, the qualification and Zynthian artifacts included; there the
+tarball is packed and checked from the amd64 build.
+
+`make install-contract` stamps each descriptor it installs with `integrity { version, commit }`: the package version
+and the source commit of the build (`SOURCE_COMMIT`, the commit the RPM's tarball or the deb's checkout was made from,
+else the tree's HEAD; none refuses the install, `tools/stamp-integrity.mjs`). `tools/integrity-check.sh` reads the
+installed `<contractdir>/omx-plugins/plugins/` and refuses a descriptor that is unstamped or carries another version
+or commit; the package build runs it on every shipped descriptor.

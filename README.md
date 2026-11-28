@@ -12,14 +12,14 @@ drawn from one declaration: its CLAP parameters, and its LV2 ports cannot disagr
 
 ## Install
 
-On **Fedora**, from the OpenMixer package channel:
+On **Fedora** 45 (x86_64, aarch64), from the OpenMixer package channel:
 
 ```sh
 sudo dnf install https://www.openmixer.org/rpm/openmixer-release.noarch.rpm
 sudo dnf install omx-plugins
 ```
 
-On **Debian** trixie (arm64), **Raspberry Pi OS** and **Zynthian**:
+On **Debian** trixie (amd64, arm64), **Raspberry Pi OS** and **Zynthian**:
 
 ```sh
 cd /tmp && curl -fsSLO https://www.openmixer.org/deb/openmixer-release.deb && sudo apt install ./openmixer-release.deb
@@ -32,6 +32,18 @@ sudo apt update && sudo apt install omx-plugins
 
 Rescan plugins in your host and look for the **omx** plugins under openmixer. They land where hosts
 look without configuration: `/usr/lib/clap`, and `/usr/lib64/lv2` on Fedora or `/usr/lib/lv2` on Debian.
+
+## In a host
+
+- **Controls as the console lays them out.** Every CLAP plugin serves its panel, cut down to sections, controls and
+  the displays that read its meters, as `org.openmixer.control-layout.draft/1`, so a host can draw the controls in
+  the console's sections and order; `omx-clap-scan --json` shows it.
+- **Choices are choices.** A parameter whose points are every whole step is a CLAP enumeration
+  (`CLAP_PARAM_IS_ENUM`) and answers its labels as its value text, so a host draws a selector with the names, not a
+  switch or a number.
+- **What is installed is what was built.** Each descriptor installed in the contract directory carries an integrity
+  stamp, the package version and the source commit of the build, and the package build holds every shipped
+  descriptor to it.
 
 ## Documentation
 
