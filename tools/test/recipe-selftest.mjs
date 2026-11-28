@@ -770,7 +770,7 @@ static inline float omx_wobble_instance_level_db(const OmxWobbleInstance *s) { r
       writeFileSync(decl8, JSON.stringify(d, null, 2));
       writeFileSync(ttl8, emitPluginTtl(loadDecl(dir8)));
     };
-    regen((ps) => ps.splice(ps.findIndex((p) => p.symbol === 'type'), 1, { symbol: 'type', name: 'Type', perBand: true, own: 'switch', unit: '', min: 0, max: 5, def: 0, kind: 'integer' }));
+    regen((ps) => ps.splice(ps.findIndex((p) => p.symbol === 'type'), 1, { symbol: 'type', name: 'Type', perBand: true, own: 'switch', unit: 'none', min: 0, max: 5, def: 0, kind: 'integer' }));
     named('a declaration that drops a band type\'s labels', 'omx-eq8: port "b1_type" lost the scale point 0 Bell');
     regen((ps) => (ps.find((p) => p.symbol === 'hpf_freq').scale = 'linear'));
     named('a frequency declared linear', 'omx-eq8: port "hpf_freq" lost pprops:logarithmic');
