@@ -199,7 +199,7 @@ LIB_FLAGS  := -fPIC -fvisibility=hidden -DOMX_CLAP_STATIC -Iinclude
 # read only by the targets that build the archive, so `make version` and the rest need no omx-dsp
 lib_cflags = $(call dep_check,omxdsp)$(call dep_check,omx-contract)$(shell $(PKG_CONFIG) --cflags omxdsp omx-contract omx-clap clap)
 
-.PHONY: control-layout test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dir meter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features choice-units placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells full-matrix clean version recipe-test completeness selftest params-doc check-params-doc docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base selftest-shards decl-schema-panel-ref filter-response artifact-retention release-same-pass release-publish-gate from-channel panel-abi-refuses plugin-category
+.PHONY: control-layout test-checks graph-enum oracle-rates comp-published-scan schema-urls face-header role-meanings plugin-labels catalogs-gate install-catalogs install-labels-domain print-install-contract-dir meter-binding meanings meter-binding summary-numbers param-tie own-units presets presets-figures test-role all lib lib-test test test-faces units panel-words panel-layout descriptor-view descriptor-features choice-units placement-strips lv2-units round-trip-loss-units lv2-deprecated lv2-maintainer no-modgui release-version resource-hints format-tables contract-union probe-checks face-ids comp-release-mode eq-probe-race band-groups strip-visible-when strip-pages-follow phaser-depth geq-widgets round-trip hints manual install install-test package-lists install-devel install-contract contract-dir lv2bench-ran ci-scope no-ci-bridge deb-cells full-matrix clean version recipe-test completeness selftest params-doc check-params-doc panel-images check-panel-images docs-site strip-crosscheck strip-bands strip-bands-bench meters-abi panel-abi meter-level dsp-copies panel-copies meter-ring meter-held meter-rows meter-words clap-validate face-dirty-order core-init-answers lv2-refuse-rate param-contract-abi host-contract curve-proof test-split test-heavy debt-base selftest-shards decl-schema-panel-ref filter-response artifact-retention release-same-pass release-publish-gate from-channel panel-abi-refuses plugin-category
 all: lib
 	@for p in $(PLUGINS); do $(MAKE) -C $$p all || exit 1; done
 lib: $(LIB) $(LIB_PC)
@@ -429,6 +429,15 @@ params-doc:
 check-params-doc:
 	node tools/params-doc.mjs --check
 	node tools/test/params-doc-test.mjs
+# the picture of every plugin's panel, drawn from its declaration alone by omx-panel's `omx-panel picture` and its renderer
+# (tools/panel-images.mjs): docs/images/panels/<stem>.png, which the parameter reference shows. Needs omx-panel >= 0.17.3 and
+# omx-panel-render ($$OMX_PANEL_DIR and $$OMX_PANEL_RENDER name a tree's); check-panel-images is red on a picture missing, stale
+# against its declaration or of no plugin, after the self-test reds each of those on purpose.
+panel-images:
+	node tools/panel-images.mjs
+check-panel-images:
+	node tools/panel-images.mjs --self-test
+	node tools/panel-images.mjs --check
 # The published reference: Open-Mixer/.github's docs-publish.yml runs this with DOCS_OUT, an empty absolute directory,
 # then renders the Markdown and, at a release tag, publishes the tree under
 # https://www.openmixer.org/reference/omx-plugins/<version>/. check-params-doc runs first: every page of docs/plugins/ is
