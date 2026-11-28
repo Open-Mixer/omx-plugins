@@ -12,14 +12,14 @@ drawn from one declaration: its CLAP parameters, and its LV2 ports cannot disagr
 
 ## Install
 
-On **Fedora**, from the OpenMixer package channel:
+On **Fedora** 45 (x86_64, aarch64), from the OpenMixer package channel:
 
 ```sh
 sudo dnf install https://www.openmixer.org/rpm/openmixer-release.noarch.rpm
 sudo dnf install omx-plugins
 ```
 
-On **Debian** trixie (arm64), **Raspberry Pi OS** and **Zynthian**:
+On **Debian** trixie (amd64, arm64), **Raspberry Pi OS** and **Zynthian**:
 
 ```sh
 cd /tmp && curl -fsSLO https://www.openmixer.org/deb/openmixer-release.deb && sudo apt install ./openmixer-release.deb
